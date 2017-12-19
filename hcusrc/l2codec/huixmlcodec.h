@@ -158,7 +158,7 @@ extern OPSTAT func_cloudvela_huitpxml_msg_bfhs_statistic_confirm_received_handle
 4E01000A00040001014E03000103]]></Content><FuncFlag>0</FuncFlag></xml>"
 
 
-
+//接收消息转化到具体处理函数的工作过程
 #define HCU_HUIXMLCODEC_RCVMSG_T2FUNC(msgId, pMsgStr, pMsgBuf, pFunc)\
 	case msgId:\
 	{\
@@ -170,15 +170,21 @@ extern OPSTAT func_cloudvela_huitpxml_msg_bfhs_statistic_confirm_received_handle
 	}\
 	break;\
 
+//消息接收固定IE部分
+#define HCU_HUIXMLCODEC_RCVIE_REQ()\
+	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);\
+	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);\
+	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);\
+	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))\
+		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");\
 
-
-
-
-
-
-
-
-
+//消息接收固定IE部分
+#define HCU_HUIXMLCODEC_RCVIE_CONFIRM()\
+		rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);\
+		rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);\
+		rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);\
+		if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))\
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");\
 
 
 #endif /* L2FRAME_HUIXMLCODEC_H_ */

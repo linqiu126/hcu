@@ -192,9 +192,7 @@ OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 {
 	int ret;
 
-	//Receive message and copy to local variable
-	msg_struct_com_time_out_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_com_time_out_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_com_time_out_t);
 
 	//钩子在此处，检查zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFDF]是否超限
 	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFDF] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
@@ -247,8 +245,7 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	char s[200], tmp[20];
 	int boardId = 0;
 
-	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
 
 	//根据收到的命令，分别进行控制
 	//state = FsmGetState(TASK_ID_L3BFDF);
@@ -354,8 +351,7 @@ OPSTAT fsm_l3bfdf_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	//int ret=0;
 	int line=0, boardId=0;
 
-	msg_struct_sui_startup_ind_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_sui_startup_ind_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_startup_ind_t);
 	//入参检查
 	line = rcv.snrId>>3;
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
@@ -395,8 +391,7 @@ OPSTAT fsm_l3bfdf_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_p
 	//int ret=0;
 	int line=0, boardId=0;
 
-	msg_struct_sui_fault_ind_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_sui_fault_ind_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_fault_ind_t);
 	//入参检查
 	line = rcv.snrId>>3;
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
@@ -431,8 +426,7 @@ OPSTAT fsm_l3bfdf_canitf_heart_beat_report(UINT32 dest_id, UINT32 src_id, void *
 	//int ret=0;
 	int line=0, boardId=0;
 
-	msg_struct_sui_heart_beat_report_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_sui_heart_beat_report_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_heart_beat_report_t);
 	//入参检查
 	line = rcv.snrId>>3;
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
@@ -479,29 +473,31 @@ OPSTAT fsm_l3bfdf_canitf_heart_beat_report(UINT32 dest_id, UINT32 src_id, void *
 //由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
 OPSTAT fsm_l3bfdf_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_cloudvela_l3bfdf_data_req_t);
+
 	return SUCCESS;
 }
 
 //由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
 OPSTAT fsm_l3bfdf_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_cloudvela_l3bfdf_data_confirm_t);
+
 	return SUCCESS;
 }
 
 //由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
 OPSTAT fsm_l3bfdf_cloudvela_event_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_cloudvela_l3bfdf_event_confirm_t);
+
 	return SUCCESS;
 }
 
 //由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
 OPSTAT fsm_l3bfdf_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-
-	//入参检查
-	msg_struct_cloudvela_l3bfdf_ctrl_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_cloudvela_l3bfdf_ctrl_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_cloudvela_l3bfdf_ctrl_req_t);
 //	if (rcv.cmdid != L3CI_bfdf_comb_scale){
 //		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
 //	}
@@ -534,6 +530,8 @@ OPSTAT fsm_l3bfdf_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 //由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
 OPSTAT fsm_l3bfdf_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_cloudvela_l3bfdf_statistic_confirm_t);
+
 	return SUCCESS;
 }
 
@@ -549,8 +547,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 	int i = 0;
 	int line=0, boardId=0;
 
-	msg_struct_can_l3bfdf_sys_cfg_resp_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_sys_cfg_resp_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_sys_cfg_resp_t);
 	//入参检查
 	line = rcv.snrId>>3;
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
@@ -621,8 +618,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 	//int ret=0;
 	int line=0, boardId=0;
 
-	msg_struct_sui_suspend_resp_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_sui_suspend_resp_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_suspend_resp_t);
 	//入参检查
 	line = rcv.snrId>>3;
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
@@ -680,8 +676,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 	//int ret=0;
 	int line=0, boardId=0;
 
-	msg_struct_sui_resume_resp_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_sui_resume_resp_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_resume_resp_t);
 	//入参检查
 	line = rcv.snrId>>3;
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
@@ -744,9 +739,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	int i=0;
 	int line=0, boardId=0;
 
-	//入参检查
-	msg_struct_can_l3bfdf_new_ready_event_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_new_ready_event_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_new_ready_event_t);
 	//入参检查
 	line = rcv.snrId>>3;
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
@@ -903,8 +896,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	//int ret=0;
 	int line=0, boardId=0;
 
-	msg_struct_can_l3bfdf_ws_comb_out_fb_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_ws_comb_out_fb_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_ws_comb_out_fb_t);
 	//入参检查
 	line = rcv.snrId>>3;
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
@@ -1014,8 +1006,7 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 	//int ret=0;
 	int line=0, boardId=0;
 
-	msg_struct_can_l3bfdf_basket_clean_ind_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_basket_clean_ind_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_basket_clean_ind_t);
 	//入参检查
 	line = rcv.snrId>>3;
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))

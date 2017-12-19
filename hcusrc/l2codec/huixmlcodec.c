@@ -1374,18 +1374,16 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 OPSTAT func_cloudvela_huitpxml_msg_heart_beat_req_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->ping.ieId = HUITP_ENDIAN_EXG16(rcv->ping.ieId);
 	rcv->ping.ieLen = HUITP_ENDIAN_EXG16(rcv->ping.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->ping.ieId != HUITP_IEID_uni_heart_beat_ping) || (rcv->ping.ieLen != (sizeof(StrIe_HUITP_IEID_uni_heart_beat_ping_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
@@ -1413,18 +1411,16 @@ OPSTAT func_cloudvela_huitpxml_msg_heart_beat_req_received_handle(StrMsg_HUITP_M
 
 OPSTAT func_cloudvela_huitpxml_msg_heart_beat_confirm_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
 	rcv->pong.ieId = HUITP_ENDIAN_EXG16(rcv->pong.ieId);
 	rcv->pong.ieLen = HUITP_ENDIAN_EXG16(rcv->pong.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->pong.ieId != HUITP_IEID_uni_heart_beat_pong) || (rcv->pong.ieLen != (sizeof(StrIe_HUITP_IEID_uni_heart_beat_pong_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
@@ -1452,16 +1448,14 @@ OPSTAT func_cloudvela_huitpxml_msg_heart_beat_confirm_received_handle(StrMsg_HUI
 
 OPSTAT func_cloudvela_huitpxml_msg_alarm_info_req_received_handle(StrMsg_HUITP_MSGID_uni_alarm_info_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_spspm_alarm_req_t snd;
@@ -1469,8 +1463,9 @@ OPSTAT func_cloudvela_huitpxml_msg_alarm_info_req_received_handle(StrMsg_HUITP_M
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_spspm_alarm_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ, TASK_ID_SYSPM, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1478,16 +1473,14 @@ OPSTAT func_cloudvela_huitpxml_msg_alarm_info_req_received_handle(StrMsg_HUITP_M
 
 OPSTAT func_cloudvela_huitpxml_msg_alarm_info_confirm_received_handle(StrMsg_HUITP_MSGID_uni_alarm_info_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_spspm_alarm_confirm_t snd;
@@ -1495,8 +1488,9 @@ OPSTAT func_cloudvela_huitpxml_msg_alarm_info_confirm_received_handle(StrMsg_HUI
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_spspm_alarm_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSPM_ALARM_CONFIRM, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_SYSPM_ALARM_CONFIRM, TASK_ID_SYSPM, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSPM_ALARM_CONFIRM, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1504,16 +1498,14 @@ OPSTAT func_cloudvela_huitpxml_msg_alarm_info_confirm_received_handle(StrMsg_HUI
 
 OPSTAT func_cloudvela_huitpxml_msg_pm_info_req_received_handle(StrMsg_HUITP_MSGID_uni_performance_info_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_spspm_perfm_req_t snd;
@@ -1521,8 +1513,9 @@ OPSTAT func_cloudvela_huitpxml_msg_pm_info_req_received_handle(StrMsg_HUITP_MSGI
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_spspm_perfm_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSPM_PERFM_REQ, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_SYSPM_PERFM_REQ, TASK_ID_SYSPM, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSPM_PERFM_REQ, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1530,16 +1523,14 @@ OPSTAT func_cloudvela_huitpxml_msg_pm_info_req_received_handle(StrMsg_HUITP_MSGI
 
 OPSTAT func_cloudvela_huitpxml_msg_pm_info_confirm_received_handle(StrMsg_HUITP_MSGID_uni_performance_info_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_spspm_perfm_confirm_t snd;
@@ -1547,8 +1538,9 @@ OPSTAT func_cloudvela_huitpxml_msg_pm_info_confirm_received_handle(StrMsg_HUITP_
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_spspm_perfm_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSPM_PERFM_CONFIRM, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_SYSPM_PERFM_CONFIRM, TASK_ID_SYSPM, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSPM_PERFM_CONFIRM, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1556,18 +1548,16 @@ OPSTAT func_cloudvela_huitpxml_msg_pm_info_confirm_received_handle(StrMsg_HUITP_
 
 OPSTAT func_cloudvela_huitpxml_msg_pm_test_command_req_received_handle(StrMsg_HUITP_MSGID_uni_test_command_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->reqValue.ieId = HUITP_ENDIAN_EXG16(rcv->reqValue.ieId);
 	rcv->reqValue.ieLen = HUITP_ENDIAN_EXG16(rcv->reqValue.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->reqValue.ieId != HUITP_IEID_uni_test_command_value) || (rcv->reqValue.ieLen != (sizeof(StrIe_HUITP_IEID_uni_test_command_value_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
@@ -1583,8 +1573,9 @@ OPSTAT func_cloudvela_huitpxml_msg_pm_test_command_req_received_handle(StrMsg_HU
 	snd.testCmdPar4 = HUITP_ENDIAN_EXG32(rcv->reqValue.testCmdPar4);
 	strncpy(snd.desc, rcv->reqValue.testCmdDesc, strlen(rcv->reqValue.testCmdDesc)<HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN?strlen(rcv->reqValue.testCmdDesc):HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN);
 	snd.length = sizeof(msg_struct_cloudvela_test_command_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_TEST_COMMAND_REQ, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_TEST_COMMAND_REQ, TASK_ID_SYSPM, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_TEST_COMMAND_REQ, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1592,18 +1583,16 @@ OPSTAT func_cloudvela_huitpxml_msg_pm_test_command_req_received_handle(StrMsg_HU
 
 OPSTAT func_cloudvela_huitpxml_msg_pm_test_command_confirm_received_handle(StrMsg_HUITP_MSGID_uni_test_command_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
 	rcv->confirmValue.ieId = HUITP_ENDIAN_EXG16(rcv->confirmValue.ieId);
 	rcv->confirmValue.ieLen = HUITP_ENDIAN_EXG16(rcv->confirmValue.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->confirmValue.ieId != HUITP_IEID_uni_test_command_value) || (rcv->confirmValue.ieLen != (sizeof(StrIe_HUITP_IEID_uni_test_command_value_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
@@ -1620,8 +1609,9 @@ OPSTAT func_cloudvela_huitpxml_msg_pm_test_command_confirm_received_handle(StrMs
 	strncpy(snd.desc, rcv->confirmValue.testCmdDesc, strlen(rcv->confirmValue.testCmdDesc)<HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN?strlen(rcv->confirmValue.testCmdDesc):HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN);
 
 	snd.length = sizeof(msg_struct_cloudvela_test_command_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_TEST_COMMAND_CONFIRM, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_TEST_COMMAND_CONFIRM, TASK_ID_SYSPM, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_TEST_COMMAND_CONFIRM, TASK_ID_SYSPM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1629,18 +1619,16 @@ OPSTAT func_cloudvela_huitpxml_msg_pm_test_command_confirm_received_handle(StrMs
 
 OPSTAT func_cloudvela_huitpxml_msg_inventory_req_received_handle(StrMsg_HUITP_MSGID_uni_inventory_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->reqValue.ieId = HUITP_ENDIAN_EXG16(rcv->reqValue.ieId);
 	rcv->reqValue.ieLen = HUITP_ENDIAN_EXG16(rcv->reqValue.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->reqValue.ieId != HUITP_IEID_uni_inventory_element) || (rcv->reqValue.ieLen != (sizeof(StrIe_HUITP_IEID_uni_inventory_element_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
@@ -1662,8 +1650,9 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_req_received_handle(StrMsg_HUITP_MS
 	snd.dbTotalLen = HUITP_ENDIAN_EXG32(rcv->reqValue.dbTotalLen);
 
 	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1671,18 +1660,16 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_req_received_handle(StrMsg_HUITP_MS
 
 OPSTAT func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(StrMsg_HUITP_MSGID_uni_inventory_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
 	rcv->confirmValue.ieId = HUITP_ENDIAN_EXG16(rcv->confirmValue.ieId);
 	rcv->confirmValue.ieLen = HUITP_ENDIAN_EXG16(rcv->confirmValue.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->confirmValue.ieId != HUITP_IEID_uni_inventory_element) || (rcv->confirmValue.ieLen != (sizeof(StrIe_HUITP_IEID_uni_inventory_element_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
@@ -1704,8 +1691,9 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(StrMsg_HUIT
 	snd.dbTotalLen = HUITP_ENDIAN_EXG32(rcv->confirmValue.dbTotalLen);
 
 	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1713,20 +1701,18 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(StrMsg_HUIT
 
 OPSTAT func_cloudvela_huitpxml_msg_sw_package_req_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->segValue.ieId = HUITP_ENDIAN_EXG16(rcv->segValue.ieId);
 	rcv->segValue.ieLen = HUITP_ENDIAN_EXG16(rcv->segValue.ieLen);
 	rcv->body.ieId = HUITP_ENDIAN_EXG16(rcv->body.ieId);
 	rcv->body.ieLen = HUITP_ENDIAN_EXG16(rcv->body.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->segValue.ieId != HUITP_IEID_uni_com_segment) || (rcv->segValue.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_segment_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->body.ieId != HUITP_IEID_uni_sw_package_body) || (rcv->body.ieLen != (sizeof(StrIe_HUITP_IEID_uni_sw_package_body_t) - 4)))
@@ -1753,8 +1739,9 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_req_received_handle(StrMsg_HUITP_M
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: HUITP and COMMSG parameter set error!\n");
 	memcpy(snd.body, rcv->body.swPkgBody, sizeof(rcv->body.swPkgBody)<sizeof(snd.body)?sizeof(rcv->body.swPkgBody):sizeof(snd.body));
 	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1762,20 +1749,18 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_req_received_handle(StrMsg_HUITP_M
 
 OPSTAT func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
 	rcv->segValue.ieId = HUITP_ENDIAN_EXG16(rcv->segValue.ieId);
 	rcv->segValue.ieLen = HUITP_ENDIAN_EXG16(rcv->segValue.ieLen);
 	rcv->body.ieId = HUITP_ENDIAN_EXG16(rcv->body.ieId);
 	rcv->body.ieLen = HUITP_ENDIAN_EXG16(rcv->body.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->segValue.ieId != HUITP_IEID_uni_com_segment) || (rcv->segValue.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_segment_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->body.ieId != HUITP_IEID_uni_sw_package_body) || (rcv->body.ieLen != (sizeof(StrIe_HUITP_IEID_uni_sw_package_body_t) - 4)))
@@ -1802,8 +1787,9 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(StrMsg_HUI
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: HUITP and COMMSG parameter set error!\n");
 	memcpy(snd.body, rcv->body.swPkgBody, sizeof(rcv->body.swPkgBody)<sizeof(snd.body)?sizeof(rcv->body.swPkgBody):sizeof(snd.body));
 	snd.length = sizeof(msg_struct_cloudvela_sysswm_sw_package_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1811,18 +1797,16 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(StrMsg_HUI
 
 OPSTAT func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_req_received_handle(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->dataReq.ieId = HUITP_ENDIAN_EXG16(rcv->dataReq.ieId);
 	rcv->dataReq.ieLen = HUITP_ENDIAN_EXG16(rcv->dataReq.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->dataReq.ieId != HUITP_IEID_uni_scale_weight_req) || (rcv->dataReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_scale_weight_req_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
@@ -1833,8 +1817,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_req_received_handle(StrM
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.reqType = rcv->dataReq.type;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfsc_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1842,16 +1827,14 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_req_received_handle(StrM
 
 OPSTAT func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_l3bfsc_data_confirm_t snd;
@@ -1859,8 +1842,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_confirm_received_handle(
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfsc_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1868,16 +1852,14 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_confirm_received_handle(
 
 OPSTAT func_cloudvela_huitpxml_msg_bfsc_comb_scale_event_confirm_received_handle(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_l3bfsc_event_confirm_t snd;
@@ -1885,28 +1867,27 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_comb_scale_event_confirm_received_handle
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfsc_event_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 
 	//返回
 	return SUCCESS;}
 
 OPSTAT func_cloudvela_huitpxml_msg_bfsc_comb_scale_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
 	rcv->cmdReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieLen);
 	rcv->cfgReq.ieId = HUITP_ENDIAN_EXG16(rcv->cfgReq.ieId);
 	rcv->cfgReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cfgReq.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_scale_weight_cmd) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_scale_weight_cmd_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->cfgReq.ieId != HUITP_IEID_uni_scale_weight_cfg_par) || (rcv->cfgReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t) - 4)))
@@ -1923,8 +1904,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_comb_scale_ctrl_req_received_handle(StrM
 	snd.staStartTime = HUITP_ENDIAN_EXG32(rcv->cfgReq.staStartTime);
 	snd.staReportDuration = HUITP_ENDIAN_EXG32(rcv->cfgReq.staReportDuration);
 	snd.length = sizeof(msg_struct_cloudvela_l3bfsc_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_CTRL_REQ, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFSC_CTRL_REQ, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_CTRL_REQ, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1932,16 +1914,14 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_comb_scale_ctrl_req_received_handle(StrM
 
 OPSTAT func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle(StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_l3bfsc_statistic_confirm_t snd;
@@ -1949,8 +1929,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle(StrMsg
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfsc_statistic_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1958,18 +1939,16 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle(StrMsg
 
 OPSTAT func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_req_received_handle(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->dataReq.ieId = HUITP_ENDIAN_EXG16(rcv->dataReq.ieId);
 	rcv->dataReq.ieLen = HUITP_ENDIAN_EXG16(rcv->dataReq.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->dataReq.ieId != HUITP_IEID_uni_scale_weight_req) || (rcv->dataReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_scale_weight_req_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
@@ -1980,8 +1959,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_req_received_handle(StrM
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.reqType = rcv->dataReq.type;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfdf_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFDF_DATA_REQ, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFDF_DATA_REQ, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFDF_DATA_REQ, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1989,16 +1969,14 @@ OPSTAT func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_req_received_handle(StrM
 
 OPSTAT func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_l3bfdf_data_confirm_t snd;
@@ -2006,8 +1984,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_confirm_received_handle(
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfdf_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFDF_DATA_CONFIRM, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFDF_DATA_CONFIRM, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFDF_DATA_CONFIRM, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2015,16 +1994,14 @@ OPSTAT func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_confirm_received_handle(
 
 OPSTAT func_cloudvela_huitpxml_msg_bfdf_comb_scale_event_confirm_received_handle(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_l3bfdf_event_confirm_t snd;
@@ -2032,28 +2009,27 @@ OPSTAT func_cloudvela_huitpxml_msg_bfdf_comb_scale_event_confirm_received_handle
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfdf_event_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFDF_EVENT_CONFIRM, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFDF_EVENT_CONFIRM, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFDF_EVENT_CONFIRM, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
 
 	//返回
 	return SUCCESS;}
 
 OPSTAT func_cloudvela_huitpxml_msg_bfdf_comb_scale_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
 	rcv->cmdReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieLen);
 	rcv->cfgReq.ieId = HUITP_ENDIAN_EXG16(rcv->cfgReq.ieId);
 	rcv->cfgReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cfgReq.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_scale_weight_cmd) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_scale_weight_cmd_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->cfgReq.ieId != HUITP_IEID_uni_scale_weight_cfg_par) || (rcv->cfgReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t) - 4)))
@@ -2065,8 +2041,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfdf_comb_scale_ctrl_req_received_handle(StrM
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfdf_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFDF_CTRL_REQ, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFDF_CTRL_REQ, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFDF_CTRL_REQ, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2074,16 +2051,14 @@ OPSTAT func_cloudvela_huitpxml_msg_bfdf_comb_scale_ctrl_req_received_handle(StrM
 
 OPSTAT func_cloudvela_huitpxml_msg_bfdf_statistic_confirm_received_handle(StrMsg_HUITP_MSGID_uni_bfdf_statistic_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_l3bfdf_statistic_confirm_t snd;
@@ -2091,8 +2066,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfdf_statistic_confirm_received_handle(StrMsg
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfdf_statistic_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFDF_STATISTIC_CONFIRM, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFDF_STATISTIC_CONFIRM, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFDF_STATISTIC_CONFIRM, TASK_ID_L3BFDF, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2100,18 +2076,16 @@ OPSTAT func_cloudvela_huitpxml_msg_bfdf_statistic_confirm_received_handle(StrMsg
 
 OPSTAT func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_req_received_handle(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->dataReq.ieId = HUITP_ENDIAN_EXG16(rcv->dataReq.ieId);
 	rcv->dataReq.ieLen = HUITP_ENDIAN_EXG16(rcv->dataReq.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->dataReq.ieId != HUITP_IEID_uni_scale_weight_req) || (rcv->dataReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_scale_weight_req_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
@@ -2122,8 +2096,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_req_received_handle(StrM
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.reqType = rcv->dataReq.type;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfhs_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFHS_DATA_REQ, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFHS_DATA_REQ, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFHS_DATA_REQ, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2131,16 +2106,14 @@ OPSTAT func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_req_received_handle(StrM
 
 OPSTAT func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_l3bfhs_data_confirm_t snd;
@@ -2148,8 +2121,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_confirm_received_handle(
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfhs_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFHS_DATA_CONFIRM, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFHS_DATA_CONFIRM, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFHS_DATA_CONFIRM, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2157,16 +2131,14 @@ OPSTAT func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_confirm_received_handle(
 
 OPSTAT func_cloudvela_huitpxml_msg_bfhs_comb_scale_event_confirm_received_handle(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_l3bfhs_event_confirm_t snd;
@@ -2174,28 +2146,27 @@ OPSTAT func_cloudvela_huitpxml_msg_bfhs_comb_scale_event_confirm_received_handle
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfhs_event_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFHS_EVENT_CONFIRM, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFHS_EVENT_CONFIRM, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFHS_EVENT_CONFIRM, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
 
 	//返回
 	return SUCCESS;}
 
 OPSTAT func_cloudvela_huitpxml_msg_bfhs_comb_scale_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
 	rcv->cmdReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieLen);
 	rcv->cfgReq.ieId = HUITP_ENDIAN_EXG16(rcv->cfgReq.ieId);
 	rcv->cfgReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cfgReq.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_scale_weight_cmd) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_scale_weight_cmd_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->cfgReq.ieId != HUITP_IEID_uni_scale_weight_cfg_par) || (rcv->cfgReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t) - 4)))
@@ -2207,8 +2178,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfhs_comb_scale_ctrl_req_received_handle(StrM
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfhs_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFHS_CTRL_REQ, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFHS_CTRL_REQ, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFHS_CTRL_REQ, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2216,16 +2188,14 @@ OPSTAT func_cloudvela_huitpxml_msg_bfhs_comb_scale_ctrl_req_received_handle(StrM
 
 OPSTAT func_cloudvela_huitpxml_msg_bfhs_statistic_confirm_received_handle(StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_l3bfhs_statistic_confirm_t snd;
@@ -2233,8 +2203,9 @@ OPSTAT func_cloudvela_huitpxml_msg_bfhs_statistic_confirm_received_handle(StrMsg
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_l3bfhs_statistic_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFHS_STATISTIC_CONFIRM, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_L3BFHS_STATISTIC_CONFIRM, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_L3BFHS_STATISTIC_CONFIRM, TASK_ID_L3BFHS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2424,16 +2395,14 @@ void func_cloudvela_huitpxml_msg_generate_test_data(void)
 
 OPSTAT func_cloudvela_huitpxml_msg_emc_data_req_received_handle(StrMsg_HUITP_MSGID_uni_emc_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_emc_data_req_t snd;
@@ -2441,8 +2410,9 @@ OPSTAT func_cloudvela_huitpxml_msg_emc_data_req_received_handle(StrMsg_HUITP_MSG
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_emc_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_EMC_DATA_REQ, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_EMC].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_EMC_DATA_REQ, TASK_ID_EMC, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_EMC_DATA_REQ, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_EMC].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2450,16 +2420,14 @@ OPSTAT func_cloudvela_huitpxml_msg_emc_data_req_received_handle(StrMsg_HUITP_MSG
 
 OPSTAT func_cloudvela_huitpxml_msg_emc_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_emc_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_emc_data_confirm_t snd;
@@ -2467,8 +2435,9 @@ OPSTAT func_cloudvela_huitpxml_msg_emc_data_confirm_received_handle(StrMsg_HUITP
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_emc_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_EMC_DATA_CONFIRM, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_EMC].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_EMC_DATA_CONFIRM, TASK_ID_EMC, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_EMC_DATA_CONFIRM, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_EMC].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2476,12 +2445,10 @@ OPSTAT func_cloudvela_huitpxml_msg_emc_data_confirm_received_handle(StrMsg_HUITP
 
 OPSTAT func_cloudvela_huitpxml_msg_emc_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
 	rcv->cmdReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieLen);
 	rcv->switchState.ieId = HUITP_ENDIAN_EXG16(rcv->switchState.ieId);
@@ -2496,9 +2463,9 @@ OPSTAT func_cloudvela_huitpxml_msg_emc_ctrl_req_received_handle(StrMsg_HUITP_MSG
 	rcv->modbusAddr.ieLen = HUITP_ENDIAN_EXG16(rcv->modbusAddr.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
-		if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->switchState.ieId != HUITP_IEID_uni_com_switch_onoff) || (rcv->switchState.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_switch_onoff_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
@@ -2524,8 +2491,9 @@ OPSTAT func_cloudvela_huitpxml_msg_emc_ctrl_req_received_handle(StrMsg_HUITP_MSG
 	snd.opt.interSample = HUITP_ENDIAN_EXG32(rcv->sampleNbr.value);
 	snd.opt.meausTimes = HUITP_ENDIAN_EXG32(rcv->sampleCycle.value);
 	snd.length = sizeof(msg_struct_cloudvela_emc_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_EMC_CTRL_REQ, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_EMC].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_EMC_CTRL_REQ, TASK_ID_EMC, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_EMC_CTRL_REQ, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_EMC].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2533,16 +2501,14 @@ OPSTAT func_cloudvela_huitpxml_msg_emc_ctrl_req_received_handle(StrMsg_HUITP_MSG
 
 OPSTAT func_cloudvela_huitpxml_msg_co1_data_req_received_handle(StrMsg_HUITP_MSGID_uni_co1_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_co1_data_req_t snd;
@@ -2550,8 +2516,9 @@ OPSTAT func_cloudvela_huitpxml_msg_co1_data_req_received_handle(StrMsg_HUITP_MSG
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_co1_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_CO1_DATA_REQ, TASK_ID_CO1, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_CO1].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_CO1_DATA_REQ, TASK_ID_CO1, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_CO1_DATA_REQ, TASK_ID_CO1, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_CO1].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2559,16 +2526,14 @@ OPSTAT func_cloudvela_huitpxml_msg_co1_data_req_received_handle(StrMsg_HUITP_MSG
 
 OPSTAT func_cloudvela_huitpxml_msg_co1_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_co1_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_co1_data_confirm_t snd;
@@ -2585,16 +2550,14 @@ OPSTAT func_cloudvela_huitpxml_msg_co1_data_confirm_received_handle(StrMsg_HUITP
 
 OPSTAT func_cloudvela_huitpxml_msg_hcho_data_req_received_handle(StrMsg_HUITP_MSGID_uni_hcho_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_hcho_data_req_t snd;
@@ -2602,8 +2565,9 @@ OPSTAT func_cloudvela_huitpxml_msg_hcho_data_req_received_handle(StrMsg_HUITP_MS
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_hcho_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_HCHO_DATA_REQ, TASK_ID_HCHO, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HCHO].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_HCHO_DATA_REQ, TASK_ID_HCHO, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_HCHO_DATA_REQ, TASK_ID_HCHO, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HCHO].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2611,16 +2575,14 @@ OPSTAT func_cloudvela_huitpxml_msg_hcho_data_req_received_handle(StrMsg_HUITP_MS
 
 OPSTAT func_cloudvela_huitpxml_msg_hcho_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_hcho_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_hcho_data_confirm_t snd;
@@ -2628,8 +2590,9 @@ OPSTAT func_cloudvela_huitpxml_msg_hcho_data_confirm_received_handle(StrMsg_HUIT
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_hcho_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_HCHO_DATA_CONFIRM, TASK_ID_HCHO, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HCHO].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_HCHO_DATA_CONFIRM, TASK_ID_HCHO, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_HCHO_DATA_CONFIRM, TASK_ID_HCHO, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HCHO].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2637,16 +2600,14 @@ OPSTAT func_cloudvela_huitpxml_msg_hcho_data_confirm_received_handle(StrMsg_HUIT
 
 OPSTAT func_cloudvela_huitpxml_msg_alcohol_data_req_received_handle(StrMsg_HUITP_MSGID_uni_alcohol_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_alcohol_data_req_t snd;
@@ -2654,8 +2615,9 @@ OPSTAT func_cloudvela_huitpxml_msg_alcohol_data_req_received_handle(StrMsg_HUITP
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_alcohol_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_ALCOHOL_DATA_REQ, TASK_ID_ALCOHOL, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_ALCOHOL].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_ALCOHOL_DATA_REQ, TASK_ID_ALCOHOL, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_ALCOHOL_DATA_REQ, TASK_ID_ALCOHOL, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_ALCOHOL].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2663,16 +2625,14 @@ OPSTAT func_cloudvela_huitpxml_msg_alcohol_data_req_received_handle(StrMsg_HUITP
 
 OPSTAT func_cloudvela_huitpxml_msg_alcohol_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_alcohol_data_confirm_t snd;
@@ -2680,8 +2640,9 @@ OPSTAT func_cloudvela_huitpxml_msg_alcohol_data_confirm_received_handle(StrMsg_H
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_alcohol_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_ALCOHOL_DATA_CONFIRM, TASK_ID_ALCOHOL, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_ALCOHOL].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_ALCOHOL_DATA_CONFIRM, TASK_ID_ALCOHOL, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_ALCOHOL_DATA_CONFIRM, TASK_ID_ALCOHOL, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_ALCOHOL].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2689,16 +2650,14 @@ OPSTAT func_cloudvela_huitpxml_msg_alcohol_data_confirm_received_handle(StrMsg_H
 
 OPSTAT func_cloudvela_huitpxml_msg_pm25_data_req_received_handle(StrMsg_HUITP_MSGID_uni_pm25_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_pm25_data_req_t snd;
@@ -2706,8 +2665,9 @@ OPSTAT func_cloudvela_huitpxml_msg_pm25_data_req_received_handle(StrMsg_HUITP_MS
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_pm25_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_PM25_DATA_REQ, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_PM25_DATA_REQ, TASK_ID_PM25, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_PM25_DATA_REQ, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2715,16 +2675,14 @@ OPSTAT func_cloudvela_huitpxml_msg_pm25_data_req_received_handle(StrMsg_HUITP_MS
 
 OPSTAT func_cloudvela_huitpxml_msg_pm25_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_pm25_data_confirm_t snd;
@@ -2732,8 +2690,9 @@ OPSTAT func_cloudvela_huitpxml_msg_pm25_data_confirm_received_handle(StrMsg_HUIT
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_pm25_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_PM25_DATA_CONFIRM, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_PM25_DATA_CONFIRM, TASK_ID_PM25, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_PM25_DATA_CONFIRM, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2741,12 +2700,10 @@ OPSTAT func_cloudvela_huitpxml_msg_pm25_data_confirm_received_handle(StrMsg_HUIT
 
 OPSTAT func_cloudvela_huitpxml_msg_pm25_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
 	rcv->cmdReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieLen);
 	rcv->switchState.ieId = HUITP_ENDIAN_EXG16(rcv->switchState.ieId);
@@ -2761,9 +2718,9 @@ OPSTAT func_cloudvela_huitpxml_msg_pm25_ctrl_req_received_handle(StrMsg_HUITP_MS
 	rcv->modbusAddr.ieLen = HUITP_ENDIAN_EXG16(rcv->modbusAddr.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
-		if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->switchState.ieId != HUITP_IEID_uni_com_switch_onoff) || (rcv->switchState.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_switch_onoff_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
@@ -2789,8 +2746,9 @@ OPSTAT func_cloudvela_huitpxml_msg_pm25_ctrl_req_received_handle(StrMsg_HUITP_MS
 	snd.opt.interSample = HUITP_ENDIAN_EXG32(rcv->sampleNbr.value);
 	snd.opt.meausTimes = HUITP_ENDIAN_EXG32(rcv->sampleCycle.value);
 	snd.length = sizeof(msg_struct_cloudvela_pm25_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_PM25_CTRL_REQ, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_PM25_CTRL_REQ, TASK_ID_PM25, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_PM25_CTRL_REQ, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2798,16 +2756,14 @@ OPSTAT func_cloudvela_huitpxml_msg_pm25_ctrl_req_received_handle(StrMsg_HUITP_MS
 
 OPSTAT func_cloudvela_huitpxml_msg_pm25sp_data_req_received_handle(StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_pm25sp_data_req_t snd;
@@ -2815,8 +2771,9 @@ OPSTAT func_cloudvela_huitpxml_msg_pm25sp_data_req_received_handle(StrMsg_HUITP_
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_pm25sp_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_PM25SP_DATA_REQ, TASK_ID_PM25SHARP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25SHARP].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_PM25SP_DATA_REQ, TASK_ID_PM25SHARP, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_PM25SP_DATA_REQ, TASK_ID_PM25SHARP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25SHARP].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2824,16 +2781,14 @@ OPSTAT func_cloudvela_huitpxml_msg_pm25sp_data_req_received_handle(StrMsg_HUITP_
 
 OPSTAT func_cloudvela_huitpxml_msg_pm25sp_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_pm25sp_data_confirm_t snd;
@@ -2841,8 +2796,9 @@ OPSTAT func_cloudvela_huitpxml_msg_pm25sp_data_confirm_received_handle(StrMsg_HU
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_pm25sp_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_PM25SP_DATA_CONFIRM, TASK_ID_PM25SHARP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25SHARP].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_PM25SP_DATA_CONFIRM, TASK_ID_PM25SHARP, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_PM25SP_DATA_CONFIRM, TASK_ID_PM25SHARP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25SHARP].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2850,16 +2806,14 @@ OPSTAT func_cloudvela_huitpxml_msg_pm25sp_data_confirm_received_handle(StrMsg_HU
 
 OPSTAT func_cloudvela_huitpxml_msg_windspd_data_req_received_handle(StrMsg_HUITP_MSGID_uni_windspd_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_windspd_data_req_t snd;
@@ -2867,8 +2821,9 @@ OPSTAT func_cloudvela_huitpxml_msg_windspd_data_req_received_handle(StrMsg_HUITP
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_windspd_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDSPD].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDSPD].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2876,16 +2831,14 @@ OPSTAT func_cloudvela_huitpxml_msg_windspd_data_req_received_handle(StrMsg_HUITP
 
 OPSTAT func_cloudvela_huitpxml_msg_windspd_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_windspd_data_confirm_t snd;
@@ -2893,8 +2846,9 @@ OPSTAT func_cloudvela_huitpxml_msg_windspd_data_confirm_received_handle(StrMsg_H
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_windspd_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_DATA_CONFIRM, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDSPD].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_WINDSPD_DATA_CONFIRM, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_DATA_CONFIRM, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDSPD].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2902,12 +2856,10 @@ OPSTAT func_cloudvela_huitpxml_msg_windspd_data_confirm_received_handle(StrMsg_H
 
 OPSTAT func_cloudvela_huitpxml_msg_windspd_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
 	rcv->cmdReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieLen);
 	rcv->switchState.ieId = HUITP_ENDIAN_EXG16(rcv->switchState.ieId);
@@ -2922,9 +2874,9 @@ OPSTAT func_cloudvela_huitpxml_msg_windspd_ctrl_req_received_handle(StrMsg_HUITP
 	rcv->modbusAddr.ieLen = HUITP_ENDIAN_EXG16(rcv->modbusAddr.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
-		if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->switchState.ieId != HUITP_IEID_uni_com_switch_onoff) || (rcv->switchState.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_switch_onoff_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
@@ -2950,8 +2902,9 @@ OPSTAT func_cloudvela_huitpxml_msg_windspd_ctrl_req_received_handle(StrMsg_HUITP
 	snd.opt.interSample = HUITP_ENDIAN_EXG32(rcv->sampleNbr.value);
 	snd.opt.meausTimes = HUITP_ENDIAN_EXG32(rcv->sampleCycle.value);
 	snd.length = sizeof(msg_struct_cloudvela_windspd_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDSPD].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDSPD].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2959,16 +2912,14 @@ OPSTAT func_cloudvela_huitpxml_msg_windspd_ctrl_req_received_handle(StrMsg_HUITP
 
 OPSTAT func_cloudvela_huitpxml_msg_winddir_data_req_received_handle(StrMsg_HUITP_MSGID_uni_winddir_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_winddir_data_req_t snd;
@@ -2976,8 +2927,9 @@ OPSTAT func_cloudvela_huitpxml_msg_winddir_data_req_received_handle(StrMsg_HUITP
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_winddir_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDDIR].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDDIR].taskName);
 
 	//返回
 	return SUCCESS;
@@ -2985,16 +2937,14 @@ OPSTAT func_cloudvela_huitpxml_msg_winddir_data_req_received_handle(StrMsg_HUITP
 
 OPSTAT func_cloudvela_huitpxml_msg_winddir_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_winddir_data_confirm_t snd;
@@ -3002,8 +2952,9 @@ OPSTAT func_cloudvela_huitpxml_msg_winddir_data_confirm_received_handle(StrMsg_H
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_winddir_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_DATA_CONFIRM, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDDIR].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_WINDDIR_DATA_CONFIRM, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_DATA_CONFIRM, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDDIR].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3011,12 +2962,10 @@ OPSTAT func_cloudvela_huitpxml_msg_winddir_data_confirm_received_handle(StrMsg_H
 
 OPSTAT func_cloudvela_huitpxml_msg_winddir_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
 	rcv->cmdReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieLen);
 	rcv->switchState.ieId = HUITP_ENDIAN_EXG16(rcv->switchState.ieId);
@@ -3031,9 +2980,9 @@ OPSTAT func_cloudvela_huitpxml_msg_winddir_ctrl_req_received_handle(StrMsg_HUITP
 	rcv->modbusAddr.ieLen = HUITP_ENDIAN_EXG16(rcv->modbusAddr.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
-		if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->switchState.ieId != HUITP_IEID_uni_com_switch_onoff) || (rcv->switchState.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_switch_onoff_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
@@ -3059,8 +3008,9 @@ OPSTAT func_cloudvela_huitpxml_msg_winddir_ctrl_req_received_handle(StrMsg_HUITP
 	snd.opt.interSample = HUITP_ENDIAN_EXG32(rcv->sampleNbr.value);
 	snd.opt.meausTimes = HUITP_ENDIAN_EXG32(rcv->sampleCycle.value);
 	snd.length = sizeof(msg_struct_cloudvela_winddir_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDDIR].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDDIR].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3068,16 +3018,14 @@ OPSTAT func_cloudvela_huitpxml_msg_winddir_ctrl_req_received_handle(StrMsg_HUITP
 
 OPSTAT func_cloudvela_huitpxml_msg_temp_data_req_received_handle(StrMsg_HUITP_MSGID_uni_temp_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_temp_data_req_t snd;
@@ -3085,8 +3033,9 @@ OPSTAT func_cloudvela_huitpxml_msg_temp_data_req_received_handle(StrMsg_HUITP_MS
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_temp_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_TEMP_DATA_REQ, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TEMP].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_TEMP_DATA_REQ, TASK_ID_TEMP, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_TEMP_DATA_REQ, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TEMP].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3094,16 +3043,14 @@ OPSTAT func_cloudvela_huitpxml_msg_temp_data_req_received_handle(StrMsg_HUITP_MS
 
 OPSTAT func_cloudvela_huitpxml_msg_temp_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_temp_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_temp_data_confirm_t snd;
@@ -3111,8 +3058,9 @@ OPSTAT func_cloudvela_huitpxml_msg_temp_data_confirm_received_handle(StrMsg_HUIT
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_temp_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_TEMP_DATA_CONFIRM, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TEMP].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_TEMP_DATA_CONFIRM, TASK_ID_TEMP, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_TEMP_DATA_CONFIRM, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TEMP].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3120,12 +3068,10 @@ OPSTAT func_cloudvela_huitpxml_msg_temp_data_confirm_received_handle(StrMsg_HUIT
 
 OPSTAT func_cloudvela_huitpxml_msg_temp_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
 	rcv->cmdReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieLen);
 	rcv->switchState.ieId = HUITP_ENDIAN_EXG16(rcv->switchState.ieId);
@@ -3140,9 +3086,9 @@ OPSTAT func_cloudvela_huitpxml_msg_temp_ctrl_req_received_handle(StrMsg_HUITP_MS
 	rcv->modbusAddr.ieLen = HUITP_ENDIAN_EXG16(rcv->modbusAddr.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
-		if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->switchState.ieId != HUITP_IEID_uni_com_switch_onoff) || (rcv->switchState.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_switch_onoff_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
@@ -3168,8 +3114,9 @@ OPSTAT func_cloudvela_huitpxml_msg_temp_ctrl_req_received_handle(StrMsg_HUITP_MS
 	snd.opt.interSample = HUITP_ENDIAN_EXG32(rcv->sampleNbr.value);
 	snd.opt.meausTimes = HUITP_ENDIAN_EXG32(rcv->sampleCycle.value);
 	snd.length = sizeof(msg_struct_cloudvela_temp_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_TEMP_CTRL_REQ, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TEMP].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_TEMP_CTRL_REQ, TASK_ID_TEMP, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_TEMP_CTRL_REQ, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TEMP].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3177,16 +3124,14 @@ OPSTAT func_cloudvela_huitpxml_msg_temp_ctrl_req_received_handle(StrMsg_HUITP_MS
 
 OPSTAT func_cloudvela_huitpxml_msg_humid_data_req_received_handle(StrMsg_HUITP_MSGID_uni_humid_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_humid_data_req_t snd;
@@ -3194,8 +3139,9 @@ OPSTAT func_cloudvela_huitpxml_msg_humid_data_req_received_handle(StrMsg_HUITP_M
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_humid_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_HUMID_DATA_REQ, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HUMID].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_HUMID_DATA_REQ, TASK_ID_HUMID, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_HUMID_DATA_REQ, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HUMID].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3203,16 +3149,14 @@ OPSTAT func_cloudvela_huitpxml_msg_humid_data_req_received_handle(StrMsg_HUITP_M
 
 OPSTAT func_cloudvela_huitpxml_msg_humid_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_humid_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_humid_data_confirm_t snd;
@@ -3220,8 +3164,9 @@ OPSTAT func_cloudvela_huitpxml_msg_humid_data_confirm_received_handle(StrMsg_HUI
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_humid_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_HUMID_DATA_CONFIRM, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HUMID].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_HUMID_DATA_CONFIRM, TASK_ID_HUMID, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_HUMID_DATA_CONFIRM, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HUMID].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3229,12 +3174,10 @@ OPSTAT func_cloudvela_huitpxml_msg_humid_data_confirm_received_handle(StrMsg_HUI
 
 OPSTAT func_cloudvela_huitpxml_msg_humid_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
 	rcv->cmdReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieLen);
 	rcv->switchState.ieId = HUITP_ENDIAN_EXG16(rcv->switchState.ieId);
@@ -3249,9 +3192,9 @@ OPSTAT func_cloudvela_huitpxml_msg_humid_ctrl_req_received_handle(StrMsg_HUITP_M
 	rcv->modbusAddr.ieLen = HUITP_ENDIAN_EXG16(rcv->modbusAddr.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
-		if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->switchState.ieId != HUITP_IEID_uni_com_switch_onoff) || (rcv->switchState.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_switch_onoff_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
@@ -3277,8 +3220,9 @@ OPSTAT func_cloudvela_huitpxml_msg_humid_ctrl_req_received_handle(StrMsg_HUITP_M
 	snd.opt.interSample = HUITP_ENDIAN_EXG32(rcv->sampleNbr.value);
 	snd.opt.meausTimes = HUITP_ENDIAN_EXG32(rcv->sampleCycle.value);
 	snd.length = sizeof(msg_struct_cloudvela_humid_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_HUMID_CTRL_REQ, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HUMID].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_HUMID_CTRL_REQ, TASK_ID_HUMID, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_HUMID_CTRL_REQ, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HUMID].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3286,16 +3230,14 @@ OPSTAT func_cloudvela_huitpxml_msg_humid_ctrl_req_received_handle(StrMsg_HUITP_M
 
 OPSTAT func_cloudvela_huitpxml_msg_airprs_data_req_received_handle(StrMsg_HUITP_MSGID_uni_airprs_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_airprs_data_req_t snd;
@@ -3303,8 +3245,9 @@ OPSTAT func_cloudvela_huitpxml_msg_airprs_data_req_received_handle(StrMsg_HUITP_
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_airprs_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_AIRPRS_DATA_REQ, TASK_ID_AIRPRS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_AIRPRS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_AIRPRS_DATA_REQ, TASK_ID_AIRPRS, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_AIRPRS_DATA_REQ, TASK_ID_AIRPRS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_AIRPRS].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3312,16 +3255,14 @@ OPSTAT func_cloudvela_huitpxml_msg_airprs_data_req_received_handle(StrMsg_HUITP_
 
 OPSTAT func_cloudvela_huitpxml_msg_airprs_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_airprs_data_confirm_t snd;
@@ -3329,8 +3270,9 @@ OPSTAT func_cloudvela_huitpxml_msg_airprs_data_confirm_received_handle(StrMsg_HU
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_airprs_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_AIRPRS_DATA_CONFIRM, TASK_ID_AIRPRS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_AIRPRS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_AIRPRS_DATA_CONFIRM, TASK_ID_AIRPRS, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_AIRPRS_DATA_CONFIRM, TASK_ID_AIRPRS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_AIRPRS].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3338,16 +3280,14 @@ OPSTAT func_cloudvela_huitpxml_msg_airprs_data_confirm_received_handle(StrMsg_HU
 
 OPSTAT func_cloudvela_huitpxml_msg_noise_data_req_received_handle(StrMsg_HUITP_MSGID_uni_noise_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_noise_data_req_t snd;
@@ -3355,8 +3295,9 @@ OPSTAT func_cloudvela_huitpxml_msg_noise_data_req_received_handle(StrMsg_HUITP_M
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_noise_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_NOISE_DATA_REQ, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_NOISE].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_NOISE_DATA_REQ, TASK_ID_NOISE, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_NOISE_DATA_REQ, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_NOISE].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3364,16 +3305,14 @@ OPSTAT func_cloudvela_huitpxml_msg_noise_data_req_received_handle(StrMsg_HUITP_M
 
 OPSTAT func_cloudvela_huitpxml_msg_noise_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_noise_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_noise_data_confirm_t snd;
@@ -3381,8 +3320,9 @@ OPSTAT func_cloudvela_huitpxml_msg_noise_data_confirm_received_handle(StrMsg_HUI
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_noise_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_NOISE_DATA_CONFIRM, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_NOISE].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_NOISE_DATA_CONFIRM, TASK_ID_NOISE, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_NOISE_DATA_CONFIRM, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_NOISE].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3390,12 +3330,10 @@ OPSTAT func_cloudvela_huitpxml_msg_noise_data_confirm_received_handle(StrMsg_HUI
 
 OPSTAT func_cloudvela_huitpxml_msg_noise_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
 	rcv->cmdReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieLen);
 	rcv->switchState.ieId = HUITP_ENDIAN_EXG16(rcv->switchState.ieId);
@@ -3410,9 +3348,9 @@ OPSTAT func_cloudvela_huitpxml_msg_noise_ctrl_req_received_handle(StrMsg_HUITP_M
 	rcv->modbusAddr.ieLen = HUITP_ENDIAN_EXG16(rcv->modbusAddr.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
-		if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->switchState.ieId != HUITP_IEID_uni_com_switch_onoff) || (rcv->switchState.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_switch_onoff_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
@@ -3438,8 +3376,9 @@ OPSTAT func_cloudvela_huitpxml_msg_noise_ctrl_req_received_handle(StrMsg_HUITP_M
 	snd.opt.interSample = HUITP_ENDIAN_EXG32(rcv->sampleNbr.value);
 	snd.opt.meausTimes = HUITP_ENDIAN_EXG32(rcv->sampleCycle.value);
 	snd.length = sizeof(msg_struct_cloudvela_noise_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_NOISE_CTRL_REQ, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_NOISE].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_NOISE_CTRL_REQ, TASK_ID_NOISE, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_NOISE_CTRL_REQ, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_NOISE].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3447,16 +3386,14 @@ OPSTAT func_cloudvela_huitpxml_msg_noise_ctrl_req_received_handle(StrMsg_HUITP_M
 
 OPSTAT func_cloudvela_huitpxml_msg_ycjk_data_req_received_handle(StrMsg_HUITP_MSGID_uni_ycjk_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_ycjk_data_req_t snd;
@@ -3464,8 +3401,9 @@ OPSTAT func_cloudvela_huitpxml_msg_ycjk_data_req_received_handle(StrMsg_HUITP_MS
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_ycjk_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_YCJK_DATA_REQ, TASK_ID_L3AQYCG20, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_YCJK_DATA_REQ, TASK_ID_L3AQYCG20, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_YCJK_DATA_REQ, TASK_ID_L3AQYCG20, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3473,16 +3411,14 @@ OPSTAT func_cloudvela_huitpxml_msg_ycjk_data_req_received_handle(StrMsg_HUITP_MS
 
 OPSTAT func_cloudvela_huitpxml_msg_ycjk_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_ycjk_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_ycjk_data_confirm_t snd;
@@ -3490,8 +3426,9 @@ OPSTAT func_cloudvela_huitpxml_msg_ycjk_data_confirm_received_handle(StrMsg_HUIT
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_ycjk_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_YCJK_DATA_CONFIRM, TASK_ID_L3AQYCG20, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_YCJK_DATA_CONFIRM, TASK_ID_L3AQYCG20, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_YCJK_DATA_CONFIRM, TASK_ID_L3AQYCG20, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3499,12 +3436,10 @@ OPSTAT func_cloudvela_huitpxml_msg_ycjk_data_confirm_received_handle(StrMsg_HUIT
 
 OPSTAT func_cloudvela_huitpxml_msg_ycjk_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_ycjk_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->sensor.ieId = HUITP_ENDIAN_EXG16(rcv->sensor.ieId);
 	rcv->sensor.ieLen = HUITP_ENDIAN_EXG16(rcv->sensor.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
@@ -3521,8 +3456,8 @@ OPSTAT func_cloudvela_huitpxml_msg_ycjk_ctrl_req_received_handle(StrMsg_HUITP_MS
 	rcv->modbusAddr.ieLen = HUITP_ENDIAN_EXG16(rcv->modbusAddr.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->sensor.ieId != HUITP_IEID_uni_ycjk_sensor_selection) || (rcv->sensor.ieLen != (sizeof(StrIe_HUITP_IEID_uni_ycjk_sensor_selection_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
@@ -3554,8 +3489,9 @@ OPSTAT func_cloudvela_huitpxml_msg_ycjk_ctrl_req_received_handle(StrMsg_HUITP_MS
 	snd.opt.interSample = HUITP_ENDIAN_EXG32(rcv->sampleNbr.value);
 	snd.opt.meausTimes = HUITP_ENDIAN_EXG32(rcv->sampleCycle.value);
 	snd.length = sizeof(msg_struct_cloudvela_ycjk_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_YCJK_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_YCJK_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_YCJK_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3563,16 +3499,14 @@ OPSTAT func_cloudvela_huitpxml_msg_ycjk_ctrl_req_received_handle(StrMsg_HUITP_MS
 
 OPSTAT func_cloudvela_huitpxml_msg_hsmmp_data_req_received_handle(StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_hsmmp_data_req_t snd;
@@ -3580,8 +3514,9 @@ OPSTAT func_cloudvela_huitpxml_msg_hsmmp_data_req_received_handle(StrMsg_HUITP_M
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_hsmmp_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_HSMMP_DATA_REQ, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_HSMMP_DATA_REQ, TASK_ID_HSMMP, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_HSMMP_DATA_REQ, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3589,16 +3524,14 @@ OPSTAT func_cloudvela_huitpxml_msg_hsmmp_data_req_received_handle(StrMsg_HUITP_M
 
 OPSTAT func_cloudvela_huitpxml_msg_hsmmp_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_hsmmp_data_confirm_t snd;
@@ -3606,8 +3539,9 @@ OPSTAT func_cloudvela_huitpxml_msg_hsmmp_data_confirm_received_handle(StrMsg_HUI
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_hsmmp_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_HSMMP_DATA_CONFIRM, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_HSMMP_DATA_CONFIRM, TASK_ID_HSMMP, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_HSMMP_DATA_CONFIRM, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3615,16 +3549,14 @@ OPSTAT func_cloudvela_huitpxml_msg_hsmmp_data_confirm_received_handle(StrMsg_HUI
 
 OPSTAT func_cloudvela_huitpxml_msg_picture_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_picture_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_picture_data_confirm_t snd;
@@ -3632,8 +3564,9 @@ OPSTAT func_cloudvela_huitpxml_msg_picture_data_confirm_received_handle(StrMsg_H
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_picture_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_PICTURE_DATA_CONFIRM, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_PICTURE_DATA_CONFIRM, TASK_ID_HSMMP, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_PICTURE_DATA_CONFIRM, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3642,12 +3575,10 @@ OPSTAT func_cloudvela_huitpxml_msg_picture_data_confirm_received_handle(StrMsg_H
 
 OPSTAT func_cloudvela_huitpxml_msg_hsmmp_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
 	rcv->cmdReq.ieId = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieId);
 	rcv->cmdReq.ieLen = HUITP_ENDIAN_EXG16(rcv->cmdReq.ieLen);
 	rcv->switchState.ieId = HUITP_ENDIAN_EXG16(rcv->switchState.ieId);
@@ -3664,9 +3595,9 @@ OPSTAT func_cloudvela_huitpxml_msg_hsmmp_ctrl_req_received_handle(StrMsg_HUITP_M
 	rcv->reqMotive.ieLen = HUITP_ENDIAN_EXG16(rcv->reqMotive.ieLen);
 
 	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
-		if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	if ((rcv->cmdReq.ieId != HUITP_IEID_uni_com_snr_cmd_tag) || (rcv->cmdReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 	if ((rcv->switchState.ieId != HUITP_IEID_uni_com_switch_onoff) || (rcv->switchState.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_switch_onoff_t) - 4)))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
@@ -3696,8 +3627,9 @@ OPSTAT func_cloudvela_huitpxml_msg_hsmmp_ctrl_req_received_handle(StrMsg_HUITP_M
 	snd.motive = rcv->reqMotive.motive;
 	snd.motiveValue = HUITP_ENDIAN_EXG32(rcv->reqMotive.value);
 	snd.length = sizeof(msg_struct_cloudvela_hsmmp_ctrl_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ, TASK_ID_HSMMP, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3705,16 +3637,14 @@ OPSTAT func_cloudvela_huitpxml_msg_hsmmp_ctrl_req_received_handle(StrMsg_HUITP_M
 
 OPSTAT func_cloudvela_huitpxml_msg_lightstr_data_req_received_handle(StrMsg_HUITP_MSGID_uni_lightstr_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_lightstr_data_req_t snd;
@@ -3722,8 +3652,9 @@ OPSTAT func_cloudvela_huitpxml_msg_lightstr_data_req_received_handle(StrMsg_HUIT
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_lightstr_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_LIGHTSTR_DATA_REQ, TASK_ID_LIGHTSTR, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_LIGHTSTR].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_LIGHTSTR_DATA_REQ, TASK_ID_LIGHTSTR, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_LIGHTSTR_DATA_REQ, TASK_ID_LIGHTSTR, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_LIGHTSTR].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3731,16 +3662,14 @@ OPSTAT func_cloudvela_huitpxml_msg_lightstr_data_req_received_handle(StrMsg_HUIT
 
 OPSTAT func_cloudvela_huitpxml_msg_lightstr_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_lightstr_data_confirm_t snd;
@@ -3748,8 +3677,9 @@ OPSTAT func_cloudvela_huitpxml_msg_lightstr_data_confirm_received_handle(StrMsg_
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_lightstr_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_LIGHTSTR_DATA_CONFIRM, TASK_ID_LIGHTSTR, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_LIGHTSTR].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_LIGHTSTR_DATA_CONFIRM, TASK_ID_LIGHTSTR, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_LIGHTSTR_DATA_CONFIRM, TASK_ID_LIGHTSTR, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_LIGHTSTR].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3757,16 +3687,14 @@ OPSTAT func_cloudvela_huitpxml_msg_lightstr_data_confirm_received_handle(StrMsg_
 
 OPSTAT func_cloudvela_huitpxml_msg_toxicgas_data_req_received_handle(StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
-	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_REQ()
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+//	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_toxicgas_data_req_t snd;
@@ -3774,8 +3702,9 @@ OPSTAT func_cloudvela_huitpxml_msg_toxicgas_data_req_received_handle(StrMsg_HUIT
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = rcv->baseReq.comReq;
 	snd.length = sizeof(msg_struct_cloudvela_toxicgas_data_req_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_TOXICGAS_DATA_REQ, TASK_ID_TOXICGAS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TOXICGAS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_TOXICGAS_DATA_REQ, TASK_ID_TOXICGAS, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_TOXICGAS_DATA_REQ, TASK_ID_TOXICGAS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TOXICGAS].taskName);
 
 	//返回
 	return SUCCESS;
@@ -3783,16 +3712,14 @@ OPSTAT func_cloudvela_huitpxml_msg_toxicgas_data_req_received_handle(StrMsg_HUIT
 
 OPSTAT func_cloudvela_huitpxml_msg_toxicgas_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t *rcv)
 {
-	//int ret = 0;
-
-	//先处理大小端问题
-	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
-	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
-	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
-
-	//IE参数检查
-	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	HCU_HUIXMLCODEC_RCVIE_CONFIRM();
+//	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+//	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+//	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+//
+//	//IE参数检查
+//	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+//		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_cloudvela_toxicgas_data_confirm_t snd;
@@ -3800,8 +3727,9 @@ OPSTAT func_cloudvela_huitpxml_msg_toxicgas_data_confirm_received_handle(StrMsg_
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.length = sizeof(msg_struct_cloudvela_toxicgas_data_confirm_t);
-	if (hcu_message_send(MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM, TASK_ID_TOXICGAS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TOXICGAS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM, TASK_ID_TOXICGAS, TASK_ID_CLOUDVELA);
+//	if (hcu_message_send(MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM, TASK_ID_TOXICGAS, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TOXICGAS].taskName);
 
 	//返回
 	return SUCCESS;

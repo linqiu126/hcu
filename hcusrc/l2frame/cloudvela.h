@@ -184,11 +184,13 @@ extern OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf);
 #define HCU_ERROR_PRINT_CLOUDVELA(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 #define HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(par) 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CLOUDVELA, par)
 
+//申明输出变量
 #define HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION()\
 	CloudDataSendBuf_t pMsgOutput;\
 	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));\
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));\
 
+//编码消息并准备发送到HUITP接口
 #define HCU_CLOUDVELA_GEN_NEW_HUITP_MSG_RESP(strHuiMsg, huiMsgId)\
 	strHuiMsg pMsgProc;\
 	UINT16 msgProcLen = sizeof(strHuiMsg);\
@@ -200,5 +202,32 @@ extern OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf);
 	pMsgProc.baseResp.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_resp_t) - 4);\
 	pMsgProc.baseResp.comResp = rcv.baseResp;\
 
+#define HCU_CLOUDVELA_GEN_NEW_HUITP_MSG_REPORT(strHuiMsg, huiMsgId)\
+	strHuiMsg pMsgProc;\
+	UINT16 msgProcLen = sizeof(strHuiMsg);\
+	memset(&pMsgProc, 0, msgProcLen);\
+	pMsgProc.msgId.cmdId = (huiMsgId>>8)&0xFF;\
+	pMsgProc.msgId.optId = huiMsgId&0xFF;\
+	pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);\
+	pMsgProc.baseReport.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_report);\
+	pMsgProc.baseReport.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_report_t) - 4);\
+	pMsgProc.baseReport.comReport = rcv.baseReport;\
+
+//PACK过程
+#define HCU_CLOUDVELA_PACK_HUITP_MSG(huiMsgId)\
+	StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;\
+	memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));\
+	memcpy(&pMsgInput, &pMsgProc, msgProcLen);\
+	if (func_cloudvela_huitpxml_msg_pack(huiMsgId, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)\
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");\
+
+//其它潜在编码处理过程
+#define HCU_CLOUDVELA_PROCESSING_OTHER_CODEC_PROTOCOL()\
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){\
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");\
+	}\
+	else{\
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");\
+	}\
 
 #endif /* L2FRAME_CLOUDVELA_H_ */

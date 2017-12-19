@@ -151,15 +151,7 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 {
 	int ret;
 
-	//Receive message and copy to local variable
-	msg_struct_com_time_out_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
-		HcuErrorPrint("SYSPM: Receive message error!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
-		return FAILURE;
-	}
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSPM, msg_struct_com_time_out_t);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_SYSPM]是否超限
 	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
@@ -228,8 +220,9 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 			snd.cpuTemp = zHcuSysStaPm.statisCnt.cpu_temp;
 			snd.timeStamp = time(0);
 			snd.length = sizeof(msg_struct_spspm_cloudvela_perfm_report_t);
-			if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
-				HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM);
+//			if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
+//				HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 
 		}
 	}
@@ -356,33 +349,36 @@ void func_syspm_get_cpu_temp(void)
 
 OPSTAT fsm_syspm_cloudvela_alarm_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSPM, msg_struct_cloudvela_spspm_alarm_req_t);
+
 	return SUCCESS;
 }
 
 OPSTAT fsm_syspm_cloudvela_alarm_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSPM, msg_struct_cloudvela_spspm_alarm_confirm_t);
+
 	return SUCCESS;
 }
 
 OPSTAT fsm_syspm_cloudvela_perfm_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSPM, msg_struct_cloudvela_spspm_perfm_req_t);
+
 	return SUCCESS;
 }
 
 OPSTAT fsm_syspm_cloudvela_perfm_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSPM, msg_struct_cloudvela_spspm_perfm_confirm_t);
+
 	return SUCCESS;
 }
 
 //未来需要集中到本地表单，然后通过一定的统计机制触发并汇报告警。当前暂时采用单件汇报机制。
 OPSTAT fsm_syspm_com_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_com_alarm_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_com_alarm_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_alarm_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("SYSPM: Receive Alarm message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSPM, msg_struct_com_alarm_report_t);
 
 	//参数检查
 	if ((rcv.equID <= 0) || (rcv.usercmdid != L3CI_alarm) || (rcv.timeStamp <=0))
@@ -418,8 +414,9 @@ OPSTAT fsm_syspm_com_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 		snd.timeStamp = rcv.timeStamp;
 		snd.alarmContent = rcv.alarmContent;
 		snd.length = sizeof(msg_struct_spspm_cloudvela_alarm_report_t);
-		if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_SYSPM, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM);
+//		if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_TASK(TASK_ID_SYSPM, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 	}
 
 	//State no change
@@ -429,12 +426,7 @@ OPSTAT fsm_syspm_com_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 //未来需要集中到本地表单，然后通过一定的统计机制触发并汇报性能。当前暂时采用单件汇报机制。
 OPSTAT fsm_syspm_com_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_com_pm_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_com_pm_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_pm_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("SYSPM: Receive PM message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSPM, msg_struct_com_pm_report_t);
 
 	//参数检查
 	if ((rcv.usercmdid != L3CI_performance) || (rcv.timeStamp <=0))
@@ -469,8 +461,9 @@ OPSTAT fsm_syspm_com_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		snd.cpuTemp = rcv.cpu_temp;
 		snd.timeStamp = rcv.timeStamp;
 		snd.length = sizeof(msg_struct_spspm_cloudvela_perfm_report_t);
-		if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM);
+//		if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 	}
 
 	//State no change
@@ -479,27 +472,14 @@ OPSTAT fsm_syspm_com_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 
 OPSTAT fsm_syspm_cloudvela_test_command_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_cloudvela_test_command_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_test_command_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_test_command_req_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("SYSPM: Receive TEST_COMMAND_REQ message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
-
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSPM, msg_struct_cloudvela_test_command_req_t);
 
 	return SUCCESS;
 }
 
 OPSTAT fsm_syspm_cloudvela_test_command_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_cloudvela_test_command_confirm_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_test_command_confirm_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_test_command_confirm_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("SYSPM: Receive TEST_COMMAND_CONFIRM message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
-
-
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSPM, msg_struct_cloudvela_test_command_confirm_t);
 
 	return SUCCESS;
 }

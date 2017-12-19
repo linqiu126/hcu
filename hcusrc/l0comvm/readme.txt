@@ -10,7 +10,7 @@
 
 //= ZJL, 2017 Dec.19 CURRENT_SW_DELIVERY 299=>BFHS项目
 = 简化CLOUDVELA等函数的编写过程，向Object-C靠近
-
+= 简化BFDF/BFHS相应的接收与发送部分
 
 //= ZJL, 2017 Dec.11 CURRENT_SW_DELIVERY 298=>BFHS项目
 = 完善BFHS的HUIREST调用函数

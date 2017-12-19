@@ -163,15 +163,7 @@ OPSTAT fsm_bfdfuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 {
 	int ret;
 
-	//Receive message and copy to local variable
-	msg_struct_com_time_out_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
-		HcuErrorPrint("BFDFUICOMM: Receive message error!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFDFUICOMM]++;
-		return FAILURE;
-	}
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_com_time_out_t);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_BFDFUICOMM]是否超限
 	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFDFUICOMM] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
@@ -255,11 +247,7 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 	UINT8	validFlag = 0;
 	UINT8	cmdid = 0;
 
-	msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t)))
-		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
 
 	validFlag = rcv.validFlag;
 	cmdid = rcv.cmdid;
@@ -303,11 +291,7 @@ OPSTAT fsm_bfdfuicomm_sui_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 	UINT8  	sensorid = 0;
 	UINT8	validFlag = 0;
 
-	msg_struct_can_uicomm_test_cmd_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_can_uicomm_test_cmd_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_uicomm_test_cmd_resp_t)))
-		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_can_uicomm_test_cmd_resp_t);
 
 /*	//Special process for calibration command, save result into table `hcubfdfcalibration`
 	if (rcv.cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_ZERO){
@@ -355,8 +339,7 @@ OPSTAT fsm_bfdfuicomm_sui_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_bfdfuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_huicobus_uir_init_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_init_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_init_req_t);
 
 	//查询gTaskL3bfdfContext状态，判定下位机状态
 
@@ -372,64 +355,56 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void 
 
 OPSTAT fsm_bfdfuicomm_huicobus_uir_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_huicobus_uir_resume_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_resume_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_resume_req_t);
 
 	return SUCCESS;
 }
 
 OPSTAT fsm_bfdfuicomm_huicobus_uir_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_huicobus_uir_suspend_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_suspend_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_suspend_req_t);
 
 	return SUCCESS;
 }
 
 OPSTAT fsm_bfdfuicomm_huicobus_uir_cali_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_huicobus_uir_cali_zero_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_cali_zero_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_cali_zero_req_t);
 
 	return SUCCESS;
 }
 
 OPSTAT fsm_bfdfuicomm_huicobus_uir_cali_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_huicobus_uir_cali_full_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_cali_full_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_cali_full_req_t);
 
 	return SUCCESS;
 }
 
 OPSTAT fsm_bfdfuicomm_huicobus_uir_study_start_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_huicobus_uir_study_start_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_study_start_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_study_start_req_t);
 
 	return SUCCESS;
 }
 
 OPSTAT fsm_bfdfuicomm_huicobus_uir_study_stop_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_huicobus_uir_study_stop_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_study_stop_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_study_stop_req_t);
 
 	return SUCCESS;
 }
 
 OPSTAT fsm_bfdfuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_huicobus_uir_test_cmd_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_test_cmd_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_test_cmd_req_t);
 
 	return SUCCESS;
 }
 
 OPSTAT fsm_bfdfuicomm_huicobus_uir_one_key_clean_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_huicobus_uir_one_key_clean_zero_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_one_key_clean_zero_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_one_key_clean_zero_req_t);
 
 	return SUCCESS;
 }

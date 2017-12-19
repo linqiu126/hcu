@@ -143,13 +143,7 @@ OPSTAT func_sysswm_int_init(void)
 OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
-
-	//Receive message and copy to local variable
-	msg_struct_com_time_out_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t)))
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSSWM, msg_struct_com_time_out_t);
 
 	//钩子在此处，检查zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]是否超限
 	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM] > HCU_RUN_ERROR_LEVEL_3_CRITICAL){
@@ -211,14 +205,7 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-
-	//Receive message and copy to local variable
-	msg_struct_cloudvela_sysswm_inventory_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_sysswm_inventory_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_sysswm_inventory_req_t)))
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSSWM, msg_struct_cloudvela_sysswm_inventory_req_t);
 
 	//生成消息并发送给后台
 	msg_struct_sysswm_cloudvela_inventory_resp_t snd;
@@ -243,8 +230,9 @@ OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * 
 	snd.upgradeFlag = zHcuSysEngPar.hwBurnId.swUpgradeFlag;
 
 	snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_resp_t);
-	if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM);
+//	if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 
 	//返回
 	return SUCCESS;
@@ -255,12 +243,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 	int ret=0;
 	char fname[HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN];
 
-	//Receive message and copy to local variable
-	msg_struct_cloudvela_sysswm_inventory_confirm_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t)))
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSSWM, msg_struct_cloudvela_sysswm_inventory_confirm_t);
 
 	//处理接收到的反馈，并进行合理的处理
 	if (rcv.baseConfirm != HUITP_IEID_UNI_COM_CONFIRM_POSITIVE){
@@ -417,16 +400,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 //暂时不处理
 OPSTAT fsm_sysswm_cloudvela_sw_package_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-
-	//Receive message and copy to local variable
-	msg_struct_cloudvela_sysswm_sw_package_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_sysswm_sw_package_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_sysswm_sw_package_req_t)))
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
-
-
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSSWM, msg_struct_cloudvela_sysswm_sw_package_req_t);
 
 	return SUCCESS;
 }
@@ -438,12 +412,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	int i =0;
 	UINT16 res = 0;
 
-	//Receive message and copy to local variable
-	msg_struct_cloudvela_sysswm_sw_package_confirm_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_sysswm_sw_package_confirm_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_sysswm_sw_package_confirm_t)))
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSSWM, msg_struct_cloudvela_sysswm_sw_package_confirm_t);
 
 	//停止定时器
 	hcu_timer_stop(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_SEG_DL_WAIT, TIMER_RESOLUTION_1S);
@@ -657,8 +626,9 @@ OPSTAT func_sysswm_time_out_period_working_scan_hcu_client(void)
 		snd.upgradeFlag = zHcuSysEngPar.hwBurnId.swUpgradeFlag;
 		snd.timeStamp = time(0);
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
-		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM);
+//		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 
 		//刷新版本界面
 		func_sysswm_sw_inventory_req_info_trigger_ui(HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT, snd.swRel, snd.swVer, snd.dbVer);
@@ -706,8 +676,9 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_stable(void)
 		snd.upgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_YES_STABLE;
 		snd.timeStamp = time(0);
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
-		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM);
+//		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 
 		//刷新版本界面
 		func_sysswm_sw_inventory_req_info_trigger_ui(HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE, snd.swRel, snd.swVer, snd.dbVer);
@@ -755,8 +726,9 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_trial(void)
 		snd.upgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_YES_TRIAL;
 		snd.timeStamp = time(0);
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
-		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM);
+//		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 
 		//刷新版本界面
 		func_sysswm_sw_inventory_req_info_trigger_ui(HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL, snd.swRel, snd.swVer, snd.dbVer);
@@ -804,8 +776,9 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_patch(void)
 		snd.upgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH;
 		snd.timeStamp = time(0);
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
-		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM);
+//		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 
 		//刷新版本界面
 		func_sysswm_sw_inventory_req_info_trigger_ui(HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH, snd.swRel, snd.swVer, snd.dbVer);
@@ -833,12 +806,7 @@ OPSTAT fsm_sysswm_canitf_inventory_report(UINT32 dest_id, UINT32 src_id, void * 
 	//int ret=0;
 	strTaskSysswmSwpkgLable_t input;
 
-	//Receive message and copy to local variable
-	msg_struct_canitf_sysswm_inventory_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_canitf_sysswm_inventory_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_canitf_sysswm_inventory_report_t)))
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSSWM, msg_struct_canitf_sysswm_inventory_report_t);
 
 	//入参检查
 	if ((rcv.upgradeFlag != HUITP_IEID_SUI_FW_UPGRADE_YES_STABLE) && (rcv.upgradeFlag != HUITP_IEID_SUI_FW_UPGRADE_YES_TRIAL) \
@@ -895,11 +863,13 @@ OPSTAT fsm_sysswm_canitf_inventory_report(UINT32 dest_id, UINT32 src_id, void * 
 	snd.nodeId = rcv.nodeId;
 	snd.length = sizeof(msg_struct_sysswm_canitf_inventory_confirm_t);
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_INVENTORY_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSSWM_CANITF_INVENTORY_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM);
+//	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_INVENTORY_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 #else
-	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_INVENTORY_CONFIRM, TASK_ID_CANALPHA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSSWM_CANITF_INVENTORY_CONFIRM, TASK_ID_CANALPHA, TASK_ID_SYSSWM);
+//	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_INVENTORY_CONFIRM, TASK_ID_CANALPHA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
 #endif
 
 	return SUCCESS;
@@ -915,12 +885,7 @@ OPSTAT fsm_sysswm_canitf_sw_package_report(UINT32 dest_id, UINT32 src_id, void *
 	//int ret=0;
 	strTaskSysswmSwpkgSegment_t input;
 
-	//Receive message and copy to local variable
-	msg_struct_canitf_sysswm_sw_package_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_canitf_sysswm_sw_package_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_canitf_sysswm_sw_package_report_t)))
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_SYSSWM, msg_struct_canitf_sysswm_sw_package_report_t);
 
 	//入参检查
 	if ((rcv.segIndex > rcv.segTotal) || (rcv.segIndex == 0) || (rcv.segSplitLen == 0) || (rcv.segSplitLen > HCU_SYSMSG_CANITF_SYSSWM_SW_PACKAGE_BODY_MAX_LEN)\
@@ -964,11 +929,13 @@ OPSTAT fsm_sysswm_canitf_sw_package_report(UINT32 dest_id, UINT32 src_id, void *
 	snd.nodeId = rcv.nodeId;
 	snd.length = sizeof(msg_struct_sysswm_canitf_sw_package_confirm_t);
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_SW_PACKAGE_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSSWM_CANITF_SW_PACKAGE_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM);
+//	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_SW_PACKAGE_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 #else
-	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_SW_PACKAGE_CONFIRM, TASK_ID_CANALPHA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSSWM_CANITF_SW_PACKAGE_CONFIRM, TASK_ID_CANALPHA, TASK_ID_SYSSWM);
+//	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_SW_PACKAGE_CONFIRM, TASK_ID_CANALPHA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+//		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
 #endif
 
 
@@ -1455,8 +1422,9 @@ OPSTAT func_sysswm_send_cloudvela_sw_package_report(void)
 		snd.segSplitLen = gTaskSysswmContext.cloudSwDl.segSplitLen;
 
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t);
-		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM);
+//		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 	}
 
 	//启动定时器
