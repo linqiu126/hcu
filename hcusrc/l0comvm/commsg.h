@@ -4758,18 +4758,20 @@ typedef struct HcuSysMsgIeL3bfdfContextStaElement
 
 typedef struct HcuSysMsgIeL3bfhsContextStaElement
 {
-	UINT32	wsIncMatCnt;  			//物料数量
-	float	wsIncMatWgt;  			//物料重量
-	UINT32	wsCombTimes;  			//总共成功素搜到目标的次数
-	UINT32	wsTttTimes;  			//TTT次数
-	UINT32	wsTgvTimes;  			//TGV次数
-	UINT32	wsTttMatCnt;			//TTT物料数量
-	UINT32	wsTgvMatCnt;			//TGV物料数量
-	float	wsTttMatWgt;			//TTT物料重量
-	float	wsTgvMatWgt;			//TGV物料重量
-	UINT32	wsAvgTttTimes;			//TTT平均次数
-	UINT32	wsAvgTttMatCnt;			//TTT平均物料数
-	float	wsAvgTttMatWgt;			//TTT平均重量
+	float	wsIncMatCntMid;  			//物料数量
+	float	wsIncMatWgtMid;  			//物料重量
+	float   wsNormalCntMid;				//正常
+	float   wsNormalWgtMid;				//正常
+	float   wsOverCntMid;				//超重
+	float   wsOverWgtMid;				//超重
+	float   wsUnderTotalCntMid;			//欠重
+	float	wsUnderTotalWgtMid;			//欠重
+	float   wsUnderTu1CntMid;			//欠重TU1
+	float	wsUnderTu1WgtMid;			//欠重TU1
+	float   wsUnderTu2lCntMid;			//欠重TU2
+	float	wsUnderTu2WgtMid;			//欠重TU2
+	float   wsUnspecificCntMid;			//非特定
+	float	wsUnspecificWgtMid;			//非特定
 }HcuSysMsgIeL3bfhsContextStaElement_t;
 
 /*

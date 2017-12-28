@@ -56,6 +56,10 @@ typedef enum HuirestActionidDefination
     HUIREST_ACTIONID_VISION_worm_clasify_batch    		= 0x2003,
 	HUIREST_ACTIONID_VISION_max,
 
+	//AIWGT
+	HUIREST_ACTIONID_AIWGT_min                			= 0x3000,
+	HUIREST_ACTIONID_AIWGT_test1           				= 0x3000,
+	HUIREST_ACTIONID_AIWGT_max,
 
 	HUIREST_ACTIONID_invalid               				= 0xFFFF, //无效
 }HuirestActionidDefination_t;
@@ -74,9 +78,11 @@ typedef enum HuirestActionidDefination
 #define HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_NUMBER  		1
 #define HUIREST_ACCESS_CONST_SVRTAG_DBA_IN_NUMBER  			2
 #define HUIREST_ACCESS_CONST_SVRTAG_VISION_IN_NUMBER  		3
+#define HUIREST_ACCESS_CONST_SVRTAG_AIWGT_IN_NUMBER  		4
 #define HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_STRING		"printer"
 #define HUIREST_ACCESS_CONST_SVRTAG_DBA_IN_STRING			"dba"
 #define HUIREST_ACCESS_CONST_SVRTAG_VISION_IN_STRING		"vision"
+#define HUIREST_ACCESS_CONST_SVRTAG_AIWGT_IN_STRING			"aiwgt"
 
 /*
 //http://www.aaa.com/printer/request.php?POST={json}
@@ -270,6 +276,19 @@ typedef struct StrRestMsgIn_HUIREST_ACTIONID_VISION_worm_clasify_single_fb
 
 
 //HUIREST_ACTIONID_VISION_max,
+
+
+//AIWGT
+//HUIREST_ACTIONID_AIWGT_min                			= 0x3000,
+//HUIREST_ACTIONID_AIWGT_test1           				= 0x3000,
+typedef struct StrRestMsgIn_HUIREST_ACTIONID_AIWGT_test1
+{
+	int 		test1;
+}StrRestMsgIn_HUIREST_ACTIONID_AIWGT_test1_t;
+
+//HUIREST_ACTIONID_AIWGT_max,
+
+
 
 //HUIREST_ACTIONID_invalid               			= 0xFFFF, //无效
 

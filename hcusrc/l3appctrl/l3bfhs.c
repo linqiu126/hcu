@@ -703,8 +703,32 @@ OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(0, &status);
 
 	//正常处理
+	gTaskL3bfhsContext.callCellId++;
+	gTaskL3bfhsContext.cur.wsIncMatCntMid++;
+	gTaskL3bfhsContext.cur.wsIncMatWgtMid += rcv.snrWsValue;
+	if (rcv.snrState == HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_NORMAL){
+		gTaskL3bfhsContext.cur.wsNormalCntMid++;
+		gTaskL3bfhsContext.cur.wsNormalWgtMid += rcv.snrWsValue;
+	}
+	else if (rcv.snrState == HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_OVERLOAD){
+		gTaskL3bfhsContext.cur.wsOverCntMid++;
+		gTaskL3bfhsContext.cur.wsOverWgtMid += rcv.snrWsValue;
+	}
+	//未来进一步分解为TU1/TU2
+	else if (rcv.snrState == HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_UNDERLOAD){
+		gTaskL3bfhsContext.cur.wsUnderTotalCntMid++;
+		gTaskL3bfhsContext.cur.wsUnderTotalWgtMid += rcv.snrWsValue;
+		gTaskL3bfhsContext.cur.wsUnderTu2lCntMid++;
+		gTaskL3bfhsContext.cur.wsUnderTu2WgtMid += rcv.snrWsValue;
+	}
+	else{
+		gTaskL3bfhsContext.cur.wsUnspecificCntMid++;
+		gTaskL3bfhsContext.cur.wsUnspecificWgtMid += rcv.snrWsValue;
+	}
 
 	//存入数据库表单
+
+
 
 	//返回
 	return SUCCESS;
@@ -912,47 +936,47 @@ OPSTAT func_l3bfhs_time_out_statistic_scan_process(void)
 	//采取老化算法 x(n+1) = x(n) * (1-1/120) + latest，从而得到最新的数据，但该数据最好使用float，然后再转换为UINT32存入到数据库表单中
 	memset(&(gTaskL3bfhsContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfhsContextStaElement_t));
 	//先存储临时数据
-	gTaskL3bfhsContext.curAge.wsIncMatCntMid = gTaskL3bfhsContext.curAge.wsIncMatCntMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsIncMatCnt;
-	gTaskL3bfhsContext.curAge.wsIncMatWgtMid = gTaskL3bfhsContext.curAge.wsIncMatWgtMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsIncMatWgt;
-	gTaskL3bfhsContext.curAge.wsCombTimesMid = gTaskL3bfhsContext.curAge.wsCombTimesMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsCombTimes;
-	gTaskL3bfhsContext.curAge.wsTttTimesMid = gTaskL3bfhsContext.curAge.wsTttTimesMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTttTimes;
-	gTaskL3bfhsContext.curAge.wsTgvTimesMid = gTaskL3bfhsContext.curAge.wsTgvTimesMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTgvTimes;
-	gTaskL3bfhsContext.curAge.wsTttMatCntMid = gTaskL3bfhsContext.curAge.wsTttMatCntMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTttMatCnt;
-	gTaskL3bfhsContext.curAge.wsTgvMatCntMid = gTaskL3bfhsContext.curAge.wsTgvMatCntMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTgvMatCnt;
-	gTaskL3bfhsContext.curAge.wsTttMatWgtMid = gTaskL3bfhsContext.curAge.wsTttMatWgtMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTttMatWgt;
-	gTaskL3bfhsContext.curAge.wsTgvMatWgtMid = gTaskL3bfhsContext.curAge.wsTgvMatWgtMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTgvMatWgt;
+//	gTaskL3bfhsContext.curAge.wsIncMatCntMid = gTaskL3bfhsContext.curAge.wsIncMatCntMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsIncMatCnt;
+//	gTaskL3bfhsContext.curAge.wsIncMatWgtMid = gTaskL3bfhsContext.curAge.wsIncMatWgtMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsIncMatWgt;
+//	gTaskL3bfhsContext.curAge.wsCombTimesMid = gTaskL3bfhsContext.curAge.wsCombTimesMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsCombTimes;
+//	gTaskL3bfhsContext.curAge.wsTttTimesMid = gTaskL3bfhsContext.curAge.wsTttTimesMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTttTimes;
+//	gTaskL3bfhsContext.curAge.wsTgvTimesMid = gTaskL3bfhsContext.curAge.wsTgvTimesMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTgvTimes;
+//	gTaskL3bfhsContext.curAge.wsTttMatCntMid = gTaskL3bfhsContext.curAge.wsTttMatCntMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTttMatCnt;
+//	gTaskL3bfhsContext.curAge.wsTgvMatCntMid = gTaskL3bfhsContext.curAge.wsTgvMatCntMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTgvMatCnt;
+//	gTaskL3bfhsContext.curAge.wsTttMatWgtMid = gTaskL3bfhsContext.curAge.wsTttMatWgtMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTttMatWgt;
+//	gTaskL3bfhsContext.curAge.wsTgvMatWgtMid = gTaskL3bfhsContext.curAge.wsTgvMatWgtMid*(float)HCU_L3BFHS_STA_AGEING_COEF + (float)HCU_L3BFHS_STA_AGEING_COEF_ALPHA*gTaskL3bfhsContext.cur.wsTgvMatWgt;
 	//再输出结果
-	gTaskL3bfhsContext.staLocalUi.wsIncMatCnt = (UINT32)(gTaskL3bfhsContext.curAge.wsIncMatCntMid + 0.5);
-	gTaskL3bfhsContext.staLocalUi.wsIncMatWgt = (UINT32)(gTaskL3bfhsContext.curAge.wsIncMatWgtMid + 0.5);
-	gTaskL3bfhsContext.staLocalUi.wsCombTimes = (UINT32)(gTaskL3bfhsContext.curAge.wsCombTimesMid + 0.5);
-	gTaskL3bfhsContext.staLocalUi.wsTttTimes  = (UINT32)(gTaskL3bfhsContext.curAge.wsTttTimesMid + 0.5);
-	gTaskL3bfhsContext.staLocalUi.wsTgvTimes  = (UINT32)(gTaskL3bfhsContext.curAge.wsTgvTimesMid + 0.5);
-	gTaskL3bfhsContext.staLocalUi.wsTttMatCnt = (UINT32)(gTaskL3bfhsContext.curAge.wsTttMatCntMid + 0.5);
-	gTaskL3bfhsContext.staLocalUi.wsTgvMatCnt = (UINT32)(gTaskL3bfhsContext.curAge.wsTgvMatCntMid + 0.5);
-	gTaskL3bfhsContext.staLocalUi.wsTttMatWgt = (UINT32)(gTaskL3bfhsContext.curAge.wsTttMatWgtMid + 0.5);
-	gTaskL3bfhsContext.staLocalUi.wsTgvMatWgt = (UINT32)(gTaskL3bfhsContext.curAge.wsTgvMatWgtMid + 0.5);
-	gTaskL3bfhsContext.staLocalUi.wsAvgTttTimes = gTaskL3bfhsContext.staLocalUi.wsTttTimes;
-	gTaskL3bfhsContext.staLocalUi.wsAvgTttMatCnt = gTaskL3bfhsContext.staLocalUi.wsTttMatCnt;
-	gTaskL3bfhsContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfhsContext.staLocalUi.wsTttMatWgt;
+//	gTaskL3bfhsContext.staLocalUi.wsIncMatCnt = (UINT32)(gTaskL3bfhsContext.curAge.wsIncMatCntMid + 0.5);
+//	gTaskL3bfhsContext.staLocalUi.wsIncMatWgt = (UINT32)(gTaskL3bfhsContext.curAge.wsIncMatWgtMid + 0.5);
+//	gTaskL3bfhsContext.staLocalUi.wsCombTimes = (UINT32)(gTaskL3bfhsContext.curAge.wsCombTimesMid + 0.5);
+//	gTaskL3bfhsContext.staLocalUi.wsTttTimes  = (UINT32)(gTaskL3bfhsContext.curAge.wsTttTimesMid + 0.5);
+//	gTaskL3bfhsContext.staLocalUi.wsTgvTimes  = (UINT32)(gTaskL3bfhsContext.curAge.wsTgvTimesMid + 0.5);
+//	gTaskL3bfhsContext.staLocalUi.wsTttMatCnt = (UINT32)(gTaskL3bfhsContext.curAge.wsTttMatCntMid + 0.5);
+//	gTaskL3bfhsContext.staLocalUi.wsTgvMatCnt = (UINT32)(gTaskL3bfhsContext.curAge.wsTgvMatCntMid + 0.5);
+//	gTaskL3bfhsContext.staLocalUi.wsTttMatWgt = (UINT32)(gTaskL3bfhsContext.curAge.wsTttMatWgtMid + 0.5);
+//	gTaskL3bfhsContext.staLocalUi.wsTgvMatWgt = (UINT32)(gTaskL3bfhsContext.curAge.wsTgvMatWgtMid + 0.5);
+//	gTaskL3bfhsContext.staLocalUi.wsAvgTttTimes = gTaskL3bfhsContext.staLocalUi.wsTttTimes;
+//	gTaskL3bfhsContext.staLocalUi.wsAvgTttMatCnt = gTaskL3bfhsContext.staLocalUi.wsTttMatCnt;
+//	gTaskL3bfhsContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfhsContext.staLocalUi.wsTttMatWgt;
 
 	//更新LocUI数据库，以便本地界面实时展示数据
 //	if (dbi_HcuBfhs_StaDatainfo_save(HCU_L3BFHS_STA_DBI_TABLE_LOCALUI, gTaskL3bfhsContext.configId, &(gTaskL3bfhsContext.staLocalUi)) == FAILURE)
 //			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Save data to DB error!\n");
 
 	//更新60Min各个统计表单
-	gTaskL3bfhsContext.sta60Min.wsIncMatCnt += gTaskL3bfhsContext.cur.wsIncMatCnt;
-	gTaskL3bfhsContext.sta60Min.wsIncMatWgt += gTaskL3bfhsContext.cur.wsIncMatWgt;
-	gTaskL3bfhsContext.sta60Min.wsCombTimes += gTaskL3bfhsContext.cur.wsCombTimes;
-	gTaskL3bfhsContext.sta60Min.wsTttTimes  += gTaskL3bfhsContext.cur.wsTttTimes;
-	gTaskL3bfhsContext.sta60Min.wsTgvTimes  += gTaskL3bfhsContext.cur.wsTgvTimes;
-	gTaskL3bfhsContext.sta60Min.wsTttMatCnt += gTaskL3bfhsContext.cur.wsTttMatCnt;
-	gTaskL3bfhsContext.sta60Min.wsTgvMatCnt += gTaskL3bfhsContext.cur.wsTgvMatCnt;
-	gTaskL3bfhsContext.sta60Min.wsTttMatWgt += gTaskL3bfhsContext.cur.wsTttMatWgt;
-	gTaskL3bfhsContext.sta60Min.wsTgvMatWgt += gTaskL3bfhsContext.cur.wsTgvMatWgt;
-	float timeRun60MinRatio = (float) HCU_L3BFHS_STA_60M_CYCLE / (float)(((gTaskL3bfhsContext.elipseCnt%HCU_L3BFHS_STA_60M_CYCLE)==0)?HCU_L3BFHS_STA_60M_CYCLE:(gTaskL3bfhsContext.elipseCnt%HCU_L3BFHS_STA_60M_CYCLE));
-	gTaskL3bfhsContext.sta60Min.wsAvgTttTimes = (UINT32)(gTaskL3bfhsContext.sta60Min.wsTttTimes*timeRun60MinRatio);
-	gTaskL3bfhsContext.sta60Min.wsAvgTttMatCnt = (UINT32)(gTaskL3bfhsContext.sta60Min.wsTttMatCnt*timeRun60MinRatio);
-	gTaskL3bfhsContext.sta60Min.wsAvgTttMatWgt = (UINT32)(gTaskL3bfhsContext.sta60Min.wsTttMatWgt*timeRun60MinRatio);
+//	gTaskL3bfhsContext.sta60Min.wsIncMatCnt += gTaskL3bfhsContext.cur.wsIncMatCnt;
+//	gTaskL3bfhsContext.sta60Min.wsIncMatWgt += gTaskL3bfhsContext.cur.wsIncMatWgt;
+//	gTaskL3bfhsContext.sta60Min.wsCombTimes += gTaskL3bfhsContext.cur.wsCombTimes;
+//	gTaskL3bfhsContext.sta60Min.wsTttTimes  += gTaskL3bfhsContext.cur.wsTttTimes;
+//	gTaskL3bfhsContext.sta60Min.wsTgvTimes  += gTaskL3bfhsContext.cur.wsTgvTimes;
+//	gTaskL3bfhsContext.sta60Min.wsTttMatCnt += gTaskL3bfhsContext.cur.wsTttMatCnt;
+//	gTaskL3bfhsContext.sta60Min.wsTgvMatCnt += gTaskL3bfhsContext.cur.wsTgvMatCnt;
+//	gTaskL3bfhsContext.sta60Min.wsTttMatWgt += gTaskL3bfhsContext.cur.wsTttMatWgt;
+//	gTaskL3bfhsContext.sta60Min.wsTgvMatWgt += gTaskL3bfhsContext.cur.wsTgvMatWgt;
+//	float timeRun60MinRatio = (float) HCU_L3BFHS_STA_60M_CYCLE / (float)(((gTaskL3bfhsContext.elipseCnt%HCU_L3BFHS_STA_60M_CYCLE)==0)?HCU_L3BFHS_STA_60M_CYCLE:(gTaskL3bfhsContext.elipseCnt%HCU_L3BFHS_STA_60M_CYCLE));
+//	gTaskL3bfhsContext.sta60Min.wsAvgTttTimes = (UINT32)(gTaskL3bfhsContext.sta60Min.wsTttTimes*timeRun60MinRatio);
+//	gTaskL3bfhsContext.sta60Min.wsAvgTttMatCnt = (UINT32)(gTaskL3bfhsContext.sta60Min.wsTttMatCnt*timeRun60MinRatio);
+//	gTaskL3bfhsContext.sta60Min.wsAvgTttMatWgt = (UINT32)(gTaskL3bfhsContext.sta60Min.wsTttMatWgt*timeRun60MinRatio);
 
 	//60分钟到了，发送统计报告到后台：发送后台只需要一种统计报告即可，重复发送意义不大
 	if ((gTaskL3bfhsContext.elipseCnt % HCU_L3BFHS_STA_60M_CYCLE) == 0){
@@ -1000,19 +1024,19 @@ OPSTAT func_l3bfhs_time_out_statistic_scan_process(void)
 	}
 
 	//更新24小时统计表单
-	gTaskL3bfhsContext.sta24H.wsIncMatCnt += gTaskL3bfhsContext.cur.wsIncMatCnt;
-	gTaskL3bfhsContext.sta24H.wsIncMatWgt += gTaskL3bfhsContext.cur.wsIncMatWgt;
-	gTaskL3bfhsContext.sta24H.wsCombTimes += gTaskL3bfhsContext.cur.wsCombTimes;
-	gTaskL3bfhsContext.sta24H.wsTttTimes  += gTaskL3bfhsContext.cur.wsTttTimes;
-	gTaskL3bfhsContext.sta24H.wsTgvTimes  += gTaskL3bfhsContext.cur.wsTgvTimes;
-	gTaskL3bfhsContext.sta24H.wsTttMatCnt += gTaskL3bfhsContext.cur.wsTttMatCnt;
-	gTaskL3bfhsContext.sta24H.wsTgvMatCnt += gTaskL3bfhsContext.cur.wsTgvMatCnt;
-	gTaskL3bfhsContext.sta24H.wsTttMatWgt += gTaskL3bfhsContext.cur.wsTttMatWgt;
-	gTaskL3bfhsContext.sta24H.wsTgvMatWgt += gTaskL3bfhsContext.cur.wsTgvMatWgt;
-	float timeRun24HourRatio = (float) HCU_L3BFHS_STA_24H_CYCLE / (float)(((gTaskL3bfhsContext.elipse24HourCnt%HCU_L3BFHS_STA_24H_CYCLE)==0)?HCU_L3BFHS_STA_24H_CYCLE:(gTaskL3bfhsContext.elipseCnt%HCU_L3BFHS_STA_24H_CYCLE));
-	gTaskL3bfhsContext.sta24H.wsAvgTttTimes = (UINT32)(gTaskL3bfhsContext.sta24H.wsTttTimes*timeRun24HourRatio);
-	gTaskL3bfhsContext.sta24H.wsAvgTttMatCnt = (UINT32)(gTaskL3bfhsContext.sta24H.wsTttMatCnt*timeRun24HourRatio);
-	gTaskL3bfhsContext.sta24H.wsAvgTttMatWgt = (UINT32)(gTaskL3bfhsContext.sta24H.wsTttMatWgt*timeRun24HourRatio);
+//	gTaskL3bfhsContext.sta24H.wsIncMatCnt += gTaskL3bfhsContext.cur.wsIncMatCnt;
+//	gTaskL3bfhsContext.sta24H.wsIncMatWgt += gTaskL3bfhsContext.cur.wsIncMatWgt;
+//	gTaskL3bfhsContext.sta24H.wsCombTimes += gTaskL3bfhsContext.cur.wsCombTimes;
+//	gTaskL3bfhsContext.sta24H.wsTttTimes  += gTaskL3bfhsContext.cur.wsTttTimes;
+//	gTaskL3bfhsContext.sta24H.wsTgvTimes  += gTaskL3bfhsContext.cur.wsTgvTimes;
+//	gTaskL3bfhsContext.sta24H.wsTttMatCnt += gTaskL3bfhsContext.cur.wsTttMatCnt;
+//	gTaskL3bfhsContext.sta24H.wsTgvMatCnt += gTaskL3bfhsContext.cur.wsTgvMatCnt;
+//	gTaskL3bfhsContext.sta24H.wsTttMatWgt += gTaskL3bfhsContext.cur.wsTttMatWgt;
+//	gTaskL3bfhsContext.sta24H.wsTgvMatWgt += gTaskL3bfhsContext.cur.wsTgvMatWgt;
+//	float timeRun24HourRatio = (float) HCU_L3BFHS_STA_24H_CYCLE / (float)(((gTaskL3bfhsContext.elipse24HourCnt%HCU_L3BFHS_STA_24H_CYCLE)==0)?HCU_L3BFHS_STA_24H_CYCLE:(gTaskL3bfhsContext.elipseCnt%HCU_L3BFHS_STA_24H_CYCLE));
+//	gTaskL3bfhsContext.sta24H.wsAvgTttTimes = (UINT32)(gTaskL3bfhsContext.sta24H.wsTttTimes*timeRun24HourRatio);
+//	gTaskL3bfhsContext.sta24H.wsAvgTttMatCnt = (UINT32)(gTaskL3bfhsContext.sta24H.wsTttMatCnt*timeRun24HourRatio);
+//	gTaskL3bfhsContext.sta24H.wsAvgTttMatWgt = (UINT32)(gTaskL3bfhsContext.sta24H.wsTttMatWgt*timeRun24HourRatio);
 
 	//24小时统计表更新数据库
 	if ((gTaskL3bfhsContext.elipseCnt % HCU_L3BFHS_STA_1M_CYCLE) == 0){
@@ -1030,18 +1054,18 @@ OPSTAT func_l3bfhs_time_out_statistic_scan_process(void)
 	//24小时到了，应该发送单独的统计报告，未来完善
 
 	//增加数据到连续统计数据中
-	gTaskL3bfhsContext.staUp2Now.wsIncMatCnt += gTaskL3bfhsContext.cur.wsIncMatCnt;
-	gTaskL3bfhsContext.staUp2Now.wsIncMatWgt += gTaskL3bfhsContext.cur.wsIncMatWgt;
-	gTaskL3bfhsContext.staUp2Now.wsCombTimes += gTaskL3bfhsContext.cur.wsCombTimes;
-	gTaskL3bfhsContext.staUp2Now.wsTttTimes  += gTaskL3bfhsContext.cur.wsTttTimes;
-	gTaskL3bfhsContext.staUp2Now.wsTgvTimes  += gTaskL3bfhsContext.cur.wsTgvTimes;
-	gTaskL3bfhsContext.staUp2Now.wsTttMatCnt += gTaskL3bfhsContext.cur.wsTttMatCnt;
-	gTaskL3bfhsContext.staUp2Now.wsTgvMatCnt += gTaskL3bfhsContext.cur.wsTgvMatCnt;
-	gTaskL3bfhsContext.staUp2Now.wsTttMatWgt += gTaskL3bfhsContext.cur.wsTttMatWgt;
-	gTaskL3bfhsContext.staUp2Now.wsTgvMatWgt += gTaskL3bfhsContext.cur.wsTgvMatWgt;
-	gTaskL3bfhsContext.staUp2Now.wsAvgTttTimes = gTaskL3bfhsContext.staUp2Now.wsTttTimes;
-	gTaskL3bfhsContext.staUp2Now.wsAvgTttMatCnt = gTaskL3bfhsContext.staUp2Now.wsTttMatCnt;
-	gTaskL3bfhsContext.staUp2Now.wsAvgTttMatWgt = gTaskL3bfhsContext.staUp2Now.wsTttMatWgt;
+//	gTaskL3bfhsContext.staUp2Now.wsIncMatCnt += gTaskL3bfhsContext.cur.wsIncMatCnt;
+//	gTaskL3bfhsContext.staUp2Now.wsIncMatWgt += gTaskL3bfhsContext.cur.wsIncMatWgt;
+//	gTaskL3bfhsContext.staUp2Now.wsCombTimes += gTaskL3bfhsContext.cur.wsCombTimes;
+//	gTaskL3bfhsContext.staUp2Now.wsTttTimes  += gTaskL3bfhsContext.cur.wsTttTimes;
+//	gTaskL3bfhsContext.staUp2Now.wsTgvTimes  += gTaskL3bfhsContext.cur.wsTgvTimes;
+//	gTaskL3bfhsContext.staUp2Now.wsTttMatCnt += gTaskL3bfhsContext.cur.wsTttMatCnt;
+//	gTaskL3bfhsContext.staUp2Now.wsTgvMatCnt += gTaskL3bfhsContext.cur.wsTgvMatCnt;
+//	gTaskL3bfhsContext.staUp2Now.wsTttMatWgt += gTaskL3bfhsContext.cur.wsTttMatWgt;
+//	gTaskL3bfhsContext.staUp2Now.wsTgvMatWgt += gTaskL3bfhsContext.cur.wsTgvMatWgt;
+//	gTaskL3bfhsContext.staUp2Now.wsAvgTttTimes = gTaskL3bfhsContext.staUp2Now.wsTttTimes;
+//	gTaskL3bfhsContext.staUp2Now.wsAvgTttMatCnt = gTaskL3bfhsContext.staUp2Now.wsTttMatCnt;
+//	gTaskL3bfhsContext.staUp2Now.wsAvgTttMatWgt = gTaskL3bfhsContext.staUp2Now.wsTttMatWgt;
 
 	//更新连续数据库数据库：每5秒存储一次，不然数据库操作过于频繁
 	if ((gTaskL3bfhsContext.elipseCnt % HCU_L3BFHS_STA_5S_CYCLE) == 0){

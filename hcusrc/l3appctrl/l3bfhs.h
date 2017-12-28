@@ -90,16 +90,18 @@ typedef struct gTaskL3bfhsContextStaEleMid
 {
 	float	wsIncMatCntMid;  			//物料数量
 	float	wsIncMatWgtMid;  			//物料重量
-	float	wsCombTimesMid;  			//总共成功素搜到目标的次数
-	float	wsTttTimesMid;  			//TTT次数
-	float	wsTgvTimesMid;  			//TGV次数
-	float	wsTttMatCntMid;				//TTT物料数量
-	float	wsTgvMatCntMid;				//TGV物料数量
-	float	wsTttMatWgtMid;				//TTT物料重量
-	float	wsTgvMatWgtMid;				//TGV物料重量
-	float	wsAvgTttTimesMid;			//TTT平均次数
-	float	wsAvgTttMatCntMid;			//TTT平均物料数
-	float	wsAvgTttMatWgtMid;			//TTT平均重量
+	float   wsNormalCntMid;				//正常
+	float   wsNormalWgtMid;				//正常
+	float   wsOverCntMid;				//超重
+	float   wsOverWgtMid;				//超重
+	float   wsUnderTotalCntMid;			//欠重
+	float	wsUnderTotalWgtMid;			//欠重
+	float   wsUnderTu1CntMid;			//欠重TU1
+	float	wsUnderTu1WgtMid;			//欠重TU1
+	float   wsUnderTu2lCntMid;			//欠重TU2
+	float	wsUnderTu2WgtMid;			//欠重TU2
+	float   wsUnspecificCntMid;			//非特定
+	float	wsUnspecificWgtMid;			//非特定
 }gTaskL3bfhsContextStaEleMid_t;
 
 //配置参数
@@ -177,6 +179,17 @@ extern gTaskL3bfhsContext_t gTaskL3bfhsContext;
 
 //统计打印报告的频率调整
 #define HCU_L3BFHS_STATISTIC_PRINT_FREQUENCY 10
+
+//CallCell数据
+typedef struct gTaskL3bfhsCallCellStorage
+{
+	UINT32  callCellId;					//批次数据
+	char    operatorName[HCU_L3BFHS_CONTEXT_OPERATOR_NAME_LEN_MAX];
+	UINT16	configId;  					//用来标识系统工作在哪一套配置参数中
+	UINT32	timeStampInUnix;
+	UINT8   state;
+	UINT32  wgtValue; //in NF2
+}gTaskL3bfhsCallCellStorage_t;
 
 //API通用部分
 extern OPSTAT fsm_l3bfhs_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
