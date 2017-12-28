@@ -49,8 +49,8 @@ HcuFsmStateItem_t HcuFsmBfhsuicomm[] =
 
 	//UIR2HCU MSG RCV
 	{MSG_ID_HUICOBUS_UIR_INIT_REQ,      		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_init_req},
-	{MSG_ID_HUICOBUS_UIR_RESUME_REQ,      		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_resume_req},
-	{MSG_ID_HUICOBUS_UIR_SUSPEND_REQ,      		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_suspend_req},
+	{MSG_ID_HUICOBUS_UIR_START_RESUME_REQ, 		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_start_resume_req},
+	{MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ, 		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_stop_suspend_req},
 	{MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_cali_zero_req},
 	{MSG_ID_HUICOBUS_UIR_CALI_FULL_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_cali_full_req},
 	{MSG_ID_HUICOBUS_UIR_STUDY_START_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_study_start_req},
@@ -320,16 +320,16 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void 
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfhsuicomm_huicobus_uir_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfhsuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_resume_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_start_resume_req_t);
 
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfhsuicomm_huicobus_uir_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfhsuicomm_huicobus_uir_stop_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_suspend_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_stop_suspend_req_t);
 
 	return SUCCESS;
 }

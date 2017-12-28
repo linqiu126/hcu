@@ -594,8 +594,8 @@ enum HCU_INTER_TASK_MSG_ID
 
 	//HUICOBUS业务消息
 	MSG_ID_HUICOBUS_UIR_INIT_REQ,
-	MSG_ID_HUICOBUS_UIR_RESUME_REQ,
-	MSG_ID_HUICOBUS_UIR_SUSPEND_REQ,
+	MSG_ID_HUICOBUS_UIR_START_RESUME_REQ,
+	MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ,
 	MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ,
 	MSG_ID_HUICOBUS_UIR_CALI_FULL_REQ,
 	MSG_ID_HUICOBUS_UIR_STUDY_START_REQ,
@@ -2967,7 +2967,7 @@ typedef struct strMsgIe_bfhs_MotoCtrlParamaters
 	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
 }strMsgIe_bfhs_MotoCtrlParamaters_t;
 
-typedef struct msg_struct_uicomm_l3bfhs_cmd_req
+typedef struct msg_struct_uicomm_l3bfhs_ctrl_cmd_req
 {
 	UINT8  cmdid;
 	//这部分待确定，这些参数是否需要从界面上带下来
@@ -3377,19 +3377,19 @@ typedef struct msg_struct_huicobus_uir_init_req
 	UINT32 length;
 }msg_struct_huicobus_uir_init_req_t;
 
-//MSG_ID_HUICOBUS_UIR_RESUME_REQ,
-typedef struct msg_struct_huicobus_uir_resume_req
+//MSG_ID_HUICOBUS_UIR_START_RESUME_REQ,
+typedef struct msg_struct_huicobus_uir_start_resume_req
 {
 	INT32  cmdValue;
 	UINT32 length;
-}msg_struct_huicobus_uir_resume_req_t;
+}msg_struct_huicobus_uir_start_resume_req_t;
 
-//MSG_ID_HUICOBUS_UIR_SUSPEND_REQ,
-typedef struct msg_struct_huicobus_uir_suspend_req
+//MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ,
+typedef struct msg_struct_huicobus_uir_stop_suspend_req
 {
 	INT32  cmdValue;
 	UINT32 length;
-}msg_struct_huicobus_uir_suspend_req_t;
+}msg_struct_huicobus_uir_stop_suspend_req_t;
 
 //MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ,
 typedef struct msg_struct_huicobus_uir_cali_zero_req
@@ -3410,6 +3410,7 @@ typedef struct msg_struct_huicobus_uir_study_start_req
 {
 	INT32  cmdValue;
 	UINT32 length;
+	UINT32 counterWgt;
 }msg_struct_huicobus_uir_study_start_req_t;
 
 //MSG_ID_HUICOBUS_UIR_STUDY_STOP_REQ,
@@ -3417,6 +3418,7 @@ typedef struct msg_struct_huicobus_uir_study_stop_req
 {
 	INT32  cmdValue;
 	UINT32 length;
+	UINT32 counterWgt;
 }msg_struct_huicobus_uir_study_stop_req_t;
 
 //MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,

@@ -123,21 +123,21 @@ OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	case HUICOBUS_CMDID_cui_uir2hcu_start_resume_req:
 	{
-		msg_struct_huicobus_uir_resume_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_resume_req_t));
+		msg_struct_huicobus_uir_start_resume_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_start_resume_req_t));
 		snd.cmdValue = rcv.cmdValue;
-		snd.length = sizeof(msg_struct_huicobus_uir_resume_req_t);
-		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_RESUME_REQ);
+		snd.length = sizeof(msg_struct_huicobus_uir_start_resume_req_t);
+		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_START_RESUME_REQ);
 		break;
 	}
 
 	case HUICOBUS_CMDID_cui_uir2hcu_stop_suspend_req:
 	{
-		msg_struct_huicobus_uir_suspend_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_suspend_req_t));
+		msg_struct_huicobus_uir_stop_suspend_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_stop_suspend_req_t));
 		snd.cmdValue = rcv.cmdValue;
-		snd.length = sizeof(msg_struct_huicobus_uir_suspend_req_t);
-		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_RESUME_REQ);
+		snd.length = sizeof(msg_struct_huicobus_uir_stop_suspend_req_t);
+		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ);
 		break;
 	}
 

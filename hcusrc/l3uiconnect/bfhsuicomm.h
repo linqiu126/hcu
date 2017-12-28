@@ -74,16 +74,6 @@ typedef struct L3BfhsuiJsonCmdParseResult
 	L3BfhsuiTestCmd_t  cmdTest;
 } L3BfhsuiJsonCmdParseResult_t;
 
-//本地常量定义
-#define HCU_BFHSCOMM_JASON_CMD_START 		(1)
-#define HCU_BFHSCOMM_JASON_CMD_STOP 		(2)
-#define HCU_BFHSCOMM_JASON_CMD_CONFIG 		(3)
-#define HCU_BFHSCOMM_JASON_CMD_TEST 		(4)
-#define HCU_BFHSCOMM_JASON_CMD_CALZERO		(5)
-#define HCU_BFHSCOMM_JASON_CMD_CALFULL 		(6)
-#define HCU_BFHSCOMM_JASON_CMD_RESUME 		(7)
-#define HCU_BFHSCOMM_JASON_CMD_SUSPEND 		(8)
-
 //Global variables
 extern HcuFsmStateItem_t HcuFsmBfhsuicomm[];
 
@@ -95,8 +85,8 @@ extern OPSTAT fsm_bfhsuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param
 extern OPSTAT fsm_bfhsuicomm_l3bfhs_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_sui_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_bfhsuicomm_huicobus_uir_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_bfhsuicomm_huicobus_uir_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_stop_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_huicobus_uir_cali_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_huicobus_uir_cali_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_huicobus_uir_study_start_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
