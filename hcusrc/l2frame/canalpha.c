@@ -570,7 +570,7 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	pMsgProc.motor_control_param.MotorDirection = HUITP_ENDIAN_EXG32(rcv.motoCtrlPar.MotorDirection);
 	pMsgProc.arm_control_param.ArmRollingStartMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingStartMs);
 	pMsgProc.arm_control_param.ArmRollingStopMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingStopMs);
-	pMsgProc.arm_control_param.ArmRollingInveralMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingInveralMs);
+	pMsgProc.arm_control_param.ArmRollingIntervalMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingIntervalMs);
 	pMsgProc.arm_control_param.ArmFailureDetectionVaration = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmFailureDetectionVaration);
 	pMsgProc.arm_control_param.ArmFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmFailureDetectionTimeMs);
 

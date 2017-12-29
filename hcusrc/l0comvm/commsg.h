@@ -596,12 +596,10 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_HUICOBUS_UIR_INIT_REQ,
 	MSG_ID_HUICOBUS_UIR_START_RESUME_REQ,
 	MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ,
-	MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ,
-	MSG_ID_HUICOBUS_UIR_CALI_FULL_REQ,
-	MSG_ID_HUICOBUS_UIR_STUDY_START_REQ,
-	MSG_ID_HUICOBUS_UIR_STUDY_STOP_REQ,
+	MSG_ID_HUICOBUS_UIR_STATIC_CALI_REQ,
+	MSG_ID_HUICOBUS_UIR_DYNAMIC_CALI_REQ,
 	MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,
-	MSG_ID_HUICOBUS_UIR_ONE_KEY_CLEAN_ZERO_REQ,
+	MSG_ID_HUICOBUS_UIR_ONE_KEY_ZERO_REQ,
 
 	//L3AQYCG20
 	MSG_ID_L3AQYC_EXG_CTRL_REQ,
@@ -2930,11 +2928,19 @@ typedef struct msg_struct_l3bfdf_uicomm_ctrl_cmd_resp
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP  				2
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND  			3
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME  			4
-#define HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_ZERO  			5
-#define HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_FULL  			6
-#define HCU_SYSMSG_BFHS_UICOMM_CMDID_DYN_ZERO  			7
-#define HCU_SYSMSG_BFHS_UICOMM_CMDID_DYN_FULL  			8
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI		5
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI		6
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_ONE_KEY_ZERO		7
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_TEST				8
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_INVALID  			0xFF
+
+//CMD_VALUE
+#define HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_NULL  							0
+#define HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO  				1
+#define HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL  				2
+#define HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO		  		3
+#define HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL		  		4
+#define HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_INVALID							0xFF
 
 typedef struct StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters
 {
@@ -2967,14 +2973,12 @@ typedef struct strMsgIe_bfhs_MotoCtrlParamaters
 	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
 }strMsgIe_bfhs_MotoCtrlParamaters_t;
 
+//MSG_ID_L3BFHS_UICOMM_CTRL_CMD_REQ
 typedef struct msg_struct_uicomm_l3bfhs_ctrl_cmd_req
 {
 	UINT8  cmdid;
-	//这部分待确定，这些参数是否需要从界面上带下来
-	StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters_t calZeroPar;
-	StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t calFullPar;
-	strMsgIe_bfhs_MotoCtrlParamaters_t   dynMotoPar;
 	UINT32 length;
+	UINT32 cmdValue;
 }msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t;
 
 //MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP,
@@ -3027,6 +3031,7 @@ typedef struct StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters
 typedef struct msg_struct_l3bfhs_uicomm_ctrl_cmd_resp
 {
 	UINT8   cmdid;
+	UINT16  cmdValue;
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
 	//这些参数，是否需要都显示到界面上？待完善定义
@@ -3166,13 +3171,16 @@ typedef struct strMsgIe_bfhs_WgtSnrParamaters
 	UINT8   WeightSensorAutoZero;    //object 0x2074, 0:off 1:On
 	UINT8   WeightSensorTimeGrid;  //object 0x2222, send weight value in a fixed time grid.
 	UINT8   WeightSensorAlgoSelect;  //weight algorithm select
+	UINT32  WeightSensorReadStartMs;  //Weight sensor start sampling after infrared detector trigger
+	UINT32  WeightSensorReadStopMs;   //Weight sensor stop sampling after infrared detector trigger
 }strMsgIe_bfhs_WgtSnrParamaters_t;
 
 typedef struct strMsgIe_bfhs_ArmCtrlParamaters
 {
 	UINT32	ArmRollingStartMs;						//how long do the arm rolling for start action
 	UINT32	ArmRollingStopMs;							//how long do the arm rolling for stop action
-	UINT32	ArmRollingInveralMs;					//If the arm is rolling, how long the motor will stay in still before roll back (stop action).
+	UINT32	ArmStartActionMs;					//The time delay of arm start action after infrared detector trigger
+	UINT32	ArmRollingIntervalMs;					//If the arm is rolling, how long the motor will stay in still before roll back (stop action).
 	UINT32	ArmFailureDetectionVaration;	// % of the MotorSpeed
 	UINT32	ArmFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
 }strMsgIe_bfhs_ArmCtrlParamaters_t;
@@ -3391,6 +3399,20 @@ typedef struct msg_struct_huicobus_uir_stop_suspend_req
 	UINT32 length;
 }msg_struct_huicobus_uir_stop_suspend_req_t;
 
+//MSG_ID_HUICOBUS_UIR_STATIC_CALI_REQ,
+typedef struct msg_struct_huicobus_uir_static_cali_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_static_cali_req_t;
+
+//MSG_ID_HUICOBUS_UIR_DYNAMIC_CALI_REQ,
+typedef struct msg_struct_huicobus_uir_dynamic_cali_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_dynamic_cali_req_t;
+
 //MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ,
 typedef struct msg_struct_huicobus_uir_cali_zero_req
 {
@@ -3424,7 +3446,6 @@ typedef struct msg_struct_huicobus_uir_study_stop_req
 //MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,
 typedef struct msg_struct_huicobus_uir_test_cmd_req
 {
-	INT32  cmdValue;
 	UINT8  	boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
 	UINT32 	cmdValue1;
 	UINT32 	cmdValue2;

@@ -26,54 +26,6 @@ enum FSM_STATE_BFHSUICOMM
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
-typedef struct gTaskL3bfhsuicommContext{
-	UINT8	bfhsuiState; // 1 - UI START; 2 - UI STOP
-	//本地全局变量，分别用于标识开启命令，校准命令，和配置命令的变化，系统启动初始化为0, UI界面修改后自动累加，HCU对比Flag变化判断用户修改了那个Json文件
-	UINT32  cmdStartStopFlag;
-	UINT32  cmdCalibrationFlag;
-	UINT32  cmdResumeFlag;
-	UINT32  cmdTestFlag;
-}gTaskL3bfhsuicommContext_t;
-
-
-typedef struct L3BfhsuiStartStopCmd
-{
-	UINT32  cmdFlag;
-	UINT32  cmdValue;
-	UINT16  confindex;
-}L3BfhsuiStartStopCmd_t;
-
-typedef struct L3BfhsuiCalibrationCmd
-{
-	UINT32  cmdFlag;
-	UINT32  cmdValue;
-	UINT8	 sensorid;
-	UINT32	weight;
-}L3BfhsuiCalibrationCmd_t;
-
-typedef struct L3BfhsuiResumeCmd
-{
-	UINT32  cmdFlag;
-	UINT32 	cmdValue;
-}L3BfhsuiResumeCmd_t;
-
-typedef struct L3BfhsuiTestCmd
-{
-	UINT32  cmdFlag;
-	UINT32 cmdValue;
-	UINT8	sensorid;
-	UINT32	testCmd;
-	UINT32	testPara;
-} L3BfhsuiTestCmd_t;
-
-typedef struct L3BfhsuiJsonCmdParseResult
-{
-	L3BfhsuiStartStopCmd_t  cmdStartStop;
-	L3BfhsuiCalibrationCmd_t  cmdCalibration;
-	L3BfhsuiResumeCmd_t  cmdResume;
-	L3BfhsuiTestCmd_t  cmdTest;
-} L3BfhsuiJsonCmdParseResult_t;
-
 //Global variables
 extern HcuFsmStateItem_t HcuFsmBfhsuicomm[];
 
@@ -87,15 +39,13 @@ extern OPSTAT fsm_bfhsuicomm_sui_test_cmd_resp(UINT32 dest_id, UINT32 src_id, vo
 extern OPSTAT fsm_bfhsuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_huicobus_uir_stop_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_bfhsuicomm_huicobus_uir_cali_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_bfhsuicomm_huicobus_uir_cali_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_bfhsuicomm_huicobus_uir_study_start_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_bfhsuicomm_huicobus_uir_study_stop_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_static_cali_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_dynamic_cali_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_bfhsuicomm_huicobus_uir_one_key_clean_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_one_key_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
-OPSTAT  func_bfhsuicomm_read_cfg_file_into_ctrl_table(UINT16 config_index);
+OPSTAT  func_bfhsuicomm_read_cfg_db_into_ctrl_table(UINT16 config_index);
 OPSTAT  func_bfhsuicomm_time_out_period_read_process(void);
 
 

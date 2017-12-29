@@ -182,7 +182,7 @@ OPSTAT func_l3bfhs_int_init(void)
 	lt=time(NULL);
 	cu = localtime(&lt);
 	cu->tm_mon = cu->tm_mon + 1; //月份是从0-11的，+1是为了符合正常逻辑
-	sprintf(s, "BOFENGZHINENG-%s-%4.2f-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfhsContext.configName, (float)gTaskL3bfhsContext.wgtSnrPar.MinAllowedWeight, \
+	sprintf(s, "BOFENGZHINENG-%s-%4.2f-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfhsContext.configName, (float)gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight, \
 			(UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
 	hcu_sps232_send_char_to_ext_printer(s, strlen(s));
 
@@ -409,7 +409,8 @@ OPSTAT fsm_l3bfhs_canitf_cal_zero_resp(UINT32 dest_id, UINT32 src_id, void * par
 		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
 		snd.validFlag = FALSE;
 		snd.errCode = rcv.errCode;
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_ZERO;
+		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO;
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
 		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB, TIMER_RESOLUTION_1S);
@@ -419,7 +420,8 @@ OPSTAT fsm_l3bfhs_canitf_cal_zero_resp(UINT32 dest_id, UINT32 src_id, void * par
 	else{
 		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_ZERO;
+		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO;
 		snd.validFlag = TRUE;
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
@@ -441,7 +443,8 @@ OPSTAT fsm_l3bfhs_canitf_cal_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
 		snd.validFlag = FALSE;
 		snd.errCode = rcv.errCode;
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_FULL;
+		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL;
 		memcpy(&snd.calFullRespPar, &rcv.calFullRespPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t));
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
@@ -452,7 +455,8 @@ OPSTAT fsm_l3bfhs_canitf_cal_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 	else{
 		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_FULL;
+		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL;
 		snd.validFlag = TRUE;
 		memcpy(&snd.calFullRespPar, &rcv.calFullRespPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t));
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
@@ -474,7 +478,8 @@ OPSTAT fsm_l3bfhs_canitf_dyn_zero_resp(UINT32 dest_id, UINT32 src_id, void * par
 		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
 		snd.validFlag = FALSE;
 		snd.errCode = rcv.errCode;
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYN_ZERO;
+		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI;
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO;
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
 		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB, TIMER_RESOLUTION_1S);
@@ -484,7 +489,8 @@ OPSTAT fsm_l3bfhs_canitf_dyn_zero_resp(UINT32 dest_id, UINT32 src_id, void * par
 	else{
 		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYN_ZERO;
+		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI;
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO;
 		snd.validFlag = TRUE;
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
@@ -506,7 +512,8 @@ OPSTAT fsm_l3bfhs_canitf_dyn_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
 		snd.validFlag = FALSE;
 		snd.errCode = rcv.errCode;
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYN_FULL;
+		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI;
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL;
 		memcpy(&snd.calFullRespPar, &rcv.dynFullRespPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t));
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
@@ -517,7 +524,8 @@ OPSTAT fsm_l3bfhs_canitf_dyn_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 	else{
 		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYN_FULL;
+		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI;
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL;
 		snd.validFlag = TRUE;
 		memcpy(&snd.calFullRespPar, &rcv.dynFullRespPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t));
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
@@ -769,45 +777,78 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 	}
 
-	//CAL_ZERO
-	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_ZERO){
-		msg_struct_l3bfhs_can_cal_zero_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_cal_zero_req_t));
-		memcpy(&snd.calZeroPar, &rcv.calZeroPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters_t));
-		snd.length = sizeof(msg_struct_l3bfhs_can_cal_zero_req_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
-		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	//STATIC_CALI
+	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI){
+		if(rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO){
+			msg_struct_l3bfhs_can_cal_zero_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_cal_zero_req_t));
+			snd.calZeroPar.WeightSensorAutoZero = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch;
+			snd.calZeroPar.WeightSensorAutoZeroAutotaringTimeMs = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs;
+			snd.calZeroPar.WeightSensorAutoZeroCaptureRangeGrams = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams;
+			snd.calZeroPar.WeightSensorFilterCutOffFreqHz = gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz;
+			snd.calZeroPar.WeightSensorMeasurementRangeNo = gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo;
+			snd.calZeroPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat;
+			snd.calZeroPar.WeightSensorPreloadComPensationValuePercent = gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue;
+			snd.calZeroPar.WeightSensorRingBufTimeMs = gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs;
+			snd.calZeroPar.WeightSensorStandstillRangeGrams = gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams;
+			snd.calZeroPar.WeightSensorStandstillTime = gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime;
+			snd.calZeroPar.WeightSensorStandstillTimeoutMs = gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs;
+			snd.calZeroPar.spare1 = 0;
+			snd.calZeroPar.spare2 = 0;
+			snd.length = sizeof(msg_struct_l3bfhs_can_cal_zero_req_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		}
+		else if(rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL){
+			msg_struct_l3bfhs_can_cal_full_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_cal_full_req_t));
+			snd.calFullPar.WeightSensorAdjustingTolerancePercent = gTaskL3bfhsContext.wgtSnrPar.snrAdjustingTolerancePercent;
+			snd.calFullPar.WeightSensorAdjustingWeightGrams = gTaskL3bfhsContext.wgtSnrPar.snrAdjustingWeightGrams;
+			snd.length = sizeof(msg_struct_l3bfhs_can_cal_full_req_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_CAL_FULL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		}
+		else
+			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Receive cmdValue error for CMDID_STATIC_CALI!\n");
 	}
-
-	//CAL_FULL
-	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_FULL){
-		msg_struct_l3bfhs_can_cal_full_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_cal_full_req_t));
-		memcpy(&snd.calFullPar, &rcv.calFullPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t));
-		snd.length = sizeof(msg_struct_l3bfhs_can_cal_full_req_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_CAL_FULL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
-		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-	}
-
-	//DYN_ZERO
-	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_DYN_ZERO){
-		msg_struct_l3bfhs_can_dyn_zero_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_dyn_zero_req_t));
-		memcpy(&snd.dynZeroPar, &rcv.calZeroPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters_t));
-		memcpy(&snd.dynMotoPar, &rcv.dynMotoPar, sizeof(strMsgIe_bfhs_MotoCtrlParamaters_t));
-		snd.length = sizeof(msg_struct_l3bfhs_can_dyn_zero_req_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_DYN_ZERO_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
-		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-	}
-
-	//DYN_FULL
-	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_DYN_FULL){
-		msg_struct_l3bfhs_can_dyn_full_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_dyn_full_req_t));
-		memcpy(&snd.dynFullPar, &rcv.calFullPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t));
-		snd.length = sizeof(msg_struct_l3bfhs_can_dyn_full_req_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_DYN_FULL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
-		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	//DYNAMIC_CALI
+	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI){
+		if(rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO){
+			msg_struct_l3bfhs_can_dyn_zero_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_dyn_zero_req_t));
+			//配置称重传感器参数
+			snd.dynZeroPar.WeightSensorAutoZero = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch;
+			snd.dynZeroPar.WeightSensorAutoZeroAutotaringTimeMs = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs;
+			snd.dynZeroPar.WeightSensorAutoZeroCaptureRangeGrams = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams;
+			snd.dynZeroPar.WeightSensorFilterCutOffFreqHz = gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz;
+			snd.dynZeroPar.WeightSensorMeasurementRangeNo = gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo;
+			snd.dynZeroPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat;
+			snd.dynZeroPar.WeightSensorPreloadComPensationValuePercent = gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue;
+			snd.dynZeroPar.WeightSensorRingBufTimeMs = gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs;
+			snd.dynZeroPar.WeightSensorStandstillRangeGrams = gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams;
+			snd.dynZeroPar.WeightSensorStandstillTime = gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime;
+			snd.dynZeroPar.WeightSensorStandstillTimeoutMs = gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs;
+			snd.dynZeroPar.spare1 = 0;
+			snd.dynZeroPar.spare2 = 0;
+			//配置马达参数
+			snd.dynMotoPar.MotorDirection = gTaskL3bfhsContext.motoCtrlPar.MotorDirection;
+			snd.dynMotoPar.MotorSpeed = gTaskL3bfhsContext.motoCtrlPar.MotorSpeed;
+			snd.length = sizeof(msg_struct_l3bfhs_can_dyn_zero_req_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_DYN_ZERO_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		}
+		else if(rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL){
+			msg_struct_l3bfhs_can_dyn_full_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_dyn_full_req_t));
+			snd.dynFullPar.WeightSensorAdjustingTolerancePercent = gTaskL3bfhsContext.wgtSnrPar.snrAdjustingTolerancePercent;
+			snd.dynFullPar.WeightSensorAdjustingWeightGrams = gTaskL3bfhsContext.wgtSnrPar.snrAdjustingWeightGrams;
+			snd.length = sizeof(msg_struct_l3bfhs_can_dyn_full_req_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_DYN_FULL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+			//动态校准可以重复进行，一次request后用户重复放置砝码会有多次response返回
+			//hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		}
+		else
+			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Receive cmdValue error for CMDID_DYNAMIC_CALI!\n");
 	}
 
 	//差错
@@ -875,7 +916,7 @@ OPSTAT func_l3bfhs_time_out_cal_zero_wait_fb_process(void)
 	//发送反馈给UICOMM
 	msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_ZERO;
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
 	snd.validFlag = FALSE;
 	snd.errCode = HCU_SYSMSG_BFHS_ERR_CODE_TIME_OUT;
 	snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
@@ -891,7 +932,7 @@ OPSTAT func_l3bfhs_time_out_cal_full_wait_fb_process(void)
 	//发送反馈给UICOMM
 	msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_FULL;
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
 	snd.validFlag = FALSE;
 	snd.errCode = HCU_SYSMSG_BFHS_ERR_CODE_TIME_OUT;
 	snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);

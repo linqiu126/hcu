@@ -107,23 +107,27 @@ typedef struct gTaskL3bfhsContextStaEleMid
 //配置参数
 typedef struct gTaskL3bfhsContextWgtSnrParamaters
 {
-	UINT32  WeightSensorAutoZeroCaptureRangeGrams; //object 0x2076, act. zero point - capture range <=new zero point<= act. zero point + capture range
-    UINT32  WeightSensorStandstillRangeGrams; //object 0x2087, Standstill monitoring facilitates detecting a stable weight value, The standstill range specifies the accuracy of internal standstill
+	UINT32	maxAllowedWeight;		//称重物品的范围上限 NF2 format
+	UINT32  minAllowedWeight;        //称重物品的范围下限 NF2 format
+	UINT32  snrAutoZeroCaptureRangeGrams; //object 0x2076, act. zero point - capture range <=new zero point<= act. zero point + capture range
+    UINT32  snrStandstillRangeGrams; //object 0x2087, Standstill monitoring facilitates detecting a stable weight value, The standstill range specifies the accuracy of internal standstill
 							//detection, If the standstill range that is selected is too small, the result can be that standstill will never be detected
-	UINT32	MaxAllowedWeight;				//称重物品的范围上限 NF2 format
-	UINT32  MinAllowedWeight;        //称重物品的范围下限 NF2 format
-	UINT32  WeightSensorFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
-	UINT16  WeightSensorRingBufTimeMs; //object 0x2060, Default is 100ms to moving average
-	UINT16  WeightSensorAutoZeroAutotaringTimeMs; //object 0x2075, should be multiply of 50ms, zero tracking interval = 2*this value;
-    UINT16  WeightSensorPreloadComPensationValuePercent; //object 0x2085, default is 6.25(%), limited range [6.25,50]
-	UINT16  WeightSensorPreloadComPensationPlacesAfterDecimalPoint; //location of decimal point for Preload Compensation, for example,6.25%, this value is 2.
+	UINT32  snrFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
+	UINT16  snrRingBufTimeMs; //object 0x2060, Default is 100ms to moving average
+	UINT16  snrAutoZeroAutotaringTimeMs; //object 0x2075, should be multiply of 50ms, zero tracking interval = 2*this value;
+    UINT16  snrPreloadCompensationValue; //object 0x2085, default is 6.25(%), limited range [6.25,50]
+	UINT16  snrPreloadCompensationDataFormat; //location of decimal point for Preload Compensation, for example,6.25%, this value is 2.
 							//detection, If the standstill range that is selected is too small, the result can be that standstill will never be detected
-	UINT16  WeightSensorStandstillTimeoutMs; //object 0x2088, default value is 10000ms, time wait for large than this value,will generate an error
-	UINT16  WeightSensorStandstillTime; //object 0x2089, only for firmware(FS276/FS911, combined with 0x2087)
-	UINT8   WeightSensorMeasurementRangeNo; //object 0x2040, Default is 0, set measurement range no(totally 3),which is displayed in 0x2041
-	UINT8   WeightSensorAutoZero;    //object 0x2074, 0:off 1:On
-	UINT8   WeightSensorTimeGrid;  //object 0x2222, send weight value in a fixed time grid.
-	UINT8   WeightSensorAlgoSelect;  //weight algorithm select
+	UINT16  snrStandstillTimeoutMs; //object 0x2088, default value is 10000ms, time wait for large than this value,will generate an error
+	UINT16  snrStandstillTime; //object 0x2089, only for firmware(FS276/FS911, combined with 0x2087)
+	UINT8   snrMeasurementRangeNo; //object 0x2040, Default is 0, set measurement range no(totally 3),which is displayed in 0x2041
+	UINT8  	snrAutoZeroSwitch;    //object 0x2074, 0:off 1:On
+	UINT8   snrTimeGrid;  //object 0x2222, send weight value in a fixed time grid.
+	UINT8   snrAlgoSelect;  //weight algorithm select
+	UINT32  snrReadStartMs;  //Weight sensor start sampling after infrared detector trigger
+	UINT32  snrReadStopMs;   //Weight sensor stop sampling after infrared detector trigger
+	UINT32  snrAdjustingWeightGrams; //object 0x2080, adjusting weight,first set this value, then combined with command 'C'
+	UINT32  snrAdjustingTolerancePercent; //object0x2082, Current adjusting factor = 0.500000, adjusting tolerance = 1 %,The new factor must lie in the range 0.495000 ≤ Factornew ≤ 0.505000
 }gTaskL3bfhsContextWgtSnrParamaters_t;
 
 typedef struct gTaskL3bfhsContextMotoCtrlParamaters
@@ -136,7 +140,8 @@ typedef struct gTaskL3bfhsContextArmCtrlParamaters
 {
 	UINT32	ArmRollingStartMs;						//how long do the arm rolling for start action
 	UINT32	ArmRollingStopMs;							//how long do the arm rolling for stop action
-	UINT32	ArmRollingInveralMs;					//If the arm is rolling, how long the motor will stay in still before roll back (stop action).
+	UINT32	ArmStartActionMs;					//The time delay of arm start action after infrared detector trigger
+	UINT32	ArmRollingIntervalMs;					//If the arm is rolling, how long the motor will stay in still before roll back (stop action).
 	UINT32	ArmFailureDetectionVaration;	// % of the MotorSpeed
 	UINT32	ArmFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
 }gTaskL3bfhsContextArmCtrlParamaters_t;
@@ -147,9 +152,10 @@ typedef struct gTaskL3bfhsContextArmCtrlParamaters
 typedef struct gTaskL3bfhsContext
 {
 	//静态配置参数部分
-	gTaskL3bfhsContextWgtSnrParamaters_t 			wgtSnrPar;
-	gTaskL3bfhsContextMotoCtrlParamaters_t			motoCtrlPar;
-	gTaskL3bfhsContextArmCtrlParamaters_t			armCtrlPar;
+	gTaskL3bfhsContextWgtSnrParamaters_t 			wgtSnrPar; 		//称重传感器参数
+	gTaskL3bfhsContextMotoCtrlParamaters_t			motoCtrlPar;	//马达控制参数
+	gTaskL3bfhsContextArmCtrlParamaters_t			armCtrlPar;		//摇臂控制参数
+
 	UINT32  start24hStaTimeInUnix;		//系统配置的参数，表示24小时统计的日历起点
 
 	//动态部分

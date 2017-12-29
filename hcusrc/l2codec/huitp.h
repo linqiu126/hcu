@@ -6197,6 +6197,8 @@ typedef struct StrHuiIe_WeightSensorBfhsParamaters
 	UINT8   WeightSensorAutoZero;    //object 0x2074, 0:off 1:On
 	UINT8   WeightSensorTimeGrid;  //object 0x2222, send weight value in a fixed time grid.
 	UINT8   WeightSensorAlgoSelect;  //weight algorithm select
+	UINT32  WeightSensorReadStartMs;  //Weight sensor start sampling after infrared detector trigger
+	UINT32  WeightSensorReadStopMs;   //Weight sensor stop sampling after infrared detector trigger
 }StrHuiIe_WeightSensorBfhsParamaters_t;
 
 typedef struct StrHuiIe_MotorControlBfhsParamaters
@@ -6211,11 +6213,12 @@ typedef struct StrHuiIe_MotorControlBfhsParamaters
 
 typedef struct StrHuiIe_ArmControlBfhsParamaters
 {
-	UINT32	ArmRollingStartMs;						//how long do the arm rolling for start action
-	UINT32	ArmRollingStopMs;							//how long do the arm rolling for stop action
-	UINT32	ArmRollingInveralMs;					//If the arm is rolling, how long the motor will stay in still before roll back (stop action).
-	UINT32	ArmFailureDetectionVaration;	// % of the MotorSpeed
-	UINT32	ArmFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
+	UINT32	ArmRollingStartMs;					//how long do the arm rolling for start action
+	UINT32	ArmRollingStopMs;					//how long do the arm rolling for stop action
+	UINT32	ArmStartActionMs;					//The time delay of arm start action after infrared detector trigger
+	UINT32	ArmRollingIntervalMs;				//If the arm is rolling, how long the motor will stay in still before roll back (stop action).
+	UINT32	ArmFailureDetectionVaration;		// % of the MotorSpeed
+	UINT32	ArmFailureDetectionTimeMs;			// within TimeMs, 如果速度都在外面，认为故障
 }StrHuiIe_ArmControlBfhsParamaters_t;
 
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_set_config_req

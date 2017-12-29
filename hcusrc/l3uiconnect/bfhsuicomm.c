@@ -44,19 +44,17 @@ HcuFsmStateItem_t HcuFsmBfhsuicomm[] =
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          					fsm_bfhsuicomm_timeout},
 
     //Normal working status
-	{MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP,    FSM_STATE_BFHSUICOMM_ACTIVED,          		fsm_bfhsuicomm_l3bfhs_cmd_resp},	//人工控制反馈
-	{MSG_ID_SUI_TEST_CMD_RESP,      		FSM_STATE_BFHSUICOMM_ACTIVED,          		fsm_bfhsuicomm_sui_test_cmd_resp},  //测试命令反馈
+	{MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP,   		FSM_STATE_BFHSUICOMM_ACTIVED,      		fsm_bfhsuicomm_l3bfhs_cmd_resp},	//人工控制反馈
+	{MSG_ID_SUI_TEST_CMD_RESP,      			FSM_STATE_BFHSUICOMM_ACTIVED,      		fsm_bfhsuicomm_sui_test_cmd_resp},  //测试命令反馈
 
 	//UIR2HCU MSG RCV
 	{MSG_ID_HUICOBUS_UIR_INIT_REQ,      		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_init_req},
 	{MSG_ID_HUICOBUS_UIR_START_RESUME_REQ, 		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_start_resume_req},
 	{MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ, 		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_stop_suspend_req},
-	{MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_cali_zero_req},
-	{MSG_ID_HUICOBUS_UIR_CALI_FULL_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_cali_full_req},
-	{MSG_ID_HUICOBUS_UIR_STUDY_START_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_study_start_req},
-	{MSG_ID_HUICOBUS_UIR_STUDY_STOP_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_study_stop_req},
+	{MSG_ID_HUICOBUS_UIR_STATIC_CALI_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_static_cali_req},
+	{MSG_ID_HUICOBUS_UIR_DYNAMIC_CALI_REQ,    	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_dynamic_cali_req},
 	{MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_test_cmd_req},
-	{MSG_ID_HUICOBUS_UIR_ONE_KEY_CLEAN_ZERO_REQ, FSM_STATE_BFHSUICOMM_ACTIVED,         	fsm_bfhsuicomm_huicobus_uir_one_key_clean_zero_req},
+	{MSG_ID_HUICOBUS_UIR_ONE_KEY_ZERO_REQ, 		FSM_STATE_BFHSUICOMM_ACTIVED,         	fsm_bfhsuicomm_huicobus_uir_one_key_zero_req},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -64,7 +62,6 @@ HcuFsmStateItem_t HcuFsmBfhsuicomm[] =
 
 //Global variables
 extern gTaskL3bfhsContext_t gTaskL3bfhsContext;
-gTaskL3bfhsuicommContext_t gTaskL3bfhsuicommContext;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -105,7 +102,6 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFHSUICOMM] = 0;
-	memset(&gTaskL3bfhsuicommContext, 0, sizeof(gTaskL3bfhsuicommContext_t));
 
 	//启动MQTT服务内容
 
@@ -128,7 +124,7 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	//延迟并启动系统，进入测试模式
 	hcu_sleep(4);
 	//设置configIndex=1
-	func_bfhsuicomm_read_cfg_file_into_ctrl_table(1);
+	func_bfhsuicomm_read_cfg_db_into_ctrl_table(1);
 	//发送启动消息给L3BFHS
 	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
@@ -323,58 +319,83 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void 
 OPSTAT fsm_bfhsuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_start_resume_req_t);
-
+	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START;
+	snd.cmdValue = rcv.cmdValue;
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
 }
 
 OPSTAT fsm_bfhsuicomm_huicobus_uir_stop_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_stop_suspend_req_t);
-
+	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP;
+	snd.cmdValue = rcv.cmdValue;
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfhsuicomm_huicobus_uir_cali_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfhsuicomm_huicobus_uir_static_cali_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_cali_zero_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_static_cali_req_t);
+	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
+	if(rcv.cmdValue == HUICOBUS_CMDVALUE_static_cali_zero)
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO;
+	else if (rcv.cmdValue == HUICOBUS_CMDVALUE_static_cali_full)
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL;
+	else
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_INVALID;
 
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfhsuicomm_huicobus_uir_cali_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfhsuicomm_huicobus_uir_dynamic_cali_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_cali_full_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_dynamic_cali_req_t);
+	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI;
+	if(rcv.cmdValue == HUICOBUS_CMDVALUE_dynamic_cali_zero)
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO;
+	else if (rcv.cmdValue == HUICOBUS_CMDVALUE_dynamic_cali_full)
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL;
+	else
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_INVALID;
 
-	return SUCCESS;
-}
-
-//可能跟dynamic_calibiration相关，待确定
-OPSTAT fsm_bfhsuicomm_huicobus_uir_study_start_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_study_start_req_t);
-
-	return SUCCESS;
-}
-
-//可能跟dynamic_calibiration相关，待确定
-OPSTAT fsm_bfhsuicomm_huicobus_uir_study_stop_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_study_stop_req_t);
-
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
 }
 
 OPSTAT fsm_bfhsuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_test_cmd_req_t);
+	msg_struct_sui_test_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sui_test_cmd_req_t));
+	snd.length = sizeof(msg_struct_sui_test_cmd_req_t);
 
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_TEST_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfhsuicomm_huicobus_uir_one_key_clean_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfhsuicomm_huicobus_uir_one_key_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_one_key_clean_zero_req_t);
+	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_TEST;
 
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
 }
 
@@ -408,69 +429,45 @@ OPSTAT func_bfhsuicomm_time_out_period_read_process(void)
 	return SUCCESS;
 }
 
-
-
 //扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
-OPSTAT func_bfhsuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
+OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 config_index)
 {
-
 	//Update config id to gTaskL3bfhsContext
 	gTaskL3bfhsContext.configId = config_index;
 
-	//查询用户动态配置参数
-//	gTaskL3bfhsContext.wgtSnrPar.MinScaleNumberCombination = 1;
-//	gTaskL3bfhsContext.wgtSnrPar.MaxScaleNumberCombination  = 1;
-//	gTaskL3bfhsContext.wgtSnrPar.MinScaleNumberStartCombination = 1;
-//	gTaskL3bfhsContext.wgtSnrPar.TargetCombinationWeight = 1;
-//	gTaskL3bfhsContext.wgtSnrPar.TargetCombinationUpperWeight = 1;
-//	gTaskL3bfhsContext.wgtSnrPar.IsProximitCombinationMode = 1;
-//	gTaskL3bfhsContext.wgtSnrPar.CombinationBias =  1;
-//	gTaskL3bfhsContext.wgtSnrPar.IsRemainDetectionEnable = 1;
-//	gTaskL3bfhsContext.wgtSnrPar.RemainDetectionTimeSec  = 1;
-//	gTaskL3bfhsContext.wgtSnrPar.RemainScaleTreatment =  1;
-//	gTaskL3bfhsContext.wgtSnrPar.IsPriorityScaleEnabled = 1;
-//	gTaskL3bfhsContext.wgtSnrPar.CombinationAutoMode = 1;
-//	gTaskL3bfhsContext.wgtSnrPar.MovingAvrageSpeedCount = 1;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorLoadDetectionTimeMs =  1;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorLoadThread = 1;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorEmptyDetectionTimeMs = 1;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorEmptyThread = 1;
-//	gTaskL3bfhsContext.motoCtrlPar.StardardReadyTimeMs = 1;
-//	gTaskL3bfhsContext.armCtrlPar.MotorSpeed = 1;
-//	gTaskL3bfhsContext.armCtrlPar.MotorDirection = 1;
-//	gTaskL3bfhsContext.armCtrlPar.MotorRollingStartMs = 1;
-//	gTaskL3bfhsContext.armCtrlPar.MotorRollingStopMs  = 1;
-//	gTaskL3bfhsContext.armCtrlPar.MotorRollingInveralMs = 1;
-//	gTaskL3bfhsContext.armCtrlPar.MotorFailureDetectionVaration = 1;
-//	gTaskL3bfhsContext.armCtrlPar.MotorFailureDetectionTimeMs = 1;
-//
-//	gTaskL3bfhsContext.motoCtrlPar.MaxAllowedWeight = 1;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorAdcGain = 1;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorAdcSampleFreq = 1;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorStaticZeroValue = 1;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorTailorValue = 1;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorDynamicZeroThreadValue = 1;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorDynamicZeroHysteresisMs = 1;
-//
-//	gTaskL3bfhsContext.wgtSnrPar.CombinationSpeedMode = 0;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorPickupThread = 300;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorPickupDetectionTimeMs = 500;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorInitOrNot = 0;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorAdcBitwidth = 22;
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorAdcValue = 0;
-//
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorFilterCoeff[0] = 0;				// NOT for GUI
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorFilterCoeff[1] = 0;				// NOT for GUI
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorFilterCoeff[2] = 0;				// NOT for GUI
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorFilterCoeff[3] = 0;				// NOT for GUI
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorOutputValue[0] = 1;				// NOT for GUI
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorOutputValue[1] = 0;				// NOT for GUI
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorOutputValue[2] = 0;				// NOT for GUI
-//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorOutputValue[3] = 0;				// NOT for GUI
+	//称重传感器配置参数
+	gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight = 1050;
+	gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight  = 990;
+	gTaskL3bfhsContext.wgtSnrPar.snrAdjustingTolerancePercent = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrAdjustingWeightGrams = 1000;
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoSelect = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams =  1;
+	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz  = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo =  1;
+	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrReadStartMs = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrReadStopMs = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrTimeGrid = 1;
 
-	//查询校准数据
+	//马达配置参数
+	gTaskL3bfhsContext.motoCtrlPar.MotorDirection =  1;
+	gTaskL3bfhsContext.motoCtrlPar.MotorSpeed = 1;
 
-	//批次数据更新
+	//摇臂配置参数
+	gTaskL3bfhsContext.armCtrlPar.ArmFailureDetectionTimeMs = 1;
+	gTaskL3bfhsContext.armCtrlPar.ArmFailureDetectionVaration = 1;
+	gTaskL3bfhsContext.armCtrlPar.ArmRollingIntervalMs  = 1;
+	gTaskL3bfhsContext.armCtrlPar.ArmRollingStartMs = 1;
+	gTaskL3bfhsContext.armCtrlPar.ArmRollingStopMs = 1;
+	gTaskL3bfhsContext.armCtrlPar.ArmStartActionMs = 1;
+
 	//读取数据库，更新批次数据
 	gTaskL3bfhsContext.callCellId = 1;
 
