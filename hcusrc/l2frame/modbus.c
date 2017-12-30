@@ -1486,12 +1486,13 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	//对信息进行MODBUS协议的编码，包括CRC16的生成
 	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2009)
 	{
-		if (snd.humid.humidValue>=HCU_SENSOR_HUMID_VALUE_ALARM_THRESHOLD)//for 温控测试
+		if (snd.humid.humidValue>=HCU_SENSOR_HUMID_VALUE_ALARM_THRESHOLD_UP)//for 温控测试
 		{
 			memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 
 			currentModbusBuf.curLen = 8;
-			UINT8 sample[] = {0x01,0x06,0x00,0x00,0x01,0xF5,0x48,0x1D};
+			//UINT8 sample[] = {0x01,0x06,0x00,0x00,0x01,0xF5,0x48,0x1D};//501=50.1度
+			UINT8 sample[] = {0x01,0x06,0x00,0x00,0x02,0x58,0x89,0x50};//600=60.0度
 			memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
 
 			HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus Temp setting data to Temprature control = %02x %02X %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
@@ -1533,7 +1534,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 		}
 
-		else
+		else if(snd.humid.humidValue<=HCU_SENSOR_HUMID_VALUE_ALARM_THRESHOLD_DOWN)
 		{
 			memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 
