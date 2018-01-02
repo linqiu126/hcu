@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: 2017-10-20 18:26:57
+-- Generation Time: 2018-01-02 09:39:09
 -- 服务器版本： 5.7.19-0ubuntu0.17.04.1
 -- PHP Version: 7.0.22-0ubuntu0.17.04.1
 
@@ -101,6 +101,89 @@ CREATE TABLE `hcualcoholmq3alcodatainfo` (
   `dataformat` int(1) NOT NULL,
   `alcoholvalue` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `hcubfhsproductpara`
+--
+
+CREATE TABLE `hcubfhsproductpara` (
+  `sid` int(4) NOT NULL,
+  `confname` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `currentconf` char(1) CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+  `baseconf` char(1) CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+  `confowner` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT 'System',
+  `conficon` varchar(20) CHARACTER SET utf8 NOT NULL,
+  `confdescription` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `targetweight` int(5) NOT NULL,
+  `tareweight` int(5) NOT NULL,
+  `targetspeed` int(4) NOT NULL,
+  `productlength` int(4) NOT NULL,
+  `armrollinginterval` int(4) NOT NULL,
+  `algorithmoption` int(4) NOT NULL,
+  `upperlimit` int(4) NOT NULL,
+  `tu1limit` int(4) NOT NULL,
+  `tu2limit` int(4) NOT NULL,
+  `maxtu1` float NOT NULL,
+  `rejectoroption` int(4) NOT NULL,
+  `statisticsswitch` int(4) NOT NULL DEFAULT '2',
+  `targetthroughput` int(6) NOT NULL DEFAULT '10000',
+  `snrautozerorange` int(4) NOT NULL,
+  `snrstandstillrange` int(4) NOT NULL,
+  `snrfiltercutofffreq` int(4) NOT NULL,
+  `snrringbuftime` int(2) NOT NULL,
+  `snrautotaringtime` int(2) NOT NULL,
+  `snrpreloadvalue` int(2) NOT NULL,
+  `snrpreloadvalueformat` int(2) NOT NULL,
+  `snrstandstilltimeout` int(2) NOT NULL,
+  `snrstandstilltime` int(2) NOT NULL,
+  `snrmeasurementrange` int(1) NOT NULL,
+  `snrtimegrid` int(1) NOT NULL,
+  `motorspeed` int(4) NOT NULL,
+  `motordirection` int(4) NOT NULL,
+  `armrollingstart` int(4) NOT NULL,
+  `armrollingstop` int(4) NOT NULL,
+  `armfailvaration` int(4) NOT NULL,
+  `armfailtime` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- 转存表中的数据 `hcubfhsproductpara`
+--
+
+INSERT INTO `hcubfhsproductpara` (`sid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `targetweight`, `tareweight`, `targetspeed`, `productlength`, `armrollinginterval`, `algorithmoption`, `upperlimit`, `tu1limit`, `tu2limit`, `maxtu1`, `rejectoroption`, `statisticsswitch`, `targetthroughput`, `snrautozerorange`, `snrstandstillrange`, `snrfiltercutofffreq`, `snrringbuftime`, `snrautotaringtime`, `snrpreloadvalue`, `snrpreloadvalueformat`, `snrstandstilltimeout`, `snrstandstilltime`, `snrmeasurementrange`, `snrtimegrid`, `motorspeed`, `motordirection`, `armrollingstart`, `armrollingstop`, `armfailvaration`, `armfailtime`) VALUES
+(13, 'fish888', 'N', 'N', 'System', 'fish37.svg', '', 1000, 995, 990, 0, 2, 2, 800, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(14, 'apple', 'Y', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(15, 'qyyy', 'N', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(16, 'apple', 'N', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(17, 'apple', 'N', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(18, 'apple', 'N', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(19, 'fish888', 'N', 'N', 'System', 'fish37.svg', '', 1000, 995, 990, 0, 2, 2, 800, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `hcubfhssystempara`
+--
+
+CREATE TABLE `hcubfhssystempara` (
+  `weighterlength` int(4) NOT NULL DEFAULT '350',
+  `rejectorposition` int(4) NOT NULL,
+  `maxallowedweight` int(4) NOT NULL,
+  `minallowedweight` int(4) NOT NULL,
+  `counterweight` int(4) NOT NULL,
+  `autozerosignal` int(4) NOT NULL DEFAULT '500',
+  `autozeroswitch` int(1) NOT NULL,
+  `autozerolimit` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- 转存表中的数据 `hcubfhssystempara`
+--
+
+INSERT INTO `hcubfhssystempara` (`weighterlength`, `rejectorposition`, `maxallowedweight`, `minallowedweight`, `counterweight`, `autozerosignal`, `autozeroswitch`, `autozerolimit`) VALUES
+(400, 500, 500, 5, 1000, 6, 100000, 3);
 
 -- --------------------------------------------------------
 
@@ -509,6 +592,29 @@ CREATE TABLE `hcubfscstaticpara` (
 
 INSERT INTO `hcubfscstaticpara` (`sid`, `calmaxallowedwgt`, `calfullwgt`, `caladcgain`, `caladcwordrate`, `snrstaticzerovalue`, `snrtailorvalue`, `snrdynzerothread`, `snrdynzerohysteresis`) VALUES
 (1, 1000000, 100000, 6, 3, 0, 0, 499, 5000);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `hcubfznaccount`
+--
+
+CREATE TABLE `hcubfznaccount` (
+  `sid` int(4) NOT NULL,
+  `username` varchar(20) CHARACTER SET utf8 NOT NULL,
+  `password` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `memo` text CHARACTER SET utf8
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- 转存表中的数据 `hcubfznaccount`
+--
+
+INSERT INTO `hcubfznaccount` (`sid`, `username`, `password`, `memo`) VALUES
+(1, 'admin', '0DPiKuNIrrVmD8IUCuw1hQxNqZc', '管理员'),
+(4, 'bfzn', '123456', NULL),
+(10, 'wxl', '123456', NULL),
+(11, 'www', '123456', NULL);
 
 -- --------------------------------------------------------
 
@@ -5508,6 +5614,12 @@ ALTER TABLE `hcualcoholmq3alcodatainfo`
   ADD PRIMARY KEY (`sid`);
 
 --
+-- Indexes for table `hcubfhsproductpara`
+--
+ALTER TABLE `hcubfhsproductpara`
+  ADD PRIMARY KEY (`sid`);
+
+--
 -- Indexes for table `hcubfsccalibration`
 --
 ALTER TABLE `hcubfsccalibration`
@@ -5560,6 +5672,12 @@ ALTER TABLE `hcubfscstadatainfo`
 -- Indexes for table `hcubfscstaticpara`
 --
 ALTER TABLE `hcubfscstaticpara`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcubfznaccount`
+--
+ALTER TABLE `hcubfznaccount`
   ADD PRIMARY KEY (`sid`);
 
 --
@@ -5820,6 +5938,11 @@ ALTER TABLE `hcualcoholdatainfo`
 ALTER TABLE `hcualcoholmq3alcodatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
+-- 使用表AUTO_INCREMENT `hcubfhsproductpara`
+--
+ALTER TABLE `hcubfhsproductpara`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+--
 -- 使用表AUTO_INCREMENT `hcubfsccalibration`
 --
 ALTER TABLE `hcubfsccalibration`
@@ -5854,6 +5977,11 @@ ALTER TABLE `hcubfscstadatainfo`
 --
 ALTER TABLE `hcubfscstaticpara`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- 使用表AUTO_INCREMENT `hcubfznaccount`
+--
+ALTER TABLE `hcubfznaccount`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- 使用表AUTO_INCREMENT `hcuco1datainfo`
 --
