@@ -717,7 +717,7 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_trial(void)
 		memset(&(gTaskSysswmContext.cloudSwPkg), 0, sizeof(HcuSysMsgIeL3SysSwmSwPkgElement_t));
 		if (dbi_HcuSysSwm_SwPkg_inquery_max_sw_ver(snd.equEntry, snd.hwType, snd.hwId, HCU_SYSCFG_HBB_FW_UPGRADE_YES_TRIAL, &(gTaskSysswmContext.cloudSwPkg)) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Inquery max REL/VER ID error from database!\n");
-		HCU_DEBUG_PRINT_FAT("SYSSWM: IHU Stable Searching for INVENTORY-TRIAL, ENTRY/TYPE/ID/REL/VER/FLAG=[%d/%d/%d/%d/%d/%d]\n", gTaskSysswmContext.cloudSwPkg.equEntry, gTaskSysswmContext.cloudSwPkg.hwType, \
+		HCU_DEBUG_PRINT_FAT("SYSSWM: IHU Trial Searching for INVENTORY-TRIAL, ENTRY/TYPE/ID/REL/VER/FLAG=[%d/%d/%d/%d/%d/%d]\n", gTaskSysswmContext.cloudSwPkg.equEntry, gTaskSysswmContext.cloudSwPkg.hwType, \
 				gTaskSysswmContext.cloudSwPkg.hwPem, gTaskSysswmContext.cloudSwPkg.swRel, gTaskSysswmContext.cloudSwPkg.swVer, gTaskSysswmContext.cloudSwPkg.upgradeFlag);
 		snd.hwId = gTaskSysswmContext.cloudSwPkg.hwPem; //找到的最新的PEMID对应的软件版本
 		snd.swRel = gTaskSysswmContext.cloudSwPkg.swRel;
