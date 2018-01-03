@@ -189,7 +189,7 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     pubmsg.qos = HUICOBUS_MQTT_QOS_CONST;
     pubmsg.retained = 0;
     memset(topic, 0, sizeof(topic));
-    func_mqtt_clientid_translate_to_text(in->topicId, topic);
+    func_mqtt_topicid_translate_to_text(in->topicId, topic);
     MQTTClient_publishMessage(client, topic, &pubmsg, &token);
     HCU_DEBUG_PRINT_NOR("MQTT: Waiting for up to %d seconds for publication of %s\n, on topic %s for client with ClientID: %s\n", (int)(HUICOBUS_MQTT_TIMEOUT_CONST/1000), input, topic, HUICOBUS_MQTT_CLIENTID_HCUENTRY);
     rc = MQTTClient_waitForCompletion(client, token, HUICOBUS_MQTT_TIMEOUT_CONST);
