@@ -1500,7 +1500,7 @@ OPSTAT hcu_canalpha_usbcan_interface_init(void)
 	}
 
 	if (ret == FAILURE) HcuErrorPrint("CANALPHA: Init CAN interface CAN_DEVIDE_IDX_CARD1 failure!\n");
-
+	if (ret == SUCCESS) HcuDebugPrint("CANALPHA: Init CAN interface successful!\n");
 	return ret;
 }
 
