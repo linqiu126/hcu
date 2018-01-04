@@ -354,7 +354,8 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
 	//也可以采取CallBack函数的形式，让内部任务自行处理具体的过程：传递消息内容以及长度
 	msg_struct_com_mqtt_rcv_t snd;
 	memset(&snd, 0, sizeof(msg_struct_com_mqtt_rcv_t));
-	snd.srcId = func_mqtt_clientid_translate_to_id(context);
+	//发送的srcId，不能用context做解码，否则崩溃
+	//snd.srcId = func_mqtt_clientid_translate_to_id(context);
 	snd.topicId = func_mqtt_topicid_translate_to_id(topicName);
 	jsonobj = json_tokener_parse(message->payload);
 	//不能用简单的==NULL来判定
@@ -390,10 +391,10 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
 	}
 
 	//SRCID复用了系统功能
-	//  if (srcId_jsonobj != NULL){
-	//	  snd.srcId = (UINT32)(json_object_get_int(srcId_jsonobj));
-	//	  json_object_put(srcId_jsonobj);
-	//  }
+	if (srcId_jsonobj != NULL){
+		snd.srcId = (UINT32)(json_object_get_int(srcId_jsonobj));
+		json_object_put(srcId_jsonobj);
+	}
 	if (srcId_jsonobj != NULL) json_object_put(srcId_jsonobj);
 
 	//DESTID
@@ -479,7 +480,8 @@ int hcu_mqtt_msg_rcv(void)
 	{
 		hcu_usleep(100);
 		ch = getchar();
-	} while(ch!='Q' && ch != 'q');
+	}while(1);
+	//}while(ch!='Q' && ch != 'q');
 
 	MQTTClient_disconnect(client, 10000);
 	MQTTClient_destroy(&client);

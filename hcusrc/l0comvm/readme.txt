@@ -9,6 +9,9 @@
 
 
 
+//= ZJL, 2018 Jan.4 CURRENT_SW_DELIVERY 301=>BFHS项目
+= 修改MQTT的BUG
+
 //= ZJL, 2017 Dec.28 CURRENT_SW_DELIVERY 300=>BFHS项目
 = 完善BFHS的统计数据CallCell
 
