@@ -158,11 +158,11 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
 
     //json_object_object_add(para_object, "MacAddr", json_object_new_string("AA:BB:CC:DD:EE:FF"));
     memset(stmp, 0, sizeof(stmp));
-    func_mqtt_clientid_translate_to_text(in->srcNode, stmp);
+    func_mqtt_nodeid_translate_to_text(in->srcNode, stmp);
     json_object_object_add(jsonobj, "srcNode", json_object_new_string(stmp));
 
     memset(stmp, 0, sizeof(stmp));
-    func_mqtt_clientid_translate_to_text(in->destNode, stmp);
+    func_mqtt_nodeid_translate_to_text(in->destNode, stmp);
     json_object_object_add(jsonobj, "destNode", json_object_new_string(stmp));
 
     memset(stmp, 0, sizeof(stmp));
@@ -272,11 +272,11 @@ int hcu_mqtt_msg_send_asy_mode(msg_struct_com_mqtt_send_t *in)
 
 	//json_object_object_add(para_object, "MacAddr", json_object_new_string("AA:BB:CC:DD:EE:FF"));
 	memset(stmp, 0, sizeof(stmp));
-	func_mqtt_clientid_translate_to_text(in->srcNode, stmp);
+	func_mqtt_nodeid_translate_to_text(in->srcNode, stmp);
 	json_object_object_add(jsonobj, "srcNode", json_object_new_string(stmp));
 
 	memset(stmp, 0, sizeof(stmp));
-	func_mqtt_clientid_translate_to_text(in->destNode, stmp);
+	func_mqtt_nodeid_translate_to_text(in->destNode, stmp);
 	json_object_object_add(jsonobj, "destNode", json_object_new_string(stmp));
 
 	memset(stmp, 0, sizeof(stmp));
@@ -348,7 +348,7 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
 	//      putchar(*payloadptr++);
 	//  }
 	//  putchar('\n');
-	HCU_DEBUG_PRINT_NOR("MQTT: Message arrived, topic: %s, message: %s\n", topicName, message->payload);
+	HCU_DEBUG_PRINT_FAT("MQTT: Message arrived, topic: %s, message: %s\n", topicName, message->payload);
 
 	//上面这一段，未来将送到内部程序，并进行处理
 	//也可以采取CallBack函数的形式，让内部任务自行处理具体的过程：传递消息内容以及长度
