@@ -125,16 +125,17 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	hcu_sleep(4);
 	//设置configIndex=1
 	func_bfhsuicomm_read_cfg_db_into_ctrl_table(1);
-	//发送启动消息给L3BFHS
-	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
-	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START;
-	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
-	ret = hcu_message_send(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM, &snd, snd.length);
-	if (ret == FAILURE){
-		HcuErrorPrint("BFHSUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFHSUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
-		return FAILURE;
-	}
+
+	//发送启动消息给L3BFHS：有了界面后，这个就不需要了，以后需要删除
+//	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
+//	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
+//	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START;
+//	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
+//	ret = hcu_message_send(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM, &snd, snd.length);
+//	if (ret == FAILURE){
+//		HcuErrorPrint("BFHSUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFHSUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+//		return FAILURE;
+//	}
 
 	//返回
 	return SUCCESS;
@@ -436,37 +437,52 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfhsContext.configId = config_index;
 
 	//称重传感器配置参数
-	gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight = 1050;
-	gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight  = 990;
-	gTaskL3bfhsContext.wgtSnrPar.snrAdjustingTolerancePercent = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrAdjustingWeightGrams = 1000;
+	gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight = 1000;
+	gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight  = 0;
 	gTaskL3bfhsContext.wgtSnrPar.snrAlgoSelect = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams =  1;
+	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs = 100;
+	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams =  500;
 	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz  = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz  = 200;
 	gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo =  1;
-	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrReadStartMs = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrReadStopMs = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs = 1;
-	gTaskL3bfhsContext.wgtSnrPar.snrTimeGrid = 1;
+	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat = 2;
+	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue = 625;
+	gTaskL3bfhsContext.wgtSnrPar.snrReadStartMs = 50;
+	gTaskL3bfhsContext.wgtSnrPar.snrReadStopMs = 50;
+	gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs = 100;
+	gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams = 500;
+	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = 100;
+	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs = 10000;
+	gTaskL3bfhsContext.wgtSnrPar.snrTimeGrid = 10;
 
 	//马达配置参数
 	gTaskL3bfhsContext.motoCtrlPar.MotorDirection =  1;
-	gTaskL3bfhsContext.motoCtrlPar.MotorSpeed = 1;
+	gTaskL3bfhsContext.motoCtrlPar.MotorSpeed = 1000;
 
 	//摇臂配置参数
-	gTaskL3bfhsContext.armCtrlPar.ArmFailureDetectionTimeMs = 1;
+	gTaskL3bfhsContext.armCtrlPar.ArmFailureDetectionTimeMs = 100;
 	gTaskL3bfhsContext.armCtrlPar.ArmFailureDetectionVaration = 1;
-	gTaskL3bfhsContext.armCtrlPar.ArmRollingIntervalMs  = 1;
+	gTaskL3bfhsContext.armCtrlPar.ArmRollingIntervalMs  = 100;
 	gTaskL3bfhsContext.armCtrlPar.ArmRollingStartMs = 1;
 	gTaskL3bfhsContext.armCtrlPar.ArmRollingStopMs = 1;
 	gTaskL3bfhsContext.armCtrlPar.ArmStartActionMs = 1;
+
+	//CAL ZERO REQ
+	gTaskL3bfhsContext.calZeroPar.WeightSensorFilterCutOffFreqHz = 200;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZeroCaptureRangeGrams = 500;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorStandstillRangeGrams = 500;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZeroAutotaringTimeMs = 100;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorPreloadComPensationValuePercent = 625;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = 2;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorStandstillTimeoutMs = 10000;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorStandstillTime = 100;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorRingBufTimeMs = 100;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorMeasurementRangeNo = 1;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZero = 1;
+
+	//CAL FULL REQ
+	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingTolerancePercent = 5;
+	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams = 20000;
 
 	//读取数据库，更新批次数据
 	gTaskL3bfhsContext.callCellId = 1;

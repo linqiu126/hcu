@@ -802,8 +802,8 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		else if(rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL){
 			msg_struct_l3bfhs_can_cal_full_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_cal_full_req_t));
-			snd.calFullPar.WeightSensorAdjustingTolerancePercent = gTaskL3bfhsContext.wgtSnrPar.snrAdjustingTolerancePercent;
-			snd.calFullPar.WeightSensorAdjustingWeightGrams = gTaskL3bfhsContext.wgtSnrPar.snrAdjustingWeightGrams;
+			snd.calFullPar.WeightSensorAdjustingTolerancePercent = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingTolerancePercent;
+			snd.calFullPar.WeightSensorAdjustingWeightGrams = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams;
 			snd.length = sizeof(msg_struct_l3bfhs_can_cal_full_req_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_CAL_FULL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
 			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
@@ -840,8 +840,8 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		else if(rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL){
 			msg_struct_l3bfhs_can_dyn_full_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_dyn_full_req_t));
-			snd.dynFullPar.WeightSensorAdjustingTolerancePercent = gTaskL3bfhsContext.wgtSnrPar.snrAdjustingTolerancePercent;
-			snd.dynFullPar.WeightSensorAdjustingWeightGrams = gTaskL3bfhsContext.wgtSnrPar.snrAdjustingWeightGrams;
+			snd.dynFullPar.WeightSensorAdjustingTolerancePercent = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingTolerancePercent;
+			snd.dynFullPar.WeightSensorAdjustingWeightGrams = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams;
 			snd.length = sizeof(msg_struct_l3bfhs_can_dyn_full_req_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_DYN_FULL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
 			//动态校准可以重复进行，一次request后用户重复放置砝码会有多次response返回

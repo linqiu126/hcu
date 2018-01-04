@@ -566,6 +566,8 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	pMsgProc.weight_sensor_param.WeightSensorAutoZero = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorAutoZero);
 	pMsgProc.weight_sensor_param.WeightSensorTimeGrid = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorTimeGrid);
 	pMsgProc.weight_sensor_param.WeightSensorAlgoSelect = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorAlgoSelect);
+	pMsgProc.weight_sensor_param.WeightSensorReadStartMs = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorReadStartMs);
+	pMsgProc.weight_sensor_param.WeightSensorReadStopMs = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorReadStopMs);
 	pMsgProc.motor_control_param.MotorSpeed = HUITP_ENDIAN_EXG32(rcv.motoCtrlPar.MotorSpeed);
 	pMsgProc.motor_control_param.MotorDirection = HUITP_ENDIAN_EXG32(rcv.motoCtrlPar.MotorDirection);
 	pMsgProc.arm_control_param.ArmRollingStartMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingStartMs);
@@ -1161,7 +1163,6 @@ OPSTAT func_canalpha_l2frame_msg_bfhs_calibration_full_resp_received_handle(StrM
 	snd.calFullRespPar.WeightSensorCellAddress = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorCellAddress);
 	snd.calFullRespPar.WeightSensorTimeGrid = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorTimeGrid);
 	snd.calFullRespPar.Weight = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.Weight);
-	snd.calFullRespPar.spare2 = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.spare2);
 
 	snd.length = sizeof(msg_struct_can_l3bfhs_cal_full_resp_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_CAL_FULL_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
@@ -1226,7 +1227,6 @@ OPSTAT func_canalpha_l2frame_msg_bfhs_dyn_calibration_full_resp_received_handle(
 	snd.dynFullRespPar.WeightSensorCellAddress = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorCellAddress);
 	snd.dynFullRespPar.WeightSensorTimeGrid = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorTimeGrid);
 	snd.dynFullRespPar.Weight = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.Weight);
-	snd.dynFullRespPar.spare2 = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.spare2);
 
 	snd.length = sizeof(msg_struct_can_l3bfhs_dyn_full_resp_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_DYN_FULL_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
