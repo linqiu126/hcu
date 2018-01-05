@@ -762,6 +762,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	if ((rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START) || (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME)){
 		//不合法，直接退回
 		if (gTaskL3bfhsContext.sensorWs[0].nodeStatus < HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP){
+			HCU_DEBUG_PRINT_FAT("L3BFHS: START ERR RESP!\n");
 			msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
 			snd.validFlag = FALSE;
@@ -773,6 +774,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		}
 		//如果是工作态度，则需要发送RESUME
 		else if ((gTaskL3bfhsContext.sensorWs[0].nodeStatus == HCU_L3BFHS_NODE_BOARD_STATUS_VALID) || (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_ACTIVED)){
+			HCU_DEBUG_PRINT_FAT("L3BFHS: RESUME Procedure!\n");
 			msg_struct_sui_resume_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_sui_resume_req_t));
 			snd.length = sizeof(msg_struct_sui_resume_req_t);
@@ -780,6 +782,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		}
 		else{
+			HCU_DEBUG_PRINT_FAT("L3BFHS: Send SYS CFG out!\n");
 			//合法，发送给下位机
 			if (func_l3bfhs_send_out_sys_cfg_req() == FAILURE)
 				HCU_ERROR_PRINT_L3BFHS("L3BFHS: Send message error!\n");
@@ -791,6 +794,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	//STOP/SUSPEND：可以不用处理，因为收不到
 	else if ((rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP) || (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND)){
 		if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_OOS_SCAN){
+			HCU_DEBUG_PRINT_FAT("L3BFHS: STOP received!\n");
 			msg_struct_sui_suspend_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
 			snd.length = sizeof(msg_struct_sui_suspend_req_t);
@@ -798,6 +802,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_SUSPEND_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		}
 		else{
+			HCU_DEBUG_PRINT_FAT("L3BFHS: STOP ERR RESP!\n");
 			msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
 			snd.validFlag = FALSE;
