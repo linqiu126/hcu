@@ -753,13 +753,35 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 
 	//启动命令
 	if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START){
-		if (func_l3bfhs_send_out_sys_cfg_req() == FAILURE)
-			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Send message error!\n");
-		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CFG_START_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
+		//不合法，直接退回
+		if (gTaskL3bfhsContext.sensorWs[0].nodeStatus < HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP){
+			msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
+			memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
+			snd.validFlag = FALSE;
+			snd.errCode = HCU_SYSMSG_BFHS_ERR_CODE_INVALIID;
+			snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START;
+			snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_NULL;
+			snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
+		}
+		//如果是工作态度，则需要发送SUSPEND
+		else if ((gTaskL3bfhsContext.sensorWs[0].nodeStatus == HCU_L3BFHS_NODE_BOARD_STATUS_VALID) || (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_ACTIVED)){
+			msg_struct_sui_suspend_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
+			snd.length = sizeof(msg_struct_sui_suspend_req_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_SUSPEND_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		}
+		else{
+			//合法，发送给下位机
+			if (func_l3bfhs_send_out_sys_cfg_req() == FAILURE)
+				HCU_ERROR_PRINT_L3BFHS("L3BFHS: Send message error!\n");
+			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CFG_START_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+			FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
+		}
 	}
 
-	//SUSPEND
+	//SUSPEND：可以不用处理，因为收不到
 	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND){
 		msg_struct_sui_suspend_req_t snd;
 		memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));

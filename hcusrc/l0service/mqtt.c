@@ -101,14 +101,13 @@ OPSTAT fsm_mqtt_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		HcuDebugPrint("MQTT: Enter FSM_STATE_MQTT_ACTIVED status, Keeping loop of signal sending here!\n");
 	}
 
+	//建立MQTT连接
+	func_mqtt_msg_link_setup_by_send_syn_mode();
+
 	//正式进入无限循环等待工作
 	if (hcu_mqtt_msg_rcv() != 0){
 		HcuDebugPrint("MQTT: Exit MQTT receiving cycle. So far continue to work!\n");
-		//exit(EXIT_FAILURE);
 	}
-
-	//建立MQTT连接
-	func_mqtt_msg_link_setup_by_send_syn_mode();
 
 	return SUCCESS;
 }
@@ -132,7 +131,6 @@ int func_mqtt_msg_link_setup_by_send_syn_mode(void)
     if ((rc = MQTTClient_connect(gTaskMqttContext.gclient, &gTaskMqttContextConn_opts)) != MQTTCLIENT_SUCCESS)
     {
         HcuErrorPrint("MQTT: Failed to connect, return code %d. So far set to continue work!\n", rc);
-        //exit(EXIT_FAILURE);
     }
 
 	//拆除链接，不能干这个事
@@ -646,17 +644,13 @@ int hcu_mqtt_msg_rcv(void)
 	conn_opts.cleansession = 1;
 
 	MQTTClient_setCallbacks(client, NULL, func_mqtt_msg_rcv_connlost, func_mqtt_msg_rcv_msgarrvd, func_mqtt_msg_rcv_delivered);
-
 	if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
 	{
 		HcuErrorPrint("MQTT: Failed to connect, return code %d. So far set to continue work!\n", rc);
 		//exit(EXIT_FAILURE);
 	}
 	HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", HUICOBUS_MQTT_TOPIC_HCU2UIR, HUICOBUS_MQTT_CLIENTID_HCUENTRY, HUICOBUS_MQTT_QOS_CONST);
-	//HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", HUICOBUS_MQTT_TOPIC_BHTRANS, HUICOBUS_MQTT_CLIENTID_HCUENTRY, HUICOBUS_MQTT_QOS_CONST);
 	MQTTClient_subscribe(client, HUICOBUS_MQTT_TOPIC_UIR2HCU, HUICOBUS_MQTT_QOS_CONST);
-	//MQTTClient_subscribe(client, HUICOBUS_MQTT_TOPIC_OPN2HCU, HUICOBUS_MQTT_QOS_CONST);
-	//MQTTClient_subscribe(client, HUICOBUS_MQTT_TOPIC_BHTRANS, HUICOBUS_MQTT_QOS_CONST);
 
 	//退出条件，未来待完善
 	do
