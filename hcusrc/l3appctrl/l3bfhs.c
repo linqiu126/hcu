@@ -752,7 +752,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
 
 	//启动命令
-	if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START){
+	if ((rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START) || (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME)){
 		//不合法，直接退回
 		if (gTaskL3bfhsContext.sensorWs[0].nodeStatus < HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP){
 			msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
@@ -764,13 +764,13 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 			snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
 		}
-		//如果是工作态度，则需要发送SUSPEND
+		//如果是工作态度，则需要发送RESUME
 		else if ((gTaskL3bfhsContext.sensorWs[0].nodeStatus == HCU_L3BFHS_NODE_BOARD_STATUS_VALID) || (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_ACTIVED)){
-			msg_struct_sui_suspend_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
-			snd.length = sizeof(msg_struct_sui_suspend_req_t);
-			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
-			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_SUSPEND_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+			msg_struct_sui_resume_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_sui_resume_req_t));
+			snd.length = sizeof(msg_struct_sui_resume_req_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		}
 		else{
 			//合法，发送给下位机
@@ -781,22 +781,25 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		}
 	}
 
-	//SUSPEND：可以不用处理，因为收不到
-	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND){
-		msg_struct_sui_suspend_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
-		snd.length = sizeof(msg_struct_sui_suspend_req_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
-		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_SUSPEND_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-	}
-
-	//RESUME
-	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME){
-		msg_struct_sui_resume_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_sui_resume_req_t));
-		snd.length = sizeof(msg_struct_sui_resume_req_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
-		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	//STOP/SUSPEND：可以不用处理，因为收不到
+	else if ((rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP) || (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND)){
+		if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_OOS_SCAN){
+			msg_struct_sui_suspend_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
+			snd.length = sizeof(msg_struct_sui_suspend_req_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_SUSPEND_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		}
+		else{
+			msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
+			memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
+			snd.validFlag = FALSE;
+			snd.errCode = HCU_SYSMSG_BFHS_ERR_CODE_INVALIID;
+			snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND;
+			snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_NULL;
+			snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
+		}
 	}
 
 	//STATIC_CALI
@@ -874,7 +877,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	}
 
 	//差错
-	else HCU_ERROR_PRINT_L3BFHS("L3BFHS: Receive message error!\n");
+	else HCU_ERROR_PRINT_L3BFHS("L3BFHS: Receive message error! Received Cmdid = %d, CmdValue=%d\n", rcv.cmdid, rcv.cmdValue);
 
 	//返回
 	return SUCCESS;
