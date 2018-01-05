@@ -480,8 +480,8 @@ int hcu_mqtt_msg_rcv(void)
 	{
 		hcu_usleep(100);
 		ch = getchar();
-	}while(1);
-	//}while(ch!='Q' && ch != 'q');
+	//}while(1);
+	}while(ch!='Q' && ch != 'q');
 
 	MQTTClient_disconnect(client, 10000);
 	MQTTClient_destroy(&client);
