@@ -486,18 +486,26 @@ void *func_usbcan_rx_thread(void *data)
 
         if (0 == cnt) continue;
 
+
+
         total_cnt = total_cnt + cnt;
 
         /* for debug */
         for (i = 0; i < cnt; i++)
         {
-        	wmc_id = func_usbcan_WmcCanIdMapToWmcId(husbcan->can_rx_data[i].ID);
-        	func_usbcan_RxCpltCallback(husbcan, &husbcan->can_rx_data[i], wmc_id);
+        	/* 2018/01/05 added by MA Yuchu */
+        	/* After we have BFHS, WMS and MWC only accept extended CAN frame, */
+        	/* as standard frame reserved for CANopen between MWC and MOTOR/SENSOR */
+        	if(TRUE == husbcan->can_rx_data[i].ExternFlag)
+        	{
+            	wmc_id = func_usbcan_WmcCanIdMapToWmcId(husbcan->can_rx_data[i].ID);
+            	func_usbcan_RxCpltCallback(husbcan, &husbcan->can_rx_data[i], wmc_id);
+        	}
 
 //        	HCU_DEBUG_PRINT_INF("USBCAN_DH: CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], total_frame = %d\n", husbcan->can_channel_id,
 //           			can[i].Data[0], can[i].Data[1], can[i].Data[2], can[i].Data[3],
 //					can[i].Data[4], can[i].Data[5], can[i].Data[6], can[i].Data[7], total_cnt);
-//        	HcuDebugPrint("USBCAN_DH: CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], len=%d, canid=0x%X, wmc_id=%d, total_frame=%d\n", husbcan->can_channel_id,
+//        	printf("USBCAN_DH: CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], len=%d, canid=0x%X, wmc_id=%d, total_frame=%d\n", husbcan->can_channel_id,
 //        			husbcan->can_rx_data[i].Data[0], husbcan->can_rx_data[i].Data[1], husbcan->can_rx_data[i].Data[2], husbcan->can_rx_data[i].Data[3],
 //					husbcan->can_rx_data[i].Data[4], husbcan->can_rx_data[i].Data[5], husbcan->can_rx_data[i].Data[6], husbcan->can_rx_data[i].Data[7],
 //					husbcan->can_rx_data[i].DataLen, husbcan->can_rx_data[i].ID, wmc_id, total_cnt);
@@ -728,6 +736,8 @@ void func_usbcan_RxCpltCallback(HcuUsbCanHandleTypeDef_t* CanHandle, VCI_CAN_OBJ
 	else
 		frame_desc = &g_can_packet_desc[1][wmc_id];
 
+	printf("USBCAN: func_usbcan_RxCpltCallback (wmc_id=%d). DataLen=%d, %02X %02X %02X %02X %02X %02X %02X %02X\r\n", wmc_id, Can->DataLen, \
+			Can->Data[0], Can->Data[1], Can->Data[2], Can->Data[3], Can->Data[4], Can->Data[5], Can->Data[6], Can->Data[7]);
 //	HCU_DEBUG_PRINT_INF("stdId 0x%x length %d, data: 0x%08x 0x%08x\n",
 //		Can->ID,
 //		Can->DataLen,
@@ -749,7 +759,6 @@ void func_usbcan_loopback_callback(HCU_HUITP_L2FRAME_Desc_t *pdesc)
 {
 	//int ret = 0;
 	//HcuUsbCanHandleTypeDef_t* CanHandle;
-
 	//入参检查
 	if ((pdesc->wmc_id >= HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE) || (can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE)){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
@@ -784,11 +793,20 @@ void func_usbcan_loopback_callback(HCU_HUITP_L2FRAME_Desc_t *pdesc)
 //			snd.databuf[4], snd.databuf[5], snd.databuf[6], snd.databuf[7]);
 
 	snd.length = sizeof(msg_struct_usbcan_l2frame_rcv_t);
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	if (hcu_message_send(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("USBCAN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 		return;
 	}
+#else
+	if (hcu_message_send(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANALPHA, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANALPHA]++;
+		HcuErrorPrint("USBCAN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
+		return;
+	}
+#endif
 	//ret = hcu_message_send(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, (void *)&(can_l2frame_itf_rx_buffer[pdesc->wmc_id]), CAN_L2_FRAME_ITF_LEN);
 
 	return;

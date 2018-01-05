@@ -131,6 +131,8 @@ int func_mqtt_msg_link_setup_by_send_syn_mode(void)
     if ((rc = MQTTClient_connect(gTaskMqttContext.gclient, &gTaskMqttContextConn_opts)) != MQTTCLIENT_SUCCESS)
     {
         HcuErrorPrint("MQTT: Failed to connect, return code %d. So far set to continue work!\n", rc);
+    }else{
+    	HcuDebugPrint("MQTT: Connected, return code %d!\n", rc);
     }
 
 	//拆除链接，不能干这个事
@@ -228,9 +230,9 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     memset(topic, 0, sizeof(topic));
     func_mqtt_topicid_translate_to_text(in->topicId, topic);
     MQTTClient_publishMessage(gTaskMqttContext.gclient, topic, &gTaskMqttContextPubmsg, &gTaskMqttContext.gtoken);
-    HCU_DEBUG_PRINT_NOR("MQTT: Waiting for up to %d seconds for publication of %s\n, on topic %s for client with ClientID: %s\n", (int)(HUICOBUS_MQTT_TIMEOUT_CONST/1000), input, topic, HUICOBUS_MQTT_CLIENTID_HCUENTRY);
+    HCU_DEBUG_PRINT_INF("MQTT: Waiting for up to %d seconds for publication of %s\n, on topic %s for client with ClientID: %s\n", (int)(HUICOBUS_MQTT_TIMEOUT_CONST/1000), input, topic, HUICOBUS_MQTT_CLIENTID_HCUENTRY);
     rc = MQTTClient_waitForCompletion(gTaskMqttContext.gclient, gTaskMqttContext.gtoken, HUICOBUS_MQTT_TIMEOUT_CONST);
-    HCU_DEBUG_PRINT_NOR("MQTT: Message with delivery token %d delivered\n", gTaskMqttContext.gtoken);
+    HCU_DEBUG_PRINT_INF("MQTT: Message with delivery token %d delivered\n", gTaskMqttContext.gtoken);
     return rc;
 #endif
 }
@@ -634,23 +636,23 @@ void func_mqtt_msg_rcv_connlost(void *context, char *cause)
 //MQTT接收消息
 int hcu_mqtt_msg_rcv(void)
 {
-	MQTTClient client;
-	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
+//	MQTTClient client;
+//	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
 	int rc;
 	int ch;
 
-	MQTTClient_create(&client, HUICOBUS_MQTT_BROKER_ADDRESS, HUICOBUS_MQTT_CLIENTID_HCUENTRY, MQTTCLIENT_PERSISTENCE_NONE, NULL);
-	conn_opts.keepAliveInterval = 20;
-	conn_opts.cleansession = 1;
+	MQTTClient_create(&gTaskMqttContext.gclient, HUICOBUS_MQTT_BROKER_ADDRESS, HUICOBUS_MQTT_CLIENTID_HCUENTRY, MQTTCLIENT_PERSISTENCE_NONE, NULL);
+	gTaskMqttContextConn_opts.keepAliveInterval = 20;
+	gTaskMqttContextConn_opts.cleansession = 1;
 
-	MQTTClient_setCallbacks(client, NULL, func_mqtt_msg_rcv_connlost, func_mqtt_msg_rcv_msgarrvd, func_mqtt_msg_rcv_delivered);
-	if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
+	MQTTClient_setCallbacks(gTaskMqttContext.gclient, NULL, func_mqtt_msg_rcv_connlost, func_mqtt_msg_rcv_msgarrvd, func_mqtt_msg_rcv_delivered);
+	if ((rc = MQTTClient_connect(gTaskMqttContext.gclient, &gTaskMqttContextConn_opts)) != MQTTCLIENT_SUCCESS)
 	{
 		HcuErrorPrint("MQTT: Failed to connect, return code %d. So far set to continue work!\n", rc);
 		//exit(EXIT_FAILURE);
 	}
 	HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", HUICOBUS_MQTT_TOPIC_HCU2UIR, HUICOBUS_MQTT_CLIENTID_HCUENTRY, HUICOBUS_MQTT_QOS_CONST);
-	MQTTClient_subscribe(client, HUICOBUS_MQTT_TOPIC_UIR2HCU, HUICOBUS_MQTT_QOS_CONST);
+	MQTTClient_subscribe(gTaskMqttContext.gclient, HUICOBUS_MQTT_TOPIC_UIR2HCU, HUICOBUS_MQTT_QOS_CONST);
 
 	//退出条件，未来待完善
 	do
@@ -661,8 +663,8 @@ int hcu_mqtt_msg_rcv(void)
 	}while(ch!='Q' && ch != 'q');
 
 	HCU_DEBUG_PRINT_FAT("MQTT: Disconnect with MQTT service!\n");
-	MQTTClient_disconnect(client, 10000);
-	MQTTClient_destroy(&client);
+	MQTTClient_disconnect(gTaskMqttContext.gclient, 10000);
+	MQTTClient_destroy(&gTaskMqttContext.gclient);
 	return rc;
 }
 

@@ -710,6 +710,13 @@ OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	status.wmcState = rcv.snrState;
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(0, &status);
 
+	//PURE TEST, to be removed!
+	StrHlcIe_cui_hcu2uir_inswgt_bfhs_report_t buf;
+	memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_inswgt_bfhs_report_t));
+	buf.weight = rcv.snrWsValue;
+	buf.wmcState = rcv.snrState;
+	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(buf.weight, &buf);
+
 	//正常处理
 	gTaskL3bfhsContext.callCellId++;
 	gTaskL3bfhsContext.cur.wsIncMatCntMid++;

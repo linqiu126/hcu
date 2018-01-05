@@ -137,6 +137,24 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 //		return FAILURE;
 //	}
 
+	//TEST MQTT
+//	while(1){
+//		StrHlcIe_cui_hcu2uir_inswgt_bfhs_report_t buf;
+//		buf.weight = rand()%500;
+//		buf.wmcState = 1;
+//		//hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(buf.weight, &buf);
+//
+//		msg_struct_com_mqtt_send_t snd;
+//		memset(&snd, 0, sizeof(msg_struct_com_mqtt_send_t));
+//		snd.cmdId = HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report;
+//		snd.cmdValue = buf.weight;
+//		snd.destId = HUICOBUS_MQTT_CLID_UIROUTER;
+//		snd.topicId = HUICOBUS_MQTT_TPID_HCU2UIR;
+//		snd.length = 11;
+//		hcu_mqtt_msg_send_syn_mode(&snd);
+//		hcu_sleep(2);
+//	}
+
 	//返回
 	return SUCCESS;
 }
