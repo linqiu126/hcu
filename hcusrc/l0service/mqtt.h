@@ -118,18 +118,32 @@ enum HUICOBUS_MQTT_TOPICID_LIST
 #define HUICOBUS_MQTT_QOS_CONST         		1
 #define HUICOBUS_MQTT_TIMEOUT_CONST     		10000L
 
+//MQTT全局变量
+typedef struct gTaskMqttContext
+{
+	MQTTClient 					gclient;
+    MQTTClient_deliveryToken 	gtoken;
+    //MQTTClient_connectOptions 	gconn_opts;
+    //MQTTClient_message 			gpubmsg;
+}gTaskMqttContext_t;
+
 //API
 extern OPSTAT fsm_mqtt_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_mqtt_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_mqtt_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //GLOBAL API
-extern int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in);
+extern int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in);  			//持久连接模式
+extern int hcu_mqtt_msg_send_syn_by_single_mode(msg_struct_com_mqtt_send_t *in); 	//单次连接并释放模式
+extern int hcu_mqtt_msg_send_asy_mode(msg_struct_com_mqtt_send_t *in);  			//持久连接模式
+extern int hcu_mqtt_msg_send_asy_by_single_mode(msg_struct_com_mqtt_send_t *in);  	//单次连接并释放模式
 extern int hcu_mqtt_msg_send_asy_mode(msg_struct_com_mqtt_send_t *in);
 extern int hcu_mqtt_msg_rcv(void);
 extern OPSTAT hcu_mqtt_hate_data_send(void *context, char *topicName, int payloadLen, char *payload);
 
 //Local APIs
+int  func_mqtt_msg_link_setup_by_send_syn_mode(void);
+int  func_mqtt_msg_link_setup_by_send_asy_mode(void);
 void func_mqtt_msg_send_asy_delivered(void *context, MQTTClient_deliveryToken dt);
 int  func_mqtt_msg_send_asy_msgarrvd(void *context, char *topicName, int topicLen, MQTTClient_message *message);
 void func_mqtt_msg_send_asy_connlost(void *context, char *cause);
