@@ -57,7 +57,7 @@ typedef enum HuicobusCmdidCuiDefination
 	HUICOBUS_CMDID_cui_uir2hcu_static_cali_req			= 0x0103,
 	HUICOBUS_CMDID_cui_uir2hcu_dynamic_cali_req			= 0x0104,
 	HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req       		= 0x0105,
-	HUICOBUS_CMDID_cui_uir2hcu_one_key_zero_req   		= 0x0116,
+	HUICOBUS_CMDID_cui_uir2hcu_one_key_zero_req   		= 0x0106,
 	HUICOBUS_CMDID_cui_uir2hcu_max,
 
 	//HCU2UIR频道
