@@ -208,10 +208,13 @@ OPSTAT func_huicobuscodec_HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req_received_handl
 	//解码snrBitmap ARRAY
 	decode_jsonobj = json_object_object_get(jsonobj, "snrBitmap");
 	if (decode_jsonobj != NULL){
-		for (i = 0 ; i < json_object_array_length(decode_jsonobj); i++){
-			json_object *val = json_object_array_get_idx(decode_jsonobj, i);
-			if (i<HUICOBUS_CMDID_CUI_HCU2UIR_TEST_CMD_BITMAP) snd->boardBitmap[i] = json_object_get_int(val);
-		}
+//		int tt = json_object_array_length(decode_jsonobj);
+//		for (i = 0 ; i < json_object_array_length(decode_jsonobj); i++){
+//			json_object *val = json_object_array_get_idx(decode_jsonobj, i);
+//			if (i<HUICOBUS_CMDID_CUI_HCU2UIR_TEST_CMD_BITMAP)
+//				snd->boardBitmap[i] = json_object_get_int(val);
+//		}
+	  snd->boardBitmap[0] = json_object_get_int(decode_jsonobj);
 	  json_object_put(decode_jsonobj);
 	}
 	//解码cmdvalue1

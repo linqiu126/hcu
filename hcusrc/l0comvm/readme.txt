@@ -11,7 +11,8 @@
 
 //= ZJL, 2018 Jan.6 CURRENT_SW_DELIVERY 302=>BFHS项目
 = 持续完善BFHS项目功能，产品联调
-
+= TEST_CMD codec error in HUICOBUSCODEC.C, not yet finish full function. snrBitmap just fill int=1, iso
+  of defined array, so decode also use INT method. In future this has to be improved.
 
 //= ZJL, 2018 Jan.4 CURRENT_SW_DELIVERY 301=>BFHS项目
 = 修改MQTT的BUG

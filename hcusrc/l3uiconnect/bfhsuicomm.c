@@ -412,6 +412,8 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 src_id, v
 	snd.cmdValue4 = rcv.cmdValue4;
 	memcpy(&snd.cmdBuf, &rcv.cmdBuf, sizeof(rcv.cmdBuf));
 
+	printf("BFHSCOMM: size of rcv.boardBitmap = %d, rcv.cmdBuf = %d\n", sizeof(rcv.boardBitmap), sizeof(rcv.cmdBuf));
+
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_TEST_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
 }
