@@ -9,6 +9,10 @@
 
 
 
+//= ZJL, 2018 Jan.6 CURRENT_SW_DELIVERY 302=>BFHS项目
+= 持续完善BFHS项目功能，产品联调
+
+
 //= ZJL, 2018 Jan.4 CURRENT_SW_DELIVERY 301=>BFHS项目
 = 修改MQTT的BUG
 = 分离不同的发送模式
