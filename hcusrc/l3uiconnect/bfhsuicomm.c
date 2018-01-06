@@ -324,6 +324,9 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_init_req_t);
 
 	//查询gTaskL3bfhsContext状态，判定下位机状态
+	if (gTaskL3bfhsContext.sensorWs[0].nodeStatus >= HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP){
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_init_resp(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STARTUP);
+	}
 
 	//if (wsState == INIT, DOWNLOAD) return SW LOADING
 
@@ -401,6 +404,13 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 src_id, v
 	msg_struct_sui_test_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_sui_test_cmd_req_t));
 	snd.length = sizeof(msg_struct_sui_test_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_TEST;
+	memcpy(&snd.boardBitmap, &rcv.boardBitmap, sizeof(rcv.boardBitmap));
+	snd.cmdValue1 = rcv.cmdValue1;
+	snd.cmdValue2 = rcv.cmdValue2;
+	snd.cmdValue3 = rcv.cmdValue3;
+	snd.cmdValue4 = rcv.cmdValue4;
+	memcpy(&snd.cmdBuf, &rcv.cmdBuf, sizeof(rcv.cmdBuf));
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_TEST_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
@@ -412,7 +422,7 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_one_key_zero_req(UINT32 dest_id, UINT32 src_i
 	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
-	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_TEST;
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_ONE_KEY_ZERO;
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
