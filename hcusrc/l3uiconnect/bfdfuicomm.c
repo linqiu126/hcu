@@ -55,14 +55,12 @@ HcuFsmStateItem_t HcuFsmBfdfuicomm[] =
 
 	//UIR2HCU MSG RCV
 	{MSG_ID_HUICOBUS_UIR_INIT_REQ,      		FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_init_req},
-	{MSG_ID_HUICOBUS_UIR_RESUME_REQ,      		FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_resume_req},
-	{MSG_ID_HUICOBUS_UIR_SUSPEND_REQ,      		FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_suspend_req},
-	{MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_cali_zero_req},
-	{MSG_ID_HUICOBUS_UIR_CALI_FULL_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_cali_full_req},
-	{MSG_ID_HUICOBUS_UIR_STUDY_START_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_study_start_req},
-	{MSG_ID_HUICOBUS_UIR_STUDY_STOP_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_study_stop_req},
+	{MSG_ID_HUICOBUS_UIR_START_RESUME_REQ, 		FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_start_resume_req},
+	{MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ, 		FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_stop_suspend_req},
+	{MSG_ID_HUICOBUS_UIR_STATIC_CALI_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_static_cali_req},
+	{MSG_ID_HUICOBUS_UIR_DYNAMIC_CALI_REQ,     	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_dynamic_cali_req},
 	{MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_test_cmd_req},
-	{MSG_ID_HUICOBUS_UIR_ONE_KEY_CLEAN_ZERO_REQ, FSM_STATE_BFDFUICOMM_ACTIVED,         	fsm_bfdfuicomm_huicobus_uir_one_key_clean_zero_req},
+	{MSG_ID_HUICOBUS_UIR_ONE_KEY_ZERO_REQ, 		FSM_STATE_BFDFUICOMM_ACTIVED,         	fsm_bfdfuicomm_huicobus_uir_one_key_zero_req},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -353,44 +351,66 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void 
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfdfuicomm_huicobus_uir_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfdfuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_resume_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_start_resume_req_t);
+	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
+	snd.cmdValue = rcv.cmdValue;
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfdfuicomm_huicobus_uir_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfdfuicomm_huicobus_uir_stop_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_suspend_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_stop_suspend_req_t);
+	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP;
+	snd.cmdValue = rcv.cmdValue;
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfdfuicomm_huicobus_uir_cali_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfdfuicomm_huicobus_uir_static_cali_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_cali_zero_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_static_cali_req_t);
+	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_STATIC_CALI;
+	if(rcv.cmdValue == HUICOBUS_CMDVALUE_static_cali_zero)
+		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_STATIC_CALI_ZERO;
+	else if (rcv.cmdValue == HUICOBUS_CMDVALUE_static_cali_full)
+		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_STATIC_CALI_FULL;
+	else
+		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_INVALID;
+
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfdfuicomm_huicobus_uir_cali_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfdfuicomm_huicobus_uir_dynamic_cali_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_cali_full_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_dynamic_cali_req_t);
+	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI;
+	if(rcv.cmdValue == HUICOBUS_CMDVALUE_dynamic_cali_zero)
+		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO;
+	else if (rcv.cmdValue == HUICOBUS_CMDVALUE_dynamic_cali_full)
+		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL;
+	else
+		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_INVALID;
 
-	return SUCCESS;
-}
-
-OPSTAT fsm_bfdfuicomm_huicobus_uir_study_start_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_study_start_req_t);
-
-	return SUCCESS;
-}
-
-OPSTAT fsm_bfdfuicomm_huicobus_uir_study_stop_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_study_stop_req_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
 	return SUCCESS;
 }
@@ -398,13 +418,30 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_study_stop_req(UINT32 dest_id, UINT32 src_id,
 OPSTAT fsm_bfdfuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_test_cmd_req_t);
+	msg_struct_sui_test_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sui_test_cmd_req_t));
+	snd.length = sizeof(msg_struct_sui_test_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_TEST;
+	memcpy(&snd.boardBitmap, &rcv.boardBitmap, sizeof(rcv.boardBitmap));
+	snd.cmdValue1 = rcv.cmdValue1;
+	snd.cmdValue2 = rcv.cmdValue2;
+	snd.cmdValue3 = rcv.cmdValue3;
+	snd.cmdValue4 = rcv.cmdValue4;
+	memcpy(&snd.cmdBuf, &rcv.cmdBuf, sizeof(rcv.cmdBuf));
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_TEST_CMD_REQ, TASK_ID_CANALPHA, TASK_ID_BFDFUICOMM);
 
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfdfuicomm_huicobus_uir_one_key_clean_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfdfuicomm_huicobus_uir_one_key_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_one_key_clean_zero_req_t);
+	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_ONE_KEY_ZERO;
+
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
 	return SUCCESS;
 }
