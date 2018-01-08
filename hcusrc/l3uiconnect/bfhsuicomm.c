@@ -142,8 +142,8 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 //		StrHlcIe_cui_hcu2uir_inswgt_bfhs_report_t buf;
 //		buf.weight = rand()%500;
 //		buf.wmcState = 1;
-//		//hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(buf.weight, &buf);
-//
+//		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(buf.weight, &buf);
+
 //		msg_struct_com_mqtt_send_t snd;
 //		memset(&snd, 0, sizeof(msg_struct_com_mqtt_send_t));
 //		snd.cmdId = HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report;
@@ -414,7 +414,7 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 src_id, v
 
 	printf("BFHSCOMM: size of rcv.boardBitmap = %d, rcv.cmdBuf = %d\n", sizeof(rcv.boardBitmap), sizeof(rcv.cmdBuf));
 
-	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_TEST_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_TEST_CMD_REQ, TASK_ID_CANALPHA, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
 }
 
