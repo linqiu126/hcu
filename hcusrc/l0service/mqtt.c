@@ -219,10 +219,17 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     json_object_object_add(jsonobj, "cmdId", json_object_new_int(in->cmdId));
     json_object_object_add(jsonobj, "cmdValue", json_object_new_int(in->cmdValue));
 
-    if (in->hlcLen > 0) json_object_object_add(jsonobj, "hlContent", json_object_new_string(in->hlContent));
-
-    sprintf(input, "%s", json_object_to_json_string(jsonobj));
-    HCU_DEBUG_PRINT_FAT("MQTT: Send out command = [%s]\n", input);
+    //执行HLC部分
+	if (in->hlcLen > 0){
+		struct json_object *jsonHlc = NULL;
+		jsonHlc = json_tokener_parse(in->hlContent);
+	    json_object_object_add(jsonobj, "hlContent", jsonHlc);
+	    sprintf(input, "%s", json_object_to_json_string(jsonobj));
+	    json_object_put(jsonHlc);//free
+	}else{
+	    json_object_object_add(jsonobj, "hlContent", json_object_new_string(""));
+	    sprintf(input, "%s", json_object_to_json_string(jsonobj));
+	}
     json_object_put(jsonobj);//free
     gTaskMqttContextPubmsg.payload = input;
     gTaskMqttContextPubmsg.payloadlen = strlen(input);
@@ -454,7 +461,6 @@ int hcu_mqtt_msg_send_asy_by_single_mode(msg_struct_com_mqtt_send_t *in)
 	//if (is_error(jsonobj))
 	if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Failed to create json object!\n");
 
-	//json_object_object_add(para_object, "MacAddr", json_object_new_string("AA:BB:CC:DD:EE:FF"));
 	memset(stmp, 0, sizeof(stmp));
 	func_mqtt_nodeid_translate_to_text(in->srcNode, stmp);
 	json_object_object_add(jsonobj, "srcNode", json_object_new_string(stmp));

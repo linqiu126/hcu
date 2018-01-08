@@ -395,13 +395,14 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(INT32 cmdValue, StrHl
     json_object_object_add(jsonobj, "boardStatus", json_object_new_int(buf->boardStatus));
 
     //测试Array
-    struct json_object *array_object = NULL;
-    array_object = json_object_new_array();
-    /*添加json值类型到数组中*/
-    json_object_array_add(array_object, json_object_new_int(256));
-    json_object_array_add(array_object, json_object_new_int(257));
-    json_object_array_add(array_object, json_object_new_int(258));
-    json_object_object_add(jsonobj, "array", array_object);
+//    struct json_object *array_object = NULL;
+//    array_object = json_object_new_array();
+//    /*添加json值类型到数组中*/
+//    json_object_array_add(array_object, json_object_new_int(256));
+//    json_object_array_add(array_object, json_object_new_int(257));
+//    json_object_array_add(array_object, json_object_new_int(258));
+//    json_object_object_add(jsonobj, "array", array_object);
+    //TEST END
 
     sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
     json_object_put(jsonobj);//free
