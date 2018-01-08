@@ -483,7 +483,7 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams = 500;
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = 100;
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs = 10000;
-	gTaskL3bfhsContext.wgtSnrPar.snrTimeGrid = 10;
+	gTaskL3bfhsContext.wgtSnrPar.snrTimeGrid = 100;
 
 	//马达配置参数
 	gTaskL3bfhsContext.motoCtrlPar.MotorDirection =  1;

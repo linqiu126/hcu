@@ -773,7 +773,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
 		}
 		//如果是工作态度，则需要发送RESUME
-		else if ((gTaskL3bfhsContext.sensorWs[0].nodeStatus == HCU_L3BFHS_NODE_BOARD_STATUS_VALID) || (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_ACTIVED)){
+		else if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_SUSPEND){
 			HCU_DEBUG_PRINT_FAT("L3BFHS: START/RESUME RCV, RESUME Procedure!\n");
 			msg_struct_sui_resume_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_sui_resume_req_t));

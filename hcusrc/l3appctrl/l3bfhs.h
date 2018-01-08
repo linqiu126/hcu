@@ -107,12 +107,12 @@ typedef struct gTaskL3bfhsContextStaEleMid
 //配置参数
 typedef struct gTaskL3bfhsContextWgtSnrParamaters
 {
-	UINT32	maxAllowedWeight;		//称重物品的范围上限 NF2 format
-	UINT32  minAllowedWeight;        //称重物品的范围下限 NF2 format
 	UINT32  snrAutoZeroCaptureRangeGrams; //object 0x2076, act. zero point - capture range <=new zero point<= act. zero point + capture range
     UINT32  snrStandstillRangeGrams; //object 0x2087, Standstill monitoring facilitates detecting a stable weight value, The standstill range specifies the accuracy of internal standstill
 							//detection, If the standstill range that is selected is too small, the result can be that standstill will never be detected
-	UINT32  snrFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
+	UINT32	maxAllowedWeight;		//称重物品的范围上限 NF2 format
+	UINT32  minAllowedWeight;        //称重物品的范围下限 NF2 format
+    UINT32  snrFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
 	UINT16  snrRingBufTimeMs; //object 0x2060, Default is 100ms to moving average
 	UINT16  snrAutoZeroAutotaringTimeMs; //object 0x2075, should be multiply of 50ms, zero tracking interval = 2*this value;
     UINT16  snrPreloadCompensationValue; //object 0x2085, default is 6.25(%), limited range [6.25,50]
