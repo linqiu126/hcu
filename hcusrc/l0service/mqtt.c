@@ -222,6 +222,7 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     if (in->hlcLen > 0) json_object_object_add(jsonobj, "hlContent", json_object_new_string(in->hlContent));
 
     sprintf(input, "%s", json_object_to_json_string(jsonobj));
+    HCU_DEBUG_PRINT_FAT("MQTT: Send out command = [%s]\n", input);
     json_object_put(jsonobj);//free
     gTaskMqttContextPubmsg.payload = input;
     gTaskMqttContextPubmsg.payloadlen = strlen(input);
