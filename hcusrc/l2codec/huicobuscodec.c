@@ -540,7 +540,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(INT32 cmdValue, 
     if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC: Failed to create json object!\n");
 
     json_object_object_add(jsonobj, "weight", json_object_new_int(buf->weight));
-    //json_object_object_add(jsonobj, "wmcState", json_object_new_int(buf->wmcState));
+    json_object_object_add(jsonobj, "wmcState", json_object_new_int(buf->wmcState));
 
     sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
     json_object_put(jsonobj);//free

@@ -107,7 +107,7 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	gTaskSysswmContext.swDlMaxTimes = HCU_SYSSWM_SW_DOWNLOAD_MAX_TIMES;
 
 	//启动周期性定时器：第一次将时钟降低到15秒
-	ret = hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, 15, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, 15000, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
 		HcuErrorPrint("SYSSWM: Error start period timer!\n");
