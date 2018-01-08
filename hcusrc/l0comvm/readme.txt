@@ -13,6 +13,7 @@
 //= ZJL, 2018 Jan.8 CURRENT_SW_DELIVERY 303=>BFHS项目
 = To easy test, SYSSWM starting timer set from 15 to 15000. To be corrected.
 = 绝对不在提早json_object_put(jsonHlc);//free释放json结构，不然会出现崩溃的情况
+= 新增消息没有配置到VM_CONFIG.H中，导致无法接入
 
 //= ZJL, 2018 Jan.6 CURRENT_SW_DELIVERY 302=>BFHS项目
 = 持续完善BFHS项目功能，产品联调
