@@ -112,6 +112,24 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	memset(&gTaskL3bfdfuicommContext, 0, sizeof(gTaskL3bfdfuicommContext_t));
 
 	//启动MQTT服务内容
+		while(1){
+			StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t buf;
+			buf.weight = rand()%500;
+			INT32 boardId = rand()%2;
+
+			hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(boardId, &buf);
+
+//			msg_struct_com_mqtt_send_t snd;
+//			memset(&snd, 0, sizeof(msg_struct_com_mqtt_send_t));
+//			snd.cmdId = HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report;
+//			snd.cmdValue = buf.weight;
+//			snd.destId = HUICOBUS_MQTT_CLID_UIROUTER;
+//			snd.topicId = HUICOBUS_MQTT_TPID_HCU2UIR;
+//			snd.length = 11;
+//			hcu_mqtt_msg_send_syn_mode(&snd);
+			hcu_sleep(2);
+		}
+
 
 	//启动周期性定时器
 /*
