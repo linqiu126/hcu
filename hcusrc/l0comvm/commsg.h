@@ -3086,7 +3086,7 @@ typedef struct strMsgIe_l3bfdf_MotorControlParamaters
 	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
 	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
 }strMsgIe_l3bfdf_MotorControlParamaters_t;
-#define	HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX			32
+#define	HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX			33
 #define	HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX	8
 typedef struct strMsgIe_l3bfdf_ActionControlParamaters
 {

@@ -85,6 +85,7 @@ OPSTAT fsm_l3bfdf_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
+	int i=0, j=0, boardId=0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -117,8 +118,8 @@ OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFDF] = 0;
 	//严格检查内部消息设置的大小，是否越界
-#if ((HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX != HCU_SYSCFG_BFDF_HOPPER_NBR_MAX-1) ||\
-		(HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX != HUITP_IEID_SUI_BFDF_MAX_GLOBAL_AP_NUM) ||\
+#if ((HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX != HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) ||\
+		(HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX != HUITP_IEID_SUI_BFDF_MAX_GLOBAL_AP_NUM+1) ||\
 		(HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX != HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD)||\
 		(HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX != HUITP_IEID_SUI_BFDF_MAX_LOCAL_AP_NUM))
 	#error BFDF KEY PARMETER SET ERROR!
@@ -138,9 +139,12 @@ OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//秤盘数据表单控制表初始化
 	memset(&gTaskL3bfdfContext, 0, sizeof(gTaskL3bfdfContext_t));
+	//第0号板子一定是垃圾桶：跟后面的逻辑是否相配？
+	for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+		gTaskL3bfdfContext.nodeDyn[i][0].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID;
+	}
 
 	//初始化界面交互数据
-	int i=0, j=0, boardId=0;
 	for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
 		for (j=0; j < (HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+2); j++){
 			boardId = (i<<3) + j;
@@ -250,100 +254,51 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
 
-	//根据收到的命令，分别进行控制
-	//state = FsmGetState(TASK_ID_L3BFDF);
-
 	//启动命令
-	if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START){
-		msg_struct_l3bfdf_can_sys_cfg_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t));
-		snd.length = sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t);
-		total=0;
-		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){
-			for (i = 0; i< HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX+2; i++){
-				//所有的配置过后的传感器
-				boardId = (j<<3)+i;
-				if (gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus > HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MIN)
-				{
-					gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_REQ;
-					gTaskL3bfdfContext.nodeDyn[j][i].cfgRcvFlag = FALSE;
-					total++;
-					snd.boardBitmap[boardId] = TRUE;
-				}
-				else snd.boardBitmap[boardId] = FALSE;
-			}
+	if ((rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START) || (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME)){
+		//判定不合法
+		if (func_l3bfdf_is_there_any_board_not_yet_startup()==FALSE){
+			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START);
 		}
-
-		memset(s, 0, sizeof(s));
-		sprintf(s, "L3BFDF: Total start sensor number = %d, bitmap = ", total);
-		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){
-			for (i=0; i<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; i++){
-				boardId = (j<<3)+i;
-				memset(tmp, 0, sizeof(tmp));
-				sprintf(tmp, "%d/", snd.boardBitmap[boardId]);
-				if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
-			}
+		//如果是工作状态，则需要发送RESUME：从板号１开始一直到HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX-1
+		else if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_SUSPEND){
+			msg_struct_sui_resume_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_sui_resume_req_t));
+			HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_RESUME_REQ);
+			HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
+			snd.length = sizeof(msg_struct_sui_resume_req_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
+			hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		}
-		strcat(s, "\n");
-		HCU_DEBUG_PRINT_CRT(s);
-
-		HCU_DEBUG_PRINT_CRT("L3BFDF: Total sensor to be start = %d\n", total);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_SYS_CFG_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
-
-		//启动定时器
-		hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		else{
+			msg_struct_l3bfdf_can_sys_cfg_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t));
+			snd.length = sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t);
+			HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_REQ);
+			HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_SYS_CFG_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
+			hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		}
 	}
 
-	//SUSPEND
-	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND){
-		msg_struct_sui_suspend_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
-		snd.length = sizeof(msg_struct_sui_suspend_req_t);
-		total=0;
-		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){
-			for (i = 0; i< HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX+2; i++){
-				//所有的配置过后的传感器
-				boardId = (j<<3)+i;
-				if (gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus > HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MIN)
-				{
-					snd.boardBitmap[boardId] = TRUE;
-					gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND_REQ;
-					gTaskL3bfdfContext.nodeDyn[j][i].cfgRcvFlag = FALSE;
-					total++;
-				}
-				else snd.boardBitmap[boardId] = FALSE;
-			}
+	//STOP/SUSPEND
+	else if ((rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP) || (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND)){
+		if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_SCAN){
+			msg_struct_sui_suspend_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
+			snd.length = sizeof(msg_struct_sui_suspend_req_t);
+			HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND_REQ);
+			HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
+			hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_SUSPEND_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		}
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
-		hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_SUSPEND_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-	}
-
-	//RESUME
-	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME){
-		msg_struct_sui_resume_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_sui_resume_req_t));
-		snd.length = sizeof(msg_struct_sui_resume_req_t);
-		total=0;
-		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){
-			for (i = 0; i< HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX+2; i++){
-				//所有的配置过后的传感器
-				boardId = (j<<3)+i;
-				if (gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus > HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MIN)
-				{
-					snd.boardBitmap[boardId] = TRUE;
-					gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_RESUME_REQ;
-					gTaskL3bfdfContext.nodeDyn[j][i].cfgRcvFlag = FALSE;
-					total++;
-				}
-				else snd.boardBitmap[boardId] = FALSE;
-			}
+		else{
+			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND);
 		}
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
-		hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 	}
 
 	//差错
-	else HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receive message error!\n");
+	else HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receive message error! Rcv.cmdId=%x, Rcv.value=%x.\n", rcv.cmdid, rcv.cmdValue);
 
 	//返回
 	return SUCCESS;
@@ -1138,7 +1093,7 @@ bool func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void)
 	int i=0, j=0;
 	for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++)
 	{
-		for (j=0; j<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++)
+		for (j=1; j<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++)
 		{
 			if ((gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus == HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_REQ) && (gTaskL3bfdfContext.nodeDyn[i][j].cfgRcvFlag == FALSE))
 				return FALSE;
@@ -1154,7 +1109,7 @@ bool func_l3bfdf_cacluate_sensor_suspend_rcv_complete(void)
 	int i=0, j=0;
 	for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++)
 	{
-		for (j=0; j<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++)
+		for (j=1; j<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++)
 		{
 			if ((gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus == HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND_REQ) && (gTaskL3bfdfContext.nodeDyn[i][j].cfgRcvFlag == FALSE))
 				return FALSE;
@@ -1169,7 +1124,7 @@ bool func_l3bfdf_cacluate_sensor_resume_rcv_complete(void)
 	int i=0, j=0;
 	for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++)
 	{
-		for (j=0; j<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++)
+		for (j=1; j<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++)
 		{
 			if ((gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus == HCU_L3BFDF_NODE_BOARD_STATUS_RESUME_REQ) && (gTaskL3bfdfContext.nodeDyn[i][j].cfgRcvFlag == FALSE))
 				return FALSE;
@@ -2128,6 +2083,24 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message(UINT8 streamId, UINT16 hopperI
 	//没找到，返回0
 	return TRUE;
 }
+
+
+//判定各个板子的状态是否合法
+//TRUE：全部都启动起来了
+//FALSE：还有板子未启动完成
+bool func_l3bfdf_is_there_any_board_not_yet_startup(void)
+{
+	int i = 0, j = 0;
+	for (i = 0; i < HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+		for (j = 0; j < HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX; j++){
+			if (gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus <HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP)
+				return FALSE;
+		}
+	}
+	//全部启动完成
+	return TRUE;
+}
+
 
 
 /***************************************************************************************************************************

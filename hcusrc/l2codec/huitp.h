@@ -6298,7 +6298,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp
 
 
 //HCU-IHU BFDF SUI新增内容
-#define     HUITP_IEID_SUI_BFDF_MAX_GLOBAL_AP_NUM				            (32)
+#define     HUITP_IEID_SUI_BFDF_MAX_GLOBAL_AP_NUM				              (32)
 #define     HUITP_IEID_SUI_BFDF_MAX_LOCAL_AP_NUM					          (8)
 
 typedef struct StrHuiIe_BfdfErrorCode

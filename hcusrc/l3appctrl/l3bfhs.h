@@ -325,8 +325,18 @@ extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);\
 	}while(0)
 
-
-
+//返回差错的CTRL_RESP MESSAGE
+#define HCU_L3BFHS_FEEDBACK_CTRL_RESP_MESSAGE(status) \
+	do{\
+		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;\
+		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));\
+		snd.validFlag = FALSE;\
+		snd.errCode = HCU_SYSMSG_BFHS_ERR_CODE_INVALIID;\
+		snd.cmdid = status;\
+		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_NULL;\
+		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);\
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);\
+	}while(0)
 
 
 #endif /* L3APP_BFHS_H_ */

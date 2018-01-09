@@ -357,7 +357,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, doub
 bool   func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, double weight);
 bool   func_l3bfdf_new_ws_send_out_pullin_message(UINT8 streamId, UINT16 hopperId);
 bool   func_l3bfdf_new_ws_send_out_comb_out_message(UINT8 streamId, UINT16 hopperId);
-
+bool   func_l3bfdf_is_there_any_board_not_yet_startup(void);
 
 //基础函数
 double gaussian(double u, double n);
@@ -380,5 +380,56 @@ extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
 		status.boardStatus = par;\
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(bid, &status);\
 	}while(0)
+
+//为了各个消息的发送，填入比较复杂的bitmap过程
+#define HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(status) \
+	do{\
+		total=0;\
+		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){\
+			for (i = 1; i< HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; i++){\
+				boardId = (j<<3)+i;\
+				if (gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus > HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MIN)\
+				{\
+					gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus = status;\
+					gTaskL3bfdfContext.nodeDyn[j][i].cfgRcvFlag = FALSE;\
+					total++;\
+					snd.boardBitmap[boardId] = TRUE;\
+				}\
+				else snd.boardBitmap[boardId] = FALSE;\
+			}\
+		}\
+	}while(0)
+
+//填入各个bitmap后，为了打印的方便，制作宏
+#define HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP() \
+	do{\
+		memset(s, 0, sizeof(s));\
+		sprintf(s, "L3BFDF: Total action sensor number = %d, bitmap = ", total);\
+		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){\
+			for (i=0; i<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; i++){\
+				boardId = (j<<3)+i;\
+				memset(tmp, 0, sizeof(tmp));\
+				sprintf(tmp, "%d/", snd.boardBitmap[boardId]);\
+				if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);\
+			}\
+		}\
+		strcat(s, "\n");\
+		HCU_DEBUG_PRINT_NOR(s);\
+		HCU_DEBUG_PRINT_NOR("L3BFDF: Total sensor to be start = %d\n", total);\
+	}while(0)
+
+//反馈差错控制消息
+#define HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(status) \
+	do{\
+		msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;\
+		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));\
+		snd.validFlag = FALSE;\
+		snd.errCode = HCU_SYSMSG_BFDF_ERR_CODE_INVALIID;\
+		snd.cmdid = status;\
+		snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);\
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF);\
+	}while(0)
+
+
 
 #endif /* L3APP_BFDF_H_ */
