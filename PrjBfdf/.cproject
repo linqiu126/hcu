@@ -282,6 +282,8 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="SDL2"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="paho-mqtt3c"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="usb"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="usbcan"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.827407200" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
