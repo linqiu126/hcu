@@ -9,6 +9,9 @@
 
 
 
+//= ZJL, 2018 Jan.9 CURRENT_SW_DELIVERY 304=>BFDF项目
+= 开始调测BFDF的界面
+
 
 //= ZJL, 2018 Jan.8 CURRENT_SW_DELIVERY 303=>BFHS项目
 = To easy test, SYSSWM starting timer set from 15 to 15000. To be corrected.

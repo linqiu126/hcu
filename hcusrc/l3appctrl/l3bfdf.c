@@ -128,7 +128,10 @@ OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if ((sizeof(gTaskL3bfdfContextWeightSensorParamaters_t) != sizeof(strMsgIe_l3bfdf_WeightSensorParamaters_t))||\
 			(sizeof(gTaskL3bfdfContextMotorControlParamaters_t) != sizeof(strMsgIe_l3bfdf_MotorControlParamaters_t))||\
 			(sizeof(gTaskL3bfdfContextActionControlParamaters_t) != sizeof(strMsgIe_l3bfdf_ActionControlParamaters_t)))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: module message definition on statistic element error!\n");
+		HCU_ERROR_PRINT_L3BFDF("L3BFDF: module message definition on statistic element error! GlobalPar/MsgStr WP=%d/%d, CP=%d/%d, AP=%d/%d\n",\
+				sizeof(gTaskL3bfdfContextWeightSensorParamaters_t), sizeof(strMsgIe_l3bfdf_WeightSensorParamaters_t), \
+				sizeof(gTaskL3bfdfContextMotorControlParamaters_t), sizeof(strMsgIe_l3bfdf_MotorControlParamaters_t), \
+				sizeof(gTaskL3bfdfContextActionControlParamaters_t), sizeof(strMsgIe_l3bfdf_ActionControlParamaters_t));
 	//严格保证统计周期的一致性
 	if (HCU_L3BFDF_STA_UNIT_DUR != (10*zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN].dur))  //静态表是以10ms为单位的
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: module timer statistic parameter set error!\n");
