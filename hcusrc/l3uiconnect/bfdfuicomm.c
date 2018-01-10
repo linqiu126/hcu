@@ -117,16 +117,7 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 			buf.weight = rand()%500;
 			INT32 boardId = rand()%2;
 
-			hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(boardId, &buf);
-
-//			msg_struct_com_mqtt_send_t snd;
-//			memset(&snd, 0, sizeof(msg_struct_com_mqtt_send_t));
-//			snd.cmdId = HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report;
-//			snd.cmdValue = buf.weight;
-//			snd.destId = HUICOBUS_MQTT_CLID_UIROUTER;
-//			snd.topicId = HUICOBUS_MQTT_TPID_HCU2UIR;
-//			snd.length = 11;
-//			hcu_mqtt_msg_send_syn_mode(&snd);
+			//hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(boardId, &buf);
 			hcu_sleep(2);
 		}
 
@@ -150,17 +141,17 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	//延迟并启动系统，进入测试模式
 	hcu_sleep(4);
 	//设置configIndex=1
-	func_bfdfuicomm_read_cfg_file_into_ctrl_table(1);
+	//func_bfdfuicomm_read_cfg_file_into_ctrl_table(1);
 	//发送启动消息给L3BFDF
-	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
-	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
-	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
-	ret = hcu_message_send(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM, &snd, snd.length);
-	if (ret == FAILURE){
-		HcuErrorPrint("BFDFUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
-		return FAILURE;
-	}
+//	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
+//	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
+//	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
+//	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
+//	ret = hcu_message_send(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM, &snd, snd.length);
+//	if (ret == FAILURE){
+//		HcuErrorPrint("BFDFUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+//		return FAILURE;
+//	}
 
 	//返回
 	return SUCCESS;

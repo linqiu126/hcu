@@ -90,6 +90,8 @@ OPSTAT fsm_mqtt_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 	//INIT this task global variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_MQTT] = 0;
+	gTaskMqttContext.gclient = NULL;
+	gTaskMqttContext.gtoken = 0;
 
 	//进入等待反馈状态
 	if (FsmSetState(TASK_ID_MQTT, FSM_STATE_MQTT_ACTIVED) == FAILURE){
@@ -186,6 +188,10 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     char topic[100];
     char stmp[100];
 
+    //Check global initialization
+    if (gTaskMqttContext.gclient == NULL)
+    	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Server not yet start! gClient=%x, gToken=%d\n", gTaskMqttContext.gclient, gTaskMqttContext.gtoken);
+
     //生成json字符串
     memset(input, 0, sizeof(input));
     struct json_object *jsonobj = NULL;
@@ -195,7 +201,6 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     //if (is_error(jsonobj))
     if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Failed to create json object!\n");
 
-    //json_object_object_add(para_object, "MacAddr", json_object_new_string("AA:BB:CC:DD:EE:FF"));
     memset(stmp, 0, sizeof(stmp));
     func_mqtt_nodeid_translate_to_text(in->srcNode, stmp);
     json_object_object_add(jsonobj, "srcNode", json_object_new_string(stmp));
@@ -215,22 +220,25 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     memset(stmp, 0, sizeof(stmp));
     func_mqtt_topicid_translate_to_text(in->topicId, stmp);
     json_object_object_add(jsonobj, "topicId", json_object_new_string(stmp));
-
     json_object_object_add(jsonobj, "cmdId", json_object_new_int(in->cmdId));
     json_object_object_add(jsonobj, "cmdValue", json_object_new_int(in->cmdValue));
 
     //执行HLC部分
+    struct json_object *jsonHlc = NULL;
 	if (in->hlcLen > 0){
-		struct json_object *jsonHlc = NULL;
 		jsonHlc = json_tokener_parse(in->hlContent);
 	    json_object_object_add(jsonobj, "hlContent", jsonHlc);
 	    sprintf(input, "%s", json_object_to_json_string(jsonobj));
 	    json_object_put(jsonHlc);//free
-	}else{
+	    HCU_DEBUG_PRINT_FAT("MQTT: Test2.1\n");
+	}
+	else{
 	    json_object_object_add(jsonobj, "hlContent", json_object_new_string(""));
 	    sprintf(input, "%s", json_object_to_json_string(jsonobj));
 	}
-    json_object_put(jsonobj);//free
+	json_object_put(jsonobj);//free
+    //if(jsonHlc != NULL) json_object_put(jsonHlc);//free
+    HCU_DEBUG_PRINT_FAT("MQTT: Test3\n");
     gTaskMqttContextPubmsg.payload = input;
     gTaskMqttContextPubmsg.payloadlen = strlen(input);
     gTaskMqttContextPubmsg.qos = HUICOBUS_MQTT_QOS_CONST;
@@ -374,10 +382,13 @@ void func_mqtt_msg_send_asy_connlost(void *context, char *cause)
 //异步持久发送模式，连接只建立一次
 int hcu_mqtt_msg_send_asy_mode(msg_struct_com_mqtt_send_t *in)
 {
-	int rc;
 	char input[1000];
 	char topic[100];
 	char stmp[100];
+
+    //Check global initialization
+    if (gTaskMqttContext.gclient == NULL)
+    	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Server not yet start!\n");
 
 	//生成json字符串
 	memset(input, 0, sizeof(input));
@@ -426,7 +437,7 @@ int hcu_mqtt_msg_send_asy_mode(msg_struct_com_mqtt_send_t *in)
 	MQTTClient_publishMessage(gTaskMqttContext.gclient, topic, &gTaskMqttContextPubmsg, &gTaskMqttContext.gtoken);
 	HCU_DEBUG_PRINT_NOR("MQTT: Waiting for publication of %s\n, on topic %s for client with ClientID: %s\n", input, topic, HUICOBUS_MQTT_CLIENTID_HCUENTRY);
 	while(deliveredtoken_send != gTaskMqttContext.gtoken);
-	return rc;
+	return SUCCESS;
 }
 
 //一次发送一次连接模式

@@ -266,6 +266,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_init_resp(INT32 cmdValue)
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -280,6 +282,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_start_resume_resp(INT32 cmdValue)
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -294,6 +298,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_stop_suspend_resp(INT32 cmdValue)
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -308,6 +314,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp(INT32 cmdValue)
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -322,6 +330,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(INT32 cmdValue)
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -350,6 +360,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp(INT32 cmdValue, StrHl
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -378,6 +390,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_version_report(INT32 cmdValue, StrH
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -403,13 +417,14 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(INT32 cmdValue, StrHl
 //    json_object_array_add(array_object, json_object_new_int(258));
 //    json_object_object_add(jsonobj, "array", array_object);
     //TEST END
-
     sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
     json_object_put(jsonobj);//free
     pMsgProc.hlcLen = strlen(pMsgProc.hlContent);
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -432,6 +447,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_alarm_report(INT32 cmdValue, StrHlc
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -454,6 +471,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_error_report(INT32 cmdValue, StrHlc
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -468,6 +487,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_restart_report(INT32 cmdValue)
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -482,6 +503,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_logout_report(INT32 cmdValue)
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -504,6 +527,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfsc_report(INT32 cmdValue, 
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -526,6 +551,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(INT32 cmdValue, 
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -549,6 +576,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(INT32 cmdValue, 
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -574,6 +603,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfsc_report(INT32 cmdValue
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -600,6 +631,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(INT32 cmdValue
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -631,6 +664,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(INT32 cmdValue
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 //发送API
@@ -645,6 +680,8 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_one_key_clean_zero_resp(INT32 cmdVa
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
 }
 
 

@@ -146,12 +146,11 @@ OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//初始化界面交互数据
 	for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
-		for (j=0; j < (HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+2); j++){
+		for (j=1; j < (HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX); j++){
 			boardId = (i<<3) + j;
 			HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(boardId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_NULL);
 		}
 	}
-
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED) == FAILURE)
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error Set FSM State!\n");
@@ -315,7 +314,7 @@ OPSTAT fsm_l3bfdf_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
 	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > (HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+2)))
+	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
 
 	//存储本地
@@ -355,7 +354,7 @@ OPSTAT fsm_l3bfdf_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_p
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
 	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > (HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+2)))
+	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
 
 	//本地存储
@@ -390,7 +389,7 @@ OPSTAT fsm_l3bfdf_canitf_heart_beat_report(UINT32 dest_id, UINT32 src_id, void *
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
 	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > (HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+2)))
+	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
 
 	//本地存储：只是为了防止下位机重启
@@ -511,7 +510,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > (HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+2)))
+	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 
 	//收到错误的反馈，就回复差错给界面
@@ -582,7 +581,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > (HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+2)))
+	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 
 	//收到错误的反馈，就回复差错给界面
@@ -640,7 +639,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > (HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+2)))
+	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 
 	//收到错误的反馈，就回复差错给界面
@@ -860,7 +859,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > (HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+2)))
+	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 	if ((rcv.hopperId == 0) || (rcv.hopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
@@ -970,7 +969,7 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > (HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+2)))
+	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 	if ((rcv.hopperId == 0) || (rcv.hopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
