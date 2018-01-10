@@ -224,21 +224,18 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     json_object_object_add(jsonobj, "cmdValue", json_object_new_int(in->cmdValue));
 
     //执行HLC部分
-    struct json_object *jsonHlc = NULL;
 	if (in->hlcLen > 0){
+	    struct json_object *jsonHlc = NULL;
 		jsonHlc = json_tokener_parse(in->hlContent);
 	    json_object_object_add(jsonobj, "hlContent", jsonHlc);
 	    sprintf(input, "%s", json_object_to_json_string(jsonobj));
 	    json_object_put(jsonHlc);//free
-	    HCU_DEBUG_PRINT_FAT("MQTT: Test2.1\n");
 	}
 	else{
 	    json_object_object_add(jsonobj, "hlContent", json_object_new_string(""));
 	    sprintf(input, "%s", json_object_to_json_string(jsonobj));
 	}
 	json_object_put(jsonobj);//free
-    //if(jsonHlc != NULL) json_object_put(jsonHlc);//free
-    HCU_DEBUG_PRINT_FAT("MQTT: Test3\n");
     gTaskMqttContextPubmsg.payload = input;
     gTaskMqttContextPubmsg.payloadlen = strlen(input);
     gTaskMqttContextPubmsg.qos = HUICOBUS_MQTT_QOS_CONST;
