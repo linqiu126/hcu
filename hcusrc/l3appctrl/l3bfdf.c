@@ -246,11 +246,6 @@ OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	int i = 0, j = 0;
-	int total=0;
-	char s[200], tmp[20];
-	int boardId = 0;
-
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
 
 	//启动命令
@@ -261,35 +256,17 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		}
 		//如果是工作状态，则需要发送RESUME：从板号１开始一直到HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX-1
 		else if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_SUSPEND){
-			msg_struct_sui_resume_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_sui_resume_req_t));
-			HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_RESUME_REQ);
-			HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
-			snd.length = sizeof(msg_struct_sui_resume_req_t);
-			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
-			hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+			if (func_l3bfdf_send_out_resume_message_to_all() == FAILURE) return FAILURE;
 		}
 		else{
-			msg_struct_l3bfdf_can_sys_cfg_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t));
-			snd.length = sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t);
-			HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_REQ);
-			HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
-			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_SYS_CFG_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
-			hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+			if (func_l3bfdf_send_out_cfg_start_message_to_all() == FAILURE) return FAILURE;
 		}
 	}
 
 	//STOP/SUSPEND
 	else if ((rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP) || (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND)){
 		if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_SCAN){
-			msg_struct_sui_suspend_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
-			snd.length = sizeof(msg_struct_sui_suspend_req_t);
-			HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND_REQ);
-			HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
-			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
-			hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_SUSPEND_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+			if (func_l3bfdf_send_out_suspend_message_to_all() == FAILURE) return FAILURE;
 		}
 		else{
 			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND);
@@ -303,6 +280,7 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	return SUCCESS;
 }
 
+//单个板子重启，将重启整个系统：无法做到单个板子的重启，但整个系统还能继续工作的，因为料斗的状态是需要人工干预的，并不能依赖点击驱动的
 OPSTAT fsm_l3bfdf_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
@@ -321,16 +299,15 @@ OPSTAT fsm_l3bfdf_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	//判定状态
 	if (FsmGetState(TASK_ID_L3BFDF) > FSM_STATE_L3BFDF_ACTIVED)
 	{
-		//Send CFG_REQ到下位机
-		msg_struct_l3bfdf_can_sys_cfg_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t));
-		memcpy(&snd.wgtSnrPar, &gTaskL3bfdfContext.wgtSnrPar, sizeof(gTaskL3bfdfContextWeightSensorParamaters_t));
-		memcpy(&snd.motMainPar, &gTaskL3bfdfContext.motMainPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
-		memcpy(&snd.motSecondPar, &gTaskL3bfdfContext.motSecondPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
-		memcpy(&snd.actionCtrlPar, &gTaskL3bfdfContext.actionCtrlPar, sizeof(gTaskL3bfdfContextActionControlParamaters_t));
-		snd.boardBitmap[rcv.snrId] = 1;
-		snd.length = sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_SYS_CFG_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
+		//如果某些板子重启，系统处于工作态，但并不是所有板子都进入工作态，则依然不重启
+		if (func_l3bfdf_is_there_any_board_not_yet_startup() == FALSE){
+			func_l3bfdf_send_out_suspend_message_to_all();
+			FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
+			HCU_ERROR_PRINT_TASK(TASK_ID_L3BFDF, "L3BFDF: Receiving Startup message while not all boards start yet!\n");
+		}
+		//给所有下位机发送StartCfg消息，重启启动整个系统
+		if (func_l3bfdf_send_out_cfg_start_message_to_all() == FAILURE) return FAILURE;
+		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
 	}
 
 	//返回
@@ -361,6 +338,8 @@ OPSTAT fsm_l3bfdf_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_p
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.snrId, &status);
 
 	//是否要根据ERR_CODE，赋予不同的差错情形，待定
+	//称重传感器如果出错，则需要SUSPEND整个系统，以免损坏系统的持续运行．仅仅通知界面是不够的．
+	if (func_l3bfdf_send_out_suspend_message_to_all() == FAILURE) return FAILURE;
 
 	//返回
 	return SUCCESS;
@@ -509,13 +488,16 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
 	}
 
+	//先改本传感器的状态
+	gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_CMPL;
+	gTaskL3bfdfContext.nodeDyn[line][boardId].cfgRcvFlag = TRUE;
+	//通知界面
+	HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_OK);
+
 	//收到正确以及齐活的反馈
+	//这里有漏洞：如果是单个板子重启，可能造成整个系统重新刷新料斗状态．那到底是否要支持单个板子重启？
+	//合理的逻辑是：单个板子重启，将重启整个系统
 	if (func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete() == TRUE){
-		//先改本传感器的状态
-		gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_CMPL;
-		gTaskL3bfdfContext.nodeDyn[line][boardId].cfgRcvFlag = TRUE;
-		//通知界面
-		HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_OK);
 		//发送反馈给UICOMM
 		msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
@@ -575,13 +557,14 @@ OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
 	}
 
+	//先改本传感器的状态
+	gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND;
+	gTaskL3bfdfContext.nodeDyn[line][boardId].cfgRcvFlag = TRUE;
+	//通知界面
+	HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_SUSPEND);
+
 	//收到正确以及齐活的反馈
 	if (func_l3bfdf_cacluate_sensor_suspend_rcv_complete() == TRUE){
-		//先改本传感器的状态
-		gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND;
-		gTaskL3bfdfContext.nodeDyn[line][boardId].cfgRcvFlag = FALSE;
-		//通知界面
-		HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_SUSPEND);
 		//发送反馈给UICOMM
 		msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
@@ -627,13 +610,14 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
 	}
 
+	//先改本传感器的状态
+	gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID;
+	gTaskL3bfdfContext.nodeDyn[line][boardId].cfgRcvFlag = TRUE;
+	//通知界面
+	HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_DATA_VALID);
+
 	//收到正确以及齐活的反馈
 	if (func_l3bfdf_cacluate_sensor_resume_rcv_complete() == TRUE){
-		//先改本传感器的状态
-		gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID;
-		gTaskL3bfdfContext.nodeDyn[line][boardId].cfgRcvFlag = FALSE;
-		//通知界面
-		HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_DATA_VALID);
 		//发送反馈给UICOMM
 		msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
@@ -662,8 +646,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_new_ready_event_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
-	if (boardId != 1)
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
+	if (boardId != 1) HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 
 	//通知界面
 	StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t status1;
@@ -697,7 +680,6 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			func_l3bfdf_print_all_hopper_ratio_by_weight(i);
 		}
 	}
-
 
 	//超界限，扔进垃圾桶
 	UINT16 gidMin = 1;
@@ -829,8 +811,6 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	if (rcv.validFlag == FALSE){
 		//隔离该料斗
 		gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID_ERROR;
-
-		//返回
 		return SUCCESS;
 	}
 
@@ -1081,6 +1061,72 @@ bool func_l3bfdf_cacluate_sensor_resume_rcv_complete(void)
 	}
 
 	return TRUE;
+}
+
+//判定各个板子的状态是否合法
+//TRUE：全部都启动起来了
+//FALSE：还有板子未启动完成
+bool func_l3bfdf_is_there_any_board_not_yet_startup(void)
+{
+	int i = 0, j = 0;
+	for (i = 0; i < HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+		for (j = 1; j < HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++){
+			if (gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus < HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP)
+				return FALSE;
+		}
+	}
+	//全部启动完成
+	return TRUE;
+}
+
+
+
+OPSTAT func_l3bfdf_send_out_suspend_message_to_all(void)
+{
+	int i = 0, j = 0, boardId = 0, total = 0;
+	char s[200], tmp[20];
+	msg_struct_sui_suspend_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
+	HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND_REQ);
+	HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
+	snd.length = sizeof(msg_struct_sui_suspend_req_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
+	hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_SUSPEND_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_SUSPEND);
+	return SUCCESS;
+}
+
+OPSTAT func_l3bfdf_send_out_resume_message_to_all(void)
+{
+	int i = 0, j = 0, boardId = 0, total = 0;
+	char s[200], tmp[20];
+	msg_struct_sui_resume_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sui_resume_req_t));
+	HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_RESUME_REQ);
+	HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
+	snd.length = sizeof(msg_struct_sui_resume_req_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
+	hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	return SUCCESS;
+}
+
+//不改变状态：因为可能是在业务态来的某个板子重启，所以状态不变．
+OPSTAT func_l3bfdf_send_out_cfg_start_message_to_all(void)
+{
+	int i = 0, j = 0, boardId = 0, total = 0;
+	char s[200], tmp[20];
+	msg_struct_l3bfdf_can_sys_cfg_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t));
+	HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_REQ);
+	memcpy(&snd.wgtSnrPar, &gTaskL3bfdfContext.wgtSnrPar, sizeof(gTaskL3bfdfContextWeightSensorParamaters_t));
+	memcpy(&snd.motMainPar, &gTaskL3bfdfContext.motMainPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
+	memcpy(&snd.motSecondPar, &gTaskL3bfdfContext.motSecondPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
+	memcpy(&snd.actionCtrlPar, &gTaskL3bfdfContext.actionCtrlPar, sizeof(gTaskL3bfdfContextActionControlParamaters_t));
+	HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
+	snd.length = sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_SYS_CFG_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
+	hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	return SUCCESS;
 }
 
 
@@ -2034,23 +2080,6 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message(UINT8 streamId, UINT16 hopperI
 }
 
 
-//判定各个板子的状态是否合法
-//TRUE：全部都启动起来了
-//FALSE：还有板子未启动完成
-bool func_l3bfdf_is_there_any_board_not_yet_startup(void)
-{
-	int i = 0, j = 0;
-	for (i = 0; i < HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
-		for (j = 1; j < HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++){
-			if (gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus <HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP)
-				return FALSE;
-		}
-	}
-	//全部启动完成
-	return TRUE;
-}
-
-
 
 /***************************************************************************************************************************
  *
@@ -2060,7 +2089,7 @@ bool func_l3bfdf_is_there_any_board_not_yet_startup(void)
 //周期性统计扫描定时器
 OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 {
-	int ret = 0;
+	//int ret = 0;
 
 	//首先增加时间流逝的计数器
 	gTaskL3bfdfContext.elipseCnt++;
