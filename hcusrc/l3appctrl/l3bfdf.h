@@ -67,9 +67,7 @@ extern HcuFsmStateItem_t HcuFsmL3bfdf[];
 typedef struct L3BfdfNodeBoardInfo
 {
 	UINT8  nodeStatus; 	//无效，空料，有料数值错误，有料待组合，有料待出料
-	UINT8  cfgRcvFlag;   	//用来保存CFG_RESP是否收到
-	UINT8  resumeRcvFlag;  	//用来保存RESUME_RESP是否收到
-	UINT8  suspendRcvFlag;  //用来保存SUSPEND_RESP是否收到
+	UINT8  cfgRcvFlag;   	//用来保存CFG_RESP/RESUME_RESP/SUSPEND_RESP是否收到
 }L3BfdfNodeBoardInfo_t;
 #define HCU_L3BFDF_NODE_BOARD_STATUS_NONE			0
 #define HCU_L3BFDF_NODE_BOARD_STATUS_OFFLINE		1
@@ -321,6 +319,11 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void);
 bool   func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
 bool   func_l3bfdf_cacluate_sensor_suspend_rcv_complete(void);
 bool   func_l3bfdf_cacluate_sensor_resume_rcv_complete(void);
+bool   func_l3bfdf_is_there_any_board_not_yet_startup(void);
+OPSTAT func_l3bfdf_send_out_suspend_message_to_all(void);
+OPSTAT func_l3bfdf_send_out_resume_message_to_all(void);
+OPSTAT func_l3bfdf_send_out_cfg_start_message_to_all(void);
+
 
 //核心双链数据处理
 extern bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup);
@@ -349,7 +352,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, doub
 bool   func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, double weight);
 bool   func_l3bfdf_new_ws_send_out_pullin_message(UINT8 streamId, UINT16 hopperId);
 bool   func_l3bfdf_new_ws_send_out_comb_out_message(UINT8 streamId, UINT16 hopperId);
-bool   func_l3bfdf_is_there_any_board_not_yet_startup(void);
+
 
 //基础函数
 double gaussian(double u, double n);
