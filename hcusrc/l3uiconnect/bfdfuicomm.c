@@ -117,8 +117,8 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 			buf.weight = rand()%500;
 			INT32 boardId = rand()%2;
 
-			//hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(boardId, &buf);
-			hcu_sleep(2);
+			hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(boardId, &buf);
+			usleep(10);
 		}
 
 
