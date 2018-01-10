@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: 2018-01-02 09:39:09
+-- Generation Time: 2018-01-10 18:39:19
 -- 服务器版本： 5.7.19-0ubuntu0.17.04.1
 -- PHP Version: 7.0.22-0ubuntu0.17.04.1
 
@@ -101,6 +101,70 @@ CREATE TABLE `hcualcoholmq3alcodatainfo` (
   `dataformat` int(1) NOT NULL,
   `alcoholvalue` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `hcubfdfproductpara`
+--
+
+CREATE TABLE `hcubfdfproductpara` (
+  `sid` int(4) NOT NULL,
+  `targetthroughput` int(6) NOT NULL,
+  `snrautozerorange` int(6) NOT NULL,
+  `confname` varchar(50) NOT NULL,
+  `currentconf` varchar(1) NOT NULL DEFAULT 'N',
+  `baseconf` varchar(5) NOT NULL DEFAULT 'N',
+  `confowner` varchar(20) NOT NULL DEFAULT 'System',
+  `conficon` varchar(20) NOT NULL,
+  `confdescription` varchar(100) NOT NULL,
+  `targetweight` int(5) NOT NULL,
+  `tareweight` int(5) NOT NULL,
+  `targetspeed` int(4) NOT NULL,
+  `productlength` int(4) NOT NULL,
+  `armrollinginterval` int(4) NOT NULL,
+  `algorithmoption` int(4) NOT NULL,
+  `upperlimit` int(4) NOT NULL,
+  `tu1limit` int(4) NOT NULL,
+  `tu2limit` int(4) NOT NULL,
+  `maxtu1` int(4) NOT NULL,
+  `rejectoroption` int(4) NOT NULL,
+  `statisticsswitch` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- 转存表中的数据 `hcubfdfproductpara`
+--
+
+INSERT INTO `hcubfdfproductpara` (`sid`, `targetthroughput`, `snrautozerorange`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `targetweight`, `tareweight`, `targetspeed`, `productlength`, `armrollinginterval`, `algorithmoption`, `upperlimit`, `tu1limit`, `tu2limit`, `maxtu1`, `rejectoroption`, `statisticsswitch`) VALUES
+(2, 0, 0, 'fish1', 'N', 'Y', 'System', 'fish37.svg', '', 999, 66, 44, 33, 22, 11, 444, 55, 0, 9, 5, 8),
+(3, 0, 0, 'fish2', 'Y', 'N', 'System', 'fish37.svg', '', 999, 66, 44, 33, 22, 11, 444, 55, 0, 9, 5, 8),
+(4, 0, 0, 'appl1', 'N', 'N', '', 'apple12.svg', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(13, 0, 0, 'candy', 'N', 'N', '', 'bread4.svg', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `hcubfdfsystempara`
+--
+
+CREATE TABLE `hcubfdfsystempara` (
+  `weighterlength` int(4) NOT NULL DEFAULT '350',
+  `rejectorposition` int(4) NOT NULL,
+  `maxallowedweight` int(4) NOT NULL,
+  `minallowedweight` int(4) NOT NULL,
+  `counterweight` int(4) NOT NULL,
+  `autozerosignal` int(4) NOT NULL DEFAULT '500',
+  `autozeroswitch` int(4) NOT NULL,
+  `autozerolimit` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- 转存表中的数据 `hcubfdfsystempara`
+--
+
+INSERT INTO `hcubfdfsystempara` (`weighterlength`, `rejectorposition`, `maxallowedweight`, `minallowedweight`, `counterweight`, `autozerosignal`, `autozeroswitch`, `autozerolimit`) VALUES
+(400, 500, 500, 500, 500, 500, 500, 500);
 
 -- --------------------------------------------------------
 
@@ -5614,6 +5678,12 @@ ALTER TABLE `hcualcoholmq3alcodatainfo`
   ADD PRIMARY KEY (`sid`);
 
 --
+-- Indexes for table `hcubfdfproductpara`
+--
+ALTER TABLE `hcubfdfproductpara`
+  ADD PRIMARY KEY (`sid`);
+
+--
 -- Indexes for table `hcubfhsproductpara`
 --
 ALTER TABLE `hcubfhsproductpara`
@@ -5937,6 +6007,11 @@ ALTER TABLE `hcualcoholdatainfo`
 --
 ALTER TABLE `hcualcoholmq3alcodatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcubfdfproductpara`
+--
+ALTER TABLE `hcubfdfproductpara`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- 使用表AUTO_INCREMENT `hcubfhsproductpara`
 --
