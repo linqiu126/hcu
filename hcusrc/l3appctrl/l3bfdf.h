@@ -49,7 +49,13 @@ extern HcuFsmStateItem_t HcuFsmL3bfdf[];
 			24 => 第4条流水线固定垃圾桶
 			25 => 第4条流水线WGT板子
 			26-31 => 第4条流水线SNR板子
+			注意：线路LINE/STREAMLINE的编号还是从0-N的，而非从１开始
 	BOARDID:　等同于CANID
+
+	//下面的定义有问题，后续需要进一步改进：问题所在是每条线都需要垃圾桶，
+	 或者是HOPPERID只是线路下的子空间，不是全局空间，这样０表示垃圾桶，１－３２表示正常料斗
+	 另外一个逻辑是用U16的高位表示流水线，低位表示料斗号，这样更加安全
+	 ＝＞由于HUITP.H中以及使用了1-32/33-64的分类，这里就按照这个方式进行编码
 	AP/HOOPERID:
 			0: =>固定垃圾桶
 			1-32: 	=>第1条流水线
@@ -142,20 +148,6 @@ typedef struct L3BfdfHopperInfo
 #define HCU_L3BFDF_HOPPER_BASKET_EMPTY			1
 #define HCU_L3BFDF_HOPPER_BASKET_FULL			2
 #define HCU_L3BFDF_HOPPER_BASKET_INVALID  		0xFF
-
-//全局定义：为了解决编译不成功的问题
-#ifndef HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX
-	#define HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX	2  	//流水线数量
-#endif
-#ifndef HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX
-	#define HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX	4
-#endif
-#ifndef HCU_SYSCFG_BFDF_HOPPER_NBR_MAX
-	#define HCU_SYSCFG_BFDF_HOPPER_NBR_MAX		33
-#endif
-#ifndef HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD
-	#define HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD	8
-#endif
 
 //配置参数
 typedef struct gTaskL3bfdfContextWeightSensorParamaters
@@ -428,6 +420,17 @@ extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
 		snd.cmdid = status;\
 		snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);\
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF);\
+	}while(0)
+
+//接收消息关键内容检查
+#define HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK() \
+	do{\
+		line = rcv.snrId>>3;\
+		if ((line <0) || (line >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))\
+			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");\
+		boardId = rcv.snrId & 0x07;\
+		if ((boardId <= 0) || (boardId >= HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))\
+			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");\
 	}while(0)
 
 

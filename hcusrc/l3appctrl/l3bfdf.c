@@ -309,13 +309,7 @@ OPSTAT fsm_l3bfdf_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	int line=0, boardId=0;
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_startup_ind_t);
-	//入参检查
-	line = rcv.snrId>>3;
-	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
-	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
+	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
 	//存储本地
 	gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
@@ -349,13 +343,7 @@ OPSTAT fsm_l3bfdf_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_p
 	int line=0, boardId=0;
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_fault_ind_t);
-	//入参检查
-	line = rcv.snrId>>3;
-	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
-	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
+	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
 	//本地存储
 	if (gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus < HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MAX)
@@ -384,13 +372,7 @@ OPSTAT fsm_l3bfdf_canitf_heart_beat_report(UINT32 dest_id, UINT32 src_id, void *
 	int line=0, boardId=0;
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_heart_beat_report_t);
-	//入参检查
-	line = rcv.snrId>>3;
-	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
-	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
+	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
 	//本地存储：只是为了防止下位机重启
 	if (gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus < HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP){
@@ -505,13 +487,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 	int line=0, boardId=0;
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_sys_cfg_resp_t);
-	//入参检查
-	line = rcv.snrId>>3;
-	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
-	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
+	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -576,13 +552,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 	int line=0, boardId=0;
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_suspend_resp_t);
-	//入参检查
-	line = rcv.snrId>>3;
-	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
-	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
+	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -634,13 +604,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 	int line=0, boardId=0;
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_resume_resp_t);
-	//入参检查
-	line = rcv.snrId>>3;
-	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
-	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
+	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -697,11 +661,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	int line=0, boardId=0;
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_new_ready_event_t);
-	//入参检查
-	line = rcv.snrId>>3;
-	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
-	boardId = rcv.snrId & 0x07;
+	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 	if (boardId != 1)
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 
@@ -851,17 +811,12 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	int line=0, boardId=0;
+	int line=0, boardId=0, locHopperId=0;
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_ws_comb_out_fb_t);
-	//入参检查
-	line = rcv.snrId>>3;
-	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
-	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
-	if ((rcv.hopperId == 0) || (rcv.hopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
+	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
+	locHopperId = ((rcv.hopperId-1)>>(line))+1;
+	if ((locHopperId <= 0) || (locHopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
 
 	//停止定时器
@@ -873,14 +828,14 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	//先处理错误情况
 	if (rcv.validFlag == FALSE){
 		//隔离该料斗
-		gTaskL3bfdfContext.hopper[line][rcv.hopperId].hopperStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID_ERROR;
+		gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID_ERROR;
 
 		//返回
 		return SUCCESS;
 	}
 
 	//篮子设置满
-	gTaskL3bfdfContext.hopper[line][rcv.hopperId].basketStatus = HCU_L3BFDF_HOPPER_BASKET_FULL;
+	gTaskL3bfdfContext.hopper[line][locHopperId].basketStatus = HCU_L3BFDF_HOPPER_BASKET_FULL;
 
 	//通知界面：该状态报告有一些问题，表达不了料斗的情况，待完善
 	StrHlcIe_cui_hcu2uir_status_report_t status;
@@ -889,10 +844,10 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.snrId, &status);
 
 	//设置料斗状态
-	gTaskL3bfdfContext.hopper[line][rcv.hopperId].hopperValue = 0;
-	gTaskL3bfdfContext.hopper[line][rcv.hopperId].hopperStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID;
-	gTaskL3bfdfContext.hopper[line][rcv.hopperId].matLackIndex = gTaskL3bfdfContext.hopper[line][rcv.hopperId].matLackNbr;
-	//gTaskL3bfdfContext.hopper[line][rcv.hopperId].matLackIndexMin = gTaskL3bfdfContext.hopper[line][rcv.hopperId].matLackNbrMin;
+	gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue = 0;
+	gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID;
+	gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = gTaskL3bfdfContext.hopper[line][locHopperId].matLackNbr;
+	//gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndexMin = gTaskL3bfdfContext.hopper[line][locHopperId].matLackNbrMin;
 
 	//打印二维码／条形码：二维码＋条形码的内容
 	char s[100];
@@ -961,21 +916,16 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	int line=0, boardId=0;
+	int line=0, boardId=0, locHopperId=0;
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_basket_clean_ind_t);
-	//入参检查
-	line = rcv.snrId>>3;
-	if ((line <0) || (line > HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
-	boardId = rcv.snrId & 0x07;
-	if ((boardId <= 0) || (boardId > HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
-	if ((rcv.hopperId == 0) || (rcv.hopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
+	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
+	locHopperId = ((rcv.hopperId-1)>>(line))+1;
+	if ((locHopperId <= 0) || (locHopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
 
 	//本地存储
-	gTaskL3bfdfContext.hopper[line][rcv.hopperId].basketStatus = HCU_L3BFDF_HOPPER_BASKET_EMPTY;
+	gTaskL3bfdfContext.hopper[line][locHopperId].basketStatus = HCU_L3BFDF_HOPPER_BASKET_EMPTY;
 
 	//通知界面：该状态报告有一些问题，表达不了料斗的情况，待完善
 	StrHlcIe_cui_hcu2uir_status_report_t status;
@@ -984,10 +934,10 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.snrId, &status);
 
 	//如果此时也条件允许，也产生出料
-	if (gTaskL3bfdfContext.hopper[line][rcv.hopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_FULL){
+	if (gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_FULL){
 		//发送出料
-		if (func_l3bfdf_new_ws_send_out_comb_out_message(line, rcv.hopperId) == FALSE){
-			gTaskL3bfdfContext.hopper[line][rcv.hopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
+		if (func_l3bfdf_new_ws_send_out_comb_out_message(line, locHopperId) == FALSE){
+			gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send Comb Out message error!\n");
 		}
 	}
@@ -2067,8 +2017,8 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message(UINT8 streamId, UINT16 hopperI
 	//发送
 	msg_struct_l3bfdf_can_ws_comb_out_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_ws_comb_out_t));
-	//snd.streamId = streamId;
-	snd.hopperId = hopperId;
+	//HopperId就是按照HUITP的定义来进行
+	snd.hopperId = (streamId<<5) + hopperId;
 	snd.length = sizeof(msg_struct_l3bfdf_can_ws_comb_out_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_WS_COMB_OUT, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
 
@@ -2091,7 +2041,7 @@ bool func_l3bfdf_is_there_any_board_not_yet_startup(void)
 {
 	int i = 0, j = 0;
 	for (i = 0; i < HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
-		for (j = 0; j < HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX; j++){
+		for (j = 1; j < HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++){
 			if (gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus <HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP)
 				return FALSE;
 		}
