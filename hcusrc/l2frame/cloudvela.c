@@ -3204,6 +3204,8 @@ OPSTAT fsm_cloudvela_hsmmp_data_report(UINT32 dest_id, UINT32 src_id, void * par
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+	else
+		HcuDebugPrint("CLOUDVELA: send HSMMP report successfully!\n\n\n\n\n\n\n");
 
 	//State no change
 	return SUCCESS;
