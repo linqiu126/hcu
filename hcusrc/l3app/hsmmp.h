@@ -57,7 +57,7 @@ extern gTaskHsmmpContext_t gTaskHsmmpContext;
 #define HSMMP_SEND_BACK_MOD_BASE  1
 
 #define HSMMP_HKVISION_CAPTURE_DURATION_DEFAULT 60 //1 minutes
-#define HSMMP_HKVISION_CAPTURE_STOP_DEFAULT 30*60  //30 minutes
+#define HSMMP_HKVISION_CAPTURE_STOP_DEFAULT 3*60  //30 minutes
 
 //API
 extern OPSTAT fsm_hsmmp_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

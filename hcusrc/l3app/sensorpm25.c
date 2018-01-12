@@ -381,7 +381,8 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	strcat(HKVisionOption.file_video, "hkvideo.txt");
 */
 	//判断如果PM2.5超过阀值，若超过，则需要设alarm flag = ON, 启动拍照和录像，并触发告警，告警报告中需要包括告警类型，告警内容，及需要上传照片的文件名（包含设备名字日期时间）和录像的开始日期、时间和停止的日期、时间。
-	HCU_DEBUG_PRINT_INF("PM25: TSP = %d\n\n\n", (rcv.pm25.pmTSPValue));
+	rcv.pm25.pmTSPValue = 30001;
+	HCU_DEBUG_PRINT_INF("PM25: TSP = %d\n\n\n\n", (rcv.pm25.pmTSPValue));
 	if(rcv.pm25.pmTSPValue >= (HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000))
 	//if(rcv.pm25.pmTSPValue >= zHcuSysEngPar.serialport.SeriesPortForGPS) //for debug
 	{

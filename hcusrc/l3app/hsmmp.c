@@ -186,7 +186,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 				}
 				else
 				{
-					sleep(60);
+					sleep(HSMMP_HKVISION_CAPTURE_DURATION_DEFAULT);
 					if(FAILURE == hcu_hsmmp_video_capture_stop(HKVisionOption))
 					{
 						HcuErrorPrint("HSMMP: Stop HK video capture error!\n\n\n\n\n\n");
@@ -228,7 +228,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 			//			HCU_ERROR_PRINT_TASK(TASK_ID_SYSPM, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				}
 
-				sleep(30*60);
+				sleep(HSMMP_HKVISION_CAPTURE_STOP_DEFAULT);
 	    	}
 		}
 
