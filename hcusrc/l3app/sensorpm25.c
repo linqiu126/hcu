@@ -10,6 +10,9 @@
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
 #include "../l2frame/cloudvela.h"
+#include "../l3app/hsmmp.h"
+
+
 /*
 ** FSM of the PM25
 */
@@ -60,6 +63,7 @@ HcuFsmStateItem_t HcuFsmPm25[] =
 
 //Task Global variables
 gTaskPm25Context_t gTaskPm25Context;
+gTaskHsmmpContext_t gTaskHsmmpContext;
 
 
 //Main Entry
@@ -331,7 +335,7 @@ void func_pm25_time_out_processing_no_rsponse(void)
 OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
-    char file[200];
+//    char file[200];
 	//这种申明方法，已经分配了完整的内存空间，不用再MALLOC单独申请内存了
 	HcuDiscDataSampleStorageArray_t record;
 
@@ -353,7 +357,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		HcuErrorPrint("PM25: Error stop timer!\n");
 		return FAILURE;
 	}
-
+/*
 	//For HKvision option setting
 	HKVisionOption_t HKVisionOption;
 	memset( (void *)&HKVisionOption, 0, sizeof(HKVisionOption_t));
@@ -375,9 +379,9 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	strcat(HKVisionOption.file_video, zHcuVmCtrTab.clock.curPhotoDir);
 	strcat(HKVisionOption.file_video, "/");
 	strcat(HKVisionOption.file_video, "hkvideo.txt");
-
+*/
 	//判断如果PM2.5超过阀值，若超过，则需要设alarm flag = ON, 启动拍照和录像，并触发告警，告警报告中需要包括告警类型，告警内容，及需要上传照片的文件名（包含设备名字日期时间）和录像的开始日期、时间和停止的日期、时间。
-	HCU_DEBUG_PRINT_INF("PM25: TSP = %d\n\n\n\n", (rcv.pm25.pmTSPValue));
+	HCU_DEBUG_PRINT_INF("PM25: TSP = %d\n\n\n", (rcv.pm25.pmTSPValue));
 	if(rcv.pm25.pmTSPValue >= (HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000))
 	//if(rcv.pm25.pmTSPValue >= zHcuSysEngPar.serialport.SeriesPortForGPS) //for debug
 	{
@@ -402,10 +406,13 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 */
 		if(FALSE == gTaskPm25Context.AlarmFlag)
 		{
+			/*
 			if(FAILURE == hcu_hsmmp_video_capture_start(HKVisionOption)){
 				HcuErrorPrint("PM25: Start HK video capture error!\n\n");
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
 			}
+			*/
+			gTaskHsmmpContext.Hsmmp_flag = TRUE;
 		}
 
 		gTaskPm25Context.AlarmFlag = TRUE;
@@ -441,13 +448,15 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 
 	{
 		gTaskPm25Context.AlarmFlag = FALSE;
-
+/*
 		ret = hcu_hsmmp_video_capture_stop(HKVisionOption);
 		if(FAILURE == ret)
 		{
 			HcuErrorPrint("PM25: Stop HK video capture error!\n\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
 		}
+*/
+		gTaskHsmmpContext.Hsmmp_flag = FALSE;
 
 		//send alarm clear report
 		msg_struct_com_alarm_report_t snd;

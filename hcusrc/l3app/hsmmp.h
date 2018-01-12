@@ -40,8 +40,10 @@ extern HcuFsmStateItem_t HcuFsmHsmmp[];
 typedef struct gTaskHsmmpContext
 {
 	UINT32 sendCloudCnt;  //用于描述发送到后台，多少次才发送一次
+	UINT32 Hsmmp_flag;    //HSMMP flag to control HSMMP start or off
 }gTaskHsmmpContext_t;
 
+extern gTaskHsmmpContext_t gTaskHsmmpContext;
 
 //定时器，控制摄像头工作周期及时长
 //#define HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
@@ -53,6 +55,9 @@ typedef struct gTaskHsmmpContext
 
 //多少次回传后台一次，如果不想频繁回传，可以设置为10次
 #define HSMMP_SEND_BACK_MOD_BASE  1
+
+#define HSMMP_HKVISION_CAPTURE_DURATION_DEFAULT 60 //1 minutes
+#define HSMMP_HKVISION_CAPTURE_STOP_DEFAULT 30*60  //30 minutes
 
 //API
 extern OPSTAT fsm_hsmmp_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

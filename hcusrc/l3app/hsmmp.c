@@ -62,7 +62,7 @@ HcuFsmStateItem_t HcuFsmHsmmp[] =
 
 
 //Task Global variables
-gTaskHsmmpContext_t gTaskHsmmpContext;
+//gTaskHsmmpContext_t gTaskHsmmpContext;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -77,7 +77,7 @@ OPSTAT fsm_hsmmp_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 
 OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0, i=0;
+	int ret=0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -109,41 +109,131 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//Task global variables init.
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP] = 0;
 	memset(&gTaskHsmmpContext, 0, sizeof(gTaskHsmmpContext_t));
+	gTaskHsmmpContext.Hsmmp_flag = FALSE;
 
-	//等待随机长度的时长，一分钟/60秒之类，然后再开始干活，以便减少所有传感器相互碰撞的几率，让所有任务分布更加平均
-	i = rand()%TIMER_DURATION_REDUCE_COLLAPTION_IN_1_MINUTES;
-	hcu_sleep(i);
+	/*
+		//等待随机长度的时长，一分钟/60秒之类，然后再开始干活，以便减少所有传感器相互碰撞的几率，让所有任务分布更加平均
+		i = rand()%TIMER_DURATION_REDUCE_COLLAPTION_IN_1_MINUTES;
+		hcu_sleep(i);
 
-	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("HSMMP: Error start timer!\n");
-		return FAILURE;
+		//启动周期性定时器
+		ret = hcu_timer_start(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ, \
+				zHcuSysEngPar.timer.array[TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+		if (ret == FAILURE){
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+			HcuErrorPrint("HSMMP: Error start timer!\n");
+			return FAILURE;
+		}
+
+		//启动周期性定时器
+		i = rand()%TIMER_DURATION_REDUCE_COLLAPTION_IN_1_MINUTES;
+		hcu_sleep(i);
+		ret = hcu_timer_start(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_PERIOD_CURL_PICTURE, \
+				zHcuSysEngPar.timer.array[TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+		if (ret == FAILURE){
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+			HcuErrorPrint("HSMMP: Error start timer!\n");
+			return FAILURE;
+		}
+	*/
+		//设置状态机到目标状态
+		//State Transfer to FSM_STATE_HSMMP_ACTIVED
+		if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
+			return FAILURE;
+		}
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
+			HcuDebugPrint("GPIO: Enter FSM_STATE_HSMMP_ACTIVED status, Keeping refresh here!\n");
+		}
+
+		//For HKvision option setting
+		HKVisionOption_t HKVisionOption;
+		memset( (void *)&HKVisionOption, 0, sizeof(HKVisionOption_t));
+
+		strcat(HKVisionOption.user_key, "admin");
+		strcat(HKVisionOption.user_key, ":");
+		strcat(HKVisionOption.user_key, "Bxxh!123");
+
+		strcat(HKVisionOption.url_photo, "http://192.168.1.64/Streaming/channels/1/picture");
+		strcat(HKVisionOption.url_video_start, "http://192.168.1.64/ISAPI/ContentMgmt/record/control/manual/start/tracks/1");
+		strcat(HKVisionOption.url_video_stop, "http://192.168.1.64/ISAPI/ContentMgmt/record/control/manual/stop/tracks/1");
+
+
+		strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curPhotoDir);
+		strcat(HKVisionOption.file_photo, "/");
+		strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curHikvisionFname);
+		strcpy(HKVisionOption.file_photo_pure, zHcuVmCtrTab.clock.curHikvisionPureFname);
+
+		strcat(HKVisionOption.file_video, zHcuVmCtrTab.clock.curPhotoDir);
+		strcat(HKVisionOption.file_video, "/");
+		strcat(HKVisionOption.file_video, "hkvideo.txt");
+
+		UINT32 timeStampStart,timeStampEnd;
+
+
+		//进入循环工作模式
+		while(1){
+
+	    	sleep(1);
+	    	if(TRUE == gTaskHsmmpContext.Hsmmp_flag)
+	    	{
+	    		timeStampStart = time(0);
+				if(FAILURE == hcu_hsmmp_video_capture_start(HKVisionOption)){
+					HcuErrorPrint("HSMMP: Start HK video capture error!\n\n\n\n\n\n");
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+					continue;
+				}
+				else
+				{
+					sleep(60);
+					if(FAILURE == hcu_hsmmp_video_capture_stop(HKVisionOption))
+					{
+						HcuErrorPrint("HSMMP: Stop HK video capture error!\n\n\n\n\n\n");
+						zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+						continue;
+					}
+					timeStampEnd = time(0);
+
+				}
+
+				//ret = func_hsmmp_time_out_period_curl_video(timeStampStart,timeStampEnd);
+				HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_HSMMP, msg_struct_hsmmp_cloudvela_data_report_t);
+
+				//发送数据给后台
+				if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//如果只发给Home,应该是Curl的连接状态
+				//if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE)){//debug by shanchun
+
+					msg_struct_hsmmp_cloudvela_data_report_t snd;
+					memset(&snd, 0, sizeof(msg_struct_hsmmp_cloudvela_data_report_t));
+
+					//L2信息
+					strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
+						sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
+					strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+							sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+					snd.comHead.timeStamp = time(0);
+					//snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
+					snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+					strcpy(snd.comHead.funcFlag, "0");
+
+					//CONTENT
+					snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+
+					snd.link.timeStampStart = timeStampStart;
+					snd.link.timeStampEnd = timeStampEnd;
+					snd.length = sizeof(msg_struct_hsmmp_cloudvela_data_report_t);
+					HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_HSMMP);
+			//		if (hcu_message_send(MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_HSMMP, &snd, snd.length) == FAILURE)
+			//			HCU_ERROR_PRINT_TASK(TASK_ID_SYSPM, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+				}
+
+				sleep(30*60);
+	    	}
+		}
+
+		return ret;
 	}
-
-	//启动周期性定时器
-	i = rand()%TIMER_DURATION_REDUCE_COLLAPTION_IN_1_MINUTES;
-	hcu_sleep(i);
-	ret = hcu_timer_start(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_PERIOD_CURL_PICTURE, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("HSMMP: Error start timer!\n");
-		return FAILURE;
-	}
-
-	//设置状态机到目标状态
-	//State Transfer to FSM_STATE_HSMMP_ACTIVED
-	if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("HSMMP: Error Set FSM State!\n");
-		return FAILURE;
-	}
-
-	return SUCCESS;
-}
 
 OPSTAT fsm_hsmmp_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {

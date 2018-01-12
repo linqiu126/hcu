@@ -7,7 +7,8 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
-
+//= ZSC, 2018 Jan.12 CURRENT_SW_DELIVERY 305=>AQYC项目
+=颗粒物浓度门限值超标，视频功能增强
 
 //= ZJL, 2018 Jan.9 CURRENT_SW_DELIVERY 304=>BFDF项目
 = 开始调测BFDF的界面

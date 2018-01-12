@@ -41,6 +41,9 @@ extern HcuFsmStateItem_t HcuFsmGpio[];
 #define RPI_GPIO_SENSOR_READ_GAP 60 //in second
 #define RPI_GPIO_READ_REPEAT_TIMES 10
 
+#define RPI_GPIO_PIN_PWM_CONTROL_LOW 5*60
+#define RPI_GPIO_PIN_PWM_CONTROL_HIGH 60
+
 //API
 extern OPSTAT fsm_gpio_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
