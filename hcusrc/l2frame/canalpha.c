@@ -281,6 +281,7 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	//gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
 
 	//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
+	printf("CANALPHA: Received cfg_start message, bitmap=%0x!\n", bitmap);
 	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
 
@@ -535,7 +536,6 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 {
 	int i=0;
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_sys_cfg_req_t);
-
 	//生成bitmap
 	UINT32 bitmap = 0;
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){

@@ -250,12 +250,12 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 
 	//启动命令
 	if ((rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START) || (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME)){
-		//判定不合法
-		if (func_l3bfdf_is_there_any_board_not_yet_startup()==FALSE){
-			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START);
-		}
+		//判定不合法: to resume this function later, as all boards not yet installed.
+//		if (func_l3bfdf_is_there_any_board_not_yet_startup()==FALSE){
+//			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START);
+//		}
 		//如果是工作状态，则需要发送RESUME：从板号１开始一直到HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX-1
-		else if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_SUSPEND){
+		if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_SUSPEND){
 			if (func_l3bfdf_send_out_resume_message_to_all() == FAILURE) return FAILURE;
 		}
 		else{
@@ -644,6 +644,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	int i=0;
 	int line=0, boardId=0;
 
+	HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving new weight event!\n");
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_new_ready_event_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 	if (boardId != 1) HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");

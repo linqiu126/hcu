@@ -587,7 +587,7 @@ UINT32 hcu_bsp_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_typ
 	husbcan->can_config.Timing0 = Timing0;
 	husbcan->can_config.Timing1 = Timing1;
 
-	HCU_DEBUG_PRINT_INF("husbcan->can_dev_type = 0x%X, husbcan->can_dev_idx = 0x%X\n", husbcan->can_dev_type, husbcan->can_dev_idx);
+	HCU_DEBUG_PRINT_FAT("husbcan->can_dev_type = 0x%X, husbcan->can_dev_idx = 0x%X\n", husbcan->can_dev_type, husbcan->can_dev_idx);
 
     if (!VCI_OpenDevice(husbcan->can_dev_type, husbcan->can_dev_idx, 0))
     {
@@ -621,7 +621,7 @@ UINT32 hcu_bsp_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_typ
 	pthread_create(&husbcan->can_receiving_thread_id, NULL, func_usbcan_rx_thread, (void *)husbcan);
 
 	husbcan->can_status = CAN_STATUS_INITIALIZED;
-	HCU_DEBUG_PRINT_INF("USBCAN_DH: VCI_StartCAN(%d) succeeded\n", 0);
+	HCU_DEBUG_PRINT_FAT("USBCAN_DH: VCI_StartCAN(%d) succeeded\n", 0);
 	return SUCCESS;
 }
 
@@ -697,9 +697,10 @@ UINT32 func_usbcan_transmit(HcuUsbCanHandleTypeDef_t *husbcan, UINT8 *ptr_data, 
 	memcpy(&husbcan->can_tx_data.Data[0], ptr_data, data_len);
 	husbcan->can_tx_data.ExternFlag = extern_flag;
 
+	printf("func_usbcan_transmit: usb_can_transmit: ID=%08x, husbcan->can_dev_type=%d, husbcan->can_dev_idx=%d\n", husbcan->can_tx_data.ID, husbcan->can_dev_type, husbcan->can_dev_idx);
 	if (1 != VCI_Transmit(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &(husbcan->can_tx_data), 1))
     {
-        HCU_DEBUG_PRINT_INF("USBCAN_DH: usb_can_transmit: CAN%d TX failed: ID=%08x\n", 0, husbcan->can_tx_data.ID);
+		printf("USBCAN_DH: usb_can_transmit: CAN%d TX failed: ID=%08x, husbcan->can_dev_type=%d, husbcan->can_dev_idx=%d\n", 0, husbcan->can_tx_data.ID, husbcan->can_dev_type, husbcan->can_dev_idx);
         return FAILURE;
     }
 
@@ -736,8 +737,8 @@ void func_usbcan_RxCpltCallback(HcuUsbCanHandleTypeDef_t* CanHandle, VCI_CAN_OBJ
 	else
 		frame_desc = &g_can_packet_desc[1][wmc_id];
 
-	printf("USBCAN: func_usbcan_RxCpltCallback (wmc_id=%d). DataLen=%d, %02X %02X %02X %02X %02X %02X %02X %02X\r\n", wmc_id, Can->DataLen, \
-			Can->Data[0], Can->Data[1], Can->Data[2], Can->Data[3], Can->Data[4], Can->Data[5], Can->Data[6], Can->Data[7]);
+//	printf("USBCAN: func_usbcan_RxCpltCallback (wmc_id=%d). DataLen=%d, %02X %02X %02X %02X %02X %02X %02X %02X\r\n", wmc_id, Can->DataLen, \
+//			Can->Data[0], Can->Data[1], Can->Data[2], Can->Data[3], Can->Data[4], Can->Data[5], Can->Data[6], Can->Data[7]);
 //	HCU_DEBUG_PRINT_INF("stdId 0x%x length %d, data: 0x%08x 0x%08x\n",
 //		Can->ID,
 //		Can->DataLen,
@@ -763,6 +764,7 @@ void func_usbcan_loopback_callback(HCU_HUITP_L2FRAME_Desc_t *pdesc)
 	if ((pdesc->wmc_id >= HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE) || (can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE)){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("USBCAN: Receive parameter error!\n");
+		printf("USBCAN: L2Packet received error, wmc_id=%d, can_l2frame_len=%d!\n", pdesc->wmc_id, can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len);
 		return;
 	}
 
@@ -873,6 +875,7 @@ uint32_t hcu_bsp_usbcan_l2frame_transmit(HcuUsbCanHandleTypeDef_t* CanHandle, ui
 		CanHandle->can_tx_data.ID = (wmc_id_bitmap | AWS_TO_WMC_CAN_ID_PREFIX);
 
 		memcpy(CanHandle->can_tx_data.Data, pL2Frame, translen);
+		printf("hcu_bsp_usbcan_l2frame_transmit: CanHandle->can_tx_data.ID=0x%0X\r\n", CanHandle->can_tx_data.ID);
 		ret = func_usbcan_transmit(CanHandle, pL2Frame, translen, CanHandle->can_tx_data.ID, 1); ///!!! EXT FRAMEs
 		//usleep(500);
 		if(ret == SUCCESS)
