@@ -697,7 +697,7 @@ UINT32 func_usbcan_transmit(HcuUsbCanHandleTypeDef_t *husbcan, UINT8 *ptr_data, 
 	memcpy(&husbcan->can_tx_data.Data[0], ptr_data, data_len);
 	husbcan->can_tx_data.ExternFlag = extern_flag;
 
-	printf("func_usbcan_transmit: usb_can_transmit: ID=%08x, husbcan->can_dev_type=%d, husbcan->can_dev_idx=%d\n", husbcan->can_tx_data.ID, husbcan->can_dev_type, husbcan->can_dev_idx);
+	//printf("func_usbcan_transmit: usb_can_transmit: ID=%08x, husbcan->can_dev_type=%d, husbcan->can_dev_idx=%d\n", husbcan->can_tx_data.ID, husbcan->can_dev_type, husbcan->can_dev_idx);
 	if (1 != VCI_Transmit(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &(husbcan->can_tx_data), 1))
     {
 		printf("USBCAN_DH: usb_can_transmit: CAN%d TX failed: ID=%08x, husbcan->can_dev_type=%d, husbcan->can_dev_idx=%d\n", 0, husbcan->can_tx_data.ID, husbcan->can_dev_type, husbcan->can_dev_idx);
@@ -764,7 +764,7 @@ void func_usbcan_loopback_callback(HCU_HUITP_L2FRAME_Desc_t *pdesc)
 	if ((pdesc->wmc_id >= HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE) || (can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE)){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("USBCAN: Receive parameter error!\n");
-		printf("USBCAN: L2Packet received error, wmc_id=%d, can_l2frame_len=%d!\n", pdesc->wmc_id, can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len);
+		//printf("USBCAN: L2Packet received error, wmc_id=%d, can_l2frame_len=%d!\n", pdesc->wmc_id, can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len);
 		return;
 	}
 
@@ -875,7 +875,7 @@ uint32_t hcu_bsp_usbcan_l2frame_transmit(HcuUsbCanHandleTypeDef_t* CanHandle, ui
 		CanHandle->can_tx_data.ID = (wmc_id_bitmap | AWS_TO_WMC_CAN_ID_PREFIX);
 
 		memcpy(CanHandle->can_tx_data.Data, pL2Frame, translen);
-		printf("hcu_bsp_usbcan_l2frame_transmit: CanHandle->can_tx_data.ID=0x%0X\r\n", CanHandle->can_tx_data.ID);
+		//printf("hcu_bsp_usbcan_l2frame_transmit: CanHandle->can_tx_data.ID=0x%0X\r\n", CanHandle->can_tx_data.ID);
 		ret = func_usbcan_transmit(CanHandle, pL2Frame, translen, CanHandle->can_tx_data.ID, 1); ///!!! EXT FRAMEs
 		//usleep(500);
 		if(ret == SUCCESS)

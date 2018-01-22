@@ -512,7 +512,9 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 		//设置所有料斗状态到工作状态
 		for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
 			if (func_l3bfdf_hopper_state_set_valid(i) == FALSE)
-				HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Init global parameter error!\n");
+				//To enable configure continuously work, temparily disable RECOVERY work mechanism
+				//HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Init global parameter error! Index = %d.\n", i);
+				HCU_DEBUG_PRINT_CRT("L3BFDF: Init global parameter error, but still temp. working continuously! Index = %d.\n", i);
 		}
 
 		//批次Session+1：它的初始化应该存入数据库表单
@@ -1127,6 +1129,7 @@ OPSTAT func_l3bfdf_send_out_cfg_start_message_to_all(void)
 	snd.length = sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_SYS_CFG_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
 	hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
 	return SUCCESS;
 }
 
@@ -1196,7 +1199,7 @@ bool func_l3bfdf_hopper_state_set_valid(UINT8 streamId)
 
 	//入参检查
 	if (streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX){
-		HcuDebugPrint("L3BFDF: Stream=%d\n", streamId);
+		HCU_DEBUG_PRINT_CRT("L3BFDF: Stream=%d\n", streamId);
 		return FALSE;
 	}
 
@@ -1218,14 +1221,14 @@ bool func_l3bfdf_hopper_state_set_valid(UINT8 streamId)
 		gTaskL3bfdfContext.hopper[streamId][i].matLackNbr = (UINT32)(targetWgt/avgWgt==0?0.01:avgWgt)&0xFFFF;
 		nbrDeep = (UINT32)(avgWgt/(sigWgt==0?0.01:sigWgt))&0xFFFF;
 		if ((sigWgt == 0) || (avgWgt == 0)){
-			HcuDebugPrint("L3BFDF: Zero sigWgt/avgWgt, Stream/Gid/Hopper=[%d/%d/%d], RangAvg/Sig/Min/Max=[%f/%f/%f/%f]\n", streamId, gid, i, avgWgt, sigWgt, \
+			HCU_DEBUG_PRINT_CRT("L3BFDF: Zero sigWgt/avgWgt, Stream/Gid/Hopper=[%d/%d/%d], RangAvg/Sig/Min/Max=[%f/%f/%f/%f]\n", streamId, gid, i, avgWgt, sigWgt, \
 					gTaskL3bfdfContext.group[streamId][gid].rangeLow, gTaskL3bfdfContext.group[streamId][gid].rangeHigh);
 			return FALSE;
 		}
 
 		//这里的目标，还要更好的进行比较
 		if (gTaskL3bfdfContext.hopper[streamId][i].matLackNbr <= nbrDeep){
-			HcuDebugPrint("L3BFDF: Stream/Hopper=[%d/%d], LackNbr=%d, nbrDeep=%d\n", streamId, i, gTaskL3bfdfContext.hopper[streamId][i].matLackNbr, nbrDeep);
+			HCU_DEBUG_PRINT_CRT("L3BFDF: Stream/Hopper=[%d/%d], LackNbr=%d, nbrDeep=%d\n", streamId, i, gTaskL3bfdfContext.hopper[streamId][i].matLackNbr, nbrDeep);
 			return FALSE;
 		}
 
