@@ -7,6 +7,15 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+
+
+//= ZJL, 2018 Jan.22 CURRENT_SW_DELIVERY 306=>BFDF项目
+= 测试过程中出现的问题：
+  - 系统CFG_START_REQ启动时未检查所有板子的死活，暂时禁止该检查，导致bitmap不正确
+  - 返回CFG_RESP消息中，统计参数全为0，检查过程忽略但报错误
+  - WS_NEW_EVENT报告错误，消息长度错误
+
+
 //= ZSC, 2018 Jan.12 CURRENT_SW_DELIVERY 305=>AQYC项目
 =颗粒物浓度门限值超标，视频功能增强
 
