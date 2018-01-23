@@ -526,6 +526,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 		//设置工作启动时间
 		gTaskL3bfdfContext.startWorkTimeInUnix = time(0);
 	}
+
 	//返回
 	return SUCCESS;
 }
@@ -646,16 +647,17 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	int i=0;
 	int line=0, boardId=0;
 
-	HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving new weight event!\n");
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_new_ready_event_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 	if (boardId != 1) HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 
-	//通知界面
-	StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t status1;
-	memset(&status1, 0, sizeof(StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t));
-	status1.weight = rcv.sensorWsValue;
-	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(rcv.snrId, &status1);
+	//通知界面, should be put after algo result
+	StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t inswgt_report;
+	memset(&inswgt_report, 0, sizeof(StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t));
+	inswgt_report.weight = rcv.sensorWsValue;
+	inswgt_report.hopperId = rand()%32;
+	inswgt_report.lineId = rand()%2 + 1;
+	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(rcv.snrId, &inswgt_report);
 
 	//正常处理
 	gTaskL3bfdfContext.cur.wsIncMatCnt++;
