@@ -404,6 +404,8 @@ typedef struct StrHlcIe_cui_hcu2uir_inswgt_bfsc_report
 //HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report      	= 0x0191,
 typedef struct StrHlcIe_cui_hcu2uir_inswgt_bfdf_report
 {
+	UINT8   lineId;  //line id
+	UINT8   hopperId;  //1-32, 33-64
 	UINT32  weight;  //in NF2
 }StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t;
 //cmdValue = boardId
