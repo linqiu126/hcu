@@ -110,6 +110,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP] = 0;
 	memset(&gTaskHsmmpContext, 0, sizeof(gTaskHsmmpContext_t));
 	gTaskHsmmpContext.Hsmmp_flag = FALSE;
+	gTaskHsmmpContext.Hsmmp_alarm = HSMMP_ALARM_FLAG_NULL;
 
 	/*
 		//等待随机长度的时长，一分钟/60秒之类，然后再开始干活，以便减少所有传感器相互碰撞的几率，让所有任务分布更加平均
@@ -146,7 +147,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 			HcuDebugPrint("GPIO: Enter FSM_STATE_HSMMP_ACTIVED status, Keeping refresh here!\n");
 		}
-
+/*
 		//For HKvision option setting
 		HKVisionOption_t HKVisionOption;
 		memset( (void *)&HKVisionOption, 0, sizeof(HKVisionOption_t));
@@ -168,68 +169,80 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		strcat(HKVisionOption.file_video, zHcuVmCtrTab.clock.curPhotoDir);
 		strcat(HKVisionOption.file_video, "/");
 		strcat(HKVisionOption.file_video, "hkvideo.txt");
-
-		UINT32 timeStampStart,timeStampEnd;
+*/
+		//UINT32 timeStampStart,timeStampEnd;
 
 
 		//进入循环工作模式
 		while(1){
 
 	    	sleep(1);
-	    	if(TRUE == gTaskHsmmpContext.Hsmmp_flag)
-	    	{
-	    		timeStampStart = time(0);
-				if(FAILURE == hcu_hsmmp_video_capture_start(HKVisionOption)){
-					HcuErrorPrint("HSMMP: Start HK video capture error!\n\n\n\n\n\n");
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-					continue;
-				}
-				else
-				{
-					sleep(HSMMP_HKVISION_CAPTURE_DURATION_DEFAULT);
-					if(FAILURE == hcu_hsmmp_video_capture_stop(HKVisionOption))
-					{
-						HcuErrorPrint("HSMMP: Stop HK video capture error!\n\n\n\n\n\n");
-						zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-						continue;
-					}
-					timeStampEnd = time(0);
 
-				}
+			HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_HSMMP, msg_struct_hsmmp_cloudvela_data_report_t);
 
-				//ret = func_hsmmp_time_out_period_curl_video(timeStampStart,timeStampEnd);
-				HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_HSMMP, msg_struct_hsmmp_cloudvela_data_report_t);
+			//发送数据给后台
+			if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE)){//如果只发给Home,应该是Curl的连接状态
+			//if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE)){//debug by shanchun
 
-				//发送数据给后台
-				if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//如果只发给Home,应该是Curl的连接状态
-				//if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE)){//debug by shanchun
+				msg_struct_hsmmp_cloudvela_data_report_t snd;
+				memset(&snd, 0, sizeof(msg_struct_hsmmp_cloudvela_data_report_t));
 
-					msg_struct_hsmmp_cloudvela_data_report_t snd;
-					memset(&snd, 0, sizeof(msg_struct_hsmmp_cloudvela_data_report_t));
+				//L2信息
+				strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
+					sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
+				strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+						sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+				snd.comHead.timeStamp = time(0);
+				//snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
+				snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+				strcpy(snd.comHead.funcFlag, "0");
 
-					//L2信息
-					strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
-						sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
-					strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
-							sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
-					snd.comHead.timeStamp = time(0);
-					//snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
-					snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-					strcpy(snd.comHead.funcFlag, "0");
+				//CONTENT
+				snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 
-					//CONTENT
-					snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 
-					snd.link.timeStampStart = timeStampStart;
-					snd.link.timeStampEnd = timeStampEnd;
+		    	if((TRUE == gTaskHsmmpContext.Hsmmp_flag) && (HSMMP_ALARM_FLAG_NULL == gTaskHsmmpContext.Hsmmp_alarm))
+		    	{
+		    		gTaskHsmmpContext.timeStamp = time(0);
+		    		gTaskHsmmpContext.Hsmmp_alarm = HSMMP_ALARM_FLAG_ON;
+
+					snd.link.alarmFlag = gTaskHsmmpContext.Hsmmp_alarm;
+					snd.link.timeStamp = gTaskHsmmpContext.timeStamp;
 					snd.length = sizeof(msg_struct_hsmmp_cloudvela_data_report_t);
 					HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_HSMMP);
-			//		if (hcu_message_send(MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_HSMMP, &snd, snd.length) == FAILURE)
-			//			HCU_ERROR_PRINT_TASK(TASK_ID_SYSPM, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-				}
 
-				sleep(HSMMP_HKVISION_CAPTURE_STOP_DEFAULT);
-	    	}
+		    	}
+
+		    	if((TRUE == gTaskHsmmpContext.Hsmmp_flag) && (HSMMP_ALARM_FLAG_ON == gTaskHsmmpContext.Hsmmp_alarm))
+		    	{
+					snd.link.alarmFlag = gTaskHsmmpContext.Hsmmp_alarm;
+					snd.link.timeStamp = gTaskHsmmpContext.timeStamp;
+					snd.length = sizeof(msg_struct_hsmmp_cloudvela_data_report_t);
+					HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_HSMMP);
+		    	}
+
+		    	if((FALSE == gTaskHsmmpContext.Hsmmp_flag) && (HSMMP_ALARM_FLAG_ON == gTaskHsmmpContext.Hsmmp_alarm))
+		    	{
+		    		gTaskHsmmpContext.timeStamp = time(0);
+		    		gTaskHsmmpContext.Hsmmp_alarm = HSMMP_ALARM_FLAG_OFF;
+
+					snd.link.alarmFlag = gTaskHsmmpContext.Hsmmp_alarm;
+					snd.link.timeStamp = gTaskHsmmpContext.timeStamp;
+					snd.length = sizeof(msg_struct_hsmmp_cloudvela_data_report_t);
+					HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_HSMMP);
+		    	}
+
+		    	if((FALSE == gTaskHsmmpContext.Hsmmp_flag) && (HSMMP_ALARM_FLAG_OFF == gTaskHsmmpContext.Hsmmp_alarm))
+		    	{
+		    		gTaskHsmmpContext.Hsmmp_alarm = HSMMP_ALARM_FLAG_NULL;
+
+					snd.link.alarmFlag = gTaskHsmmpContext.Hsmmp_alarm;
+					snd.link.timeStamp = gTaskHsmmpContext.timeStamp;
+					snd.length = sizeof(msg_struct_hsmmp_cloudvela_data_report_t);
+					HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_HSMMP);
+		    	}
+			}
+	    	sleep(HSMMP_HKVISION_CAPTURE_DURATION_DEFAULT);
 		}
 
 		return ret;
@@ -445,7 +458,8 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			msg_struct_hsmmp_cloudvela_data_resp_t snd;
 			memset(&snd, 0, sizeof(msg_struct_hsmmp_cloudvela_data_resp_t));
 			snd.length = sizeof(msg_struct_hsmmp_cloudvela_data_resp_t);
-			strcpy(snd.link.linkName, newpath);
+
+			/*strcpy(snd.link.linkName, newpath);
 			snd.link.linkLen = strlen(newpath);
 
 			//考虑到AVORION将放到外部单独进程中，GPS时钟无法共享，故而GPS数据的采集直接放到HSMMP模块中，而不放到传感器中
@@ -456,7 +470,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			snd.link.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
 			snd.link.timeStampStart = rcv.hsmmp.timeStamp;
 			snd.link.timeStampEnd = time(0);
-
+*/
 			//强行注入参数，以方便CLOUT中的编码，未来待完善
 			snd.usercmdid = L3CI_hsmmp;
 			snd.useroptid = L3PO_hsmmp_data_report;
@@ -605,7 +619,7 @@ OPSTAT func_hsmmp_time_out_period_curl_picture(void)
 		snd.comHead.timeStamp = time(0);
 		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
 		strcpy(snd.comHead.funcFlag, "0");
-
+/*
 		//LINK层参数
 		snd.link.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
 		snd.link.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
@@ -614,7 +628,7 @@ OPSTAT func_hsmmp_time_out_period_curl_picture(void)
 		snd.link.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
 		snd.link.timeStampStart = time(0);
 		snd.link.timeStampEnd = time(0);
-
+*/
 		//强行注入参数
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.flag = HUITP_IEID_UNI_PICTURE_IND_FLAG_REMOTE_CURL_TRIGGER;

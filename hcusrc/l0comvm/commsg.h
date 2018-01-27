@@ -866,11 +866,13 @@ typedef struct sensor_hsmmp_link_element
 {
 	UINT32 equipid;
 	UINT32 linkLen;
-	char   linkName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
-	msgie_struct_com_gps_pos_t gps;
-	UINT32 timeStampStart;
-	UINT32 timeStampEnd;
-	UINT32 nTimes;
+	//char   linkName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	//msgie_struct_com_gps_pos_t gps;
+	//UINT32 timeStampStart;
+	//UINT32 timeStampEnd;
+	//UINT32 nTimes;
+	UINT8 alarmFlag;
+	UINT32 timeStamp;
 }sensor_hsmmp_link_element_t;
 typedef struct  sensor_airprs_data_element //
 {

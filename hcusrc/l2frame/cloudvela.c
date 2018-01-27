@@ -3022,9 +3022,9 @@ OPSTAT fsm_cloudvela_hsmmp_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		//StrIe_HUITP_IEID_uni_hsmmp_value_t
 		pMsgProc.respValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_hsmmp_value);
 		pMsgProc.respValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_hsmmp_value_t) - 4);
-		strncpy(pMsgProc.respValue.linkName, rcv.link.linkName, strlen(rcv.link.linkName)<sizeof(pMsgProc.respValue.linkName)?strlen(rcv.link.linkName):sizeof(pMsgProc.respValue.linkName));
-		pMsgProc.respValue.timeStampStart = HUITP_ENDIAN_EXG32(rcv.link.timeStampStart);
-		pMsgProc.respValue.timeStampEnd = HUITP_ENDIAN_EXG32(rcv.link.timeStampEnd);
+		//strncpy(pMsgProc.respValue.linkName, rcv.link.linkName, strlen(rcv.link.linkName)<sizeof(pMsgProc.respValue.linkName)?strlen(rcv.link.linkName):sizeof(pMsgProc.respValue.linkName));
+		//pMsgProc.respValue.timeStampStart = HUITP_ENDIAN_EXG32(rcv.link.timeStampStart);
+		//pMsgProc.respValue.timeStampEnd = HUITP_ENDIAN_EXG32(rcv.link.timeStampEnd);
 		//StrIe_HUITP_IEID_uni_hsmmp_motive_t
 		pMsgProc.respPosStatus.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_hsmmp_pos_status);
 		pMsgProc.respPosStatus.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_hsmmp_pos_status_t) - 4);
@@ -3179,9 +3179,9 @@ OPSTAT fsm_cloudvela_hsmmp_data_report(UINT32 dest_id, UINT32 src_id, void * par
 		//StrIe_HUITP_IEID_uni_hsmmp_value_t
 		pMsgProc.reportValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_hsmmp_value);
 		pMsgProc.reportValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_hsmmp_value_t) - 4);
-		strncpy(pMsgProc.reportValue.linkName, rcv.link.linkName, strlen(rcv.link.linkName)<sizeof(pMsgProc.reportValue.linkName)?strlen(rcv.link.linkName):sizeof(pMsgProc.reportValue.linkName));
-		pMsgProc.reportValue.timeStampStart = HUITP_ENDIAN_EXG32(rcv.link.timeStampStart);
-		pMsgProc.reportValue.timeStampEnd = HUITP_ENDIAN_EXG32(rcv.link.timeStampEnd);
+		//strncpy(pMsgProc.reportValue.linkName, rcv.link.linkName, strlen(rcv.link.linkName)<sizeof(pMsgProc.reportValue.linkName)?strlen(rcv.link.linkName):sizeof(pMsgProc.reportValue.linkName));
+		//pMsgProc.reportValue.timeStampStart = HUITP_ENDIAN_EXG32(rcv.link.timeStampStart);
+		//pMsgProc.reportValue.timeStampEnd = HUITP_ENDIAN_EXG32(rcv.link.timeStampEnd);
 
 		//Pack message
 		HCU_CLOUDVELA_PACK_HUITP_MSG(HUITP_MSGID_uni_hsmmp_data_report);

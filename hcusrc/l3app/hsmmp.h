@@ -41,6 +41,8 @@ typedef struct gTaskHsmmpContext
 {
 	UINT32 sendCloudCnt;  //用于描述发送到后台，多少次才发送一次
 	UINT32 Hsmmp_flag;    //HSMMP flag to control HSMMP start or off
+	UINT32 Hsmmp_alarm;
+	UINT32 timeStamp;
 }gTaskHsmmpContext_t;
 
 extern gTaskHsmmpContext_t gTaskHsmmpContext;
@@ -57,7 +59,12 @@ extern gTaskHsmmpContext_t gTaskHsmmpContext;
 #define HSMMP_SEND_BACK_MOD_BASE  1
 
 #define HSMMP_HKVISION_CAPTURE_DURATION_DEFAULT 60 //1 minutes
-#define HSMMP_HKVISION_CAPTURE_STOP_DEFAULT 3*60  //30 minutes
+
+
+#define HSMMP_ALARM_FLAG_NULL 0
+#define HSMMP_ALARM_FLAG_ON 1
+#define HSMMP_ALARM_FLAG_OFF 2
+#define HSMMP_ALARM_FLAG_INVALID 0xFF
 
 //API
 extern OPSTAT fsm_hsmmp_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

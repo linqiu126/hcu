@@ -386,38 +386,13 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	if(rcv.pm25.pmTSPValue >= (HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000))
 	//if(rcv.pm25.pmTSPValue >= zHcuSysEngPar.serialport.SeriesPortForGPS) //for debug
 	{
-/*
-		ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
-		if(FAILURE == ret)
-		{
-			sprintf(file, "sudo rm %s", HKVisionOption.file_photo);
-			system(file);
-
-			HcuErrorPrint("PM25: Start HK photo capture error!\n\n");
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-		}
-		else
-		{
-			if ( FAILURE == hcu_service_ftp_picture_upload_by_ftp(HKVisionOption.file_photo_pure, HKVisionOption.file_photo))
-				HcuErrorPrint("PM25: Picture Upload Error! Filename=[%s]\n", HKVisionOption.file_photo);
-			else
-				HCU_DEBUG_PRINT_INF("PM25: Picture Upload Successfully! Filename=[%s]\n", HKVisionOption.file_photo);
-
-		}
-*/
 		if(FALSE == gTaskPm25Context.AlarmFlag)
 		{
-			/*
-			if(FAILURE == hcu_hsmmp_video_capture_start(HKVisionOption)){
-				HcuErrorPrint("PM25: Start HK video capture error!\n\n");
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-			}
-			*/
 			gTaskHsmmpContext.Hsmmp_flag = TRUE;
 		}
 
 		gTaskPm25Context.AlarmFlag = TRUE;
-
+/*
 		//send alarm report
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
@@ -432,15 +407,10 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.equID = rcv.pm25.equipid;
 		snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_TSP_VALUE;
 		snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_TSP_VALUE_EXCEED_THRESHLOD;
-/*
-		if(FAILURE == ret){
-			strcpy(snd.alarmDesc, "PM25: Start HK photo capture error!");
-		}else{
-			strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
-		}
-*/
+
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_PM25, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+*/
 	}
 
 	//若没超过阀值，而且alarm flag = TRUE, 则将alarm flag = FALSE，停止拍照和录像，然后需要发告警清除报告
@@ -449,16 +419,8 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 
 	{
 		gTaskPm25Context.AlarmFlag = FALSE;
-/*
-		ret = hcu_hsmmp_video_capture_stop(HKVisionOption);
-		if(FAILURE == ret)
-		{
-			HcuErrorPrint("PM25: Stop HK video capture error!\n\n");
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-		}
-*/
 		gTaskHsmmpContext.Hsmmp_flag = FALSE;
-
+/*
 		//send alarm clear report
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
@@ -477,6 +439,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_PM25, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+*/
 	}
 /*
 	//离线模式

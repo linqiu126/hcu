@@ -2192,13 +2192,21 @@ typedef struct StrIe_HUITP_IEID_uni_noise_value
 //HUITP_IEID_uni_hsmmp_min                        = 0x2C00, 
 //HUITP_IEID_uni_hsmmp_value                      = 0x2C00,
 #define HUITP_IEID_UNI_HSMMP_LINK_FILE_LEN_MAX  80
+
+#define HUITP_IEID_UNI_HSMMP_ALARM_FLAG_NULL 0
+#define HUITP_IEID_UNI_HSMMP_ALARM_FLAG_ON 1
+#define HUITP_IEID_UNI_HSMMP_ALARM_FLAG_OFF 2
+#define HUITP_IEID_UNI_HSMMP_ALARM_FLAG_INVALID 0xFF
+
 typedef struct StrIe_HUITP_IEID_uni_hsmmp_value
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	char   linkName[HUITP_IEID_UNI_HSMMP_LINK_FILE_LEN_MAX];
-	UINT32 timeStampStart;
-	UINT32 timeStampEnd;
+	//char   linkName[HUITP_IEID_UNI_HSMMP_LINK_FILE_LEN_MAX];
+	//UINT32 timeStampStart;
+	//UINT32 timeStampEnd;
+	UINT8 alarmFlag;
+	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_hsmmp_value_t;
 
 //HUITP_IEID_uni_hsmmp_motive                     = 0x2C01,
