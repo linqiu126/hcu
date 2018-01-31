@@ -220,7 +220,7 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	UINT32 bitmap = 0;
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
 		if (rcv.boardBitmap[i] == TRUE){
-			bitmap = ((UINT32)1<<i);
+			bitmap |= ((UINT32)1<<i);
 		}
 	}
 

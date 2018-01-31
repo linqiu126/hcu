@@ -9,6 +9,10 @@
 
 
 
+//= ZJL, 2018 Jan.31 CURRENT_SW_DELIVERY 307=>BFDF项目
+= Update BFDF algorithsm
+
+
 //= ZJL, 2018 Jan.22 CURRENT_SW_DELIVERY 306=>BFDF项目
 = 测试过程中出现的问题：
   - 系统CFG_START_REQ启动时未检查所有板子的死活，暂时禁止该检查，导致bitmap不正确

@@ -139,9 +139,9 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//延迟并启动系统，进入测试模式
-	hcu_sleep(4);
+	hcu_sleep(2);
 	//设置configIndex=1
-	//func_bfdfuicomm_read_cfg_file_into_ctrl_table(1);
+	func_bfdfuicomm_read_cfg_file_into_ctrl_table(1);
 	//发送启动消息给L3BFDF
 //	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
 //	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
@@ -876,7 +876,7 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 
 	int nbrGroup = 0;
 	//第0个流水线，分配组别
-	nbrGroup = rand()%5+1;
+	nbrGroup = rand()%5+4;
 	func_l3bfdf_group_allocation(0, nbrGroup);
 	func_l3bfdf_hopper_add_by_group_in_average_distribution(0, nbrGroup);
 	//设置小组重量范围

@@ -229,9 +229,9 @@ OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//周期性统计扫描定时器
 	else if ((rcv.timeId == TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN) &&(rcv.timeRes == TIMER_RESOLUTION_10MS)){
-		if (func_l3bfdf_time_out_statistic_scan_process() == FAILURE){
-			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error process time out message!\n");
-		}
+//		if (func_l3bfdf_time_out_statistic_scan_process() == FAILURE){
+//			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error process time out message!\n");
+//		}
 	}
 
 	//返回
@@ -289,9 +289,11 @@ OPSTAT fsm_l3bfdf_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_startup_ind_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
+	line = rcv.snrId>>3;
+	boardId = rcv.snrId & 0x07;
 	//存储本地
 	gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
-	HCU_DEBUG_PRINT_CRT("L3BFDF: Sensor ID = %d is set to be startup!\n", rcv.snrId);
+	HcuDebugPrint("L3BFDF: Sensor ID = %d is set to be startup, line = %d, boardId = %d!\n", rcv.snrId, line, boardId);
 
 	//通知界面
 	HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STARTUP);
@@ -673,7 +675,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	}
 
 	//打印统计信息
-	if ((rand()%100) == 1){
+	//if ((rand()%100) == 1){
 		//打印整体比例情况
 		HCU_DEBUG_PRINT_CRT("L3BFDF: Statistic Total Inc/Comb/Ttt=%d/%d/%d, CombR=%5.2f%, TttR=%5.2f%, TgvR=%5.2f%\n", \
 				gTaskL3bfdfContext.cur.wsIncMatCnt, gTaskL3bfdfContext.cur.wsCombTimes, gTaskL3bfdfContext.cur.wsTttTimes,\
@@ -684,7 +686,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
 			func_l3bfdf_print_all_hopper_ratio_by_weight(i);
 		}
-	}
+	//}
 
 	//超界限，扔进垃圾桶
 	UINT16 gidMin = 1;
@@ -699,7 +701,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfdfContext.cur.wsTgvTimes++;
 		gTaskL3bfdfContext.cur.wsTgvMatCnt ++;
 		gTaskL3bfdfContext.cur.wsTgvMatWgt += weight;
-
+		printf("\nError1!\n\n");
 		return SUCCESS;
 	}
 
@@ -743,13 +745,13 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfdfContext.cur.wsCombTimes++;
 		gTaskL3bfdfContext.cur.wsTttMatCnt++;
 		gTaskL3bfdfContext.cur.wsTttMatWgt += weight;
-
 		return SUCCESS;
 	}
 
 	//通过fillHopper进行搜索：深水区，需要判定料斗的欠缺深度
 	//从fillHopper入手，寻找第一个可以满足区间控制的目标，然后填入
 	outHopperId = func_l3bfdf_new_ws_search_hopper_valid_normal(line, gId, weight);
+	outHopperId = 1;
 	if (outHopperId == 0){
 		//扔进垃圾桶
 		if (func_l3bfdf_new_ws_send_out_pullin_message(line, 0) == FALSE)
@@ -758,13 +760,16 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfdfContext.cur.wsTgvTimes++;
 		gTaskL3bfdfContext.cur.wsTgvMatCnt++;
 		gTaskL3bfdfContext.cur.wsTgvMatWgt += weight;
+		printf("\nEnter rubbish!\n\n");
 	}
 
 	//正确找到
 	else{
 		//先发送出料：出料的定时机制，如何处理？这是重入过程：使用状态机，不用定时器
+		printf("Send out message!\n\n");
 		if (func_l3bfdf_new_ws_send_out_pullin_message(line, outHopperId) == FALSE)
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send out pullin message error!\n");
+		printf("Send out message success!\n\n");
 		//等待入料成功后，状态设置为出料，即可激活出料过程
 		gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT;
 		//留待入料成功后，加入到目标重量区
@@ -788,6 +793,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfdfContext.cur.wsTttMatCnt++;
 		gTaskL3bfdfContext.cur.wsTttMatWgt += weight;
 	}
+	printf("\nContinue working3!\n\n");
 
 	//返回
 	return SUCCESS;
@@ -1286,7 +1292,10 @@ bool func_l3bfdf_hopper_add_by_tail(UINT8 streamId, UINT16 groupId, UINT16 hoppe
 		return FALSE;
 
 	//强制增加GroupId到最大数量计量单位上
-	if (groupId > gTaskL3bfdfContext.totalGroupNbr[streamId]) gTaskL3bfdfContext.totalGroupNbr[streamId] = groupId;
+	if (groupId > gTaskL3bfdfContext.totalGroupNbr[streamId]){
+		HCU_DEBUG_PRINT_FAT("ERROR: Add group by tail, groupid = %d\n", groupId);
+		gTaskL3bfdfContext.totalGroupNbr[streamId] = groupId;
+	}
 
 	//强制修改该GroupId数据
 	gTaskL3bfdfContext.group[streamId][groupId].groupId = groupId;
@@ -1329,7 +1338,10 @@ bool func_l3bfdf_hopper_add_by_group(UINT8 streamId, UINT16 groupId, UINT16 nbrH
 		return FALSE;
 
 	//强制增加GroupId到最大数量计量单位上
-	if (groupId > gTaskL3bfdfContext.totalGroupNbr[streamId]) gTaskL3bfdfContext.totalGroupNbr[streamId] = groupId;
+	if (groupId > gTaskL3bfdfContext.totalGroupNbr[streamId]){
+		HCU_DEBUG_PRINT_FAT("ERROR: Add group by group, groupid = %d\n", groupId);
+		gTaskL3bfdfContext.totalGroupNbr[streamId] = groupId;
+	}
 
 	int i=0;
 	UINT16 tmpHopper = 0;
@@ -1356,7 +1368,10 @@ bool func_l3bfdf_hopper_add_by_group_in_average_distribution(UINT8 streamId, UIN
 		return FALSE;
 
 	//强制增加GroupId到最大数量计量单位上
-	if (nbrGroup > gTaskL3bfdfContext.totalGroupNbr[streamId]) gTaskL3bfdfContext.totalGroupNbr[streamId] = nbrGroup;
+	if (nbrGroup > gTaskL3bfdfContext.totalGroupNbr[streamId]){
+		HCU_DEBUG_PRINT_FAT("ERROR: Add group by average distribution, groupid = %d\n", nbrGroup);
+		gTaskL3bfdfContext.totalGroupNbr[streamId] = nbrGroup;
+	}
 
 	int i=0;
 	int cnt = HCU_SYSCFG_BFDF_HOPPER_NBR_MAX/nbrGroup;
@@ -1381,7 +1396,10 @@ bool func_l3bfdf_hopper_add_by_group_in_normal_distribution(UINT8 streamId, UINT
 		return FALSE;
 
 	//强制增加GroupId到最大数量计量单位上
-	if (nbrGroup > gTaskL3bfdfContext.totalGroupNbr[streamId]) gTaskL3bfdfContext.totalGroupNbr[streamId] = nbrGroup;
+	if (nbrGroup > gTaskL3bfdfContext.totalGroupNbr[streamId]){
+		HCU_DEBUG_PRINT_FAT("ERROR: Group allocation by group in normal distribution, groupd = %d\n", nbrGroup);
+		gTaskL3bfdfContext.totalGroupNbr[streamId] = nbrGroup;
+	}
 
 	//斜线分布
 	for (i = 0; i< HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
@@ -1480,7 +1498,10 @@ bool func_l3bfdf_hopper_insert_by_middle(UINT8 streamId, UINT16 groupId, UINT16 
 		return FALSE;
 
 	//强制增加GroupId到最大数量计量单位上
-	if (groupId > gTaskL3bfdfContext.totalGroupNbr[streamId]) gTaskL3bfdfContext.totalGroupNbr[streamId] = groupId;
+	if (groupId > gTaskL3bfdfContext.totalGroupNbr[streamId]){
+		HCU_DEBUG_PRINT_FAT("ERROR: func_l3bfdf_hopper_insert_by_middle, groupd = %d\n", groupId);
+		gTaskL3bfdfContext.totalGroupNbr[streamId] = groupId;
+	}
 
 	//强制修改该GroupId数据
 	gTaskL3bfdfContext.group[streamId][groupId].groupId = groupId;
@@ -2218,7 +2239,7 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 	if (((time(0)-gTaskL3bfdfContext.start24hStaTimeInUnix) % HCU_L3BFDF_STA_24H_IN_SECOND) == 0){
 		memset(&(gTaskL3bfdfContext.sta24H), 0, sizeof(HcuSysMsgIeL3bfdfContextStaElement_t));
 		gTaskL3bfdfContext.elipse24HourCnt = 0;
-		printf("this is a test, to show enter into wrong loop!\n");
+		HCU_DEBUG_PRINT_CRT("this is a test, to show enter into wrong loop!\n");
 	}
 
 	//24小时到了，应该发送单独的统计报告，未来完善

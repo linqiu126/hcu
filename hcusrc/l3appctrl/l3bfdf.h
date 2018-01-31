@@ -278,7 +278,6 @@ typedef struct gTaskL3bfdfContext
 	HcuSysMsgIeL3bfdfContextStaElement_t sta8H;		//8H统计结果
 	HcuSysMsgIeL3bfdfContextStaElement_t sta24H;		//24H统计结果
 	HcuSysMsgIeL3bfdfContextStaElement_t staUp2Now;	//连续工作到目前的统计结果
-
 }gTaskL3bfdfContext_t;
 extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
 
@@ -409,8 +408,8 @@ extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
 			}\
 		}\
 		strcat(s, "\n");\
-		HCU_DEBUG_PRINT_NOR(s);\
-		HCU_DEBUG_PRINT_NOR("L3BFDF: Total sensor to be start = %d\n", total);\
+		HCU_DEBUG_PRINT_CRT(s);\
+		HCU_DEBUG_PRINT_CRT("L3BFDF: Total sensor to be start = %d\n", total);\
 	}while(0)
 
 //反馈差错控制消息
@@ -430,10 +429,10 @@ extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
 	do{\
 		line = rcv.snrId>>3;\
 		if ((line <0) || (line >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX))\
-			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");\
+			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Received line id [=%d] out of range!\n", line);\
 		boardId = rcv.snrId & 0x07;\
 		if ((boardId <= 0) || (boardId >= HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX))\
-			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");\
+			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Received board id [=%d] out of range!\n", boardId);\
 	}while(0)
 
 
