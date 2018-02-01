@@ -4782,35 +4782,35 @@ typedef struct HcuSysMsgIeL3bfscContextStaElement
 typedef struct HcuSysMsgIeL3bfdfContextStaElement
 {
 	UINT32	wsIncMatCnt;  			//物料数量
-	float	wsIncMatWgt;  			//物料重量
+	UINT32	wsIncMatWgt;  			//物料重量
 	UINT32	wsCombTimes;  			//总共成功素搜到目标的次数
 	UINT32	wsTttTimes;  			//TTT次数
 	UINT32	wsTgvTimes;  			//TGV次数
 	UINT32	wsTttMatCnt;			//TTT物料数量
 	UINT32	wsTgvMatCnt;			//TGV物料数量
-	float	wsTttMatWgt;			//TTT物料重量
-	float	wsTgvMatWgt;			//TGV物料重量
+	UINT32	wsTttMatWgt;			//TTT物料重量
+	UINT32	wsTgvMatWgt;			//TGV物料重量
 	UINT32	wsAvgTttTimes;			//TTT平均次数
 	UINT32	wsAvgTttMatCnt;			//TTT平均物料数
-	float	wsAvgTttMatWgt;			//TTT平均重量
+	UINT32	wsAvgTttMatWgt;			//TTT平均重量
 }HcuSysMsgIeL3bfdfContextStaElement_t;
 
 typedef struct HcuSysMsgIeL3bfhsContextStaElement
 {
-	float	wsIncMatCntMid;  			//物料数量
-	float	wsIncMatWgtMid;  			//物料重量
-	float   wsNormalCntMid;				//正常
-	float   wsNormalWgtMid;				//正常
-	float   wsOverCntMid;				//超重
-	float   wsOverWgtMid;				//超重
-	float   wsUnderTotalCntMid;			//欠重
-	float	wsUnderTotalWgtMid;			//欠重
-	float   wsUnderTu1CntMid;			//欠重TU1
-	float	wsUnderTu1WgtMid;			//欠重TU1
-	float   wsUnderTu2lCntMid;			//欠重TU2
-	float	wsUnderTu2WgtMid;			//欠重TU2
-	float   wsUnspecificCntMid;			//非特定
-	float	wsUnspecificWgtMid;			//非特定
+	UINT32	wsIncMatCntMid;  			//物料数量
+	UINT32	wsIncMatWgtMid;  			//物料重量
+	UINT32   wsNormalCntMid;			//正常
+	UINT32   wsNormalWgtMid;			//正常
+	UINT32   wsOverCntMid;				//超重
+	UINT32   wsOverWgtMid;				//超重
+	UINT32   wsUnderTotalCntMid;		//欠重
+	UINT32	wsUnderTotalWgtMid;			//欠重
+	UINT32   wsUnderTu1CntMid;			//欠重TU1
+	UINT32	wsUnderTu1WgtMid;			//欠重TU1
+	UINT32   wsUnderTu2lCntMid;			//欠重TU2
+	UINT32	wsUnderTu2WgtMid;			//欠重TU2
+	UINT32   wsUnspecificCntMid;		//非特定
+	UINT32	wsUnspecificWgtMid;			//非特定
 }HcuSysMsgIeL3bfhsContextStaElement_t;
 
 /*

@@ -88,6 +88,8 @@ typedef struct L3BfdfNodeBoardInfo
 #define HCU_L3BFDF_NODE_BOARD_STATUS_WORK_MAX 		49
 #define HCU_L3BFDF_NODE_BOARD_STATUS_INVALID  		0xFF
 
+//整个系统全部采用NF2的整数形式进行处理
+
 //分组信息
 typedef struct L3BfdfGroupInfo
 {
@@ -118,14 +120,11 @@ typedef struct L3BfdfHopperInfo
 	UINT16 hopperStatus;
 	UINT16 preHopperId;
 	UINT16 nextHopperId;
-	UINT8  basketStatus;
 	UINT16 matLackNbr;		//用来计算在特定组别的情况下，采用欠缺算法，需要从多少个开始操控．当打开自动调配小组时，这个参数需要动态刷新．本项目估计暂时不需要．
-	//UINT16 matLackNbrMin;
 	UINT16 matLackIndex;     //具体控制欠n的数量
-	//UINT16 matLackIndexMin;
-	double  hopperValue;    //料斗总重量
-	double  hopperLastMat;  //用来存储称重台到物料入料之间的期间，物料的重量．冲入则需要状态和算法控制．
-	double  buferValue;		//用来控制buffer的重量数值
+	UINT32  hopperValue;    //料斗总重量
+	UINT32  hopperLastMat;  //用来存储称重台到物料入料之间的期间，物料的重量．冲入则需要状态和算法控制．
+	UINT32  buferValue;		//用来控制buffer的重量数值
 }L3BfdfHopperInfo_t;
 //料斗状态定义
 #define HCU_L3BFDF_HOPPER_STATUS_NONE			0
@@ -139,8 +138,9 @@ typedef struct L3BfdfHopperInfo
 #define HCU_L3BFDF_HOPPER_STATUS_VALID          31	//状态转换到工作态，空料斗
 #define HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT     32	//开始有物料，直接进篮筐
 #define HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL    33  //篮筐满了
-#define HCU_L3BFDF_HOPPER_STATUS_BUF_FULL       34  //上层BUFFER也满了，一旦收到清零篮筐，必然回到HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT状态，因为篮筐不可能直接满的
-#define HCU_L3BFDF_HOPPER_STATUS_VALID_ERR      35
+#define HCU_L3BFDF_HOPPER_STATUS_BUF_CONT       34  //BUF继续
+#define HCU_L3BFDF_HOPPER_STATUS_BUF_FULL       35  //上层BUFFER也满了，一旦收到清零篮筐，必然回到HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT状态，因为篮筐不可能直接满的
+#define HCU_L3BFDF_HOPPER_STATUS_VALID_ERR      36
 #define HCU_L3BFDF_HOPPER_STATUS_WORK_MAX 		49
 #define HCU_L3BFDF_HOPPER_STATUS_INVALID  		0xFF
 
@@ -191,18 +191,18 @@ typedef struct gTaskL3bfdfContextActionControlParamaters
 //统计信息
 typedef struct gTaskL3bfdfContextStaEleMid
 {
-	double	wsIncMatCntMid;  			//物料数量
-	double	wsIncMatWgtMid;  			//物料重量
-	double	wsCombTimesMid;  			//总共成功素搜到目标的次数
-	double	wsTttTimesMid;  			//TTT次数
-	double	wsTgvTimesMid;  			//TGV次数
-	double	wsTttMatCntMid;				//TTT物料数量
-	double	wsTgvMatCntMid;				//TGV物料数量
-	double	wsTttMatWgtMid;				//TTT物料重量
-	double	wsTgvMatWgtMid;				//TGV物料重量
-	double	wsAvgTttTimesMid;			//TTT平均次数
-	double	wsAvgTttMatCntMid;			//TTT平均物料数
-	double	wsAvgTttMatWgtMid;			//TTT平均重量
+	UINT32	wsIncMatCntMid;  			//物料数量
+	UINT32	wsIncMatWgtMid;  			//物料重量
+	UINT32	wsCombTimesMid;  			//总共成功素搜到目标的次数
+	UINT32	wsTttTimesMid;  			//TTT次数
+	UINT32	wsTgvTimesMid;  			//TGV次数
+	UINT32	wsTttMatCntMid;				//TTT物料数量
+	UINT32	wsTgvMatCntMid;				//TGV物料数量
+	UINT32	wsTttMatWgtMid;				//TTT物料重量
+	UINT32	wsTgvMatWgtMid;				//TGV物料重量
+	UINT32	wsAvgTttTimesMid;			//TTT平均次数
+	UINT32	wsAvgTttMatCntMid;			//TTT平均物料数
+	UINT32	wsAvgTttMatWgtMid;			//TTT平均重量
 }gTaskL3bfdfContextStaEleMid_t;
 
 //统计周期，为了计算滑动平均数据
@@ -329,18 +329,23 @@ extern bool func_l3bfdf_hopper_remove_by_tail(UINT8 streamId, UINT16 groupId);
 extern bool func_l3bfdf_hopper_insert_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId, UINT16 hopperNewId);
 extern bool func_l3bfdf_hopper_del_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId);
 extern int  func_l3bfdf_hopper_dual_chain_audit(void);
-extern bool func_l3bfdf_group_auto_alloc_init_range_in_average(UINT8 streamId, UINT16 nbrGroup, double wgtMin, double wgtMax);
-extern bool func_l3bfdf_group_auto_alloc_init_target_with_uplimit(UINT8 streamId, double targetWgt, double ulRatio);
+extern bool func_l3bfdf_group_auto_alloc_init_range_in_average(UINT8 streamId, UINT16 nbrGroup, UINT32 wgtMin, UINT32 wgtMax);
+extern bool func_l3bfdf_group_auto_alloc_init_target_with_uplimit(UINT8 streamId, UINT32 targetWgt, double ulRatio);
 extern bool func_l3bfdf_print_all_hopper_status_by_id(UINT8 streamId);
 extern bool func_l3bfdf_print_all_hopper_status_by_chain(UINT8 streamId);
 extern bool func_l3bfdf_print_all_hopper_ratio_by_weight(UINT8 streamId);
 
 //核心搜索算法
 UINT16 func_l3bfdf_new_ws_search_group(UINT8 streamId, double weight);
-UINT16 func_l3bfdf_new_ws_search_hopper_full(UINT8 streamId);
-UINT16 func_l3bfdf_new_ws_search_hopper_lack_one(UINT8 streamId, UINT16 gid, double weight);
-UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, double weight);
-bool   func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, double weight);
+UINT16 func_l3bfdf_new_ws_search_hopper_double_full(UINT8 streamId);
+UINT16 func_l3bfdf_new_ws_search_hopper_basket_full(UINT8 streamId);
+UINT16 func_l3bfdf_new_ws_search_hopper_buffer_lack_one(UINT8 streamId, UINT16 gid, UINT32 weight);
+UINT16 func_l3bfdf_new_ws_search_hopper_buffer_normal(UINT8 streamId, UINT16 gid, UINT32 weight);
+UINT16 func_l3bfdf_new_ws_search_hopper_basket_lack_one(UINT8 streamId, UINT16 gid, UINT32 weight);
+UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, UINT32 weight);
+bool   func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, UINT32 weight);
+bool   func_l3bfdf_hopper_judge_buffer_is_lack_one_full(UINT8 sid, UINT16 hid, UINT32 weight);
+bool   func_l3bfdf_hopper_judge_buffer_is_valid(UINT8 sid, UINT16 hid, UINT32 weight);
 bool   func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(UINT8 streamId, UINT16 hopperId);
 bool   func_l3bfdf_new_ws_send_out_comb_out_message_w_basket_full(UINT8 streamId, UINT16 hopperId);
 bool   func_l3bfdf_new_ws_send_out_comb_out_message_w_double_full(UINT8 streamId, UINT16 hopperId);

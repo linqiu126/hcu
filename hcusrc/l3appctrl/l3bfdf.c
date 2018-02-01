@@ -641,10 +641,11 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 
 
 //触发组合算法
+//进来的重量是NF2，在整个计算过程中，全部以NF2进行表达
 OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	double weight = 0;
+	UINT32 weight = 0;
 	UINT16 outHopperId = 0;
 	int i=0;
 	int line=0, boardId=0;
@@ -675,7 +676,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	}
 
 	//打印统计信息
-	//if ((rand()%100) == 1){
+	if ((rand()%10) == 1){
 		//打印整体比例情况
 		HCU_DEBUG_PRINT_CRT("L3BFDF: Statistic Total Inc/Comb/Ttt=%d/%d/%d, CombR=%5.2f%, TttR=%5.2f%, TgvR=%5.2f%\n", \
 				gTaskL3bfdfContext.cur.wsIncMatCnt, gTaskL3bfdfContext.cur.wsCombTimes, gTaskL3bfdfContext.cur.wsTttTimes,\
@@ -686,17 +687,21 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
 			func_l3bfdf_print_all_hopper_ratio_by_weight(i);
 		}
-	//}
+	}
 
-	//超界限，扔进垃圾桶
+	//超界限错误，扔进垃圾桶
 	UINT16 gidMin = 1;
 	UINT16 gidMax = gTaskL3bfdfContext.totalGroupNbr[line];
-	weight = (double)rcv.sensorWsValue / 100.0;
+	weight = rcv.sensorWsValue;
 	if ((weight < gTaskL3bfdfContext.group[line][gidMin].rangeLow) || (weight > gTaskL3bfdfContext.group[line][gidMax].rangeHigh))
 	{
 		//HCU_DEBUG_PRINT_CRT("L3BFDF: NEW EVENT S/W=%d/%f, Low/High=%f/%f\n", line, weight, gTaskL3bfdfContext.group[line][gidMin].rangeLow, gTaskL3bfdfContext.group[line][gidMax].rangeHigh);
 		if (func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(line, 0) == FALSE)
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
+
+		//更新目标料斗重量 in NF2
+		gTaskL3bfdfContext.hopper[line][0].hopperValue += rcv.sensorWsValue;
+
 		//更新统计信息
 		gTaskL3bfdfContext.cur.wsTgvTimes++;
 		gTaskL3bfdfContext.cur.wsTgvMatCnt ++;
@@ -718,45 +723,85 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	if ((gId == 0) || (gId > gidMax))
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Can not find right group! StreamId=%d, rcv.weight=%fg\n", line, (float)rcv.sensorWsValue/100.00);
 
-	//看看是否有满的
-	outHopperId = func_l3bfdf_new_ws_search_hopper_full(line);
-	if (outHopperId != 0){
-		gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndex = 0;
+	//STEP0: 如果已经双满的，则不管了
+	//STEP1: 先找加上本物料之后就双满的
+	outHopperId = func_l3bfdf_new_ws_search_hopper_buffer_lack_one(line, gId, weight);
+	if (outHopperId !=0){
+		gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndex--;
 		//发送出料
-		if (func_l3bfdf_new_ws_send_out_comb_out_message_w_basket_full(line, outHopperId) == FALSE){
+		if (func_l3bfdf_new_ws_send_out_comb_out_message_w_double_full(line, outHopperId) == FALSE){
 			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send Comb Out message error!\n");
 		}
+
+		//本料斗信息更新
+		gTaskL3bfdfContext.hopper[line][outHopperId].hopperLastMat = weight;
+		gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_BUF_FULL;
+
+		//循环将fillHopper后移
+		fillHopper = gTaskL3bfdfContext.group[line][gId].fillHopperId;
+		gTaskL3bfdfContext.group[line][gId].fillHopperId = gTaskL3bfdfContext.hopper[line][fillHopper].nextHopperId;
+
 		//更新统计信息
 		gTaskL3bfdfContext.cur.wsCombTimes++;
 		gTaskL3bfdfContext.cur.wsTttMatCnt++;
 		gTaskL3bfdfContext.cur.wsTttMatWgt += weight;
 
 		//打印状态
-		HcuDebugPrint("L3BFDF: Find full basket! Line = %d, HopperId = %d\n", line, outHopperId);
+		HcuDebugPrint("L3BFDF: Find full buffer! Line = %d, HopperId = %d\n", line, outHopperId);
 
-		//送往明确的满桶并通知界面
+		//送往明确的满buf并通知界面
 		inswgt_report.hopperId = outHopperId;
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(rcv.snrId, &inswgt_report);
 
 		return SUCCESS;
 	}
 
-	//先搜索是否有欠一满：而且还必须状态正常
-	outHopperId = func_l3bfdf_new_ws_search_hopper_lack_one(line, gId, weight);
+	//STEP2: 再寻找BASKET已经满的，但BUF不是满的
+	outHopperId = func_l3bfdf_new_ws_search_hopper_buffer_normal(line, gId, weight);
+	if (outHopperId !=0){
+		gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndex--;
+		//发送出料
+		if (func_l3bfdf_new_ws_send_out_comb_out_message_w_basket_full(line, outHopperId) == FALSE){
+			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
+			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send Comb Out message error!\n");
+		}
+
+		//本料斗信息更新
+		gTaskL3bfdfContext.hopper[line][outHopperId].hopperLastMat = weight;
+		gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_BUF_CONT;
+
+		//更新统计信息
+		gTaskL3bfdfContext.cur.wsCombTimes++;
+		gTaskL3bfdfContext.cur.wsTttMatCnt++;
+		gTaskL3bfdfContext.cur.wsTttMatWgt += weight;
+
+		//打印状态
+		HcuDebugPrint("L3BFDF: Find continous working buffer! Line = %d, HopperId = %d\n", line, outHopperId);
+
+		//送往明确的满buf并通知界面
+		inswgt_report.hopperId = outHopperId;
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(rcv.snrId, &inswgt_report);
+
+		return SUCCESS;
+	}
+
+	//STEP3: 寻找BASKET欠1满，然后物料框就满了
+	outHopperId = func_l3bfdf_new_ws_search_hopper_basket_lack_one(line, gId, weight);
 	if (outHopperId != 0){
 		//先发送出料：出料的定时机制，如何处理？这是重入过程：使用状态机，不用定时器
-		if (func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(line, outHopperId) == FALSE)
+		if (func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(line, outHopperId) == FALSE){
+			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send out pullin message error!\n");
+		}
+
 		//等待入料成功后，状态设置为满，即可激活出料过程
-		gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL;
+		gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT;
 		//留待入料成功后，加入到目标重量区
 		gTaskL3bfdfContext.hopper[line][outHopperId].hopperLastMat = weight;
 		//清零Index，等待COMB_OUT成功后再恢复最大
 		gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndex = 0;
-		//循环将fillHopper后移
-		fillHopper = gTaskL3bfdfContext.group[line][gId].fillHopperId;
-		gTaskL3bfdfContext.group[line][gId].fillHopperId = gTaskL3bfdfContext.hopper[line][fillHopper].nextHopperId;
+
 		//更新统计信息
 		gTaskL3bfdfContext.cur.wsCombTimes++;
 		gTaskL3bfdfContext.cur.wsTttMatCnt++;
@@ -774,16 +819,21 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 	//通过fillHopper进行搜索：深水区，需要判定料斗的欠缺深度
 	//从fillHopper入手，寻找第一个可以满足区间控制的目标，然后填入
+	//STEP4: 正常状态
 	outHopperId = func_l3bfdf_new_ws_search_hopper_valid_normal(line, gId, weight);
-	outHopperId = 1;
 	if (outHopperId == 0){
 		//扔进垃圾桶
-		if (func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(line, 0) == FALSE)
+		if (func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(line, 0) == FALSE){
+			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
+		}
 		//更新统计数据
 		gTaskL3bfdfContext.cur.wsTgvTimes++;
 		gTaskL3bfdfContext.cur.wsTgvMatCnt++;
 		gTaskL3bfdfContext.cur.wsTgvMatWgt += weight;
+
+		//更新目标料斗重量 in NF2
+		gTaskL3bfdfContext.hopper[line][0].hopperValue += rcv.sensorWsValue;
 
 		//打印状态
 		HcuDebugPrint("L3BFDF: Find other normal basket, but not find, so throw into rubbish! Line = %d, HopperId = 0\n", line);
@@ -798,10 +848,12 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	//正确找到
 	else{
 		//先发送出料：出料的定时机制，如何处理？这是重入过程：使用状态机，不用定时器
-		printf("Send out message!\n\n");
-		if (func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(line, outHopperId) == FALSE)
+		if (func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(line, outHopperId) == FALSE){
+			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send out pullin message error!\n");
-		printf("Send out message success!\n\n");
+		}
+
+		gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndex--;
 		//等待入料成功后，状态设置为出料，即可激活出料过程
 		gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT;
 		//留待入料成功后，加入到目标重量区
@@ -811,6 +863,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		//这里可能有潜在的问题，需要再进一步测试和实验
 		//核心问题与思路是：计算最大的倒推N，得到负数，但每一次并没有落入真正的n区间，而是因为小于0被归零了，这样，可能造成最终聚合成总重量，并不是N个，而是比N大
 		//但这里的计算还是以N进行计算的．所以在第一次跨越0时，可能需要重新计算最大N值，而且还要重新将Index赋给N
+		//时候需要迭代N的计算
 
 /*		if (gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndexMax <= 1){
 			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
@@ -873,11 +926,26 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	status.boardStatus = 1;
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.snrId, &status);
 
-	//设置料斗状态
-	gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue = 0;
-	gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID;
-	gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = gTaskL3bfdfContext.hopper[line][locHopperId].matLackNbr;
-	//gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndexMin = gTaskL3bfdfContext.hopper[line][locHopperId].matLackNbrMin;
+	//料斗重量更新：将最后一个物料增加到目标重量中
+	if (gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL){
+		//设置料斗状态：操控余量控制数量
+		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = gTaskL3bfdfContext.hopper[line][locHopperId].matLackNbr;
+		//料斗重量增加
+		gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
+	}
+	else if ((gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_CONT) ||\
+			(gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_FULL)){
+		//料斗重量增加
+		gTaskL3bfdfContext.hopper[line][locHopperId].buferValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
+	}
+	else if ((gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_VALID) ||\
+			(gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT)){
+		//料斗重量增加
+		gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
+	}
+	else{
+		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Rcv COMB FB but relevant hopperId status error. Stream/HopperId/Status=%d/%d/%d!\n", line, locHopperId, gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus);
+	}
 
 	//打印二维码／条形码：二维码＋条形码的内容
 	char s[100];
@@ -1758,7 +1826,7 @@ double gaussian(double u, double n)
 }
 
 //分配小组的重量范围
-bool func_l3bfdf_group_auto_alloc_init_range_in_average(UINT8 streamId, UINT16 nbrGroup, double wgtMin, double wgtMax)
+bool func_l3bfdf_group_auto_alloc_init_range_in_average(UINT8 streamId, UINT16 nbrGroup, UINT32 wgtMin, UINT32 wgtMax)
 {
 	int i=0;
 	double gap = 0;
@@ -1782,7 +1850,7 @@ bool func_l3bfdf_group_auto_alloc_init_range_in_average(UINT8 streamId, UINT16 n
 }
 
 //分配小组的重量目标
-bool func_l3bfdf_group_auto_alloc_init_target_with_uplimit(UINT8 streamId, double targetWgt, double ulRatio)
+bool func_l3bfdf_group_auto_alloc_init_target_with_uplimit(UINT8 streamId, UINT32 targetWgt, double ulRatio)
 {
 	int i=0;
 	double ratio;
@@ -1929,8 +1997,25 @@ UINT16 func_l3bfdf_new_ws_search_group(UINT8 streamId, double weight)
 	return 0;
 }
 
-//搜索是否存在欠一满：状态必须是VALID，而不能是其它状态
-UINT16 func_l3bfdf_new_ws_search_hopper_full(UINT8 streamId)
+//搜索双满的第一个
+UINT16 func_l3bfdf_new_ws_search_hopper_double_full(UINT8 streamId)
+{
+	int i=0;
+
+	//入参检查：注意起点和终点
+	if (streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) return 0;
+
+	for (i=1; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
+		if (gTaskL3bfdfContext.hopper[streamId][i].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_FULL)
+			return i;
+	}
+
+	//没找到，返回0
+	return 0;
+}
+
+//搜索篮筐满的第一个
+UINT16 func_l3bfdf_new_ws_search_hopper_basket_full(UINT8 streamId)
 {
 	int i=0;
 
@@ -1946,8 +2031,8 @@ UINT16 func_l3bfdf_new_ws_search_hopper_full(UINT8 streamId)
 	return 0;
 }
 
-//搜索是否存在欠一满：状态必须是VALID，而不能是其它状态
-UINT16 func_l3bfdf_new_ws_search_hopper_lack_one(UINT8 streamId, UINT16 gid, double weight)
+//搜索BUF是否存在欠一满
+UINT16 func_l3bfdf_new_ws_search_hopper_buffer_lack_one(UINT8 streamId, UINT16 gid, UINT32 weight)
 {
 	int cnt=0;
 	UINT16 fHopper=0, nextHopper=0, tmpHopper=0;
@@ -1959,7 +2044,71 @@ UINT16 func_l3bfdf_new_ws_search_hopper_lack_one(UINT8 streamId, UINT16 gid, dou
 	fHopper = gTaskL3bfdfContext.group[streamId][gid].fillHopperId;
 	if (fHopper == 0) return 0;
 
-	if ((gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_VALID) &&\
+	if (func_l3bfdf_hopper_judge_buffer_is_lack_one_full(streamId, fHopper, weight) == TRUE)
+			return fHopper;
+
+	cnt = 0;
+	nextHopper = gTaskL3bfdfContext.hopper[streamId][fHopper].nextHopperId;
+	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper))
+	{
+		cnt++;
+		if (func_l3bfdf_hopper_judge_buffer_is_lack_one_full(streamId, nextHopper, weight) == TRUE)
+				return nextHopper;
+		tmpHopper = gTaskL3bfdfContext.hopper[streamId][nextHopper].nextHopperId;
+		nextHopper = tmpHopper;
+	}
+
+	//没找到，返回0
+	return 0;
+}
+
+//搜索BUF常态的框
+UINT16 func_l3bfdf_new_ws_search_hopper_buffer_normal(UINT8 streamId, UINT16 gid, UINT32 weight)
+{
+	int cnt=0;
+	UINT16 fHopper=0, nextHopper=0, tmpHopper=0;
+	UINT16 outHopper=0;
+
+	//入参检查：注意起点和终点
+	if (streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) return 0;
+	if ((gid <=0) || (gid > gTaskL3bfdfContext.totalGroupNbr[streamId])) return 0;
+
+	fHopper = gTaskL3bfdfContext.group[streamId][gid].fillHopperId;
+	if (fHopper == 0) return 0;
+
+	if (func_l3bfdf_hopper_judge_buffer_is_valid(streamId, fHopper, weight) == TRUE)
+			return fHopper;
+
+	cnt = 0;
+	nextHopper = gTaskL3bfdfContext.hopper[streamId][fHopper].nextHopperId;
+	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper))
+	{
+		cnt++;
+		if (func_l3bfdf_hopper_judge_buffer_is_valid(streamId, nextHopper, weight) == TRUE)
+				return nextHopper;
+		tmpHopper = gTaskL3bfdfContext.hopper[streamId][nextHopper].nextHopperId;
+		nextHopper = tmpHopper;
+	}
+
+	//没找到，返回0
+	return 0;
+}
+
+
+//搜索篮筐是否存在欠一满
+UINT16 func_l3bfdf_new_ws_search_hopper_basket_lack_one(UINT8 streamId, UINT16 gid, UINT32 weight)
+{
+	int cnt=0;
+	UINT16 fHopper=0, nextHopper=0, tmpHopper=0;
+
+	//入参检查：注意起点和终点
+	if (streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) return 0;
+	if ((gid <=0) || (gid > gTaskL3bfdfContext.totalGroupNbr[streamId])) return 0;
+
+	fHopper = gTaskL3bfdfContext.group[streamId][gid].fillHopperId;
+	if (fHopper == 0) return 0;
+
+	if ((gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_VALID) &&\
 			((gTaskL3bfdfContext.hopper[streamId][fHopper].hopperValue + weight) >= gTaskL3bfdfContext.group[streamId][gid].targetWeight) &&\
 			((gTaskL3bfdfContext.hopper[streamId][fHopper].hopperValue + weight) <= (gTaskL3bfdfContext.group[streamId][gid].targetWeight +\
 					gTaskL3bfdfContext.group[streamId][gid].targetUpLimit)))
@@ -1971,7 +2120,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_lack_one(UINT8 streamId, UINT16 gid, dou
 	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper))
 	{
 		cnt++;
-		if ((gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_VALID) &&\
+		if ((gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_VALID) &&\
 				((gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperValue + weight) >= gTaskL3bfdfContext.group[streamId][gid].targetWeight) &&\
 				((gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperValue + weight) <= (gTaskL3bfdfContext.group[streamId][gid].targetWeight +\
 						gTaskL3bfdfContext.group[streamId][gid].targetUpLimit)))
@@ -1985,7 +2134,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_lack_one(UINT8 streamId, UINT16 gid, dou
 }
 
 //搜索正常的目标区间
-UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, double weight)
+UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, UINT32 weight)
 {
 	int cnt=0;
 	UINT16 fH=0, nextHopper=0, tmpHopper=0;
@@ -2009,7 +2158,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, doub
 	hFinal = tWg+tLm;
 
 	//判定入口满足条件
-	if (gTaskL3bfdfContext.hopper[sid][fH].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_VALID)
+	if (gTaskL3bfdfContext.hopper[sid][fH].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_VALID)
 	{
 		if (func_l3bfdf_hopper_state_set_single_hopper_N_coef(sid, fH) == FALSE)
 			HcuErrorPrint("L3BFDF: Error set coeffience!\n");
@@ -2032,7 +2181,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, doub
 	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fH))
 	{
 		cnt++;
-		if (gTaskL3bfdfContext.hopper[sid][nextHopper].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_VALID)
+		if (gTaskL3bfdfContext.hopper[sid][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_VALID)
 		{
 			if (func_l3bfdf_hopper_state_set_single_hopper_N_coef(sid, nextHopper) == FALSE)
 				HcuErrorPrint("L3BFDF: Error set coeffience!\n");
@@ -2057,7 +2206,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, doub
 }
 
 //寻找目标空间是否为空，就是是否一定会在理论上组合出来
-bool func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, double weight)
+bool func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, UINT32 weight)
 {
 	UINT16 gid = 0;
 	double targetWgtH = 0, targetWgtL = 0;
@@ -2101,6 +2250,75 @@ bool func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, dou
 	if (((index > 4) || (index <= 1)) && ((umax - umin) >=1)) return TRUE;
 
 	//最终不成功
+	return FALSE;
+}
+
+//判定BUFFER是不是欠一满，而且还没有已经满了的
+bool func_l3bfdf_hopper_judge_buffer_is_lack_one_full(UINT8 sid, UINT16 hid, UINT32 weight)
+{
+	UINT16 gid = 0;
+	UINT32 tWg=0, tLm=0, tAvg=0, tSigma=0;
+	UINT32 cWg=0, hMax=0, hMin=0;
+	UINT32 gap=0;
+
+	//入参检查
+	if ((sid >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) || (hid==0) || (hid >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
+		return FALSE;
+
+	//状态判定
+	if ((gTaskL3bfdfContext.hopper[sid][hid].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) &&\
+			(gTaskL3bfdfContext.hopper[sid][hid].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_BUF_CONT))
+		return FALSE;
+
+	//获取基础信息
+	gid = gTaskL3bfdfContext.hopper[sid][hid].groupId;
+	tWg = gTaskL3bfdfContext.group[sid][gid].targetWeight;
+	tLm = gTaskL3bfdfContext.group[sid][gid].targetUpLimit;
+	tAvg = gTaskL3bfdfContext.group[sid][gid].rangeAvg;
+	tSigma = gTaskL3bfdfContext.group[sid][gid].rangeSigma;
+
+	//计算范围一次范围
+	cWg = gTaskL3bfdfContext.hopper[sid][hid].hopperValue + weight;
+	if (cWg > gTaskL3bfdfContext.hopper[sid][hid].buferValue) return FALSE;
+	hMax = tWg+tLm - gTaskL3bfdfContext.hopper[sid][hid].hopperValue - (tAvg-tSigma)*(double)gTaskL3bfdfContext.hopper[sid][hid].matLackIndex;
+	hMin = tWg - gTaskL3bfdfContext.hopper[sid][hid].hopperValue  - (tAvg+tSigma)*(double)gTaskL3bfdfContext.hopper[sid][hid].matLackIndex;
+	if ((cWg < hMin) || (cWg > hMax)) return FALSE;
+
+	//计算二次范围：计算GAP比范围还小，则认为是最后一个
+	gap = gTaskL3bfdfContext.hopper[sid][hid].buferValue - cWg;
+	if (gap < (tAvg-tSigma)) return TRUE;
+
+	//其他情况，均认为不是最后一个
+	return FALSE;
+}
+
+//判定BUFFER的当前物品时候合法
+bool func_l3bfdf_hopper_judge_buffer_is_valid(UINT8 sid, UINT16 hid, UINT32 weight)
+{
+	UINT16 gid = 0;
+	UINT32 tWg=0, tLm=0, tAvg=0, tSigma=0;
+	UINT32 cWg=0, hMax=0, hMin=0;
+	UINT32 gap=0;
+
+	//入参检查
+	if ((sid >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) || (hid==0) || (hid >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
+		return FALSE;
+
+	//获取基础信息
+	gid = gTaskL3bfdfContext.hopper[sid][hid].groupId;
+	tWg = gTaskL3bfdfContext.group[sid][gid].targetWeight;
+	tLm = gTaskL3bfdfContext.group[sid][gid].targetUpLimit;
+	tAvg = gTaskL3bfdfContext.group[sid][gid].rangeAvg;
+	tSigma = gTaskL3bfdfContext.group[sid][gid].rangeSigma;
+
+	//计算范围一次范围
+	cWg = gTaskL3bfdfContext.hopper[sid][hid].hopperValue + weight;
+	if (cWg > gTaskL3bfdfContext.hopper[sid][hid].buferValue) return FALSE;
+	hMax = tWg+tLm - gTaskL3bfdfContext.hopper[sid][hid].hopperValue - (tAvg-tSigma)*(double)gTaskL3bfdfContext.hopper[sid][hid].matLackIndex;
+	hMin = tWg - gTaskL3bfdfContext.hopper[sid][hid].hopperValue  - (tAvg+tSigma)*(double)gTaskL3bfdfContext.hopper[sid][hid].matLackIndex;
+	if ((cWg >= hMin) && (cWg <= hMax)) return TRUE;
+
+	//其他情况，均认为不是最后一个
 	return FALSE;
 }
 

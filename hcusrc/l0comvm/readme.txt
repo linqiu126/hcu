@@ -10,7 +10,7 @@
 
 
 //= ZJL, 2018 Jan.31 CURRENT_SW_DELIVERY 307=>BFDF项目
-= Update BFDF algorithsm
+= Update BFDF algorithms
 
 
 //= ZJL, 2018 Jan.22 CURRENT_SW_DELIVERY 306=>BFDF项目

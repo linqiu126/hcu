@@ -879,17 +879,17 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	nbrGroup = rand()%5+4;
 	func_l3bfdf_group_allocation(0, nbrGroup);
 	func_l3bfdf_hopper_add_by_group_in_average_distribution(0, nbrGroup);
-	//设置小组重量范围
-	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 100.00, 1000.00);
+	//设置小组重量范围：数据均为NF2进行设置
+	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 10000, 100000);
 	//设置重量目标
-	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 10000, 0.03);
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 1000000, 3);
 
 	//第1个流水线，分配组别
 /*	nbrGroup = rand()%3+1;
 	func_l3bfdf_group_allocation(1, nbrGroup);
 	func_l3bfdf_hopper_add_by_group_in_average_distribution(1, nbrGroup);
-	func_l3bfdf_group_auto_alloc_init_range_in_average(1, nbrGroup, 200.00, 2000.00);
-	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 20000, 0.4);*/
+	func_l3bfdf_group_auto_alloc_init_range_in_average(1, nbrGroup, 20000, 200000);
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 2000000, 40);*/
 
 	//打印
 	for (i = 0; i< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
