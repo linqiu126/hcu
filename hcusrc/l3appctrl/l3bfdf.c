@@ -118,12 +118,12 @@ OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFDF] = 0;
 	//严格检查内部消息设置的大小，是否越界
-#if ((HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX != HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) ||\
-		(HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX != HUITP_IEID_SUI_BFDF_MAX_GLOBAL_AP_NUM+1) ||\
-		(HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX != HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD)||\
-		(HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX != HUITP_IEID_SUI_BFDF_MAX_LOCAL_AP_NUM))
-	#error BFDF KEY PARMETER SET ERROR!
-#endif
+//#if ((HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX != HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) ||\
+//		(HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX != HUITP_IEID_SUI_BFDF_MAX_GLOBAL_AP_NUM+1) ||\
+//		(HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX != HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD)||\
+//		(HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX != HUITP_IEID_SUI_BFDF_MAX_LOCAL_AP_NUM))
+//	#error BFDF KEY PARMETER SET ERROR!
+//#endif
 
 	//严格防止HUITP消息跟内部消息在关键结构上定义的不一致
 	if ((sizeof(gTaskL3bfdfContextWeightSensorParamaters_t) != sizeof(strMsgIe_l3bfdf_WeightSensorParamaters_t))||\
@@ -1903,12 +1903,27 @@ bool func_l3bfdf_print_all_hopper_status_by_chain(UINT8 streamId)
 	int fHopper = 0;
 	int nextHopper = 0;
 	int tmpHopper = 0;
-	char s[800];
-	char tmp[40];
+	char s[900];
+	char tmp[100];
 
 	//入参检查：注意起点和终点
 	if (streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) return FALSE;
 
+	//Output basic info
+	memset(s, 0, sizeof(s));
+	sprintf(s, "L3BFDF: Stream[%d] Total Group number = %d, Group[Index-TargetWgt/Buf/Uplimit/High/Low] = ", streamId, gTaskL3bfdfContext.totalGroupNbr[streamId]);
+	for (i = 0; i<= gTaskL3bfdfContext.totalGroupNbr[streamId]; i++)
+	{
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "[%d-%d/%d/%d/%d/%d] ", i, (int)gTaskL3bfdfContext.group[streamId][i].targetWeight, (int)gTaskL3bfdfContext.group[streamId][i].targetUpLimit, \
+				(int)gTaskL3bfdfContext.group[streamId][i].bufWgtTarget, (int)gTaskL3bfdfContext.group[streamId][i].rangeHigh, (int)gTaskL3bfdfContext.group[streamId][i].rangeLow);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+	}
+	strcat(s, "\n");
+	HCU_DEBUG_PRINT_CRT(s);
+
+	//Output chain status
+	memset(s, 0, sizeof(s));
 	sprintf(s, "L3BFDF: Stream[%d] Total Group number = %d, Group[x-y/y/y] = ", streamId, gTaskL3bfdfContext.totalGroupNbr[streamId]);
 	for (i = 0; i<= gTaskL3bfdfContext.totalGroupNbr[streamId]; i++)
 	{
@@ -2337,9 +2352,6 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(UINT8 streamId, UINT
 		return FALSE;
 	}
 
-	//将临时物料重量清零
-	gTaskL3bfdfContext.hopper[streamId][hopperId].hopperLastMat = 0;
-
 	//发送
 	msg_struct_l3bfdf_can_ws_comb_out_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_ws_comb_out_t));
@@ -2347,6 +2359,7 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(UINT8 streamId, UINT
 	snd.hopperId = (streamId<<5) + hopperId;
 	snd.basketFullStatus = FALSE;
 	snd.bufferFullStatus = FALSE;
+	snd.snrId = ((streamId<<3) + ((2 + hopperId/HCU_SYSCFG_BFDF_HOPPER_NBR_MAX)&0x07));
 	snd.length = sizeof(msg_struct_l3bfdf_can_ws_comb_out_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_WS_COMB_OUT, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
 
@@ -2384,6 +2397,7 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message_w_basket_full(UINT8 streamId, 
 	snd.hopperId = (streamId<<5) + hopperId;
 	snd.basketFullStatus = TRUE;
 	snd.bufferFullStatus = FALSE;
+	snd.snrId = ((streamId<<3) + ((2 + hopperId/HCU_SYSCFG_BFDF_HOPPER_NBR_MAX)&0x07));
 	snd.length = sizeof(msg_struct_l3bfdf_can_ws_comb_out_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_WS_COMB_OUT, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
 
@@ -2412,6 +2426,7 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message_w_double_full(UINT8 streamId, 
 	snd.hopperId = (streamId<<5) + hopperId;
 	snd.basketFullStatus = TRUE;
 	snd.bufferFullStatus = TRUE;
+	snd.snrId = ((streamId<<3) + ((2 + hopperId/HCU_SYSCFG_BFDF_HOPPER_NBR_MAX)&0x07));
 	snd.length = sizeof(msg_struct_l3bfdf_can_ws_comb_out_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_WS_COMB_OUT, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
 

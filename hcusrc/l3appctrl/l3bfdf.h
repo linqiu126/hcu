@@ -98,11 +98,11 @@ typedef struct L3BfdfGroupInfo
 	UINT16	totalHopperNbr;
 	UINT16	firstHopperId;	//系统配置以后，最初从哪一个料斗开始
 	UINT16	fillHopperId;	//优先从哪一个料斗开始查找，从而加速查找
-	double	targetWeight;	//目标重量
-	double	targetUpLimit;	//上限比例部分，小数，不是最大值
-	double	bufWgtTarget;	//篮筐之外的缓冲区
-	double  rangeLow;
-	double  rangeHigh;
+	UINT32	targetWeight;	//目标重量
+	UINT32	targetUpLimit;	//上限比例部分，小数，不是最大值
+	UINT32	bufWgtTarget;	//篮筐之外的缓冲区
+	UINT32  rangeLow;
+	UINT32  rangeHigh;
 	double  rangeAvg;
 	double  rangeSigma;
 }L3BfdfGroupInfo_t;
