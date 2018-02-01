@@ -96,8 +96,9 @@ typedef struct L3BfdfGroupInfo
 	UINT16	totalHopperNbr;
 	UINT16	firstHopperId;	//系统配置以后，最初从哪一个料斗开始
 	UINT16	fillHopperId;	//优先从哪一个料斗开始查找，从而加速查找
-	double	targetWeight;
-	double	targetUpLimit;
+	double	targetWeight;	//目标重量
+	double	targetUpLimit;	//上限比例部分，小数，不是最大值
+	double	bufWgtTarget;	//篮筐之外的缓冲区
 	double  rangeLow;
 	double  rangeHigh;
 	double  rangeAvg;
@@ -124,6 +125,7 @@ typedef struct L3BfdfHopperInfo
 	//UINT16 matLackIndexMin;
 	double  hopperValue;    //料斗总重量
 	double  hopperLastMat;  //用来存储称重台到物料入料之间的期间，物料的重量．冲入则需要状态和算法控制．
+	double  buferValue;		//用来控制buffer的重量数值
 }L3BfdfHopperInfo_t;
 //料斗状态定义
 #define HCU_L3BFDF_HOPPER_STATUS_NONE			0
@@ -134,18 +136,13 @@ typedef struct L3BfdfHopperInfo
 #define HCU_L3BFDF_HOPPER_STATUS_INIT_ALLOC     12
 #define HCU_L3BFDF_HOPPER_STATUS_INIT_MAX		29
 #define HCU_L3BFDF_HOPPER_STATUS_WORK_MIN 		30
-#define HCU_L3BFDF_HOPPER_STATUS_VALID          31
-#define HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT     32
-#define HCU_L3BFDF_HOPPER_STATUS_FULL_PRE       33  //已经满了，就等待拨杆反馈
-#define HCU_L3BFDF_HOPPER_STATUS_FULL           34  //真正满了
+#define HCU_L3BFDF_HOPPER_STATUS_VALID          31	//状态转换到工作态，空料斗
+#define HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT     32	//开始有物料，直接进篮筐
+#define HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL    33  //篮筐满了
+#define HCU_L3BFDF_HOPPER_STATUS_BUF_FULL       34  //上层BUFFER也满了，一旦收到清零篮筐，必然回到HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT状态，因为篮筐不可能直接满的
 #define HCU_L3BFDF_HOPPER_STATUS_VALID_ERR      35
 #define HCU_L3BFDF_HOPPER_STATUS_WORK_MAX 		49
 #define HCU_L3BFDF_HOPPER_STATUS_INVALID  		0xFF
-
-#define HCU_L3BFDF_HOPPER_BASKET_NONE			0
-#define HCU_L3BFDF_HOPPER_BASKET_EMPTY			1
-#define HCU_L3BFDF_HOPPER_BASKET_FULL			2
-#define HCU_L3BFDF_HOPPER_BASKET_INVALID  		0xFF
 
 //配置参数
 typedef struct gTaskL3bfdfContextWeightSensorParamaters
@@ -231,11 +228,6 @@ typedef struct gTaskL3bfdfContextStaEleMid
 #define HCU_L3BFDF_STA_DBI_TABLE_8HOUR   	"BFDF_STA_8_HOUR"
 #define HCU_L3BFDF_STA_DBI_TABLE_24HOUR   	"BFDF_STA_24_HOUR"
 #define HCU_L3BFDF_STA_DBI_TABLE_UP2NOW   	"BFDF_STA_UP_2_NOW"
-
-//为了简化编辑时的红色显示
-#ifndef HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX
-	#define HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX 4
-#endif
 
 //主体上下文
 #define HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX    20
@@ -349,9 +341,9 @@ UINT16 func_l3bfdf_new_ws_search_hopper_full(UINT8 streamId);
 UINT16 func_l3bfdf_new_ws_search_hopper_lack_one(UINT8 streamId, UINT16 gid, double weight);
 UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, double weight);
 bool   func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, double weight);
-bool   func_l3bfdf_new_ws_send_out_pullin_message(UINT8 streamId, UINT16 hopperId);
-bool   func_l3bfdf_new_ws_send_out_comb_out_message(UINT8 streamId, UINT16 hopperId);
-
+bool   func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(UINT8 streamId, UINT16 hopperId);
+bool   func_l3bfdf_new_ws_send_out_comb_out_message_w_basket_full(UINT8 streamId, UINT16 hopperId);
+bool   func_l3bfdf_new_ws_send_out_comb_out_message_w_double_full(UINT8 streamId, UINT16 hopperId);
 
 //基础函数
 double gaussian(double u, double n);

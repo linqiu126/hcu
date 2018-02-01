@@ -622,7 +622,6 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(INT32 cmdValue
     if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC: Failed to create json object!\n");
 
     json_object_object_add(jsonobj, "hopperId", json_object_new_int(buf->hopperId));
-    json_object_object_add(jsonobj, "combNbr", json_object_new_int(buf->combNbr));
     json_object_object_add(jsonobj, "targetWeight", json_object_new_int(buf->targetWeight));
     json_object_object_add(jsonobj, "upLimitWeight", json_object_new_int(buf->upLimitWeight));
     json_object_object_add(jsonobj, "combWeight", json_object_new_int(buf->combWeight));
@@ -649,16 +648,16 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(INT32 cmdValue
 	jsonobj = json_object_new_object();
     if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC: Failed to create json object!\n");
 
-    json_object_object_add(jsonobj, "targetWeight", json_object_new_int(1000));
-    json_object_object_add(jsonobj, "tu1Limit", json_object_new_int(995));
-    json_object_object_add(jsonobj, "tu2Limit", json_object_new_int(990));
-    json_object_object_add(jsonobj, "upperLimit", json_object_new_int(1005));
-    json_object_object_add(jsonobj, "totalWeight", json_object_new_int(buf->weight+rand()%100));
-    json_object_object_add(jsonobj, "totalPackage", json_object_new_int(1005+rand()%10));
-    json_object_object_add(jsonobj, "throughput", json_object_new_int(1005+rand()%100));
-    json_object_object_add(jsonobj, "goodPackage", json_object_new_int(1005+rand()%100));
-    json_object_object_add(jsonobj, "overWeight", json_object_new_int(1005+rand()%100));
-    json_object_object_add(jsonobj, "underWeight", json_object_new_int(1005+rand()%100));
+    json_object_object_add(jsonobj, "targetWeight", json_object_new_int(buf->targetWeight));
+    json_object_object_add(jsonobj, "tu1Limit", json_object_new_int(buf->tu1Limit));
+    json_object_object_add(jsonobj, "tu2Limit", json_object_new_int(buf->tu2Limit));
+    json_object_object_add(jsonobj, "upperLimit", json_object_new_int(buf->upperLimit));
+    json_object_object_add(jsonobj, "totalWeight", json_object_new_int(buf->totalWeight));
+    json_object_object_add(jsonobj, "totalPackage", json_object_new_int(buf->totalPackage));
+    json_object_object_add(jsonobj, "throughput", json_object_new_int(buf->throughput));
+    json_object_object_add(jsonobj, "goodPackage", json_object_new_int(buf->goodPackage));
+    json_object_object_add(jsonobj, "overWeight", json_object_new_int(buf->overWeight));
+    json_object_object_add(jsonobj, "underWeight", json_object_new_int(buf->underWeight));
 
     sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
     json_object_put(jsonobj);//free
@@ -686,5 +685,113 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_one_key_clean_zero_resp(INT32 cmdVa
 	return SUCCESS;
 }
 
+//发送API
+OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfsc_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_statistic_bfsc_report_t *buf)
+{
+	msg_struct_com_mqtt_send_t pMsgProc;
+	HCU_HUICOBUS_ENCODE_HCU2UIR_MSGHEAD_WITH_FIX_VALUE();
+	pMsgProc.cmdId = HUICOBUS_CMDID_cui_hcu2uir_statistic_bfsc_report;
+
+	//HLC part
+	struct json_object *jsonobj = NULL;
+	jsonobj = json_object_new_object();
+    if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC: Failed to create json object!\n");
+
+    json_object_object_add(jsonobj, "combNbr", json_object_new_int(buf->combNbr));
+    json_object_object_add(jsonobj, "targetWeight", json_object_new_int(buf->targetWeight));
+    json_object_object_add(jsonobj, "upLimitWeight", json_object_new_int(buf->upLimitWeight));
+    json_object_object_add(jsonobj, "combWeight", json_object_new_int(buf->combWeight));
+
+    sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
+    json_object_put(jsonobj);//free
+    pMsgProc.hlcLen = strlen(pMsgProc.hlContent);
+
+	//Call MQTT APIs
+	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
+}
+
+//发送API
+OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t *buf)
+{
+	msg_struct_com_mqtt_send_t pMsgProc;
+	HCU_HUICOBUS_ENCODE_HCU2UIR_MSGHEAD_WITH_FIX_VALUE();
+	pMsgProc.cmdId = HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report;
+
+	//HLC part
+	struct json_object *jsonobj = NULL;
+	jsonobj = json_object_new_object();
+    if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC: Failed to create json object!\n");
+
+    json_object_object_add(jsonobj, "lineId", json_object_new_int(buf->lineId));
+    json_object_object_add(jsonobj, "targetWeight", json_object_new_int(buf->targetWeight));
+    json_object_object_add(jsonobj, "upLimitWeight", json_object_new_int(buf->upLimitWeight));
+    json_object_object_add(jsonobj, "throughputPerMin", json_object_new_int(buf->throughputPerMin));
+    json_object_object_add(jsonobj, "totalReject", json_object_new_int(buf->totalReject));
+    json_object_object_add(jsonobj, "totalWeight", json_object_new_int(buf->totalWeight));
+    json_object_object_add(jsonobj, "totalPackage", json_object_new_int(buf->totalPackage));
+
+    sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
+    json_object_put(jsonobj);//free
+    pMsgProc.hlcLen = strlen(pMsgProc.hlContent);
+
+	//Call MQTT APIs
+	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
+}
+
+//发送API
+OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_statistic_bfhs_report_t *buf)
+{
+	msg_struct_com_mqtt_send_t pMsgProc;
+	HCU_HUICOBUS_ENCODE_HCU2UIR_MSGHEAD_WITH_FIX_VALUE();
+	pMsgProc.cmdId = HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report;
+
+	//HLC part
+	struct json_object *jsonobj = NULL;
+	jsonobj = json_object_new_object();
+    if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC: Failed to create json object!\n");
+
+    json_object_object_add(jsonobj, "weight", json_object_new_int(buf->weight));
+    json_object_object_add(jsonobj, "wmcState", json_object_new_int(buf->wmcState));
+
+    sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
+    json_object_put(jsonobj);//free
+    pMsgProc.hlcLen = strlen(pMsgProc.hlContent);
+
+	//Call MQTT APIs
+	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
+}
+
+//发送API
+OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm(INT32 cmdValue, StrHlcIe_cui_hcu2uir_pullin_confirm_t *buf)
+{
+	msg_struct_com_mqtt_send_t pMsgProc;
+	HCU_HUICOBUS_ENCODE_HCU2UIR_MSGHEAD_WITH_FIX_VALUE();
+	pMsgProc.cmdId = HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report;
+
+	//HLC part
+	struct json_object *jsonobj = NULL;
+	jsonobj = json_object_new_object();
+    if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC: Failed to create json object!\n");
+
+    json_object_object_add(jsonobj, "hopperId", json_object_new_int(buf->hopperId));
+    json_object_object_add(jsonobj, "targetWeight", json_object_new_int(buf->targetWeight));
+    json_object_object_add(jsonobj, "upLimitWeight", json_object_new_int(buf->upLimitWeight));
+    json_object_object_add(jsonobj, "combWeight", json_object_new_int(buf->combWeight));
+
+    sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
+    json_object_put(jsonobj);//free
+    pMsgProc.hlcLen = strlen(pMsgProc.hlContent);
+
+	//Call MQTT APIs
+	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
+}
 
 

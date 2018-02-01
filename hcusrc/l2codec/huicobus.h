@@ -81,6 +81,10 @@ typedef enum HuicobusCmdidCuiDefination
 	HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report     = 0x0194,
 	HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report     = 0x0195,
 	HUICOBUS_CMDID_cui_hcu2uir_one_key_clean_zero_resp  = 0x0196,
+	HUICOBUS_CMDID_cui_hcu2uir_statistic_bfsc_report    = 0x0197,
+	HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report    = 0x0198,
+	HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report    = 0x0199,
+	HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm         	= 0x019A,
 	HUICOBUS_CMDID_cui_hcu2uir_max,
 
 	//UIR2UIP频道
@@ -432,7 +436,6 @@ typedef struct StrHlcIe_cui_hcu2uir_callcell_bfsc_report
 typedef struct StrHlcIe_cui_hcu2uir_callcell_bfdf_report
 {
 	UINT8   hopperId;  //1-32, 33-64
-	UINT8	combNbr;
 	UINT32  targetWeight;
 	UINT32	upLimitWeight;  //in NF2
 	UINT32	combWeight;  //in NF2
@@ -442,8 +445,16 @@ typedef struct StrHlcIe_cui_hcu2uir_callcell_bfdf_report
 //HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report     = 0x0195,
 typedef struct StrHlcIe_cui_hcu2uir_callcell_bfhs_report
 {
-	UINT32	weight;  //in NF2
-	UINT8   wmcState;
+	UINT32	 targetWeight;  //in NF2
+	UINT32   tu1Limit;
+	UINT32   tu2Limit;
+	UINT32   upperLimit;
+	UINT32   totalWeight;
+	UINT32   totalPackage;
+	UINT32   throughput;
+	UINT32   goodPackage;
+	UINT32   overWeight;
+	UINT32   underWeight;
 }StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t;
 //cmdValue = configID;
 
@@ -452,6 +463,47 @@ typedef struct StrHlcIe_cui_hcu2uir_one_key_clean_zero_resp
 {
 }StrHlcIe_cui_hcu2uir_one_key_clean_zero_resp_t;
 //cmdValue = NULL
+
+//HUICOBUS_CMDID_cui_hcu2uir_statistic_bfsc_report    = 0x0197,
+typedef struct StrHlcIe_cui_hcu2uir_statistic_bfsc_report
+{
+	UINT8	combNbr;
+	UINT32	targetWeight;  //in NF2
+	UINT32	upLimitWeight;  //in NF2
+	UINT32	combWeight;  //in NF2
+}StrHlcIe_cui_hcu2uir_statistic_bfsc_report_t;
+//cmdValue = configID;
+
+//HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report    = 0x0198,
+typedef struct StrHlcIe_cui_hcu2uir_statistic_bfdf_report
+{
+	UINT8   lineId;
+	UINT32  targetWeight;
+	UINT32	upLimitWeight;  //in NF2
+	UINT32	throughputPerMin;
+	UINT32	totalReject;
+	UINT32	totalWeight;
+	UINT32	totalPackage;
+}StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t;
+//cmdValue = configID;
+
+//HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report    = 0x0199,
+typedef struct StrHlcIe_cui_hcu2uir_statistic_bfhs_report
+{
+	UINT32	weight;  //in NF2
+	UINT8   wmcState;
+}StrHlcIe_cui_hcu2uir_statistic_bfhs_report_t;
+//cmdValue = configID;
+
+//HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm         	= 0x019A,
+typedef struct StrHlcIe_cui_hcu2uir_pullin_confirm
+{
+	UINT8   hopperId;  //1-32, 33-64
+	UINT32  targetWeight;
+	UINT32	upLimitWeight;  //in NF2
+	UINT32	combWeight;  //in NF2
+}StrHlcIe_cui_hcu2uir_pullin_confirm_t;
+//cmdValue = configID;
 
 //HUICOBUS_CMDID_cui_hcu2uir_max,
 
