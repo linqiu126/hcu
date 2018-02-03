@@ -44,7 +44,7 @@ HcuFsmStateItem_t HcuFsmBfhsuicomm[] =
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          					fsm_bfhsuicomm_timeout},
 
     //Normal working status
-	{MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP,   		FSM_STATE_BFHSUICOMM_ACTIVED,      		fsm_bfhsuicomm_l3bfhs_cmd_resp},	//人工控制反馈
+	{MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP,   		FSM_STATE_BFHSUICOMM_ACTIVED,      		fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp},	//人工控制反馈
 	{MSG_ID_SUI_TEST_CMD_RESP,      			FSM_STATE_BFHSUICOMM_ACTIVED,      		fsm_bfhsuicomm_sui_test_cmd_resp},  //测试命令反馈
 
 	//UIR2HCU MSG RCV
@@ -217,44 +217,83 @@ OPSTAT fsm_bfhsuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 }
 
 //启动停止反馈
-OPSTAT fsm_bfhsuicomm_l3bfhs_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-//	int ret=0;
-//	UINT8	validFlag = 0;
-//	UINT8	cmdid = 0;
-//
-//	msg_struct_l3bfhs_uicomm_cmd_resp_t rcv;
-//	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_uicomm_cmd_resp_t));
-//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_uicomm_cmd_resp_t)))
-//		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: Receive message error!\n");
-//	memcpy(&rcv, param_ptr, param_len);
-//
-//	validFlag = rcv.validFlag;
-//	cmdid = rcv.cmdid;
-//	//测试用的打印命令
-//	HCU_DEBUG_PRINT_NOR("TASK_ID_BFHSUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag,cmdid);
-//
-//	//存入数据库表单，通知界面新的状态信息
-//	if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_START)){
-//		//do nothing
-//	}
-//	else if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP)){
-//		//do nothing
-//	}
-//	else if((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND)){
-//		ret = dbi_HcuBfhs_WmcStatusForceSuspend();
-//		if (ret == FAILURE) {
-//			HCU_ERROR_PRINT_TASK(TASK_ID_BFHSUICOMM, "TASK_ID_BFHSUICOMM: Save data error!\n");
-//			return FAILURE;
-//		}
-//	}
-//	else if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME)){
-//		//do nothing
-//	}
-//	else{
-//		HCU_ERROR_PRINT_TASK(TASK_ID_BFHSUICOMM, "TASK_ID_BFHSUICOMM: Invalid command response!\n");
-//		return FAILURE;
-//	}
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
+
+	if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START){
+		//通知界面
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		if(rcv.validFlag == TRUE)
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR;
+		else
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_OK;
+
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+	}
+	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP){
+		//通知界面
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STOP;
+
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+	}
+	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND){
+		//通知界面
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_SUSPEND;
+	}
+	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME){
+		//通知界面
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_RESUME;
+	}
+	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI){
+		//通知界面
+		StrHlcIe_cui_hcu2uir_static_cali_resp_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_static_cali_resp_t));
+
+		if (rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO){
+			status.validFlag = rcv.validFlag;
+			status.errCode = rcv.errCode;
+			status.weight = 0;
+		}
+		else if (rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL){
+			status.validFlag = rcv.validFlag;
+			status.errCode = rcv.errCode;
+			status.weight = rcv.calFullRespPar.Weight;
+			printf("BFHSUICOMM: STATIC_CALI_FULL weight = %d \n", status.weight);
+		}
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp(rcv.cmdValue, &status);
+	}
+	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI){
+		StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t));
+
+		if (rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO){
+			status.validFlag = rcv.validFlag;
+			status.errCode = rcv.errCode;
+			status.weight = 0;
+		}
+		else if (rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL){
+			status.validFlag = rcv.validFlag;
+			status.errCode = rcv.errCode;
+			status.weight = rcv.calFullRespPar.Weight;
+		}
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(rcv.cmdValue, &status);
+	}
+	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_ONE_KEY_ZERO){
+		//TBD
+		printf ("fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp: rcv.cmdid = %d\n", rcv.cmdid);
+	}
+	else{
+		HCU_ERROR_PRINT_TASK(TASK_ID_BFHSUICOMM, "TASK_ID_BFHSUICOMM: Invalid command response!\n");
+		return FAILURE;
+	}
 
 	//返回
 	return SUCCESS;
@@ -509,8 +548,8 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZero = 1;
 
 	//CAL FULL REQ
-	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingTolerancePercent = 5;
-	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams = 20000;
+	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingTolerancePercent = 3000;
+	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams = 22000;
 
 	//读取数据库，更新批次数据
 	gTaskL3bfhsContext.callCellId = 1;

@@ -301,6 +301,7 @@ typedef struct StrHlcIe_uir2hcu_one_key_zero_req
 #define HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STOP				10
 #define HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_DATA_VALID		11
 #define HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_ERROR				12
+#define HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_RESUME			13
 #define HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_INVALID			0xFFFFFFFF
 
 //HUICOBUS_CMDID_cui_hcu2uir_min                		= 0x0180,
@@ -325,12 +326,18 @@ typedef struct StrHlcIe_cui_hcu2uir_stop_suspend_resp
 //HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp     		= 0x0183,
 typedef struct StrHlcIe_cui_hcu2uir_static_cali_resp
 {
+	UINT8   validFlag;  //是否执行成功
+	UINT16  errCode;
+	UINT32  weight;
 }StrHlcIe_cui_hcu2uir_static_cali_resp_t;
 //cmdValue = adcValue
 
 //HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp     		= 0x0184,
 typedef struct StrHlcIe_cui_hcu2uir_dynamic_cali_resp
 {
+	UINT8   validFlag;  //是否执行成功
+	UINT16  errCode;
+	UINT32  weight;
 }StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t;
 //cmdValue = adcValue
 
