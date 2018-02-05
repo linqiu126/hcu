@@ -226,11 +226,11 @@ OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//L3BFDF_TTT_WAIT_FB定时器，也没啥用，用不上
 
-	//周期性统计扫描定时器：测试完成后，该定时器并没有啥用
+	//周期性统计扫描定时器
 	else if ((rcv.timeId == TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN) &&(rcv.timeRes == TIMER_RESOLUTION_10MS)){
-//		if (func_l3bfdf_time_out_statistic_scan_process() == FAILURE){
-//			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error process time out message!\n");
-//		}
+		if (func_l3bfdf_time_out_statistic_scan_process() == FAILURE){
+			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error process time out message!\n");
+		}
 	}
 
 	//返回
@@ -1035,6 +1035,7 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 
 	//更新统计信息
 	gTaskL3bfdfContext.cur.wsTttTimes++;
+	gTaskL3bfdfContext.sessionId++;
 
 	//返回
 	return SUCCESS;
@@ -2465,7 +2466,7 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 		snd.sta.tttMatNbr = gTaskL3bfdfContext.sta60Min.wsTttMatCnt;
 		snd.sta.tgvMatNbr = gTaskL3bfdfContext.sta60Min.wsTgvMatCnt;
 		snd.sta.combAvgSpeed = gTaskL3bfdfContext.sta60Min.wsAvgTttTimes;
-		snd.sta.totalWeight = (UINT32)(gTaskL3bfdfContext.sta60Min.wsIncMatWgt*100);
+		snd.sta.totalWeight = gTaskL3bfdfContext.sta60Min.wsIncMatWgt;
 		snd.sta.totalMatNbr = gTaskL3bfdfContext.sta60Min.wsIncMatCnt;
 		snd.sta.totalWorkMin = (time(0) - gTaskL3bfdfContext.startWorkTimeInUnix)/60;
 		snd.sta.timeInUnix = time(0);
@@ -2503,7 +2504,6 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 	if (((time(0)-gTaskL3bfdfContext.start24hStaTimeInUnix) % HCU_L3BFDF_STA_24H_IN_SECOND) == 0){
 		memset(&(gTaskL3bfdfContext.sta24H), 0, sizeof(HcuSysMsgIeL3bfdfContextStaElement_t));
 		gTaskL3bfdfContext.elipse24HourCnt = 0;
-		HCU_DEBUG_PRINT_CRT("One whole working day passed, congratulation!\n");
 	}
 
 	//增加数据到连续统计数据中

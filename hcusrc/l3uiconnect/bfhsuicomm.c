@@ -122,9 +122,13 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//延迟并启动系统，进入测试模式
-	hcu_sleep(4);
+	hcu_sleep(2);
 	//设置configIndex=1
 	func_bfhsuicomm_read_cfg_db_into_ctrl_table(1);
+
+	//初始化sessionId
+	gTaskL3bfhsContext.sessionId = dbi_HcuBfhs_CallCellMaxIdGet() + 1;
+
 
 	//发送启动消息给L3BFHS：有了界面后，这个就不需要了，以后需要删除
 //	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
@@ -552,7 +556,7 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams = 22000;
 
 	//读取数据库，更新批次数据
-	gTaskL3bfhsContext.callCellId = 1;
+	gTaskL3bfhsContext.sessionId = 1;
 
 	return SUCCESS;
 }

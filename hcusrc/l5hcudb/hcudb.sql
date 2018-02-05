@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 05, 2018 at 09:49 AM
+-- Generation Time: Feb 05, 2018 at 04:56 PM
 -- Server version: 5.7.20-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -105,6 +105,34 @@ CREATE TABLE `hcualcoholmq3alcodatainfo` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hcubfdfcallcell`
+--
+
+CREATE TABLE `hcubfdfcallcell` (
+  `sid` int(4) NOT NULL,
+  `configid` int(4) DEFAULT NULL,
+  `timestamp` int(4) DEFAULT NULL,
+  `operator` char(20) DEFAULT NULL,
+  `groupid` int(1) DEFAULT NULL,
+  `grouprangehigh` int(4) DEFAULT NULL,
+  `grouprangelow` int(4) DEFAULT NULL,
+  `targetweight` int(4) DEFAULT NULL,
+  `uplimitweight` int(4) DEFAULT NULL,
+  `actualweight` int(4) DEFAULT NULL,
+  `streamline` int(1) DEFAULT NULL,
+  `hooperid` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcubfdfcallcell`
+--
+
+INSERT INTO `hcubfdfcallcell` (`sid`, `configid`, `timestamp`, `operator`, `groupid`, `grouprangehigh`, `grouprangelow`, `targetweight`, `uplimitweight`, `actualweight`, `streamline`, `hooperid`) VALUES
+(1, 1, 3245662, 'TEST', 1, 100000, 120000, 5000000, 100000, 5032500, 0, 6);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `hcubfdfproductpara`
 --
 
@@ -145,6 +173,41 @@ INSERT INTO `hcubfdfproductpara` (`sid`, `targetthroughput`, `snrautozerorange`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hcubfdfstadatainfo`
+--
+
+CREATE TABLE `hcubfdfstadatainfo` (
+  `sid` int(4) NOT NULL,
+  `statype` char(20) DEFAULT NULL,
+  `configid` int(4) DEFAULT NULL,
+  `timestamp` int(4) DEFAULT NULL,
+  `wsincmatcnt` int(4) DEFAULT NULL,
+  `wsincmatwgt` double(18,2) DEFAULT NULL,
+  `wscombtimes` int(4) DEFAULT NULL,
+  `wsttttimes` int(4) DEFAULT NULL,
+  `wstgvtimes` int(4) DEFAULT NULL,
+  `wstttmatcnt` int(4) DEFAULT NULL,
+  `wstgvmatcnt` int(4) DEFAULT NULL,
+  `wstttmatwgt` double(18,2) DEFAULT NULL,
+  `wstgvmatwgt` double(18,2) DEFAULT NULL,
+  `wsavgttttimes` int(4) DEFAULT NULL,
+  `wsavgtttmatcnt` int(4) DEFAULT NULL,
+  `wsavgtttmatwgt` double(18,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcubfdfstadatainfo`
+--
+
+INSERT INTO `hcubfdfstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `wsincmatcnt`, `wsincmatwgt`, `wscombtimes`, `wsttttimes`, `wstgvtimes`, `wstttmatcnt`, `wstgvmatcnt`, `wstttmatwgt`, `wstgvmatwgt`, `wsavgttttimes`, `wsavgtttmatcnt`, `wsavgtttmatwgt`) VALUES
+(1, 'BFDF_STA_24_HOUR', 1, 1501126545, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(2, 'BFDF_STA_LOCAL_UI', 0, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(3, 'BFDF_STA_LOCAL_UI', 1, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(4, 'BFDF_STA_UP_2_NOW', 1, 1501641451, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `hcubfdfsystempara`
 --
 
@@ -165,6 +228,31 @@ CREATE TABLE `hcubfdfsystempara` (
 
 INSERT INTO `hcubfdfsystempara` (`weighterlength`, `rejectorposition`, `maxallowedweight`, `minallowedweight`, `counterweight`, `autozerosignal`, `autozeroswitch`, `autozerolimit`) VALUES
 (400, 500, 500, 500, 500, 500, 500, 500);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcubfhscallcell`
+--
+
+CREATE TABLE `hcubfhscallcell` (
+  `sid` int(4) NOT NULL,
+  `configid` int(4) DEFAULT NULL,
+  `timestamp` int(4) DEFAULT NULL,
+  `operator` char(20) DEFAULT NULL,
+  `targetweight` int(4) DEFAULT NULL,
+  `tu1` int(4) DEFAULT NULL,
+  `tu2` int(4) DEFAULT NULL,
+  `actualweight` int(4) DEFAULT NULL,
+  `state` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcubfhscallcell`
+--
+
+INSERT INTO `hcubfhscallcell` (`sid`, `configid`, `timestamp`, `operator`, `targetweight`, `tu1`, `tu2`, `actualweight`, `state`) VALUES
+(1, 1, 124124214, 'TEST', 940000, 5000, 8000, 938000, 1);
 
 -- --------------------------------------------------------
 
@@ -224,6 +312,40 @@ INSERT INTO `hcubfhsproductpara` (`sid`, `confname`, `currentconf`, `baseconf`, 
 (17, 'apple', 'N', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (18, 'apple', 'N', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (19, 'fish888', 'N', 'N', 'System', 'fish37.svg', '', 1000, 995, 990, 0, 2, 2, 800, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcubfhsstadatainfo`
+--
+
+CREATE TABLE `hcubfhsstadatainfo` (
+  `sid` int(4) NOT NULL,
+  `statype` char(20) DEFAULT NULL,
+  `configid` int(4) DEFAULT NULL,
+  `timestamp` int(4) DEFAULT NULL,
+  `wsincmatwgt` int(4) DEFAULT NULL,
+  `wsincmatcnt` int(4) DEFAULT NULL,
+  `wsnormalcnt` int(4) DEFAULT NULL,
+  `wsnormalwgt` int(4) DEFAULT NULL,
+  `wsovercnt` int(4) DEFAULT NULL,
+  `wsoverwgt` int(4) DEFAULT NULL,
+  `wsundertotalcnt` int(4) DEFAULT NULL,
+  `wsundertotalwgt` int(4) DEFAULT NULL,
+  `wsundertu1cnt` int(4) DEFAULT NULL,
+  `wsundertu1wgt` int(4) DEFAULT NULL,
+  `wsundertu2cnt` int(4) DEFAULT NULL,
+  `wsundertu2wgt` int(4) DEFAULT NULL,
+  `wsunspecificcnt` int(4) DEFAULT NULL,
+  `wsunspecificwgt` int(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcubfhsstadatainfo`
+--
+
+INSERT INTO `hcubfhsstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `wsincmatwgt`, `wsincmatcnt`, `wsnormalcnt`, `wsnormalwgt`, `wsovercnt`, `wsoverwgt`, `wsundertotalcnt`, `wsundertotalwgt`, `wsundertu1cnt`, `wsundertu1wgt`, `wsundertu2cnt`, `wsundertu2wgt`, `wsunspecificcnt`, `wsunspecificwgt`) VALUES
+(1, 'BFHS_STA_UP_2_NOW', 1, 1231241, 3232, 2, 424, 222, 12, 323, 321, 3123213, 22, 31231, 33, 1232321, 12, 3213);
 
 -- --------------------------------------------------------
 
@@ -5679,15 +5801,39 @@ ALTER TABLE `hcualcoholmq3alcodatainfo`
   ADD PRIMARY KEY (`sid`);
 
 --
+-- Indexes for table `hcubfdfcallcell`
+--
+ALTER TABLE `hcubfdfcallcell`
+  ADD PRIMARY KEY (`sid`);
+
+--
 -- Indexes for table `hcubfdfproductpara`
 --
 ALTER TABLE `hcubfdfproductpara`
   ADD PRIMARY KEY (`sid`);
 
 --
+-- Indexes for table `hcubfdfstadatainfo`
+--
+ALTER TABLE `hcubfdfstadatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcubfhscallcell`
+--
+ALTER TABLE `hcubfhscallcell`
+  ADD PRIMARY KEY (`sid`);
+
+--
 -- Indexes for table `hcubfhsproductpara`
 --
 ALTER TABLE `hcubfhsproductpara`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcubfhsstadatainfo`
+--
+ALTER TABLE `hcubfhsstadatainfo`
   ADD PRIMARY KEY (`sid`);
 
 --
@@ -6009,15 +6155,35 @@ ALTER TABLE `hcualcoholdatainfo`
 ALTER TABLE `hcualcoholmq3alcodatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `hcubfdfcallcell`
+--
+ALTER TABLE `hcubfdfcallcell`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT for table `hcubfdfproductpara`
 --
 ALTER TABLE `hcubfdfproductpara`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
+-- AUTO_INCREMENT for table `hcubfdfstadatainfo`
+--
+ALTER TABLE `hcubfdfstadatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `hcubfhscallcell`
+--
+ALTER TABLE `hcubfhscallcell`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT for table `hcubfhsproductpara`
 --
 ALTER TABLE `hcubfhsproductpara`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+--
+-- AUTO_INCREMENT for table `hcubfhsstadatainfo`
+--
+ALTER TABLE `hcubfhsstadatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `hcubfsccalibration`
 --

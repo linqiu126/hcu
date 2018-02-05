@@ -1024,7 +1024,26 @@ typedef struct msgie_struct_bfdf_scale_weight_sta_element
 	UINT32 timeInUnix;  	//报告生成的unix时间，网络可能报告滞留
 	UINT32 errNbr;			//出错次数
 }msgie_struct_bfdf_scale_weight_sta_element_t;
-
+typedef struct msgie_struct_bfhs_scale_weight_sta_element
+{
+	UINT32	wsIncMatCnt;  		//物料数量
+	UINT32	wsIncMatWgt;  		//物料重量
+	UINT32  wsNormalCnt;		//正常
+	UINT32  wsNormalWgt;		//正常
+	UINT32  wsOverCnt;			//超重
+	UINT32  wsOverWgt;			//超重
+	UINT32  wsUnderTotalCnt;	//欠重
+	UINT32	wsUnderTotalWgt;	//欠重
+	UINT32  wsUnderTu1Cnt;		//欠重TU1
+	UINT32	wsUnderTu1Wgt;		//欠重TU1
+	UINT32  wsUnderTu2Cnt;		//欠重TU2
+	UINT32	wsUnderTu2Wgt;		//欠重TU2
+	UINT32  wsUnspecificCnt;	//非特定
+	UINT32	wsUnspecificWgt;	//非特定
+	UINT32  wsAvgMatTimes;		//平均进料次数
+	UINT32  wsAvgTttTimes;		//平均成功次数
+	UINT32  wsAvgTgvTimes;		//平均失败次数
+}msgie_struct_bfhs_scale_weight_sta_element_t;
 
 
 /***************************************************************************************************************
@@ -2695,6 +2714,7 @@ typedef struct msg_struct_l3bfhs_cloudvela_statistic_report
 	UINT8  staRepType;
 	UINT8  dataFormat;
 	msgie_struct_bh_com_head_t comHead;
+	msgie_struct_bfhs_scale_weight_sta_element_t sta;
 	UINT32 length;
 }msg_struct_l3bfhs_cloudvela_statistic_report_t;
 
@@ -4797,20 +4817,23 @@ typedef struct HcuSysMsgIeL3bfdfContextStaElement
 
 typedef struct HcuSysMsgIeL3bfhsContextStaElement
 {
-	UINT32	wsIncMatCntMid;  			//物料数量
-	UINT32	wsIncMatWgtMid;  			//物料重量
-	UINT32   wsNormalCntMid;			//正常
-	UINT32   wsNormalWgtMid;			//正常
-	UINT32   wsOverCntMid;				//超重
-	UINT32   wsOverWgtMid;				//超重
-	UINT32   wsUnderTotalCntMid;		//欠重
-	UINT32	wsUnderTotalWgtMid;			//欠重
-	UINT32   wsUnderTu1CntMid;			//欠重TU1
-	UINT32	wsUnderTu1WgtMid;			//欠重TU1
-	UINT32   wsUnderTu2lCntMid;			//欠重TU2
-	UINT32	wsUnderTu2WgtMid;			//欠重TU2
-	UINT32   wsUnspecificCntMid;		//非特定
-	UINT32	wsUnspecificWgtMid;			//非特定
+	UINT32	wsIncMatCnt;  		//物料数量
+	UINT32	wsIncMatWgt;  		//物料重量
+	UINT32  wsNormalCnt;		//正常
+	UINT32  wsNormalWgt;		//正常
+	UINT32  wsOverCnt;			//超重
+	UINT32  wsOverWgt;			//超重
+	UINT32  wsUnderTotalCnt;	//欠重
+	UINT32	wsUnderTotalWgt;	//欠重
+	UINT32  wsUnderTu1Cnt;		//欠重TU1
+	UINT32	wsUnderTu1Wgt;		//欠重TU1
+	UINT32  wsUnderTu2Cnt;		//欠重TU2
+	UINT32	wsUnderTu2Wgt;		//欠重TU2
+	UINT32  wsUnspecificCnt;	//非特定
+	UINT32	wsUnspecificWgt;	//非特定
+	UINT32  wsAvgMatTimes;		//平均进料次数
+	UINT32  wsAvgTttTimes;		//平均成功次数
+	UINT32  wsAvgTgvTimes;		//平均失败次数
 }HcuSysMsgIeL3bfhsContextStaElement_t;
 
 /*
@@ -4854,7 +4877,8 @@ typedef struct HcuSysMsgIeL3bfhsCallcellElement
 	UINT32 timestamp;
 	char   operator[20];
 	UINT32 targetWeight; //in NF2
-	UINT32 upLimitWeight; //in NF2
+	UINT32 tu1; //in NF2
+	UINT32 tu2; //in NF2
 	UINT32 actualWeight; //in NF2
 	UINT8  state;
 }HcuSysMsgIeL3bfhsCallcellElement_t;

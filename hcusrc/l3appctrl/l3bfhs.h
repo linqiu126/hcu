@@ -88,20 +88,23 @@ typedef struct L3BfhsNodeBoardInfo
 //临时数据暂存内容
 typedef struct gTaskL3bfhsContextStaEleMid
 {
-	float	wsIncMatCntMid;  			//物料数量
-	float	wsIncMatWgtMid;  			//物料重量
-	float   wsNormalCntMid;				//正常
-	float   wsNormalWgtMid;				//正常
-	float   wsOverCntMid;				//超重
-	float   wsOverWgtMid;				//超重
-	float   wsUnderTotalCntMid;			//欠重
-	float	wsUnderTotalWgtMid;			//欠重
-	float   wsUnderTu1CntMid;			//欠重TU1
-	float	wsUnderTu1WgtMid;			//欠重TU1
-	float   wsUnderTu2lCntMid;			//欠重TU2
-	float	wsUnderTu2WgtMid;			//欠重TU2
-	float   wsUnspecificCntMid;			//非特定
-	float	wsUnspecificWgtMid;			//非特定
+	double	wsIncMatCntMid;  			//物料数量
+	double	wsIncMatWgtMid;  			//物料重量
+	double  wsNormalCntMid;				//正常
+	double  wsNormalWgtMid;				//正常
+	double  wsOverCntMid;				//超重
+	double  wsOverWgtMid;				//超重
+	double  wsUnderTotalCntMid;			//欠重
+	double	wsUnderTotalWgtMid;			//欠重
+	double  wsUnderTu1CntMid;			//欠重TU1
+	double	wsUnderTu1WgtMid;			//欠重TU1
+	double  wsUnderTu2CntMid;			//欠重TU2
+	double	wsUnderTu2WgtMid;			//欠重TU2
+	double  wsUnspecificCntMid;			//非特定
+	double	wsUnspecificWgtMid;			//非特定
+	double  wsAvgMatTimesMid;			//平均进料次数
+	double  wsAvgTttTimesMid;			//平均成功次数
+	double  wsAvgTgvTimesMid;			//平均失败次数
 }gTaskL3bfhsContextStaEleMid_t;
 
 //配置参数
@@ -228,7 +231,7 @@ typedef struct gTaskL3bfhsContext
 	UINT32  start24hStaTimeInUnix;		//系统配置的参数，表示24小时统计的日历起点
 
 	//动态部分
-	UINT32  callCellId;					//批次数据
+	UINT32  sessionId;					//批次数据
 	char    operatorName[HCU_L3BFHS_CONTEXT_OPERATOR_NAME_LEN_MAX];
 	UINT16	configId;  					//用来标识系统工作在哪一套配置参数中
 	char    configName[HCU_L3BFHS_CONTEXT_CONFIG_NAME_LEN_MAX];
