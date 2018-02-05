@@ -132,13 +132,13 @@ OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 //#endif
 
 	//严格防止HUITP消息跟内部消息在关键结构上定义的不一致
-	if ((sizeof(gTaskL3bfdfContextWeightSensorParamaters_t) != sizeof(strMsgIe_l3bfdf_WeightSensorParamaters_t))||\
-			(sizeof(gTaskL3bfdfContextMotorControlParamaters_t) != sizeof(strMsgIe_l3bfdf_MotorControlParamaters_t))||\
-			(sizeof(gTaskL3bfdfContextActionControlParamaters_t) != sizeof(strMsgIe_l3bfdf_ActionControlParamaters_t)))
-		HCU_ERROR_PRINT_L3BFDF("L3BFDF: module message definition on statistic element error! GlobalPar/MsgStr WP=%d/%d, CP=%d/%d, AP=%d/%d\n",\
-				sizeof(gTaskL3bfdfContextWeightSensorParamaters_t), sizeof(strMsgIe_l3bfdf_WeightSensorParamaters_t), \
-				sizeof(gTaskL3bfdfContextMotorControlParamaters_t), sizeof(strMsgIe_l3bfdf_MotorControlParamaters_t), \
-				sizeof(gTaskL3bfdfContextActionControlParamaters_t), sizeof(strMsgIe_l3bfdf_ActionControlParamaters_t));
+//	if ((sizeof(gTaskL3bfdfContextWeightSensorParamaters_t) != sizeof(strMsgIe_l3bfdf_WeightSensorParamaters_t))||\
+//			(sizeof(gTaskL3bfdfContextMotorControlParamaters_t) != sizeof(strMsgIe_l3bfdf_MotorControlParamaters_t))||\
+//			(sizeof(gTaskL3bfdfContextActionControlParamaters_t) != sizeof(strMsgIe_l3bfdf_ActionControlParamaters_t)))
+//		HCU_ERROR_PRINT_L3BFDF("L3BFDF: module message definition on statistic element error! GlobalPar/MsgStr WP=%d/%d, CP=%d/%d, AP=%d/%d\n",\
+//				sizeof(gTaskL3bfdfContextWeightSensorParamaters_t), sizeof(strMsgIe_l3bfdf_WeightSensorParamaters_t), \
+//				sizeof(gTaskL3bfdfContextMotorControlParamaters_t), sizeof(strMsgIe_l3bfdf_MotorControlParamaters_t), \
+//				sizeof(gTaskL3bfdfContextActionControlParamaters_t), sizeof(strMsgIe_l3bfdf_ActionControlParamaters_t));
 	//严格保证统计周期的一致性
 	if (HCU_L3BFDF_STA_UNIT_DUR != (10*zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN].dur))  //静态表是以10ms为单位的
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: module timer statistic parameter set error!\n");
@@ -709,7 +709,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfdfContext.cur.wsTgvMatWgt += weight;
 
 		//打印状态
-		HcuDebugPrint("L3BFDF: Send mat to rubbish, line = %d, weight = %fg, rangeLow = %fg, rangeHight = %fg\n", line, weight, gTaskL3bfdfContext.group[line][gidMin].rangeLow, gTaskL3bfdfContext.group[line][gidMin].rangeHigh);
+		HcuDebugPrint("L3BFDF: Send mat to rubbish, line = %d, weight = %dg, rangeLow = %dg, rangeHight = %dg\n", line, weight, gTaskL3bfdfContext.group[line][gidMin].rangeLow, gTaskL3bfdfContext.group[line][gidMin].rangeHigh);
 
 		//送往垃圾桶并通知界面
 		inswgt_report.hopperId = 0;
