@@ -160,6 +160,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0comvm/vmlayer.h</locationURI>
 		</link>
 		<link>
+			<name>src/l0dbi/dbi_bfdf.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0dbi/dbi_bfdf.c</locationURI>
+		</link>
+		<link>
+			<name>src/l0dbi/dbi_bfdf.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0dbi/dbi_bfdf.h</locationURI>
+		</link>
+		<link>
 			<name>src/l0dbi/dbi_sysswm.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0dbi/dbi_sysswm.c</locationURI>

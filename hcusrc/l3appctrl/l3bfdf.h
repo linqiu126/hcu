@@ -120,7 +120,7 @@ typedef struct L3BfdfHopperInfo
 	UINT16 hopperStatus;
 	UINT16 preHopperId;
 	UINT16 nextHopperId;
-	UINT16 matLackNbr;		//用来计算在特定组别的情况下，采用欠缺算法，需要从多少个开始操控．当打开自动调配小组时，这个参数需要动态刷新．本项目估计暂时不需要．
+	UINT16 matLackNbr;		//用来计算在特定组别的情况下，采用欠缺算法，需要从多少个开始操控
 	UINT16 matLackIndex;     //具体控制欠n的数量
 	UINT32  hopperValue;    //料斗总重量
 	UINT32  hopperLastMat;  //用来存储称重台到物料入料之间的期间，物料的重量．冲入则需要状态和算法控制．
@@ -188,21 +188,21 @@ typedef struct gTaskL3bfdfContextActionControlParamaters
 	UINT16  DelayUpHcuAlgoDl;
 }gTaskL3bfdfContextActionControlParamaters_t;
 
-//统计信息
+//统计信息：为了提高本地计算的精度
 typedef struct gTaskL3bfdfContextStaEleMid
 {
-	UINT32	wsIncMatCntMid;  			//物料数量
-	UINT32	wsIncMatWgtMid;  			//物料重量
-	UINT32	wsCombTimesMid;  			//总共成功素搜到目标的次数
-	UINT32	wsTttTimesMid;  			//TTT次数
-	UINT32	wsTgvTimesMid;  			//TGV次数
-	UINT32	wsTttMatCntMid;				//TTT物料数量
-	UINT32	wsTgvMatCntMid;				//TGV物料数量
-	UINT32	wsTttMatWgtMid;				//TTT物料重量
-	UINT32	wsTgvMatWgtMid;				//TGV物料重量
-	UINT32	wsAvgTttTimesMid;			//TTT平均次数
-	UINT32	wsAvgTttMatCntMid;			//TTT平均物料数
-	UINT32	wsAvgTttMatWgtMid;			//TTT平均重量
+	double	wsIncMatCntMid;  			//物料数量
+	double	wsIncMatWgtMid;  			//物料重量
+	double	wsCombTimesMid;  			//总共成功素搜到目标的次数
+	double	wsTttTimesMid;  			//TTT次数
+	double	wsTgvTimesMid;  			//TGV次数
+	double	wsTttMatCntMid;				//TTT物料数量
+	double	wsTgvMatCntMid;				//TGV物料数量
+	double	wsTttMatWgtMid;				//TTT物料重量
+	double	wsTgvMatWgtMid;				//TGV物料重量
+	double	wsAvgTttTimesMid;			//TTT平均次数
+	double	wsAvgTttMatCntMid;			//TTT平均物料数
+	double	wsAvgTttMatWgtMid;			//TTT平均重量
 }gTaskL3bfdfContextStaEleMid_t;
 
 //统计周期，为了计算滑动平均数据
@@ -305,7 +305,6 @@ void func_l3bfdf_stm_main_recovery_from_fault(void);  //提供了一种比RESTAR
 //Local API
 OPSTAT func_l3bfdf_int_init(void);
 OPSTAT func_l3bfdf_time_out_sys_cfg_req_process(void);
-OPSTAT func_l3bfdf_time_out_comb_out_req_process(void);
 OPSTAT func_l3bfdf_time_out_statistic_scan_process(void);
 bool   func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
 bool   func_l3bfdf_cacluate_sensor_suspend_rcv_complete(void);
@@ -320,7 +319,7 @@ OPSTAT func_l3bfdf_send_out_cfg_start_message_to_all(void);
 extern bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup);
 extern bool func_l3bfdf_hopper_state_set_init(UINT8 streamId);
 extern bool func_l3bfdf_hopper_state_set_valid(UINT8 streamId);
-extern bool func_l3bfdf_hopper_state_set_single_hopper_N_coef(UINT8 streamId, UINT16 hid);
+extern bool func_l3bfdf_hopper_update_N_coef(UINT8 streamId, UINT16 hid);
 extern bool func_l3bfdf_hopper_add_by_tail(UINT8 streamId, UINT16 groupId, UINT16 hopperNewId);
 extern bool func_l3bfdf_hopper_add_by_group(UINT8 streamId, UINT16 groupId, UINT16 nbrHopper);
 extern bool func_l3bfdf_hopper_add_by_group_in_average_distribution(UINT8 streamId, UINT16 nbrGroup);
@@ -343,9 +342,9 @@ UINT16 func_l3bfdf_new_ws_search_hopper_buffer_lack_one(UINT8 streamId, UINT16 g
 UINT16 func_l3bfdf_new_ws_search_hopper_buffer_normal(UINT8 streamId, UINT16 gid, UINT32 weight);
 UINT16 func_l3bfdf_new_ws_search_hopper_basket_lack_one(UINT8 streamId, UINT16 gid, UINT32 weight);
 UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, UINT32 weight);
-bool   func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, UINT32 weight);
+bool   func_l3bfdf_hopper_judge_cur_mat_is_in_right_space(UINT8 streamId, UINT16 hid, UINT32 weight);
+bool   func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(UINT8 streamId, UINT16 hid, UINT32 weight);
 bool   func_l3bfdf_hopper_judge_buffer_is_lack_one_full(UINT8 sid, UINT16 hid, UINT32 weight);
-bool   func_l3bfdf_hopper_judge_buffer_is_valid(UINT8 sid, UINT16 hid, UINT32 weight);
 bool   func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(UINT8 streamId, UINT16 hopperId);
 bool   func_l3bfdf_new_ws_send_out_comb_out_message_w_basket_full(UINT8 streamId, UINT16 hopperId);
 bool   func_l3bfdf_new_ws_send_out_comb_out_message_w_double_full(UINT8 streamId, UINT16 hopperId);
@@ -356,7 +355,7 @@ double gaussian(double u, double n);
 //External APIs
 extern OPSTAT hcu_sps232_qr_printer_init(void);
 extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
-
+extern OPSTAT dbi_HcuBfdf_callcell_save(HcuSysMsgIeL3bfdfCallcellElement_t *input);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_L3BFDF(...)				do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFDF]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

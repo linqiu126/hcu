@@ -114,6 +114,7 @@ OPSTAT  func_bfdfuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfdfuiJsonCm
 
 //External APIs
 extern OPSTAT dbi_HcuBfdf_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);
+extern UINT32 dbi_HcuBfdf_CallCellMaxIdGet(void);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_BFDFUICOMM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFDFUICOMM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

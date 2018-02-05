@@ -4816,6 +4816,52 @@ typedef struct HcuSysMsgIeL3bfhsContextStaElement
 /*
  *
  *
+ *   //组合秤的CALLCELL数据结构
+ *
+ *
+ */
+typedef struct HcuSysMsgIeL3bfscCallcellElement
+{
+	UINT32 sid;
+	UINT32 configId;
+	UINT32 timestamp;
+	char   operator[20];
+	UINT32 targetWeight; //in NF2
+	UINT32 upLimitWeight; //in NF2
+	UINT32 actualWeight; //in NF2
+}HcuSysMsgIeL3bfscCallcellElement_t;
+
+typedef struct HcuSysMsgIeL3bfdfCallcellElement
+{
+	UINT32 sid;
+	UINT32 configId;
+	UINT32 timestamp;
+	char   operator[20];
+	UINT8  groupId;
+	UINT32 groupRangeHigh; //in NF2
+	UINT32 groupRangeLow;  //in NF2
+	UINT32 targetWeight; //in NF2
+	UINT32 upLimitWeight; //in NF2
+	UINT32 actualWeight; //in NF2
+	UINT8  streamLine;
+	UINT8  hopperId;
+}HcuSysMsgIeL3bfdfCallcellElement_t;
+
+typedef struct HcuSysMsgIeL3bfhsCallcellElement
+{
+	UINT32 sid;
+	UINT32 configId;
+	UINT32 timestamp;
+	char   operator[20];
+	UINT32 targetWeight; //in NF2
+	UINT32 upLimitWeight; //in NF2
+	UINT32 actualWeight; //in NF2
+	UINT8  state;
+}HcuSysMsgIeL3bfhsCallcellElement_t;
+
+/*
+ *
+ *
  *   //软件下载数据结构
  *
  *

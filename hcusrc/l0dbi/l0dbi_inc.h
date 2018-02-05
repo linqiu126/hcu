@@ -36,6 +36,13 @@
 	#include "../l0dbi/dbi_bfsc.h"
 #endif
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	#include "../l0dbi/dbi_bfhs.h"
+#endif
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	#include "../l0dbi/dbi_bfdf.h"
+#endif
 
 /*
  *  mysql多次调用存储过程的问题

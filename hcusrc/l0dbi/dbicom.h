@@ -44,5 +44,37 @@ extern OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void);
 
 //引用外部API
 
+//高级定义，简化程序的可读性
+
+//通知刷新界面的复合宏定义
+#define HCU_L0DBICOM_INIT_DB_CONN() \
+	do{\
+	    sqlHandler = mysql_init(NULL);\
+	    if(!sqlHandler)\
+	    {\
+	    	HcuErrorPrint("DBICOM: MySQL init failed!\n");\
+	        return FAILURE;\
+	    }\
+	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);\
+	    if (!sqlHandler){\
+	    	mysql_close(sqlHandler);\
+	    	HcuErrorPrint("DBICOM: MySQL connection failed: %s\n", mysql_error(sqlHandler));\
+	        return FAILURE;\
+	    }\
+	}while(0)
+
+//CLOSE DB CONNECTION
+#define HCU_L0DBICOM_CLOSE_DB_CONN() \
+	do{\
+		mysql_free_result(resPtr);\
+	    mysql_close(sqlHandler);\
+	    return SUCCESS;\
+	}while(0)
+
+
+
+
+
+
 
 #endif /* L0DBI_DBICOM_H_ */

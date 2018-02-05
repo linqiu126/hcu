@@ -153,6 +153,9 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 //		return FAILURE;
 //	}
 
+	//初始化sessionId
+	gTaskL3bfdfContext.sessionId = dbi_HcuBfdf_CallCellMaxIdGet() + 1;
+
 	//返回
 	return SUCCESS;
 }
