@@ -9,9 +9,17 @@
 
 
 
+
+
+
+
+//= ZJL, 2018 Feb.5 CURRENT_SW_DELIVERY 308=>BFDF项目
+= 完善BFHS/BFDF中有关STARTUP消息触发后的处理过程
+= 为SYSSWM中软件下载，设置一个下载的时间长度，从而可以根据这个值来决定是否需要启动远程下载
+= 注意：经过这一次改动之后，因为数据库表单的变化，将导致BFSC的老程序和新程序不兼容，必须升级数据库才能继续使用
+
 //= ZJL, 2018 Jan.31 CURRENT_SW_DELIVERY 307=>BFDF项目
 = Update BFDF algorithms
-
 
 //= ZJL, 2018 Jan.22 CURRENT_SW_DELIVERY 306=>BFDF项目
 = 测试过程中出现的问题：

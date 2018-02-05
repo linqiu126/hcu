@@ -383,6 +383,9 @@
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
 
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
 
 //打开所有模块，为了测试性能
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
@@ -464,6 +467,9 @@
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
 
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
 
 //基于G1/335D的AQYC
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
@@ -534,7 +540,7 @@
 	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 		(1001) //十进制
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
+	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -544,6 +550,10 @@
 
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
+
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
 
 //基于G2/树莓派的AQYC
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
@@ -641,6 +651,10 @@
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP //可以加INDIVIDUAL，变成两个都支持的模式
 
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
+
 //数采仪
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
 	//系统启动选项以及网络连接选项
@@ -713,7 +727,7 @@
 	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 		(3001) //十进制
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
+	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -723,6 +737,10 @@
 
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
+
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
 
 //挂墙仪表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
@@ -793,7 +811,7 @@
 	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 		(4001) //十进制
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
+	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -803,6 +821,9 @@
 
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
+
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
 
 
 //CHUNXU智能路灯
@@ -885,6 +906,9 @@
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
 
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
 
 //CHUNXU格力空调模块
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
@@ -955,7 +979,7 @@
 	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 		(2201) //十进制
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
+	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -965,6 +989,10 @@
 
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
+
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
 
 //CHUNXU低功耗抄表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
@@ -1046,6 +1074,10 @@
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
 
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
+
 //CHUNXU中等功耗抄表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
 	//系统启动选项以及网络连接选项
@@ -1125,6 +1157,9 @@
 
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
+
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
 
 
 //波峰组合秤上位机
@@ -1220,6 +1255,10 @@
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
 
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
+
 //奥普维尔的OTDR仪表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	//系统启动选项以及网络连接选项
@@ -1299,6 +1338,10 @@
 
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
+
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
 
 //波峰双线分选组合称流水线上位机
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
@@ -1399,6 +1442,9 @@
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
 
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
 
 //波峰高速分选称上位机
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
@@ -1491,6 +1537,10 @@
 
 	//定义传感器是否采用聚合汇报，还是独立汇报的形式
 	#define HCU_SYSCFG_SENSOR_REPORT_MODE_SET	HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL //可以加GROUP，变成两个都支持的模式
+
+	//定义软件下载干活的缺省次数
+	#define HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES  0x7FFFFFFF
+
 
 #else
 	#error Un-correct constant definition

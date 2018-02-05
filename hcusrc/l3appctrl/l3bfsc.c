@@ -219,7 +219,8 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	HCU_DEBUG_PRINT_FAT("L3BFSC: Enter FSM_STATE_L3BFSC_ACTIVED status, Keeping refresh here!\n");
 
 	//启动周期性定时器：因为BFSC项目的缘故，暂时不启动下载过程
-	gTaskSysswmContext.swDlMaxTimes = HCU_L3BFSC_SW_DOWNLOAD_MAX_TIMES;
+	//该机制已经在最新的改动中，被工程参数给替换掉了，所以不再需要这个工作机制
+	//gTaskSysswmContext.swDlMaxTimes = HCU_L3BFSC_SW_DOWNLOAD_MAX_TIMES;
 
 	//测试组合程序
 	//hcu_sleep(2);

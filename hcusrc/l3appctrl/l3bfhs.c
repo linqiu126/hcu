@@ -548,6 +548,12 @@ OPSTAT fsm_l3bfhs_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	//通知界面
 	HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STARTUP);
 
+	//如果判定为SUSPEND状态，则直接复位主状态机
+	if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_SUSPEND){
+		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
+		return SUCCESS;
+	}
+
 	//判定状态
 	if (FsmGetState(TASK_ID_L3BFHS) > FSM_STATE_L3BFHS_ACTIVED){
 		//Send CFG_REQ到下位机

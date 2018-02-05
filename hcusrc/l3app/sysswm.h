@@ -38,7 +38,6 @@ typedef struct gTaskSysswmContext
 	UINT16	swVerSave;			//用于恢复之前数据的临时记录
 	UINT8	swDlSession;		//下载时哪一个下载过程
 	UINT8	reTransTimes;		//重传次数
-	UINT32	swDlMaxTimes;		//下载的最大计数器
 	UINT32	swDlCntTimes;		//下载的当期计数器
 }gTaskSysswmContext_t;
 //将HCU_CLIENT改为１是为了第一个命中，方便测试
@@ -51,7 +50,7 @@ typedef struct gTaskSysswmContext
 #define HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES  	4
 #define HCU_SYSSWM_SW_PACKAGE_FTP_DOWNLOAD_FILE_SIZE_THREADHOLD  2000  //200000，正常放200KB的
 
-#define HCU_SYSSWM_SW_DOWNLOAD_MAX_TIMES	0x7FFFFFFF
+//#define HCU_SYSSWM_SW_DOWNLOAD_MAX_TIMES	0x7FFFFFFF
 
 extern gTaskSysswmContext_t gTaskSysswmContext;
 

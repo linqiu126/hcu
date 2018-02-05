@@ -390,6 +390,8 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		strncpy(zHcuSysEngPar.swm.hcuSwDownloadDir, HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT, (sizeof(HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swm.hcuSwDownloadDir))?(sizeof(HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swm.hcuSwDownloadDir)));
 		strncpy(zHcuSysEngPar.swm.hcuSwActiveDir, HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT, (sizeof(HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swm.hcuSwActiveDir))?(sizeof(HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swm.hcuSwActiveDir)));
 		strncpy(zHcuSysEngPar.swm.hcuSwBackupDir, HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT, (sizeof(HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swm.hcuSwBackupDir))?(sizeof(HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swm.hcuSwBackupDir)));
+		zHcuSysEngPar.swm.swDlDuration = HCU_SYSCFG_SW_DOWNLOAD_MAX_TIMES;
+
 		//for HCU video FTP upload by shanchun
 		strncpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT, (sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT)<sizeof(zHcuSysEngPar.videoSev.hcuVideoServerDir))?(sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.videoSev.hcuVideoServerDir)));
 		strncpy(zHcuSysEngPar.videoSev.hcuVideoServerHttp, HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT, (sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT)<sizeof(zHcuSysEngPar.videoSev.hcuVideoServerHttp))?(sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT)):(sizeof(zHcuSysEngPar.videoSev.hcuVideoServerHttp)));
@@ -1098,7 +1100,7 @@ void func_hwinv_scan_eng_par(void)
 			int ret = 0;
 			ret = hcu_write_errlog("Scan eng par from DB failure reach the max, the system reboot!");
 			if (ret == FAILURE)
-				HCU_ERROR_PRINT_HWINV("HWINV: write reboot log failure in: %s!\n", HCU_SYSCFG_REBOOT_LOG_FILE);
+				HCU_ERROR_PRINT_HWINV_WO_RETURN("HWINV: write reboot log failure in: %s!\n", HCU_SYSCFG_REBOOT_LOG_FILE);
 
 			//_exit(0);//HCU exit
 			system("reboot");

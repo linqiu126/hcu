@@ -104,10 +104,9 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM] = 0;
 	memset(&gTaskSysswmContext, 0, sizeof(gTaskSysswmContext_t));
-	gTaskSysswmContext.swDlMaxTimes = HCU_SYSSWM_SW_DOWNLOAD_MAX_TIMES;
 
 	//启动周期性定时器：第一次将时钟降低到15秒
-	ret = hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, 15000, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, 15, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
 		HcuErrorPrint("SYSSWM: Error start period timer!\n");
@@ -160,7 +159,7 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	else if ((rcv.timeId == TIMER_ID_1S_SYSSWM_PERIOD_WORKING) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//先判定是否要干活
 		gTaskSysswmContext.swDlCntTimes++;
-		if (gTaskSysswmContext.swDlCntTimes > gTaskSysswmContext.swDlMaxTimes){
+		if (gTaskSysswmContext.swDlCntTimes > zHcuSysEngPar.swm.swDlDuration){
 			hcu_timer_stop(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, TIMER_RESOLUTION_1S);
 			return SUCCESS;
 		}

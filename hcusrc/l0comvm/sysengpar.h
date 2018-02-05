@@ -85,6 +85,7 @@ typedef struct SysEngParElementHcuSwDownload
 	char  hcuSwDownloadDir[HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
 	char  hcuSwActiveDir[HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
 	char  hcuSwBackupDir[HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
+	UINT32 swDlDuration;
 }SysEngParElementHcuSwDownload_t;
 
 //本地视频服务器的地址
@@ -320,7 +321,7 @@ typedef struct HcuSysEngParTab
 	SysEngParElementLocalUi_t 				localUI;
 	SysEngParElementProgramCodeDefineFix_t 	codeDefineFix;
 	SysEngParElementHwBurnPhyIdAddr_t 		hwBurnId;
-	UINT8 winddircalibration;
+	UINT8  winddircalibration;
 }HcuSysEngParTab_t;
 
 
