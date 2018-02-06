@@ -99,7 +99,7 @@ typedef struct L3BfdfGroupInfo
 	UINT16	firstHopperId;	//系统配置以后，最初从哪一个料斗开始
 	UINT16	fillHopperId;	//优先从哪一个料斗开始查找，从而加速查找
 	UINT32	targetWeight;	//目标重量
-	UINT32	targetUpLimit;	//上限比例部分，小数，不是最大值
+	UINT32	targetUpLimit;	//上限比例部分，小数，不是最大值，所以这里定义的并不是目标最大值，而是最大值与目标之间的差值
 	UINT32	bufWgtTarget;	//篮筐之外的缓冲区
 	UINT32  rangeLow;
 	UINT32  rangeHigh;
@@ -321,9 +321,9 @@ extern bool func_l3bfdf_hopper_state_set_init(UINT8 streamId);
 extern bool func_l3bfdf_hopper_state_set_valid(UINT8 streamId);
 extern bool func_l3bfdf_hopper_update_N_coef(UINT8 streamId, UINT16 hid);
 extern bool func_l3bfdf_hopper_add_by_tail(UINT8 streamId, UINT16 groupId, UINT16 hopperNewId);
-extern bool func_l3bfdf_hopper_add_by_group(UINT8 streamId, UINT16 groupId, UINT16 nbrHopper);
-extern bool func_l3bfdf_hopper_add_by_group_in_average_distribution(UINT8 streamId, UINT16 nbrGroup);
-extern bool func_l3bfdf_hopper_add_by_group_in_normal_distribution(UINT8 streamId, UINT16 nbrGroup);
+extern bool func_l3bfdf_hopper_add_by_group_element(UINT8 streamId, UINT16 groupId, UINT16 nbrHopper);
+extern bool func_l3bfdf_hopper_add_by_grp_in_average_distribution(UINT8 streamId, UINT16 nbrGroup);
+extern bool func_l3bfdf_hopper_add_by_grp_in_normal_distribution(UINT8 streamId, UINT16 nbrGroup);  //比较复杂，所以暂时没有使用
 extern bool func_l3bfdf_hopper_remove_by_tail(UINT8 streamId, UINT16 groupId);
 extern bool func_l3bfdf_hopper_insert_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId, UINT16 hopperNewId);
 extern bool func_l3bfdf_hopper_del_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId);

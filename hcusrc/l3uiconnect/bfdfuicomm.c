@@ -881,7 +881,7 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	//第0个流水线，分配组别
 	nbrGroup = rand()%3+1;
 	func_l3bfdf_group_allocation(0, nbrGroup);
-	func_l3bfdf_hopper_add_by_group_in_average_distribution(0, nbrGroup);
+	func_l3bfdf_hopper_add_by_grp_in_average_distribution(0, nbrGroup);
 	//设置小组重量范围：数据均为NF2进行设置
 	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 10000, 100000);
 	//设置重量目标
@@ -890,7 +890,7 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	//第1个流水线，分配组别
 /*	nbrGroup = rand()%3+1;
 	func_l3bfdf_group_allocation(1, nbrGroup);
-	func_l3bfdf_hopper_add_by_group_in_average_distribution(1, nbrGroup);
+	func_l3bfdf_hopper_add_by_grp_in_average_distribution(1, nbrGroup);
 	func_l3bfdf_group_auto_alloc_init_range_in_average(1, nbrGroup, 20000, 200000);
 	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 2000000, 40);*/
 

@@ -9,6 +9,8 @@
 
 
 
+//= ZJL, 2018 Feb.7 CURRENT_SW_DELIVERY 310=>BFDF项目
+
 
 //= ZJL, 2018 Feb.5 CURRENT_SW_DELIVERY 309=>BFHS项目
 = 完善BFHS的统计上报过程
