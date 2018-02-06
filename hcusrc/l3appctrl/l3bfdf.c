@@ -56,6 +56,7 @@ HcuFsmStateItem_t HcuFsmL3bfdf[] =
 
 	//休眠状态：只允许收到RESUME指令，不更新界面广告牌以及数据库
 	{MSG_ID_SUI_RESUME_RESP,       				FSM_STATE_L3BFDF_SUSPEND,          	fsm_l3bfdf_canitf_sys_resume_resp},//这个是先发送命令，收齐后再转移状态
+	{MSG_ID_SUI_SUSPEND_RESP,       			FSM_STATE_L3BFDF_SUSPEND,          	fsm_l3bfdf_canitf_sys_suspend_resp},//这个是先转移状态，再发送命令
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            					FSM_STATE_END,             			NULL},  //Ending
@@ -228,9 +229,9 @@ OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//周期性统计扫描定时器
 	else if ((rcv.timeId == TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN) &&(rcv.timeRes == TIMER_RESOLUTION_10MS)){
-		if (func_l3bfdf_time_out_statistic_scan_process() == FAILURE){
-			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error process time out message!\n");
-		}
+//		if (func_l3bfdf_time_out_statistic_scan_process() == FAILURE){
+//			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error process time out message!\n");
+//		}
 	}
 
 	//返回
@@ -259,6 +260,7 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		}
 		else{
 			if (func_l3bfdf_send_out_cfg_start_message_to_all() == FAILURE) return FAILURE;
+			FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
 		}
 	}
 
@@ -272,6 +274,8 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 			//HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND);
 			if (func_l3bfdf_send_out_suspend_message_to_all() == FAILURE) return FAILURE;
 		}
+		//SET state
+		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_SUSPEND);
 	}
 
 	//差错
@@ -299,8 +303,13 @@ OPSTAT fsm_l3bfdf_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	//通知界面
 	HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STARTUP);
 
+	//RETURN to normal state
+	if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_SUSPEND)
+	{
+		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
+	}
+
 	//判定状态
-	printf("L3BFDF: Current state = %d\n", FsmGetState(TASK_ID_L3BFDF));
 	if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_SCAN)
 	{
 		//如果某些板子重启，系统处于工作态，但并不是所有板子都进入工作态，则依然不重启
@@ -545,6 +554,8 @@ OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_suspend_resp_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
+	printf("L3BFDF: Suspend resp rcv, SnrId=%d, flag=%d\n", rcv.snrId, rcv.validFlag);
+
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
 		//先改本传感器的状态
@@ -564,6 +575,8 @@ OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 		//停止定时器
 		hcu_timer_stop(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_SUSPEND_WAIT_FB, TIMER_RESOLUTION_1S);
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
+
+		return SUCCESS;
 	}
 
 	//先改本传感器的状态
@@ -598,6 +611,8 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_resume_resp_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
+	printf("L3BFDF: RESUME resp rcv, SnrId=%d, flag=%d\n", rcv.snrId, rcv.validFlag);
+
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
 		//先改本传感器的状态
@@ -616,7 +631,9 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF);
 		//停止定时器
 		hcu_timer_stop(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_SUSPEND_WAIT_FB, TIMER_RESOLUTION_1S);
-		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
+		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);\
+
+		return SUCCESS;
 	}
 
 	//先改本传感器的状态
@@ -657,6 +674,8 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_new_ready_event_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 	if (boardId != 1) HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
+
+	printf("L3BFDF: New event, weight=%d\n", rcv.sensorWsValue);
 
 	//通知界面, should be put after algo result
 	StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t inswgt_report;
@@ -1136,7 +1155,7 @@ OPSTAT func_l3bfdf_send_out_suspend_message_to_all(void)
 	char s[200], tmp[20];
 	msg_struct_sui_suspend_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
-	HCU_L3BFDF_FORCE_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND_REQ);
+	HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND_REQ);
 	HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
 	snd.length = sizeof(msg_struct_sui_suspend_req_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);

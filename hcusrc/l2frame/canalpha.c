@@ -513,9 +513,11 @@ OPSTAT fsm_canalpha_sui_heart_beat_confirm(UINT32 dest_id, UINT32 src_id, void *
 
 	//生成bitmap
 	UINT32 bitmap = 0;
+	//printf("Heart beat SnrId=%d\n", rcv.snrId);
 	bitmap = ((UINT32)1<<rcv.snrId);
 
 	//准备组装发送消息
+
 	StrMsg_HUITP_MSGID_sui_com_heart_beat_confirm_t pMsgProc;
 	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_com_heart_beat_confirm_t);
 	memset(&pMsgProc, 0, msgProcLen);
@@ -747,6 +749,7 @@ OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void *
 	int ret=0;
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_usbcan_l2frame_rcv_t);
 
+	//printf("CANALPHA: Rcv L2 message from %d once!\n", rcv.nodeId);
 	//解码MSGID/MSGLEN
 	UINT16 msgId = 0, msgLen = 0;
 	StrMsg_HUITP_MSGID_sui_common_msg_header_t *pComMsg = (StrMsg_HUITP_MSGID_sui_common_msg_header_t *)(rcv.databuf);
