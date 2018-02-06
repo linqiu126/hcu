@@ -469,6 +469,8 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_sys_cfg_resp_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
+	printf("L3BFDF: Receiving CFG_RESP, Flag/SnrId=%d/%d\n", rcv.validFlag, rcv.snrId);
+
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
 		//先改本传感器的状态

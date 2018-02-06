@@ -394,7 +394,7 @@ extern OPSTAT dbi_HcuBfdf_callcell_save(HcuSysMsgIeL3bfdfCallcellElement_t *inpu
 #define HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP() \
 	do{\
 		memset(s, 0, sizeof(s));\
-		sprintf(s, "L3BFDF: Total action sensor number = %d, bitmap = ", total);\
+		sprintf(s, "L3BFDF: Sending CFG_START out, Total action sensor number = %d, bitmap = ", total);\
 		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){\
 			for (i=0; i<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; i++){\
 				boardId = (j<<3)+i;\
@@ -405,7 +405,6 @@ extern OPSTAT dbi_HcuBfdf_callcell_save(HcuSysMsgIeL3bfdfCallcellElement_t *inpu
 		}\
 		strcat(s, "\n");\
 		HCU_DEBUG_PRINT_CRT(s);\
-		HCU_DEBUG_PRINT_CRT("L3BFDF: Total sensor to be start = %d\n", total);\
 	}while(0)
 
 //反馈差错控制消息
