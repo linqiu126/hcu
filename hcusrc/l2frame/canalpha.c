@@ -454,6 +454,8 @@ OPSTAT fsm_canalpha_sui_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_
 	int i=0;
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_sui_suspend_req_t);
 
+	printf("CANALPHA: bitmap = %d/%d/%d/%d/%d/%d\n", rcv.boardBitmap[0], rcv.boardBitmap[1], rcv.boardBitmap[2], rcv.boardBitmap[3],\
+			rcv.boardBitmap[4], rcv.boardBitmap[5]);
 	//生成bitmap
 	UINT32 bitmap = 0;
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){

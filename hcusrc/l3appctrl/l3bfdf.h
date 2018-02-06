@@ -274,7 +274,7 @@ typedef struct gTaskL3bfdfContext
 extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
 
 //统计打印报告的频率调整
-#define HCU_L3BFDF_STATISTIC_PRINT_FREQUENCY 10
+#define HCU_L3BFDF_STATISTIC_PRINT_FREQUENCY 100
 
 //FSM通用部分
 extern OPSTAT fsm_l3bfdf_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -386,6 +386,21 @@ extern OPSTAT dbi_HcuBfdf_callcell_save(HcuSysMsgIeL3bfdfCallcellElement_t *inpu
 					snd.boardBitmap[boardId] = TRUE;\
 				}\
 				else snd.boardBitmap[boardId] = FALSE;\
+			}\
+		}\
+	}while(0)
+
+//为了各个消息的发送，填入比较复杂的bitmap过程
+#define HCU_L3BFDF_FORCE_FILL_ALL_BOARD_BITMAP(status) \
+	do{\
+		total=0;\
+		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){\
+			for (i = 1; i< HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; i++){\
+				boardId = (j<<3)+i;\
+				gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus = status;\
+				gTaskL3bfdfContext.nodeDyn[j][i].cfgRcvFlag = FALSE;\
+				total++;\
+				snd.boardBitmap[boardId] = TRUE;\
 			}\
 		}\
 	}while(0)

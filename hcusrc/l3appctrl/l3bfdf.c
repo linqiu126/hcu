@@ -52,6 +52,7 @@ HcuFsmStateItem_t HcuFsmL3bfdf[] =
 	{MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,      FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_ws_new_ready_event},
 	{MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,       	FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_ws_comb_out_fb},
 	{MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,       	FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_basket_clean_ind},
+	{MSG_ID_SUI_SUSPEND_RESP,       			FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_sys_suspend_resp},//这个是先转移状态，再发送命令
 
 	//休眠状态：只允许收到RESUME指令，不更新界面广告牌以及数据库
 	{MSG_ID_SUI_RESUME_RESP,       				FSM_STATE_L3BFDF_SUSPEND,          	fsm_l3bfdf_canitf_sys_resume_resp},//这个是先发送命令，收齐后再转移状态
@@ -266,8 +267,10 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_SCAN){
 			if (func_l3bfdf_send_out_suspend_message_to_all() == FAILURE) return FAILURE;
 		}
+		//Special Treatment, to reduce test errors!
 		else{
-			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND);
+			//HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND);
+			if (func_l3bfdf_send_out_suspend_message_to_all() == FAILURE) return FAILURE;
 		}
 	}
 
@@ -297,7 +300,8 @@ OPSTAT fsm_l3bfdf_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STARTUP);
 
 	//判定状态
-	if (FsmGetState(TASK_ID_L3BFDF) > FSM_STATE_L3BFDF_ACTIVED)
+	printf("L3BFDF: Current state = %d\n", FsmGetState(TASK_ID_L3BFDF));
+	if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_SCAN)
 	{
 		//如果某些板子重启，系统处于工作态，但并不是所有板子都进入工作态，则依然不重启
 		if (func_l3bfdf_is_there_any_board_not_yet_startup() == FALSE){
@@ -710,7 +714,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfdfContext.cur.wsTgvMatWgt += weight;
 
 		//打印状态
-		HcuDebugPrint("L3BFDF: Send mat to rubbish, line = %d, weight = %dg, rangeLow = %dg, rangeHight = %dg\n", line, weight, gTaskL3bfdfContext.group[line][gidMin].rangeLow, gTaskL3bfdfContext.group[line][gidMin].rangeHigh);
+		HcuDebugPrint("L3BFDF: Send mat to rubbish, line = %d, weight = %lg, rangeLow = %dg, rangeHight = %dg\n", line, weight, gTaskL3bfdfContext.group[line][gidMin].rangeLow, gTaskL3bfdfContext.group[line][gidMin].rangeHigh);
 
 		//送往垃圾桶并通知界面
 		inswgt_report.hopperId = 0;
@@ -900,7 +904,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 	locHopperId = ((rcv.hopperId-1)>>(line))+1;
 	if ((locHopperId <= 0) || (locHopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
+		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error! Rcv HopperId = %d, localHopperId=%d\n", rcv.hopperId, locHopperId);
 
 	//先处理错误情况
 	if (rcv.validFlag == FALSE){
@@ -1125,14 +1129,14 @@ bool func_l3bfdf_is_there_any_board_not_yet_startup(void)
 }
 
 
-
+//Special TREATMENT for bitmap of boards
 OPSTAT func_l3bfdf_send_out_suspend_message_to_all(void)
 {
 	int i = 0, j = 0, boardId = 0, total = 0;
 	char s[200], tmp[20];
 	msg_struct_sui_suspend_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
-	HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND_REQ);
+	HCU_L3BFDF_FORCE_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND_REQ);
 	HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
 	snd.length = sizeof(msg_struct_sui_suspend_req_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
@@ -1771,7 +1775,6 @@ bool func_l3bfdf_group_auto_alloc_init_target_with_uplimit(UINT8 streamId, UINT3
 		gTaskL3bfdfContext.group[streamId][i].targetWeight = targetWgt * (rand()%100+100) / 100.0 / sqrt(1+gTaskL3bfdfContext.totalGroupNbr[streamId]-i);
 		gTaskL3bfdfContext.group[streamId][i].targetUpLimit = targetWgt * ratio;
 		gTaskL3bfdfContext.group[streamId][i].bufWgtTarget = gTaskL3bfdfContext.group[streamId][i].targetWeight/4; //暂时按照25%固定分配，未来待改进
-		printf("Allocation: tWgt=%d, buf=%d\n", gTaskL3bfdfContext.group[streamId][i].targetWeight, gTaskL3bfdfContext.group[streamId][i].bufWgtTarget);
 	}
 
 	return TRUE;
@@ -1963,12 +1966,13 @@ UINT16 func_l3bfdf_new_ws_search_hopper_buffer_lack_one(UINT8 streamId, UINT16 g
 	fHopper = gTaskL3bfdfContext.group[streamId][gid].fillHopperId;
 	if (fHopper == 0) return 0;
 
-	if (func_l3bfdf_hopper_judge_buffer_is_lack_one_full(streamId, fHopper, weight) == TRUE)
+	if ((gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) && \
+			(func_l3bfdf_hopper_judge_buffer_is_lack_one_full(streamId, fHopper, weight) == TRUE))
 			return fHopper;
 
 	cnt = 0;
 	nextHopper = gTaskL3bfdfContext.hopper[streamId][fHopper].nextHopperId;
-	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper))
+	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper) && (gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL))
 	{
 		cnt++;
 		if (func_l3bfdf_hopper_judge_buffer_is_lack_one_full(streamId, nextHopper, weight) == TRUE)
@@ -1994,12 +1998,12 @@ UINT16 func_l3bfdf_new_ws_search_hopper_buffer_normal(UINT8 streamId, UINT16 gid
 	fHopper = gTaskL3bfdfContext.group[streamId][gid].fillHopperId;
 	if (fHopper == 0) return 0;
 
-	if (func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(streamId, fHopper, weight) == TRUE)
+	if ((gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) && (func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(streamId, fHopper, weight)) == TRUE)
 			return fHopper;
 
 	cnt = 0;
 	nextHopper = gTaskL3bfdfContext.hopper[streamId][fHopper].nextHopperId;
-	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper))
+	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper) && (gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL))
 	{
 		cnt++;
 		if (func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(streamId, nextHopper, weight) == TRUE)
@@ -2200,12 +2204,10 @@ bool func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(UINT8 streamId, UINT16 
 	umin = (UINT32)min;
 
 	//不相等的情况下，是否覆盖整数
-/*
-	HcuDebugPrint("L3BFDF: max/min/umax/umin = %6.2f/%6.2f/%d/%d, weight/RangeL/H/Cur/Target/Up=%6.2f/%6.2f/%6.2f/%6.2f/%6.2f/%6.2f\n", max, min, umax, umin, weight, \
+	HcuDebugPrint("L3BFDF: max/min/umax/umin = %6.2f/%6.2f/%d/%d, weight/RangeL/H/Cur/Target/Up=%d/%d/%d/%d/%d/%d\n", max, min, umax, umin, weight, \
 			gTaskL3bfdfContext.group[streamId][gid].rangeLow, gTaskL3bfdfContext.group[streamId][gid].rangeHigh, \
 			gTaskL3bfdfContext.hopper[streamId][hid].hopperValue, gTaskL3bfdfContext.group[streamId][gid].targetWeight, \
 			gTaskL3bfdfContext.group[streamId][gid].targetWeight+gTaskL3bfdfContext.group[streamId][gid].targetUpLimit);
-*/
 
 	//当最后两个Lack1/2的时候
 	index = gTaskL3bfdfContext.hopper[streamId][hid].matLackIndex;
