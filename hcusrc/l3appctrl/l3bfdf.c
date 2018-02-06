@@ -554,7 +554,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_suspend_resp_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
-	printf("L3BFDF: Suspend resp rcv, SnrId=%d, flag=%d\n", rcv.snrId, rcv.validFlag);
+	//printf("L3BFDF: Suspend resp rcv, SnrId=%d, flag=%d\n", rcv.snrId, rcv.validFlag);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -611,7 +611,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_resume_resp_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
-	printf("L3BFDF: RESUME resp rcv, SnrId=%d, flag=%d\n", rcv.snrId, rcv.validFlag);
+	//printf("L3BFDF: RESUME resp rcv, SnrId=%d, flag=%d\n", rcv.snrId, rcv.validFlag);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -922,6 +922,9 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_ws_comb_out_fb_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 	locHopperId = ((rcv.hopperId-1)>>(line))+1;
+
+	printf("L3BFDF: LocalHopperId=%d, rcv.Hopper=%d, SnrId=%d\n", locHopperId, rcv.hopperId, rcv.snrId);
+
 	if ((locHopperId <= 0) || (locHopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error! Rcv HopperId = %d, localHopperId=%d\n", rcv.hopperId, locHopperId);
 

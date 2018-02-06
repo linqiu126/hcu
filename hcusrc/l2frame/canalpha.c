@@ -460,7 +460,7 @@ OPSTAT fsm_canalpha_sui_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_
 	UINT32 bitmap = 0;
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
 		if (rcv.boardBitmap[i] == TRUE){
-			bitmap = ((UINT32)1<<i);
+			bitmap |= ((UINT32)1<<i);
 		}
 	}
 
@@ -488,7 +488,7 @@ OPSTAT fsm_canalpha_sui_resume_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	UINT32 bitmap = 0;
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
 		if (rcv.boardBitmap[i] == TRUE){
-			bitmap = ((UINT32)1<<i);
+			bitmap |= ((UINT32)1<<i);
 		}
 	}
 
@@ -609,7 +609,7 @@ OPSTAT fsm_canalpha_l3bfhs_cal_zero_req(UINT32 dest_id, UINT32 src_id, void * pa
 	UINT32 bitmap = 0;
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
 		if (rcv.boardBitmap[i] == TRUE){
-			bitmap = ((UINT32)1<<i);
+			bitmap |= ((UINT32)1<<i);
 		}
 	}
 
@@ -649,7 +649,7 @@ OPSTAT fsm_canalpha_l3bfhs_cal_full_req(UINT32 dest_id, UINT32 src_id, void * pa
 	UINT32 bitmap = 0;
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
 		if (rcv.boardBitmap[i] == TRUE){
-			bitmap = ((UINT32)1<<i);
+			bitmap |= ((UINT32)1<<i);
 		}
 	}
 
@@ -680,7 +680,7 @@ OPSTAT fsm_canalpha_l3bfhs_dyn_zero_req(UINT32 dest_id, UINT32 src_id, void * pa
 	UINT32 bitmap = 0;
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
 		if (rcv.boardBitmap[i] == TRUE){
-			bitmap = ((UINT32)1<<i);
+			bitmap |= ((UINT32)1<<i);
 		}
 	}
 
@@ -722,7 +722,7 @@ OPSTAT fsm_canalpha_l3bfhs_dyn_full_req(UINT32 dest_id, UINT32 src_id, void * pa
 	UINT32 bitmap = 0;
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
 		if (rcv.boardBitmap[i] == TRUE){
-			bitmap = ((UINT32)1<<i);
+			bitmap |= ((UINT32)1<<i);
 		}
 	}
 
@@ -1070,7 +1070,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_ws_comb_out_fb_received_handle(StrMsg_HUIT
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t));
 	snd.snrId = nodeId;
 	snd.errCode = 0;
-	snd.hopperId = HUITP_ENDIAN_EXG16(rcv->apHopperId);
+	snd.hopperId = HUITP_ENDIAN_EXG8(rcv->apHopperId);
 	snd.validFlag = TRUE;
 	snd.length = sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
