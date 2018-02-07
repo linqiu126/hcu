@@ -8,6 +8,8 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2018 Feb.7 CURRENT_SW_DELIVERY 311=>DAYC项目
+= 新创建工程，为了达岸公司的产品部署
 
 //= ZJL, 2018 Feb.7 CURRENT_SW_DELIVERY 310=>BFDF项目
 = 修正分配hopper数量最是小一个的问题：HCU_SYSCFG_BFDF_HOPPER_NBR_MAX参数的设定，必须采用+1的做法= 

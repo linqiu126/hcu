@@ -366,6 +366,12 @@
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
 
+	//HTTP-RESTFUL服务地址
+	#define HCU_SYSCFG_RESTFUL_PRINTER 			"http://localhost/printer/request.php"
+	#define HCU_SYSCFG_RESTFUL_DBA 				"http://localhost/dba/request.php"
+	#define HCU_SYSCFG_RESTFUL_VISION			"http://localhost/vision/request.php"
+	#define HCU_SYSCFG_RESTFUL_AIWGT			"http://localhost:8000/aiwgt/request.php"
+
 	//打印和TRACE开关
 	#define HCU_SYSCFG_TRACE_DEBUG_SET HCU_SYSCFG_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_SYSCFG_TRACE_MSG_SET HCU_SYSCFG_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
@@ -448,6 +454,12 @@
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
+
+	//HTTP-RESTFUL服务地址
+	#define HCU_SYSCFG_RESTFUL_PRINTER 			"http://localhost/printer/request.php"
+	#define HCU_SYSCFG_RESTFUL_DBA 				"http://localhost/dba/request.php"
+	#define HCU_SYSCFG_RESTFUL_VISION			"http://localhost/vision/request.php"
+	#define HCU_SYSCFG_RESTFUL_AIWGT			"http://localhost:8000/aiwgt/request.php"
 
 	//打印和TRACE开关
 	#define HCU_SYSCFG_TRACE_DEBUG_SET HCU_SYSCFG_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
@@ -532,6 +544,12 @@
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
+
+	//HTTP-RESTFUL服务地址
+	#define HCU_SYSCFG_RESTFUL_PRINTER 			"http://localhost/printer/request.php"
+	#define HCU_SYSCFG_RESTFUL_DBA 				"http://localhost/dba/request.php"
+	#define HCU_SYSCFG_RESTFUL_VISION			"http://localhost/vision/request.php"
+	#define HCU_SYSCFG_RESTFUL_AIWGT			"http://localhost:8000/aiwgt/request.php"
 
 	//打印和TRACE开关
 	#define HCU_SYSCFG_TRACE_DEBUG_SET HCU_SYSCFG_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
@@ -633,6 +651,12 @@
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
 
+	//HTTP-RESTFUL服务地址
+	#define HCU_SYSCFG_RESTFUL_PRINTER 			"http://localhost/printer/request.php"
+	#define HCU_SYSCFG_RESTFUL_DBA 				"http://localhost/dba/request.php"
+	#define HCU_SYSCFG_RESTFUL_VISION			"http://localhost/vision/request.php"
+	#define HCU_SYSCFG_RESTFUL_AIWGT			"http://localhost:8000/aiwgt/request.php"
+
 	//打印和TRACE开关
 	#define HCU_SYSCFG_TRACE_DEBUG_SET HCU_SYSCFG_TRACE_DEBUG_INF_ON + HCU_SYSCFG_TRACE_DEBUG_NOR_ON + HCU_SYSCFG_TRACE_DEBUG_IPT_ON + HCU_SYSCFG_TRACE_DEBUG_CRT_ON + HCU_SYSCFG_TRACE_DEBUG_FAT_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_SYSCFG_TRACE_MSG_SET HCU_SYSCFG_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
@@ -720,6 +744,12 @@
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
 
+	//HTTP-RESTFUL服务地址
+	#define HCU_SYSCFG_RESTFUL_PRINTER 			"http://localhost/printer/request.php"
+	#define HCU_SYSCFG_RESTFUL_DBA 				"http://localhost/dba/request.php"
+	#define HCU_SYSCFG_RESTFUL_VISION			"http://localhost/vision/request.php"
+	#define HCU_SYSCFG_RESTFUL_AIWGT			"http://localhost:8000/aiwgt/request.php"
+
 	//打印和TRACE开关
 	#define HCU_SYSCFG_TRACE_DEBUG_SET HCU_SYSCFG_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_SYSCFG_TRACE_MSG_SET HCU_SYSCFG_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
@@ -803,6 +833,12 @@
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
+
+	//HTTP-RESTFUL服务地址
+	#define HCU_SYSCFG_RESTFUL_PRINTER 			"http://localhost/printer/request.php"
+	#define HCU_SYSCFG_RESTFUL_DBA 				"http://localhost/dba/request.php"
+	#define HCU_SYSCFG_RESTFUL_VISION			"http://localhost/vision/request.php"
+	#define HCU_SYSCFG_RESTFUL_AIWGT			"http://localhost:8000/aiwgt/request.php"
 
 	//打印和TRACE开关
 	#define HCU_SYSCFG_TRACE_DEBUG_SET HCU_SYSCFG_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
@@ -888,6 +924,12 @@
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
 
+	//HTTP-RESTFUL服务地址
+	#define HCU_SYSCFG_RESTFUL_PRINTER 			"http://localhost/printer/request.php"
+	#define HCU_SYSCFG_RESTFUL_DBA 				"http://localhost/dba/request.php"
+	#define HCU_SYSCFG_RESTFUL_VISION			"http://localhost/vision/request.php"
+	#define HCU_SYSCFG_RESTFUL_AIWGT			"http://localhost:8000/aiwgt/request.php"
+
 	//打印和TRACE开关
 	#define HCU_SYSCFG_TRACE_DEBUG_SET HCU_SYSCFG_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_SYSCFG_TRACE_MSG_SET HCU_SYSCFG_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
@@ -971,6 +1013,12 @@
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
+
+	//HTTP-RESTFUL服务地址
+	#define HCU_SYSCFG_RESTFUL_PRINTER 			"http://localhost/printer/request.php"
+	#define HCU_SYSCFG_RESTFUL_DBA 				"http://localhost/dba/request.php"
+	#define HCU_SYSCFG_RESTFUL_VISION			"http://localhost/vision/request.php"
+	#define HCU_SYSCFG_RESTFUL_AIWGT			"http://localhost:8000/aiwgt/request.php"
 
 	//打印和TRACE开关
 	#define HCU_SYSCFG_TRACE_DEBUG_SET HCU_SYSCFG_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
@@ -1056,6 +1104,12 @@
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
 
+	//HTTP-RESTFUL服务地址
+	#define HCU_SYSCFG_RESTFUL_PRINTER 			"http://localhost/printer/request.php"
+	#define HCU_SYSCFG_RESTFUL_DBA 				"http://localhost/dba/request.php"
+	#define HCU_SYSCFG_RESTFUL_VISION			"http://localhost/vision/request.php"
+	#define HCU_SYSCFG_RESTFUL_AIWGT			"http://localhost:8000/aiwgt/request.php"
+
 	//打印和TRACE开关
 	#define HCU_SYSCFG_TRACE_DEBUG_SET HCU_SYSCFG_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_SYSCFG_TRACE_MSG_SET HCU_SYSCFG_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
@@ -1139,6 +1193,12 @@
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
+
+	//HTTP-RESTFUL服务地址
+	#define HCU_SYSCFG_RESTFUL_PRINTER 			"http://localhost/printer/request.php"
+	#define HCU_SYSCFG_RESTFUL_DBA 				"http://localhost/dba/request.php"
+	#define HCU_SYSCFG_RESTFUL_VISION			"http://localhost/vision/request.php"
+	#define HCU_SYSCFG_RESTFUL_AIWGT			"http://localhost:8000/aiwgt/request.php"
 
 	//打印和TRACE开关
 	#define HCU_SYSCFG_TRACE_DEBUG_SET HCU_SYSCFG_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
@@ -1320,6 +1380,12 @@
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
+
+	//HTTP-RESTFUL服务地址
+	#define HCU_SYSCFG_RESTFUL_PRINTER 			"http://localhost/printer/request.php"
+	#define HCU_SYSCFG_RESTFUL_DBA 				"http://localhost/dba/request.php"
+	#define HCU_SYSCFG_RESTFUL_VISION			"http://localhost/vision/request.php"
+	#define HCU_SYSCFG_RESTFUL_AIWGT			"http://localhost:8000/aiwgt/request.php"
 
 	//打印和TRACE开关
 	#define HCU_SYSCFG_TRACE_DEBUG_SET HCU_SYSCFG_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
