@@ -103,8 +103,8 @@ typedef struct L3BfdfGroupInfo
 	UINT32	bufWgtTarget;	//篮筐之外的缓冲区
 	UINT32  rangeLow;
 	UINT32  rangeHigh;
-	double  rangeAvg;
-	double  rangeSigma;
+	UINT32  rangeAvg;
+	UINT32  rangeSigma;
 }L3BfdfGroupInfo_t;
 //分组状态定义
 #define HCU_L3BFDF_GROUP_STATUS_NONE			0
@@ -275,6 +275,7 @@ typedef struct gTaskL3bfdfContext
 }gTaskL3bfdfContext_t;
 extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
 #define HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL		(gTaskL3bfdfContext.nbrStreamLine)
+#define HCU_L3BFDF_MAX_IO_BOARD_NBR_ACTUAL		(gTaskL3bfdfContext.nbrIoBoardPerLine + 2)
 #define HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL	(gTaskL3bfdfContext.nbrIoBoardPerLine* HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD + 1)
 
 //统计打印报告的频率调整
@@ -413,7 +414,7 @@ extern OPSTAT dbi_HcuBfdf_callcell_save(HcuSysMsgIeL3bfdfCallcellElement_t *inpu
 #define HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP() \
 	do{\
 		memset(s, 0, sizeof(s));\
-		sprintf(s, "L3BFDF: Sending CFG_START out, Total action sensor number = %d, bitmap = ", total);\
+		sprintf(s, "L3BFDF: Sending command out, Total action sensor number = %d, bitmap = ", total);\
 		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){\
 			for (i=0; i<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; i++){\
 				boardId = (j<<3)+i;\

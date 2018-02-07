@@ -485,7 +485,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			hcu_vm_taskid_to_string(dest_id, s1);
 			hcu_vm_taskid_to_string(src_id, s2);
 			hcu_vm_msgid_to_string(msg_id, s3);
-			if ((msg_id != MSG_ID_COM_TIME_OUT) && (msg_id != MSG_ID_COM_HEART_BEAT) && (msg_id != MSG_ID_COM_HEART_BEAT_FB)  && (msg_id != MSG_ID_USBCAN_L2FRAME_RCV) && (msg_id != MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX)){
+			if ((msg_id != MSG_ID_COM_TIME_OUT) && (msg_id != MSG_ID_COM_HEART_BEAT) && (msg_id != MSG_ID_COM_HEART_BEAT_FB)  && \
+					(msg_id != MSG_ID_USBCAN_L2FRAME_RCV) && (msg_id != MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX) &&\
+					(msg_id != MSG_ID_SUI_HEART_BEAT_REPORT) && (msg_id != MSG_ID_SUI_HEART_BEAT_CONFIRM)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;

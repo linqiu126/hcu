@@ -888,7 +888,9 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 
 	int nbrGroup = 0;
 	//第0个流水线，分配组别
-	nbrGroup = rand()%3+1;
+	//nbrGroup = rand()%3+1;
+	//For test purpose, fix to be 1 group
+	nbrGroup = 1;
 	func_l3bfdf_group_allocation(0, nbrGroup);
 	func_l3bfdf_hopper_add_by_grp_in_average_distribution(0, nbrGroup);
 	//设置小组重量范围：数据均为NF2进行设置

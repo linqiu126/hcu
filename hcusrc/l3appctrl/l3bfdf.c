@@ -163,7 +163,6 @@ OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error Set FSM State!\n");
 	HCU_DEBUG_PRINT_FAT("L3BFDF: Enter FSM_STATE_L3BFDF_ACTIVED status, Keeping refresh here!\n");
 
-	//返回
 	return SUCCESS;
 }
 
@@ -232,6 +231,8 @@ OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 //		if (func_l3bfdf_time_out_statistic_scan_process() == FAILURE){
 //			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error process time out message!\n");
 //		}
+		//Pure test code, to be deleted.
+		//func_l3bfdf_send_out_suspend_message_to_all();
 	}
 
 	//返回
@@ -298,7 +299,7 @@ OPSTAT fsm_l3bfdf_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	boardId = rcv.snrId & 0x07;
 	//存储本地
 	gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
-	HcuDebugPrint("L3BFDF: Sensor ID = %d is set to be startup, line = %d, boardId = %d!\n", rcv.snrId, line, boardId);
+	//printf("L3BFDF: Sensor ID = %d is set to be startup, line = %d, boardId = %d!\n", rcv.snrId, line, boardId);
 
 	//通知界面
 	HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STARTUP);
@@ -358,6 +359,7 @@ OPSTAT fsm_l3bfdf_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_p
 	return SUCCESS;
 }
 
+//static uint32_t counter_l3bfdf_canitf_heart_beat_report = 0;
 OPSTAT fsm_l3bfdf_canitf_heart_beat_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
@@ -388,6 +390,15 @@ OPSTAT fsm_l3bfdf_canitf_heart_beat_report(UINT32 dest_id, UINT32 src_id, void *
 	snd.timeStamp = time(0);
 	snd.length = sizeof(msg_struct_sui_heart_beat_confirm_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_HEART_BEAT_CONFIRM, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
+
+//	extern uint32_t counter_canalpha_sui_heart_beat_confirm;
+//	extern uint32_t counter_canalpha_sui_heart_beat_confirm_ko;
+
+//	if(rcv.snrId == 1)
+//	{
+//	    counter_l3bfdf_canitf_heart_beat_report++;
+//	    printf("L3APP HEARTBEAT REPORT/CONFIRM %d times, CAN TX %d times, CAN TX KO %d times\r\n", counter_l3bfdf_canitf_heart_beat_report, counter_canalpha_sui_heart_beat_confirm, counter_canalpha_sui_heart_beat_confirm_ko);
+//	}
 
 	//返回
 	return SUCCESS;
@@ -481,7 +492,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_sys_cfg_resp_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
-	printf("L3BFDF: Receiving CFG_RESP, Flag/SnrId=%d/%d\n", rcv.validFlag, rcv.snrId);
+	//printf("L3BFDF: Receiving CFG_RESP, Flag/SnrId=%d/%d\n", rcv.validFlag, rcv.snrId);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -611,7 +622,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_resume_resp_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
-	//printf("L3BFDF: RESUME resp rcv, SnrId=%d, flag=%d\n", rcv.snrId, rcv.validFlag);
+	//printf("L3BFDF: Resume resp rcv, SnrId=%d, flag=%d\n", rcv.snrId, rcv.validFlag);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -676,7 +687,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 	if (boardId != 1) HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receiving message error!\n");
 
-	printf("L3BFDF: New event, weight=%d\n", rcv.sensorWsValue);
+	//printf("L3BFDF: New event, weight=0x%x\n", rcv.sensorWsValue);
 
 	//通知界面, should be put after algo result
 	StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t inswgt_report;
@@ -721,10 +732,6 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	{
 		//HCU_DEBUG_PRINT_CRT("L3BFDF: NEW EVENT S/W=%d/%f, Low/High=%f/%f\n", line, weight, gTaskL3bfdfContext.group[line][gidMin].rangeLow, gTaskL3bfdfContext.group[line][gidMax].rangeHigh);
 
-		//超限物料，直接忽略，啥控制指令也不需要就行了。
-		//if (func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(line, 0) == FALSE)
-		//	HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
-
 		//更新目标料斗重量 in NF2
 		gTaskL3bfdfContext.hopper[line][0].hopperValue += rcv.sensorWsValue;
 
@@ -734,7 +741,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfdfContext.cur.wsTgvMatWgt += weight;
 
 		//打印状态
-		HcuDebugPrint("L3BFDF: Send mat to rubbish, line = %d, weight = %lg, rangeLow = %dg, rangeHight = %dg\n", line, weight, gTaskL3bfdfContext.group[line][gidMin].rangeLow, gTaskL3bfdfContext.group[line][gidMin].rangeHigh);
+		HcuDebugPrint("L3BFDF: Send mat to rubbish!\n");
 
 		//送往垃圾桶并通知界面
 		inswgt_report.hopperId = 0;
@@ -755,7 +762,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	if (outHopperId !=0){
 		//发送出料
 		if (func_l3bfdf_new_ws_send_out_comb_out_message_w_double_full(line, outHopperId) == FALSE){
-			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
+			//gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send Comb Out message error!\n");
 		}
 
@@ -792,7 +799,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	if (outHopperId !=0){
 		//发送出料
 		if (func_l3bfdf_new_ws_send_out_comb_out_message_w_basket_full(line, outHopperId) == FALSE){
-			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
+			//gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send Comb Out message error!\n");
 		}
 
@@ -825,7 +832,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	if (outHopperId != 0){
 		//先发送出料：出料的定时机制，如何处理？这是重入过程：使用状态机，不用定时器
 		if (func_l3bfdf_new_ws_send_out_comb_out_message_w_basket_full(line, outHopperId) == FALSE){
-			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
+			//gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send out pullin message error!\n");
 		}
 
@@ -856,11 +863,6 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	//STEP4: 正常状态
 	outHopperId = func_l3bfdf_new_ws_search_hopper_valid_normal(line, gId, weight);
 	if (outHopperId == 0){
-		//扔进垃圾桶：啥都不需要干，自动进垃圾桶
-		//if (func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(line, 0) == FALSE){
-		//	gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
-		//	HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
-		//}
 		//更新统计数据
 		gTaskL3bfdfContext.cur.wsTgvTimes++;
 		gTaskL3bfdfContext.cur.wsTgvMatCnt++;
@@ -883,7 +885,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	else{
 		//先发送出料：出料的定时机制，如何处理？这是重入过程：使用状态机，不用定时器
 		if (func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(line, outHopperId) == FALSE){
-			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
+			//gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send out pullin message error!\n");
 		}
 
@@ -903,10 +905,10 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		//每一次均自动刷新N进行迭代，这个风险就没有了
 		//给一个发现BUG的地方：其实是可以不用的，但考虑到调测的需求，还是放在这儿
 		//最恶劣的情况：还剩下1.9个，所以没法直接满，matLackIndex=1了，所以不能跟1进行比较，不然有虚警
-		if (gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndex <= 0){
-			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
-			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Hopper Status error, Stream/HopperId=[%d/%d]!\n", line, outHopperId);
-		}
+//		if (gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndex <= 0){
+//			gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
+//			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Hopper Status error, Stream/HopperId=[%d/%d]!\n", line, outHopperId);
+//		}
 
 		//更新统计信息
 		gTaskL3bfdfContext.cur.wsCombTimes++;
@@ -940,7 +942,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 	locHopperId = ((rcv.hopperId-1)>>(line))+1;
 
-	printf("L3BFDF: LocalHopperId=%d, rcv.Hopper=%d, SnrId=%d\n", locHopperId, rcv.hopperId, rcv.snrId);
+	//printf("L3BFDF: LocalHopperId=%d, rcv.Hopper=%d, SnrId=%d\n", locHopperId, rcv.hopperId, rcv.snrId);
 
 	if ((locHopperId <= 0) || (locHopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error! Rcv HopperId = %d, localHopperId=%d\n", rcv.hopperId, locHopperId);
@@ -1156,8 +1158,8 @@ bool func_l3bfdf_cacluate_sensor_resume_rcv_complete(void)
 bool func_l3bfdf_is_there_any_board_not_yet_startup(void)
 {
 	int i = 0, j = 0;
-	for (i = 0; i < HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
-		for (j = 1; j < HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++){
+	for (i = 0; i < HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; i++){
+		for (j = 1; j < HCU_L3BFDF_MAX_IO_BOARD_NBR_ACTUAL; j++){
 			if (gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus < HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP)
 				return FALSE;
 		}
@@ -1797,7 +1799,7 @@ bool func_l3bfdf_group_auto_alloc_init_range_in_average(UINT8 streamId, UINT16 n
 		gTaskL3bfdfContext.group[streamId][i].rangeLow = wgtMin + (i-1)*gap;
 		gTaskL3bfdfContext.group[streamId][i].rangeHigh = wgtMin + i*gap;
 		gTaskL3bfdfContext.group[streamId][i].rangeAvg = (gTaskL3bfdfContext.group[streamId][i].rangeLow + gTaskL3bfdfContext.group[streamId][i].rangeHigh)/2.0;
-		gTaskL3bfdfContext.group[streamId][i].rangeSigma = gap/2.0;
+		gTaskL3bfdfContext.group[streamId][i].rangeSigma = gap/2;
 		//HcuDebugPrint("L3BFDF: S/G/Low/High = %d/%d/%f/%f, gap = %f\n", streamId, i, gTaskL3bfdfContext.group[streamId][i].rangeLow, gTaskL3bfdfContext.group[streamId][i].rangeHigh, gap);
 	}
 
@@ -1905,6 +1907,21 @@ bool func_l3bfdf_print_all_hopper_status_by_chain(UINT8 streamId)
 	}
 	strcat(s, "\n");
 	HCU_DEBUG_PRINT_CRT(s);
+
+	//Output Weight status
+	memset(s, 0, sizeof(s));
+	sprintf(s, "L3BFDF: PART-C Stream[%d] Total Hopper=%d as: ", streamId, HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL-1);
+	for (i = 1; i< HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL; i++)
+	{
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "[Hid=%d, Hv=%4.2f%%, Bv=%4.2f%%] ", i, (float)gTaskL3bfdfContext.hopper[streamId][i].hopperValue/(float)gTaskL3bfdfContext.group[streamId][gTaskL3bfdfContext.hopper[streamId][i].groupId].targetWeight*100.0, \
+				(float)gTaskL3bfdfContext.hopper[streamId][i].buferValue/(float)gTaskL3bfdfContext.group[streamId][gTaskL3bfdfContext.hopper[streamId][i].groupId].targetWeight*100.0);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+	}
+	strcat(s, "\n");
+	HCU_DEBUG_PRINT_CRT(s);
+
+
 	return TRUE;
 }
 
@@ -2389,6 +2406,7 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message_w_basket_full(UINT8 streamId, 
 		return FALSE;
 
 	//先检查hopper状态
+	printf("Send comb-out msg out, shall be full basket status, actual=%d\n", gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus);
 	if (gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) return FALSE;
 
 	//发送

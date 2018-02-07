@@ -449,13 +449,15 @@ OPSTAT fsm_canalpha_sui_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param
 	return SUCCESS;
 }
 
+//Test code
+//static uint32_t counter_suspend_req = 0;
+//static uint32_t counter_suspend_req_ok = 0;
+//Formal code
 OPSTAT fsm_canalpha_sui_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int i=0;
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_sui_suspend_req_t);
 
-	printf("CANALPHA: bitmap = %d/%d/%d/%d/%d/%d\n", rcv.boardBitmap[0], rcv.boardBitmap[1], rcv.boardBitmap[2], rcv.boardBitmap[3],\
-			rcv.boardBitmap[4], rcv.boardBitmap[5]);
 	//生成bitmap
 	UINT32 bitmap = 0;
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
@@ -463,6 +465,8 @@ OPSTAT fsm_canalpha_sui_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_
 			bitmap |= ((UINT32)1<<i);
 		}
 	}
+//	printf("CANALPHA: Suspend REQ, bitmap = %d/%d/%d/%d/%d/%d, send out bitmap=%x \n", rcv.boardBitmap[0], rcv.boardBitmap[1], rcv.boardBitmap[2], rcv.boardBitmap[3],\
+//			rcv.boardBitmap[4], rcv.boardBitmap[5], bitmap);
 
 	//准备组装发送消息
 	StrMsg_HUITP_MSGID_sui_com_suspend_req_t pMsgProc;
@@ -474,6 +478,18 @@ OPSTAT fsm_canalpha_sui_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_
 	//发送消息
 	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
+
+//	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+//	{
+//		//HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
+//		counter_suspend_req++;
+//	}
+//	else
+//	{
+//		counter_suspend_req_ok++;
+//		counter_suspend_req++;
+//	}
+//	printf("CAN TEST: SUSPED_REQ(OK:%d, TOTAL:%d)\r\n", counter_suspend_req_ok, counter_suspend_req);
 
 	//返回
 	return SUCCESS;
@@ -490,7 +506,10 @@ OPSTAT fsm_canalpha_sui_resume_req(UINT32 dest_id, UINT32 src_id, void * param_p
 		if (rcv.boardBitmap[i] == TRUE){
 			bitmap |= ((UINT32)1<<i);
 		}
+
 	}
+//	printf("CANALPHA: Resume REQ, bitmap = %d/%d/%d/%d/%d/%d, send out bitmap=%x \n", rcv.boardBitmap[0], rcv.boardBitmap[1], rcv.boardBitmap[2], rcv.boardBitmap[3],\
+//			rcv.boardBitmap[4], rcv.boardBitmap[5], bitmap);
 
 	//准备组装发送消息
 	StrMsg_HUITP_MSGID_sui_com_resume_req_t pMsgProc;
@@ -507,6 +526,8 @@ OPSTAT fsm_canalpha_sui_resume_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	return SUCCESS;
 }
 
+//uint32_t counter_canalpha_sui_heart_beat_confirm = 0;
+//uint32_t counter_canalpha_sui_heart_beat_confirm_ko = 0;
 OPSTAT fsm_canalpha_sui_heart_beat_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_sui_heart_beat_confirm_t);
@@ -530,6 +551,23 @@ OPSTAT fsm_canalpha_sui_heart_beat_confirm(UINT32 dest_id, UINT32 src_id, void *
 	//发送消息
 	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
+
+//	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+//	{
+//		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
+//		if(rcv.snrId==1)
+//		{
+//		    counter_canalpha_sui_heart_beat_confirm_ko++;
+//		    counter_canalpha_sui_heart_beat_confirm++;
+//		}
+//	}
+//	else
+//	{
+//		if(rcv.snrId==1)
+//		{
+//    		counter_canalpha_sui_heart_beat_confirm++;
+//		}
+//	}
 
 	//返回
 	return SUCCESS;
@@ -1054,6 +1092,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_new_ws_event_received_handle(StrMsg_HUITP_
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_new_ready_event_t));
 	snd.snrId = nodeId;
 	snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->weight);
+	//printf("CANALPHA: Rcv weight = 0x%x\n", snd.sensorWsValue);
 	snd.length = sizeof(msg_struct_can_l3bfdf_new_ready_event_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 
