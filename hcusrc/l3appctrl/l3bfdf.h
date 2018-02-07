@@ -123,7 +123,7 @@ typedef struct L3BfdfHopperInfo
 	UINT16 matLackNbr;		//用来计算在特定组别的情况下，采用欠缺算法，需要从多少个开始操控
 	UINT16 matLackIndex;     //具体控制欠n的数量
 	UINT32  hopperValue;    //料斗总重量
-	UINT32  hopperLastMat;  //用来存储称重台到物料入料之间的期间，物料的重量．冲入则需要状态和算法控制．
+	//UINT32  hopperLastMat;  //用来存储称重台到物料入料之间的期间，物料的重量．冲入则需要状态和算法控制：为了改造COMB_FB成为可重入工作模式，该工作机制将被废弃
 	UINT32  buferValue;		//用来控制buffer的重量数值
 }L3BfdfHopperInfo_t;
 //料斗状态定义

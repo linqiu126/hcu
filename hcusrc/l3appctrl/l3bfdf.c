@@ -663,6 +663,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 
 //触发组合算法
 //进来的重量是NF2，在整个计算过程中，全部以NF2进行表达
+//为了让单个料斗可以无限制的增加物料，必须不断的接受物料的进入：LastMat控制机制就不能用了，这相当于多HARQ机制，需要滑动窗口，单个HARQ和缓冲区搞不定了
 OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
@@ -759,8 +760,13 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		}
 
 		//本料斗信息更新
-		gTaskL3bfdfContext.hopper[line][outHopperId].hopperLastMat = weight;
 		gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_BUF_FULL;
+		gTaskL3bfdfContext.hopper[line][outHopperId].buferValue += weight;
+
+		//动态更新调控数量
+		double gap = (double)gTaskL3bfdfContext.group[line][gId].targetWeight - (double)gTaskL3bfdfContext.hopper[line][outHopperId].buferValue;
+		double avg = gTaskL3bfdfContext.group[line][gId].rangeAvg==0?0.01:gTaskL3bfdfContext.group[line][gId].rangeAvg;
+		gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndex = ((UINT32)(gap/avg))&0xFFFF;
 
 		//循环将fillHopper后移
 		fillHopper = gTaskL3bfdfContext.group[line][gId].fillHopperId;
@@ -791,8 +797,13 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		}
 
 		//本料斗信息更新
-		gTaskL3bfdfContext.hopper[line][outHopperId].hopperLastMat = weight;
 		gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_BUF_CONT;
+		gTaskL3bfdfContext.hopper[line][outHopperId].buferValue += weight;
+
+		//动态更新调控数量
+		double gap = (double)gTaskL3bfdfContext.group[line][gId].targetWeight - (double)gTaskL3bfdfContext.hopper[line][outHopperId].buferValue;
+		double avg = gTaskL3bfdfContext.group[line][gId].rangeAvg==0?0.01:gTaskL3bfdfContext.group[line][gId].rangeAvg;
+		gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndex = ((UINT32)(gap/avg))&0xFFFF;
 
 		//更新统计信息
 		gTaskL3bfdfContext.cur.wsCombTimes++;
@@ -820,8 +831,10 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 		//等待入料成功后，状态设置为满，即可激活出料过程
 		gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL;
-		//留待入料成功后，加入到目标重量区
-		gTaskL3bfdfContext.hopper[line][outHopperId].hopperLastMat = weight;
+		gTaskL3bfdfContext.hopper[line][outHopperId].hopperValue += weight;
+
+		//动态更新调控数量
+		gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndex = gTaskL3bfdfContext.hopper[line][outHopperId].matLackNbr;
 
 		//更新统计信息
 		gTaskL3bfdfContext.cur.wsCombTimes++;
@@ -876,8 +889,12 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 		//等待入料成功后，状态设置为出料，即可激活出料过程
 		gTaskL3bfdfContext.hopper[line][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT;
-		//留待入料成功后，加入到目标重量区
-		gTaskL3bfdfContext.hopper[line][outHopperId].hopperLastMat = weight;
+		gTaskL3bfdfContext.hopper[line][outHopperId].hopperValue += weight;
+
+		//动态更新调控数量
+		double gap = (double)gTaskL3bfdfContext.group[line][gId].targetWeight - (double)gTaskL3bfdfContext.hopper[line][outHopperId].hopperValue;
+		double avg = gTaskL3bfdfContext.group[line][gId].rangeAvg==0?0.01:gTaskL3bfdfContext.group[line][gId].rangeAvg;
+		gTaskL3bfdfContext.hopper[line][outHopperId].matLackIndex = ((UINT32)(gap/avg))&0xFFFF;
 
 		//欠一满不可能，不然该料斗已经成功进入出料状态了
 		//这里可能有潜在的问题，需要再进一步测试和实验
@@ -935,8 +952,6 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 		return SUCCESS;
 	}
 
-	//通过组合比特位，确定可能的状态转移：考虑到篮筐采用轻状态控制机制，这里只是一个反馈，原则上并不需要进一步改进状态控制，不然就搞的太复杂
-
 	//通知界面：该状态报告有一些问题，表达不了料斗的情况，待完善
 	StrHlcIe_cui_hcu2uir_status_report_t status;
 	memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
@@ -949,45 +964,45 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	//完整的进行证实的确可以，但也会遇到复杂度大大上升的问题！所以简单的方式是，一旦有一个物料在路上，则下一次不再给它分配。
 	//如何判定该料斗还在物料回收状态？判定hopperLastMat是否归零。不再使用其他更为很杂的状态机去操控。
 	//逻辑上，这属于单线程的HARQ机制
-	UINT16 gId = gTaskL3bfdfContext.hopper[line][locHopperId].groupId;
-	if (gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL){
-		//设置料斗状态：操控余量控制数量
-		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = gTaskL3bfdfContext.hopper[line][locHopperId].matLackNbr;
-		//料斗实时重量刷新
-		gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
-		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
-	}
-	else if ((gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_CONT) ||\
-			(gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_FULL)){
-		//料斗实时重量刷新
-		gTaskL3bfdfContext.hopper[line][locHopperId].buferValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
-		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
-		//动态更新调控数量
-		double gap = (double)gTaskL3bfdfContext.group[line][gId].targetWeight - (double)gTaskL3bfdfContext.hopper[line][locHopperId].buferValue;
-		double avg = gTaskL3bfdfContext.group[line][gId].rangeAvg==0?0.01:gTaskL3bfdfContext.group[line][gId].rangeAvg;
-		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = ((UINT32)(gap/avg))&0xFFFF;
-	}
-	else if ((gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_VALID) ||\
-			(gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT)){
-		//料斗实时重量刷新
-		gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
-		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
-		//动态更新调控数量
-		double gap = (double)gTaskL3bfdfContext.group[line][gId].targetWeight - (double)gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue;
-		double avg = gTaskL3bfdfContext.group[line][gId].rangeAvg==0?0.01:gTaskL3bfdfContext.group[line][gId].rangeAvg;
-		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = ((UINT32)(gap/avg))&0xFFFF;
-	}
-	else{
-		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
-		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Rcv COMB FB but relevant hopperId status error. Stream/HopperId/Status=%d/%d/%d!\n", line, locHopperId, gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus);
-	}
+//	UINT16 gId = gTaskL3bfdfContext.hopper[line][locHopperId].groupId;
+//	if (gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL){
+//		//设置料斗状态：操控余量控制数量
+//		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = gTaskL3bfdfContext.hopper[line][locHopperId].matLackNbr;
+//		//料斗实时重量刷新
+//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
+//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
+//	}
+//	else if ((gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_CONT) ||\
+//			(gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_FULL)){
+//		//料斗实时重量刷新
+//		gTaskL3bfdfContext.hopper[line][locHopperId].buferValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
+//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
+//		//动态更新调控数量
+//		double gap = (double)gTaskL3bfdfContext.group[line][gId].targetWeight - (double)gTaskL3bfdfContext.hopper[line][locHopperId].buferValue;
+//		double avg = gTaskL3bfdfContext.group[line][gId].rangeAvg==0?0.01:gTaskL3bfdfContext.group[line][gId].rangeAvg;
+//		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = ((UINT32)(gap/avg))&0xFFFF;
+//	}
+//	else if ((gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_VALID) ||\
+//			(gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT)){
+//		//料斗实时重量刷新
+//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
+//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
+//		//动态更新调控数量
+//		double gap = (double)gTaskL3bfdfContext.group[line][gId].targetWeight - (double)gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue;
+//		double avg = gTaskL3bfdfContext.group[line][gId].rangeAvg==0?0.01:gTaskL3bfdfContext.group[line][gId].rangeAvg;
+//		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = ((UINT32)(gap/avg))&0xFFFF;
+//	}
+//	else{
+//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
+//		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Rcv COMB FB but relevant hopperId status error. Stream/HopperId/Status=%d/%d/%d!\n", line, locHopperId, gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus);
+//	}
 
 	//打印二维码／条形码：二维码＋条形码的内容
+#if 0
 	char s[100];
 	time_t lt;
 	struct tm *cu;
 	memset(s, 0, sizeof(s));
-
 	//初始本地时间
 	lt=time(NULL);
 	cu = localtime(&lt);
@@ -995,6 +1010,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	sprintf(s, "BOFENGZHINENG-%s-%5.2fg-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfdfContext.configName, (float)gTaskL3bfdfContext.wgtSnrPar.MaxAllowedWeight, \
 			(UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
 	hcu_sps232_send_char_to_ext_printer(s, strlen(s));
+#endif
 
 	//返回
 	return SUCCESS;

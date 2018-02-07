@@ -12,6 +12,7 @@
 //= ZJL, 2018 Feb.7 CURRENT_SW_DELIVERY 310=>BFDF项目
 = 修正分配hopper数量最是小一个的问题：HCU_SYSCFG_BFDF_HOPPER_NBR_MAX参数的设定，必须采用+1的做法= 
 = 将系统从固定的32个料斗，修改为可以使用界面进行配置的灵活方式
+= 将COMB_FB从互斥改为可重入方式
 
 //= ZJL, 2018 Feb.5 CURRENT_SW_DELIVERY 309=>BFHS项目
 = 完善BFHS的统计上报过程
