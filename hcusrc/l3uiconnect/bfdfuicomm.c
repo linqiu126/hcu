@@ -870,11 +870,20 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 
 	//查询校准数据
 
-	int i =0;
+	//配置系统的DIMENSIONING
+	gTaskL3bfdfContext.nbrStreamLine = 1;
+	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
+
+	int i =0, j=0;
 	//分配Hooper数据：暂时没有考虑相应板子的启动状态
 	//Hopper初始化
-	for (i = 0; i< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+	for (i = 0; i< gTaskL3bfdfContext.nbrStreamLine; i++){
 		func_l3bfdf_hopper_state_set_init(i);
+	}
+	for (i = gTaskL3bfdfContext.nbrStreamLine; i< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+		for (j=0; j<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; j++){
+			gTaskL3bfdfContext.hopper[i][j].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_OFFLINE;
+		}
 	}
 
 	int nbrGroup = 0;
@@ -888,19 +897,21 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 1000000, 3);
 
 	//第1个流水线，分配组别
-/*	nbrGroup = rand()%3+1;
-	func_l3bfdf_group_allocation(1, nbrGroup);
-	func_l3bfdf_hopper_add_by_grp_in_average_distribution(1, nbrGroup);
-	func_l3bfdf_group_auto_alloc_init_range_in_average(1, nbrGroup, 20000, 200000);
-	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 2000000, 40);*/
+	if (gTaskL3bfdfContext.nbrIoBoardPerLine >= 2){
+		nbrGroup = rand()%3+1;
+		func_l3bfdf_group_allocation(1, nbrGroup);
+		func_l3bfdf_hopper_add_by_grp_in_average_distribution(1, nbrGroup);
+		func_l3bfdf_group_auto_alloc_init_range_in_average(1, nbrGroup, 20000, 200000);
+		func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 2000000, 40);
+	}
 
 	//打印
-	for (i = 0; i< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+	for (i = 0; i< gTaskL3bfdfContext.nbrStreamLine; i++){
 		func_l3bfdf_print_all_hopper_status_by_id(i);
 	}
 
 	//手工浏览一遍双链表
-	for (i = 0; i< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+	for (i = 0; i< gTaskL3bfdfContext.nbrStreamLine; i++){
 		func_l3bfdf_print_all_hopper_status_by_chain(i);
 	}
 

@@ -694,7 +694,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	if (res <0) HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Audit error, errCode = %d\n", res);
 
 	//手工浏览一遍双链表，进行打印
-	for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+	for (i=0; i<HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; i++){
 		func_l3bfdf_print_all_hopper_status_by_chain(i);
 	}
 
@@ -1237,7 +1237,7 @@ bool func_l3bfdf_hopper_state_set_init(UINT8 streamId)
 		return FALSE;
 
 	//循环赋值
-	for (i=1; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
+	for (i=1; i< HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL; i++){
 		gTaskL3bfdfContext.hopper[streamId][i].groupId = 0;
 		gTaskL3bfdfContext.hopper[streamId][i].hopperId = i;
 		gTaskL3bfdfContext.hopper[streamId][i].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_INIT_UNALLOC;
@@ -1252,6 +1252,12 @@ bool func_l3bfdf_hopper_state_set_init(UINT8 streamId)
 	gTaskL3bfdfContext.group[streamId][0].totalHopperNbr = 1;
 	gTaskL3bfdfContext.group[streamId][0].firstHopperId = 0;
 	gTaskL3bfdfContext.group[streamId][0].fillHopperId = 0;
+
+	//其他未分配的料斗，均为离线状态
+	for (i=HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
+		gTaskL3bfdfContext.hopper[streamId][i].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_OFFLINE;
+	}
+
 	return TRUE;
 }
 
@@ -1406,6 +1412,7 @@ bool func_l3bfdf_hopper_add_by_group_element(UINT8 streamId, UINT16 groupId, UIN
 	int cnt = 0;
 	for (i=0; i<nbrHopper; i++){
 		cnt = 0;
+		//HCU_SYSCFG_BFDF_HOPPER_NBR_MAX本身就有+1的特性在里面
 		tmpHopper = rand()%(HCU_SYSCFG_BFDF_HOPPER_NBR_MAX);
 		while ((cnt < 1000) && (gTaskL3bfdfContext.hopper[streamId][tmpHopper].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_INIT_UNALLOC)){
 			cnt++;
@@ -1433,12 +1440,13 @@ bool func_l3bfdf_hopper_add_by_grp_in_average_distribution(UINT8 streamId, UINT1
 	}
 
 	int i=0;
-	int cnt = HCU_SYSCFG_BFDF_HOPPER_NBR_MAX/nbrGroup;
+	//int cnt = HCU_SYSCFG_BFDF_HOPPER_NBR_MAX/nbrGroup;
+	int cnt = HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL/nbrGroup;
 	for (i=1; i<nbrGroup; i++){
 		if (func_l3bfdf_hopper_add_by_group_element(streamId, i, cnt) == FALSE) return FALSE;
 		//HcuDebugPrint("L3BFDF: GroupId = %d, Nbr of Hopper = %d\n", i, cnt);
 	}
-	cnt = HCU_SYSCFG_BFDF_HOPPER_NBR_MAX - cnt * (nbrGroup-1); //第一个是固定的垃圾桶
+	cnt = HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL - cnt * (nbrGroup-1) -1; //第0#是固定的垃圾桶
 	if (func_l3bfdf_hopper_add_by_group_element(streamId, nbrGroup, cnt) == FALSE) return FALSE;
 	//HcuDebugPrint("L3BFDF: GroupId = %d, Nbr of Hopper = %d\n", nbrGroup, cnt);
 
@@ -1651,6 +1659,7 @@ bool func_l3bfdf_hopper_del_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hop
 	return TRUE;
 }
 
+//按照实际数量进行AUDIT
 int func_l3bfdf_hopper_dual_chain_audit(void)
 {
 	UINT8  streamId = 0;
@@ -1660,7 +1669,7 @@ int func_l3bfdf_hopper_dual_chain_audit(void)
 	int cnt = 0;
 
 	//STREAM
-	for (streamId=0; streamId<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; streamId++)
+	for (streamId=0; streamId<HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; streamId++)
 	{
 		if (gTaskL3bfdfContext.totalGroupNbr[streamId] > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -1;
 		if (gTaskL3bfdfContext.totalGroupNbr[streamId] == 0) continue;
@@ -1674,7 +1683,8 @@ int func_l3bfdf_hopper_dual_chain_audit(void)
 			//HcuDebugPrint("L3BFDF: S/G=%d/%d, Total Hopper=%d\n", streamId, gid, gTaskL3bfdfContext.group[streamId][gid].totalHopperNbr);
 			tmp += gTaskL3bfdfContext.group[streamId][gid].totalHopperNbr;
 		}
-		if (tmp != HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -4;
+		//if (tmp != HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -4;
+		if (tmp != HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL) return -4;
 		for (gid = gTaskL3bfdfContext.totalGroupNbr[streamId]+1; gid < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; gid++)
 		{
 			if (gTaskL3bfdfContext.group[streamId][gid].totalHopperNbr != 0) return -5;
@@ -1814,7 +1824,7 @@ bool func_l3bfdf_print_all_hopper_status_by_id(UINT8 streamId)
 
 	memset(s, 0, sizeof(s));
 	sprintf(s, "L3BFDF: Stream[%d] Total Group = %d, Hopper bitmap Gid/Hid/nHid/pHid/Stat = ", streamId, gTaskL3bfdfContext.totalGroupNbr[streamId]);
-	for (i = 0; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
+	for (i = 0; i<HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL; i++){
 		memset(tmp, 0, sizeof(tmp));
 		sprintf(tmp, "[%d/%d/%d/%d/%d]", gTaskL3bfdfContext.hopper[streamId][i].groupId, gTaskL3bfdfContext.hopper[streamId][i].hopperId, gTaskL3bfdfContext.hopper[streamId][i].nextHopperId, gTaskL3bfdfContext.hopper[streamId][i].preHopperId, gTaskL3bfdfContext.hopper[streamId][i].hopperStatus);
 		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
@@ -1840,7 +1850,7 @@ bool func_l3bfdf_print_all_hopper_status_by_chain(UINT8 streamId)
 
 	//Output basic info
 	memset(s, 0, sizeof(s));
-	sprintf(s, "L3BFDF: PART-A Stream[%d] Total Group/Hopper=%d/%d, Group set [Index-tWgt/Buf/Uplim/High/Low] as: ", streamId, gTaskL3bfdfContext.totalGroupNbr[streamId], HCU_SYSCFG_BFDF_HOPPER_NBR_MAX);
+	sprintf(s, "L3BFDF: PART-A Stream[%d] Total Group/Hopper=%d/%d, Group set [Index-tWgt/Buf/Uplim/High/Low] as: ", streamId, gTaskL3bfdfContext.totalGroupNbr[streamId], HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL-1);
 	for (i = 0; i<= gTaskL3bfdfContext.totalGroupNbr[streamId]; i++)
 	{
 		memset(tmp, 0, sizeof(tmp));

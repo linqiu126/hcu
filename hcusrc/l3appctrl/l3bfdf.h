@@ -246,6 +246,8 @@ typedef struct gTaskL3bfdfContext
 	char    operatorName[HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX];
 	UINT16	configId;  								//用来标识系统工作在哪一套配置参数中
 	char    configName[HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX];
+	UINT8   nbrStreamLine;			//缺省为2，最大不能超过4
+	UINT8   nbrIoBoardPerLine;		//缺省为4，最大不能超过4
 
 	//nodeDyn的编制原则是：0一定表达WGT板子，1-HCU_L3BFDF_NODE_BOARD_NBR_MAX表达一条流水先上的总共的板子数量
 	L3BfdfNodeBoardInfo_t  	nodeDyn[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX];
@@ -272,6 +274,8 @@ typedef struct gTaskL3bfdfContext
 	HcuSysMsgIeL3bfdfContextStaElement_t staUp2Now;	//连续工作到目前的统计结果
 }gTaskL3bfdfContext_t;
 extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
+#define HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL		(gTaskL3bfdfContext.nbrStreamLine)
+#define HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL	(gTaskL3bfdfContext.nbrIoBoardPerLine* HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD + 1)
 
 //统计打印报告的频率调整
 #define HCU_L3BFDF_STATISTIC_PRINT_FREQUENCY 100
