@@ -1196,24 +1196,14 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3app/sysswm.h</locationURI>
 		</link>
 		<link>
-			<name>src/l3appctrl/l3aqycg20.c</name>
+			<name>src/l3appctrl/l3daycg21.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appctrl/l3aqycg20.c</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appctrl/l3daycg21.c</locationURI>
 		</link>
 		<link>
-			<name>src/l3appctrl/l3aqycg20.h</name>
+			<name>src/l3appctrl/l3daycg21.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appctrl/l3aqycg20.h</locationURI>
-		</link>
-		<link>
-			<name>src/l3hate/hate_aqyc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_aqyc.c</locationURI>
-		</link>
-		<link>
-			<name>src/l3hate/hate_aqyc.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_aqyc.h</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appctrl/l3daycg21.h</locationURI>
 		</link>
 		<link>
 			<name>src/l3hate/hate_common.c</name>
@@ -1224,6 +1214,16 @@
 			<name>src/l3hate/hate_common.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_common.h</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/hate_dayc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_dayc.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/hate_dayc.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_dayc.h</locationURI>
 		</link>
 		<link>
 			<name>src/l3hate/l3hate.c</name>

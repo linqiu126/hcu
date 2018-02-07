@@ -113,6 +113,7 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_CANALPHA,
 	TASK_ID_L3AQYCG10,
 	TASK_ID_L3AQYCG20,
+	TASK_ID_L3DAYCG21,
 	TASK_ID_L3TBSWRG30,
 	TASK_ID_L3GQYBG40,
 	TASK_ID_L3CXILC,
@@ -594,7 +595,7 @@ extern HcuFsmStateItem_t HcuFsmNbiotcj188[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmNbiotqg376[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmLlczhb[];                            //状态机
 extern HcuFsmStateItem_t HcuFsmHuicobuscodec[];                     //状态机
-extern HcuFsmStateItem_t HcuFsmHuijsoncodec[];                     //状态机
+extern HcuFsmStateItem_t HcuFsmHuijsoncodec[];                      //状态机
 extern HcuFsmStateItem_t HcuFsmHsmmp[];                             //状态机
 extern HcuFsmStateItem_t HcuFsmEmc[];                               //状态机
 extern HcuFsmStateItem_t HcuFsmHumid[];                             //状态机
@@ -621,6 +622,7 @@ extern HcuFsmStateItem_t HcuFsmCanitfleo[];                         //状态机
 extern HcuFsmStateItem_t HcuFsmCanalpha[];                          //状态机
 extern HcuFsmStateItem_t HcuFsmL3aqycg10[];                         //状态机
 extern HcuFsmStateItem_t HcuFsmL3aqycg20[];                         //状态机
+extern HcuFsmStateItem_t HcuFsmL3daycg21[];                         //状态机
 extern HcuFsmStateItem_t HcuFsmL3tbswrg30[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmLgqgybg40[];                         //状态机
 extern HcuFsmStateItem_t HcuFsmL3cxilc[];                           //状态机
@@ -748,6 +750,7 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_1S_L3AQYCG20_STOP_HOUR_REPORT,
 	TIMER_ID_1S_L3AQYCG20_START_DAY_REPORT,
 	TIMER_ID_1S_L3AQYCG20_STOP_DAY_REPORT,
+	TIMER_ID_1S_L3DAYCG21_PERIOD_READ,
 	//TIMER_ID_1S_L3AQYCG20_START_ALA_REPORT,
 	//TIMER_ID_1S_L3AQYCG20_STOP_ALA_REPORT,
 	TIMER_ID_1S_L3TBSWRG30_PERIOD_READ,
