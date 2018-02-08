@@ -564,6 +564,12 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(INT32 cmdValue, 
     json_object_object_add(jsonobj, "weight", json_object_new_int(buf->weight));
     json_object_object_add(jsonobj, "lineId", json_object_new_int(buf->lineId));
     json_object_object_add(jsonobj, "hopperId", json_object_new_int(buf->hopperId));
+    json_object_object_add(jsonobj, "groupId", json_object_new_int(buf->groupId));
+    json_object_object_add(jsonobj, "validFlag", json_object_new_int(buf->validFlag));
+    json_object_object_add(jsonobj, "curWgt", json_object_new_int(buf->curWgt));
+    json_object_object_add(jsonobj, "bufWgt", json_object_new_int(buf->bufWgt));
+    json_object_object_add(jsonobj, "curRatio", json_object_new_int(buf->curRatio));
+    json_object_object_add(jsonobj, "bufRatio", json_object_new_int(buf->bufRatio));
 
     sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
     json_object_put(jsonobj);//free
@@ -797,10 +803,10 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm(INT32 cmdValue, StrH
 	jsonobj = json_object_new_object();
     if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC: Failed to create json object!\n");
 
+    json_object_object_add(jsonobj, "streamId", json_object_new_int(buf->streamId));
     json_object_object_add(jsonobj, "hopperId", json_object_new_int(buf->hopperId));
     json_object_object_add(jsonobj, "targetWeight", json_object_new_int(buf->targetWeight));
     json_object_object_add(jsonobj, "upLimitWeight", json_object_new_int(buf->upLimitWeight));
-    json_object_object_add(jsonobj, "combWeight", json_object_new_int(buf->combWeight));
 
     sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
     json_object_put(jsonobj);//free

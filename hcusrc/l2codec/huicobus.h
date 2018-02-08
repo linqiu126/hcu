@@ -417,7 +417,13 @@ typedef struct StrHlcIe_cui_hcu2uir_inswgt_bfdf_report
 {
 	UINT8   lineId;  //line id
 	UINT8   hopperId;  //1-32, 33-64
+	UINT8   groupId;
 	UINT32  weight;  //in NF2
+	UINT8   validFlag;
+	UINT32  curWgt; //in NF2
+	UINT32  bufWgt; // in NF2
+	UINT8  curRatio; //in INT
+	UINT8  bufRatio; //in INT
 }StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t;
 //cmdValue = boardId
 
@@ -505,10 +511,10 @@ typedef struct StrHlcIe_cui_hcu2uir_statistic_bfhs_report
 //HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm         	= 0x019A,
 typedef struct StrHlcIe_cui_hcu2uir_pullin_confirm
 {
+	UINT8   streamId;
 	UINT8   hopperId;  //1-32, 33-64
 	UINT32  targetWeight;
 	UINT32	upLimitWeight;  //in NF2
-	UINT32	combWeight;  //in NF2
 }StrHlcIe_cui_hcu2uir_pullin_confirm_t;
 //cmdValue = configID;
 

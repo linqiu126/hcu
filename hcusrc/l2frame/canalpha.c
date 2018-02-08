@@ -1126,7 +1126,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_basket_clean_ind_received_handle(StrMsg_HU
 	msg_struct_can_l3bfdf_basket_clean_ind_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_basket_clean_ind_t));
 	snd.snrId = nodeId;
-	snd.hopperId = HUITP_ENDIAN_EXG16(rcv->apHopperId);
+	snd.hopperId = HUITP_ENDIAN_EXG8(rcv->apHopperId);
 	snd.length = sizeof(msg_struct_can_l3bfdf_basket_clean_ind_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 

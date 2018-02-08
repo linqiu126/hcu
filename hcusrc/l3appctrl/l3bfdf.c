@@ -755,6 +755,12 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 		//送往垃圾桶并通知界面
 		inswgt_report.hopperId = 0;
+		inswgt_report.groupId = 0;
+		inswgt_report.validFlag = TRUE;
+		inswgt_report.curWgt = 0;
+		inswgt_report.curRatio = 0;
+		inswgt_report.bufWgt = 0;
+		inswgt_report.bufRatio = 0;
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(rcv.snrId, &inswgt_report);
 
 		return SUCCESS;
@@ -801,6 +807,14 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 		//送往明确的满buf并通知界面
 		inswgt_report.hopperId = outHopperId;
+		inswgt_report.groupId = gId;
+		inswgt_report.validFlag = TRUE;
+		inswgt_report.curWgt = gTaskL3bfdfContext.hopper[line][outHopperId].hopperValue;
+		inswgt_report.curRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][outHopperId].hopperValue/\
+				(float)gTaskL3bfdfContext.group[line][gId].targetWeight*100.0)&0xFF;
+		inswgt_report.bufWgt = gTaskL3bfdfContext.hopper[line][outHopperId].buferValue;
+		inswgt_report.bufRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][outHopperId].buferValue/\
+				(float)gTaskL3bfdfContext.group[line][gId].bufWgtTarget*100.0)&0xFF;
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(rcv.snrId, &inswgt_report);
 
 		return SUCCESS;
@@ -836,6 +850,14 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 		//送往明确的满buf并通知界面
 		inswgt_report.hopperId = outHopperId;
+		inswgt_report.groupId = gId;
+		inswgt_report.validFlag = TRUE;
+		inswgt_report.curWgt = gTaskL3bfdfContext.hopper[line][outHopperId].hopperValue;
+		inswgt_report.curRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][outHopperId].hopperValue/\
+				(float)gTaskL3bfdfContext.group[line][gId].targetWeight*100.0)&0xFF;
+		inswgt_report.bufWgt = gTaskL3bfdfContext.hopper[line][outHopperId].buferValue;
+		inswgt_report.bufRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][outHopperId].buferValue/\
+				(float)gTaskL3bfdfContext.group[line][gId].bufWgtTarget*100.0)&0xFF;
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(rcv.snrId, &inswgt_report);
 
 		return SUCCESS;
@@ -869,6 +891,14 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 		//送往明确的满桶并通知界面
 		inswgt_report.hopperId = outHopperId;
+		inswgt_report.groupId = gId;
+		inswgt_report.validFlag = TRUE;
+		inswgt_report.curWgt = gTaskL3bfdfContext.hopper[line][outHopperId].hopperValue;
+		inswgt_report.curRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][outHopperId].hopperValue/\
+				(float)gTaskL3bfdfContext.group[line][gId].targetWeight*100.0)&0xFF;
+		inswgt_report.bufWgt = gTaskL3bfdfContext.hopper[line][outHopperId].buferValue;
+		inswgt_report.bufRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][outHopperId].buferValue/\
+				(float)gTaskL3bfdfContext.group[line][gId].bufWgtTarget*100.0)&0xFF;
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(rcv.snrId, &inswgt_report);
 
 		return SUCCESS;
@@ -893,6 +923,12 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 		//送往明确的满桶并通知界面
 		inswgt_report.hopperId = 0;
+		inswgt_report.groupId = 0;
+		inswgt_report.validFlag = TRUE;
+		inswgt_report.curWgt = 0;
+		inswgt_report.curRatio = 0;
+		inswgt_report.bufWgt = 0;
+		inswgt_report.bufRatio = 0;
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(rcv.snrId, &inswgt_report);
 
 		return SUCCESS;
@@ -939,6 +975,14 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 		//送往明确的满桶并通知界面
 		inswgt_report.hopperId = outHopperId;
+		inswgt_report.groupId = gId;
+		inswgt_report.validFlag = TRUE;
+		inswgt_report.curWgt = gTaskL3bfdfContext.hopper[line][outHopperId].hopperValue;
+		inswgt_report.curRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][outHopperId].hopperValue/\
+				(float)gTaskL3bfdfContext.group[line][gId].targetWeight*100.0)&0xFF;
+		inswgt_report.bufWgt = gTaskL3bfdfContext.hopper[line][outHopperId].buferValue;
+		inswgt_report.bufRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][outHopperId].buferValue/\
+				(float)gTaskL3bfdfContext.group[line][gId].bufWgtTarget*100.0)&0xFF;
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(rcv.snrId, &inswgt_report);
 
 		return SUCCESS;
@@ -974,10 +1018,19 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	//通知界面：该状态报告有一些问题，表达不了料斗的情况，待完善
-	StrHlcIe_cui_hcu2uir_status_report_t status;
-	memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
-	status.boardStatus = 1;
-	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.snrId, &status);
+//	StrHlcIe_cui_hcu2uir_status_report_t status;
+//	memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+//	status.boardStatus = 1;
+//	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.snrId, &status);
+
+	//PullIn confirm message
+	StrHlcIe_cui_hcu2uir_pullin_confirm_t buf;
+	memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_pullin_confirm_t));
+	buf.streamId = line;
+	buf.hopperId = locHopperId;
+	buf.targetWeight = gTaskL3bfdfContext.group[buf.streamId][gTaskL3bfdfContext.hopper[line][locHopperId].groupId].targetWeight;
+	buf.upLimitWeight = gTaskL3bfdfContext.group[buf.streamId][gTaskL3bfdfContext.hopper[line][locHopperId].groupId].targetUpLimit;
+	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm(gTaskL3bfdfContext.configId, &buf);
 
 	//料斗重量更新：将最后一个物料增加到统计数据中
 	//由于有可能出现多个物料进入同一个料斗的情况，如果一直要等待FB消息之后才更新，则可能出现下一次的计算不准确：为啥？因为下一次还是按照物料进桶之前为基数做的计算
@@ -1054,6 +1107,7 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_basket_clean_ind_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 	locHopperId = ((rcv.hopperId-1)>>(line))+1;
+
 	if ((locHopperId <= 0) || (locHopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
 
@@ -1068,9 +1122,8 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 	int groupId = gTaskL3bfdfContext.hopper[line][locHopperId].groupId;
 	callcell.targetWeight = gTaskL3bfdfContext.group[line][groupId].targetWeight;
 	callcell.upLimitWeight = gTaskL3bfdfContext.group[line][groupId].targetUpLimit;
-	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(rcv.snrId, &callcell);
 
-	printf("test1!\n");
+	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(rcv.snrId, &callcell);
 
 	//本地的CallCell数据存储更新，表示一个完整的料箱搞完成了
 	HcuSysMsgIeL3bfdfCallcellElement_t data;
@@ -1088,8 +1141,6 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 	data.timestamp = time(0);
 	strncpy(data.operator, gTaskL3bfdfContext.configName, sizeof(gTaskL3bfdfContext.configName)<sizeof(data.operator)?sizeof(gTaskL3bfdfContext.configName):sizeof(data.operator));
 	dbi_HcuBfdf_callcell_save(&data);
-
-	printf("test2!\n");
 
 	//99.9%的条件下，篮筐大于BUFFER，门自动打开，BUF中的物料自动掉落到篮筐，继续进行组合
 	gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT;
