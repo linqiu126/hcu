@@ -1077,10 +1077,9 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			snd2.length = sizeof(msg_struct_l3bfsc_can_ws_comb_out_t);
 			memcpy(snd2.sensorBitmap, gTaskL3bfscContext.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
 			snd2.combnbr = gTaskL3bfscContext.wsValueNbrTtt;
-			ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_COMB_OUT, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd2, snd2.length);
-			if (ret == FAILURE){
+			snd2.smallest_wmc_id = func_l3bfsc_search_smallest_scale_amongh_bitmap_for_one_shot_output();
+			if (hcu_message_send(MSG_ID_L3BFSC_CAN_WS_COMB_OUT, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd2, snd2.length)== FAILURE)
 				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
-			}
 
 			//更新传感器状态
 			for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
@@ -1507,10 +1506,12 @@ void func_l3bfsc_caculate_execute_search_result(UINT32 i, UINT8* resBitmap)
 	}
 	gTaskL3bfscContext.cur.wsCombTimes++;
 	//不值得再打印
-	//HCU_DEBUG_PRINT_INF("L3BFSC: ComTarget/Max=[%d/%d], Nbr Min/Max = [%d/%d], SearchNbr=%d\n", gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight, gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination, gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination, searchNbr);
-	//HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
-	//		gTaskL3bfscContext.sensorWs[3].sensorValue, gTaskL3bfscContext.sensorWs[4].sensorValue, gTaskL3bfscContext.sensorWs[5].sensorValue, gTaskL3bfscContext.sensorWs[6].sensorValue,\
-	//		gTaskL3bfscContext.sensorWs[7].sensorValue, gTaskL3bfscContext.sensorWs[8].sensorValue, gTaskL3bfscContext.sensorWs[9].sensorValue, gTaskL3bfscContext.sensorWs[10].sensorValue);
+	HCU_DEBUG_PRINT_INF("L3BFSC: ComTarget/Max=[%d/%d], Nbr Min/Max = [%d/%d]\n", gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
+			gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight, \
+			gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination, gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination);
+	HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+			gTaskL3bfscContext.sensorWs[3].sensorValue, gTaskL3bfscContext.sensorWs[4].sensorValue, gTaskL3bfscContext.sensorWs[5].sensorValue, gTaskL3bfscContext.sensorWs[6].sensorValue,\
+			gTaskL3bfscContext.sensorWs[7].sensorValue, gTaskL3bfscContext.sensorWs[8].sensorValue, gTaskL3bfscContext.sensorWs[9].sensorValue, gTaskL3bfscContext.sensorWs[10].sensorValue);
 }
 
 
@@ -1605,6 +1606,21 @@ UINT8 func_l3bfsc_count_numbers_of_startup_ws_sensors(void)
 	{
 		if (gTaskL3bfscContext.sensorWs[i].sensorStatus >= HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP)
 			count++;
+	}
+
+	//返回
+	return count;
+}
+
+//计算bitmap中的最小值，为了输出物料的分堆功能
+UINT8 func_l3bfsc_search_smallest_scale_amongh_bitmap_for_one_shot_output(void)
+{
+	int i=0, count = 1;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++)
+	{
+		if (gTaskL3bfscContext.wsBitmap[i] == 1){
+			if (i < count) count = i;
+		}
 	}
 
 	//返回

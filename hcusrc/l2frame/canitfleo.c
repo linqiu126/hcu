@@ -417,6 +417,8 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfsc_ws_comb_out_req);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 	pMsgProc.weight_combin_type.WeightCombineType = HUITP_ENDIAN_EXG32(HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT);
+	//临时使用DelayMS域来计算分堆中的延迟
+	pMsgProc.weight_combin_type.ActionDelayMs = HUITP_ENDIAN_EXG8(rcv.smallest_wmc_id);
 
 	//发送消息
 	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)

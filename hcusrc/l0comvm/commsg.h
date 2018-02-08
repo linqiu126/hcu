@@ -2793,6 +2793,7 @@ typedef struct msg_struct_l3bfsc_can_ws_comb_out
 {
 	UINT8  combnbr;
 	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT8  smallest_wmc_id;  //组合出来的最小的ID
 	UINT32 length;
 }msg_struct_l3bfsc_can_ws_comb_out_t;
 

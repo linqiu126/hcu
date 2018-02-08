@@ -10,6 +10,7 @@
 
 //= ZJL, 2018 Feb.8 CURRENT_SW_DELIVERY 312=>BFDF项目
 = Fix algorithms
+= BFSC支持分堆功能
 
 //= ZJL, 2018 Feb.7 CURRENT_SW_DELIVERY 311=>DAYC项目
 = 新创建工程，为了达岸公司的产品部署
