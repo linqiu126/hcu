@@ -1070,6 +1070,8 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 	callcell.upLimitWeight = gTaskL3bfdfContext.group[line][groupId].targetUpLimit;
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(rcv.snrId, &callcell);
 
+	printf("test1!\n");
+
 	//本地的CallCell数据存储更新，表示一个完整的料箱搞完成了
 	HcuSysMsgIeL3bfdfCallcellElement_t data;
 	memset(&data, 0, sizeof(HcuSysMsgIeL3bfdfCallcellElement_t));
@@ -1086,6 +1088,8 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 	data.timestamp = time(0);
 	strncpy(data.operator, gTaskL3bfdfContext.configName, sizeof(gTaskL3bfdfContext.configName)<sizeof(data.operator)?sizeof(gTaskL3bfdfContext.configName):sizeof(data.operator));
 	dbi_HcuBfdf_callcell_save(&data);
+
+	printf("test2!\n");
 
 	//99.9%的条件下，篮筐大于BUFFER，门自动打开，BUF中的物料自动掉落到篮筐，继续进行组合
 	gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT;
@@ -2518,6 +2522,42 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 	gTaskL3bfdfContext.staLocalUi.wsAvgTttTimes = gTaskL3bfdfContext.staLocalUi.wsTttTimes;
 	gTaskL3bfdfContext.staLocalUi.wsAvgTttMatCnt = gTaskL3bfdfContext.staLocalUi.wsTttMatCnt;
 	gTaskL3bfdfContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfdfContext.staLocalUi.wsTttMatWgt;
+
+	//更新1Min各个统计表单
+	gTaskL3bfdfContext.staOneMin.wsIncMatCnt += gTaskL3bfdfContext.cur.wsIncMatCnt;
+	gTaskL3bfdfContext.staOneMin.wsIncMatWgt += gTaskL3bfdfContext.cur.wsIncMatWgt;
+	gTaskL3bfdfContext.staOneMin.wsCombTimes += gTaskL3bfdfContext.cur.wsCombTimes;
+	gTaskL3bfdfContext.staOneMin.wsTttTimes  += gTaskL3bfdfContext.cur.wsTttTimes;
+	gTaskL3bfdfContext.staOneMin.wsTgvTimes  += gTaskL3bfdfContext.cur.wsTgvTimes;
+	gTaskL3bfdfContext.staOneMin.wsTttMatCnt += gTaskL3bfdfContext.cur.wsTttMatCnt;
+	gTaskL3bfdfContext.staOneMin.wsTgvMatCnt += gTaskL3bfdfContext.cur.wsTgvMatCnt;
+	gTaskL3bfdfContext.staOneMin.wsTttMatWgt += gTaskL3bfdfContext.cur.wsTttMatWgt;
+	gTaskL3bfdfContext.staOneMin.wsTgvMatWgt += gTaskL3bfdfContext.cur.wsTgvMatWgt;
+	gTaskL3bfdfContext.staOneMin.wsCallCellTimes += gTaskL3bfdfContext.cur.wsCallCellTimes;
+	float timeRun1MinRatio = (float) HCU_L3BFDF_STA_1M_CYCLE / (float)(((gTaskL3bfdfContext.elipseCnt%HCU_L3BFDF_STA_1M_CYCLE)==0)?HCU_L3BFDF_STA_1M_CYCLE:(gTaskL3bfdfContext.elipseCnt%HCU_L3BFDF_STA_1M_CYCLE));
+	gTaskL3bfdfContext.staOneMin.wsAvgTttTimes = (UINT32)(gTaskL3bfdfContext.staOneMin.wsTttTimes*timeRun1MinRatio);
+	gTaskL3bfdfContext.staOneMin.wsAvgTttMatCnt = (UINT32)(gTaskL3bfdfContext.staOneMin.wsTttMatCnt*timeRun1MinRatio);
+	gTaskL3bfdfContext.staOneMin.wsAvgTttMatWgt = (UINT32)(gTaskL3bfdfContext.staOneMin.wsTttMatWgt*timeRun1MinRatio);
+
+	//1分钟：是否需要分为2条线路？
+	if ((gTaskL3bfdfContext.elipseCnt % HCU_L3BFDF_STA_1M_CYCLE) == 0){
+		StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t buf;
+		memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t));
+		int i = 0;
+		for (i = 0; i<HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; i++){
+			buf.lineId = i;
+			buf.targetWeight = gTaskL3bfdfContext.group[i][1].targetWeight;
+			buf.upLimitWeight = gTaskL3bfdfContext.group[i][1].targetUpLimit;
+			buf.totalPackage = gTaskL3bfdfContext.staUp2Now.wsIncMatCnt;
+			buf.totalReject = gTaskL3bfdfContext.staUp2Now.wsTgvMatCnt;
+			buf.totalWeight = gTaskL3bfdfContext.staUp2Now.wsIncMatWgt;\
+			buf.throughputPerMin = gTaskL3bfdfContext.staOneMin.wsAvgTttTimes;
+			hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report(gTaskL3bfdfContext.configId, &buf);
+		}
+
+		//然后将1分钟统计数据表单清零，以便再次计数
+		memset(&(gTaskL3bfdfContext.sta60Min), 0, sizeof(HcuSysMsgIeL3bfdfContextStaElement_t));
+	}
 
 	//更新60Min各个统计表单
 	gTaskL3bfdfContext.sta60Min.wsIncMatCnt += gTaskL3bfdfContext.cur.wsIncMatCnt;
