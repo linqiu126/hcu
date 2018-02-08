@@ -896,7 +896,7 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	//设置小组重量范围：数据均为NF2进行设置
 	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 10000, 100000);
 	//设置重量目标
-	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 1000000, 3);
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 300000, 0.1);
 
 	//第1个流水线，分配组别
 	if (gTaskL3bfdfContext.nbrIoBoardPerLine >= 2){

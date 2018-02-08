@@ -8,6 +8,9 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2018 Feb.8 CURRENT_SW_DELIVERY 312=>BFDF项目
+= Fix algorithms
+
 //= ZJL, 2018 Feb.7 CURRENT_SW_DELIVERY 311=>DAYC项目
 = 新创建工程，为了达岸公司的产品部署
 

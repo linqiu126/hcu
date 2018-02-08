@@ -318,7 +318,7 @@ bool   func_l3bfdf_is_there_any_board_not_yet_startup(void);
 OPSTAT func_l3bfdf_send_out_suspend_message_to_all(void);
 OPSTAT func_l3bfdf_send_out_resume_message_to_all(void);
 OPSTAT func_l3bfdf_send_out_cfg_start_message_to_all(void);
-
+bool   func_l3bfdf_print_all_board_status(void);
 
 //核心双链数据处理
 extern bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup);
