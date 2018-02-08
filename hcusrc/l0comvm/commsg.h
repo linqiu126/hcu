@@ -4810,6 +4810,7 @@ typedef struct HcuSysMsgIeL3bfdfContextStaElement
 	UINT32	wsTgvMatCnt;			//TGV物料数量
 	UINT32	wsTttMatWgt;			//TTT物料重量
 	UINT32	wsTgvMatWgt;			//TGV物料重量
+	UINT32  wsCallCellTimes;		//成功出料到外部的次数
 	UINT32	wsAvgTttTimes;			//TTT平均次数
 	UINT32	wsAvgTttMatCnt;			//TTT平均物料数
 	UINT32	wsAvgTttMatWgt;			//TTT平均重量

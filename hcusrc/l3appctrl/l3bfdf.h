@@ -200,6 +200,7 @@ typedef struct gTaskL3bfdfContextStaEleMid
 	double	wsTgvMatCntMid;				//TGV物料数量
 	double	wsTttMatWgtMid;				//TTT物料重量
 	double	wsTgvMatWgtMid;				//TGV物料重量
+	double  wsCallCellTimesMid;			//成功出料到外部的次数
 	double	wsAvgTttTimesMid;			//TTT平均次数
 	double	wsAvgTttMatCntMid;			//TTT平均物料数
 	double	wsAvgTttMatWgtMid;			//TTT平均重量
@@ -279,7 +280,7 @@ extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
 #define HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL	(gTaskL3bfdfContext.nbrIoBoardPerLine* HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD + 1)
 
 //统计打印报告的频率调整
-#define HCU_L3BFDF_STATISTIC_PRINT_FREQUENCY 100
+#define HCU_L3BFDF_STATISTIC_PRINT_FREQUENCY 10
 
 //FSM通用部分
 extern OPSTAT fsm_l3bfdf_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
