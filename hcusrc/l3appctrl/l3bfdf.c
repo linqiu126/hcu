@@ -2605,9 +2605,9 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 			buf.throughputPerMin = gTaskL3bfdfContext.staOneMin.wsAvgTttTimes;
 			hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report(gTaskL3bfdfContext.configId, &buf);
 		}
-
+		//printf("\nSend one times' report to UI!\n\n");
 		//然后将1分钟统计数据表单清零，以便再次计数
-		memset(&(gTaskL3bfdfContext.sta60Min), 0, sizeof(HcuSysMsgIeL3bfdfContextStaElement_t));
+		memset(&(gTaskL3bfdfContext.staOneMin), 0, sizeof(HcuSysMsgIeL3bfdfContextStaElement_t));
 	}
 
 	//更新60Min各个统计表单
