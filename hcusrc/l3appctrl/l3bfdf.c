@@ -250,10 +250,12 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
 
 	//启动命令
-	if ((rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START) || (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME)){
+	if ((rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START) || (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME))
+	{
 		//判定不合法: to resume this function later, as all boards not yet installed.
 		if (func_l3bfdf_is_there_any_board_not_yet_startup()==FALSE){
 			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START);
+			return SUCCESS;
 		}
 		//如果是工作状态，则需要发送RESUME：从板号１开始一直到HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX-1
 		if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_SUSPEND){
@@ -266,7 +268,14 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	}
 
 	//STOP/SUSPEND
-	else if ((rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP) || (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND)){
+	else if ((rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP) || (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND))
+	{
+		//判定不合法: to resume this function later, as all boards not yet installed.
+		if (func_l3bfdf_is_there_any_board_not_yet_startup()==FALSE){
+			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START);
+			return SUCCESS;
+		}
+		//SUSPEND
 		if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_SCAN){
 			if (func_l3bfdf_send_out_suspend_message_to_all() == FAILURE) return FAILURE;
 		}
@@ -692,6 +701,9 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 	//printf("L3BFDF: New event, weight=0x%x\n", rcv.sensorWsValue);
 
+	//Update latest boards status
+	func_l3bfdf_print_all_board_status();
+
 	//通知界面, should be put after algo result
 	StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t inswgt_report;
 	memset(&inswgt_report, 0, sizeof(StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t));
@@ -714,13 +726,6 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		for (i=0; i<HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; i++){
 			func_l3bfdf_print_all_hopper_status_by_chain(i);
 		}
-
-		//打印整体比例情况
-		HCU_DEBUG_PRINT_CRT("L3BFDF: Statistic Total Inc/Comb/Ttt/Tgv/Clean=%d/%d/%d/%d/%d, CombR=%5.2f%%, TttR=%5.2f%%, TgvR=%5.2f%%\n", \
-				gTaskL3bfdfContext.cur.wsIncMatCnt, gTaskL3bfdfContext.cur.wsCombTimes, gTaskL3bfdfContext.cur.wsTttTimes, gTaskL3bfdfContext.cur.wsTgvTimes, gTaskL3bfdfContext.cur.wsCallCellTimes,\
-				(float)gTaskL3bfdfContext.cur.wsCombTimes/(float)gTaskL3bfdfContext.cur.wsIncMatCnt*100.0, \
-				(float)gTaskL3bfdfContext.cur.wsTttTimes/(float)gTaskL3bfdfContext.cur.wsIncMatCnt*100.0, \
-				(float)gTaskL3bfdfContext.cur.wsTgvTimes/(float)gTaskL3bfdfContext.cur.wsIncMatCnt*100.0);
 
 		//打印所有Hopper的仓位情况
 		for (i=0; i<HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; i++){
@@ -759,7 +764,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	UINT16 gId = func_l3bfdf_new_ws_search_group(line, weight);
 	UINT16 fillHopper = 0;
 	if ((gId == 0) || (gId > gidMax))
-		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Can not find right group! StreamId=%d, rcv.weight=%fg\n", line, (float)rcv.sensorWsValue/100.00);
+		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Can not find right group! StreamId=%d, rcv.weight=%dg\n", line, rcv.sensorWsValue);
 
 	//STEP0: 如果已经双满的，则不管了
 	//STEP1: 先找加上本物料之后就双满的
@@ -980,38 +985,40 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	//完整的进行证实的确可以，但也会遇到复杂度大大上升的问题！所以简单的方式是，一旦有一个物料在路上，则下一次不再给它分配。
 	//如何判定该料斗还在物料回收状态？判定hopperLastMat是否归零。不再使用其他更为很杂的状态机去操控。
 	//逻辑上，这属于单线程的HARQ机制
-//	UINT16 gId = gTaskL3bfdfContext.hopper[line][locHopperId].groupId;
-//	if (gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL){
-//		//设置料斗状态：操控余量控制数量
-//		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = gTaskL3bfdfContext.hopper[line][locHopperId].matLackNbr;
-//		//料斗实时重量刷新
-//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
-//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
-//	}
-//	else if ((gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_CONT) ||\
-//			(gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_FULL)){
-//		//料斗实时重量刷新
-//		gTaskL3bfdfContext.hopper[line][locHopperId].buferValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
-//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
-//		//动态更新调控数量
-//		double gap = (double)gTaskL3bfdfContext.group[line][gId].targetWeight - (double)gTaskL3bfdfContext.hopper[line][locHopperId].buferValue;
-//		double avg = gTaskL3bfdfContext.group[line][gId].rangeAvg==0?0.01:gTaskL3bfdfContext.group[line][gId].rangeAvg;
-//		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = ((UINT32)(gap/avg))&0xFFFF;
-//	}
-//	else if ((gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_VALID) ||\
-//			(gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT)){
-//		//料斗实时重量刷新
-//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
-//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
-//		//动态更新调控数量
-//		double gap = (double)gTaskL3bfdfContext.group[line][gId].targetWeight - (double)gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue;
-//		double avg = gTaskL3bfdfContext.group[line][gId].rangeAvg==0?0.01:gTaskL3bfdfContext.group[line][gId].rangeAvg;
-//		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = ((UINT32)(gap/avg))&0xFFFF;
-//	}
-//	else{
-//		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
-//		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Rcv COMB FB but relevant hopperId status error. Stream/HopperId/Status=%d/%d/%d!\n", line, locHopperId, gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus);
-//	}
+#if 0
+	UINT16 gId = gTaskL3bfdfContext.hopper[line][locHopperId].groupId;
+	if (gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL){
+		//设置料斗状态：操控余量控制数量
+		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = gTaskL3bfdfContext.hopper[line][locHopperId].matLackNbr;
+		//料斗实时重量刷新
+		gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
+		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
+	}
+	else if ((gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_CONT) ||\
+			(gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_FULL)){
+		//料斗实时重量刷新
+		gTaskL3bfdfContext.hopper[line][locHopperId].buferValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
+		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
+		//动态更新调控数量
+		double gap = (double)gTaskL3bfdfContext.group[line][gId].targetWeight - (double)gTaskL3bfdfContext.hopper[line][locHopperId].buferValue;
+		double avg = gTaskL3bfdfContext.group[line][gId].rangeAvg==0?0.01:gTaskL3bfdfContext.group[line][gId].rangeAvg;
+		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = ((UINT32)(gap/avg))&0xFFFF;
+	}
+	else if ((gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_VALID) ||\
+			(gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT)){
+		//料斗实时重量刷新
+		gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue += gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat;
+		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
+		//动态更新调控数量
+		double gap = (double)gTaskL3bfdfContext.group[line][gId].targetWeight - (double)gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue;
+		double avg = gTaskL3bfdfContext.group[line][gId].rangeAvg==0?0.01:gTaskL3bfdfContext.group[line][gId].rangeAvg;
+		gTaskL3bfdfContext.hopper[line][locHopperId].matLackIndex = ((UINT32)(gap/avg))&0xFFFF;
+	}
+	else{
+		gTaskL3bfdfContext.hopper[line][locHopperId].hopperLastMat = 0;
+		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Rcv COMB FB but relevant hopperId status error. Stream/HopperId/Status=%d/%d/%d!\n", line, locHopperId, gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus);
+	}
+#endif
 
 	//打印二维码／条形码：二维码＋条形码的内容
 #if 0
@@ -1052,13 +1059,6 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 
 	//如果此时也条件允许，也产生出料：不太可能。一般情况下，只有BUF的深度=篮筐的深度，才有这个可能性。
 	//另外，HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL也表达不了这个，需要HCU_L3BFDF_HOPPER_STATUS_BUF_FULL以及两者深度相同才行。本项目中不存在。
-//	if (gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL){
-//		//发送出料
-//		if (func_l3bfdf_new_ws_send_out_comb_out_message_w_basket_full(line, locHopperId) == FALSE){
-//			gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
-//			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send Comb Out message error!\n");
-//		}
-//	}
 
 	//通知界面：CallCell报告
 	StrHlcIe_cui_hcu2uir_callcell_bfdf_report_t callcell;
@@ -1919,20 +1919,6 @@ bool func_l3bfdf_print_all_hopper_status_by_chain(UINT8 streamId)
 	strcat(s, "\n");
 	HCU_DEBUG_PRINT_CRT(s);
 
-	//Output Weight status
-//	memset(s, 0, sizeof(s));
-//	sprintf(s, "L3BFDF: PART-C Stream[%d] Total Hopper=%d as: ", streamId, HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL-1);
-//	for (i = 1; i< HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL; i++)
-//	{
-//		memset(tmp, 0, sizeof(tmp));
-//		sprintf(tmp, "[Hid=%d, Hv=%4.2f%%, Bv=%4.2f%%, Nbr=%d] ", i, (float)gTaskL3bfdfContext.hopper[streamId][i].hopperValue/(float)gTaskL3bfdfContext.group[streamId][gTaskL3bfdfContext.hopper[streamId][i].groupId].targetWeight*100.0, \
-//				(float)gTaskL3bfdfContext.hopper[streamId][i].buferValue/(float)gTaskL3bfdfContext.group[streamId][gTaskL3bfdfContext.hopper[streamId][i].groupId].targetWeight*100.0, gTaskL3bfdfContext.hopper[streamId][i].matLackIndex);
-//		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
-//	}
-//	strcat(s, "\n");
-//	HCU_DEBUG_PRINT_CRT(s);
-
-
 	return TRUE;
 }
 
@@ -1990,7 +1976,7 @@ bool func_l3bfdf_print_all_board_status(void)
 
 	//Output basic info
 	memset(s, 0, sizeof(s));
-	sprintf(s, "L3BFDF: Boards startup refresh, conf. with Line/Hop = %d/%d, ", HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL, HCU_L3BFDF_MAX_IO_BOARD_NBR_ACTUAL-1);
+	sprintf(s, "L3BFDF: Boards startup refresh, conf. with Line/Boards = %d/%d, ", HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL, HCU_L3BFDF_MAX_IO_BOARD_NBR_ACTUAL-1);
 	for (i = 0; i< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++)
 	{
 		memset(tmp, 0, sizeof(tmp));
@@ -1999,6 +1985,23 @@ bool func_l3bfdf_print_all_board_status(void)
 		for (j = 1; j< HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++)
 		{
 			sprintf(tmp, "%d/", gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus);
+			if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+		}
+		strcat(s, "] ");
+	}
+	strcat(s, "\n");
+	HCU_DEBUG_PRINT_CRT(s);
+
+	memset(s, 0, sizeof(s));
+	sprintf(s, "L3BFDF: Hopper status refresh, conf. with Line/Hop = %d/%d, ", HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL, HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL-1);
+	for (i = 0; i< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++)
+	{
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "[Line(%d)=", i);
+		strcat(s, tmp);
+		for (j = 1; j< HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; j++)
+		{
+			sprintf(tmp, "%d/", gTaskL3bfdfContext.hopper[i][j].hopperStatus);
 			if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
 		}
 		strcat(s, "] ");
@@ -2076,6 +2079,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_buffer_lack_one(UINT8 streamId, UINT16 g
 	//Secure the range
 	if (((gTaskL3bfdfContext.hopper[streamId][fHopper].buferValue + weight) <= gTaskL3bfdfContext.group[streamId][gid].bufWgtTarget) && \
 			(gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) && \
+			(gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus < HCU_L3BFDF_HOPPER_STATUS_BUF_FULL) && \
 			(func_l3bfdf_hopper_judge_buffer_is_lack_one_full(streamId, fHopper, weight) == TRUE))
 			return fHopper;
 
@@ -2086,6 +2090,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_buffer_lack_one(UINT8 streamId, UINT16 g
 		cnt++;
 		if (((gTaskL3bfdfContext.hopper[streamId][nextHopper].buferValue + weight) <= gTaskL3bfdfContext.group[streamId][gid].bufWgtTarget) && \
 				(gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) && \
+				(gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus < HCU_L3BFDF_HOPPER_STATUS_BUF_FULL) && \
 				(func_l3bfdf_hopper_judge_buffer_is_lack_one_full(streamId, nextHopper, weight) == TRUE))
 				return nextHopper;
 		tmpHopper = gTaskL3bfdfContext.hopper[streamId][nextHopper].nextHopperId;
@@ -2111,8 +2116,9 @@ UINT16 func_l3bfdf_new_ws_search_hopper_buffer_normal(UINT8 streamId, UINT16 gid
 
 	//Secure the range
 	if (((gTaskL3bfdfContext.hopper[streamId][fHopper].buferValue + weight) <= gTaskL3bfdfContext.group[streamId][gid].bufWgtTarget) && \
-			(gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) \
-			&& (func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(streamId, fHopper, weight)) == TRUE)
+			(gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) && \
+			(gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus < HCU_L3BFDF_HOPPER_STATUS_BUF_FULL) && \
+			(func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(streamId, fHopper, weight)) == TRUE)
 			return fHopper;
 
 	cnt = 0;
@@ -2123,6 +2129,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_buffer_normal(UINT8 streamId, UINT16 gid
 		cnt++;
 		if (((gTaskL3bfdfContext.hopper[streamId][nextHopper].buferValue + weight) <= gTaskL3bfdfContext.group[streamId][gid].bufWgtTarget) && \
 				(gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) && \
+				(gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus < HCU_L3BFDF_HOPPER_STATUS_BUF_FULL) && \
 				(func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(streamId, nextHopper, weight) == TRUE))
 				return nextHopper;
 		tmpHopper = gTaskL3bfdfContext.hopper[streamId][nextHopper].nextHopperId;
@@ -2148,6 +2155,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_basket_lack_one(UINT8 streamId, UINT16 g
 	if (fHopper == 0) return 0;
 
 	if ((gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_VALID) &&\
+			(gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus < HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) &&\
 			((gTaskL3bfdfContext.hopper[streamId][fHopper].hopperValue + weight) >= gTaskL3bfdfContext.group[streamId][gid].targetWeight) &&\
 			((gTaskL3bfdfContext.hopper[streamId][fHopper].hopperValue + weight) <= (gTaskL3bfdfContext.group[streamId][gid].targetWeight +\
 					gTaskL3bfdfContext.group[streamId][gid].targetUpLimit)))
@@ -2160,6 +2168,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_basket_lack_one(UINT8 streamId, UINT16 g
 	{
 		cnt++;
 		if ((gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_VALID) &&\
+				(gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus < HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) &&\
 				((gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperValue + weight) >= gTaskL3bfdfContext.group[streamId][gid].targetWeight) &&\
 				((gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperValue + weight) <= (gTaskL3bfdfContext.group[streamId][gid].targetWeight +\
 						gTaskL3bfdfContext.group[streamId][gid].targetUpLimit)))
@@ -2198,19 +2207,11 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, UINT
 	hFinal = tWg+tLm;
 
 	//判定入口满足条件
-	if (gTaskL3bfdfContext.hopper[sid][fH].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_VALID)
+	if ((gTaskL3bfdfContext.hopper[sid][fH].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_VALID) && \
+			(gTaskL3bfdfContext.hopper[sid][fH].hopperStatus < HCU_L3BFDF_HOPPER_STATUS_BUF_FULL))
 	{
 		//在每一次反馈中，已经更新过最新的N系数了，不需要再更新
-//		if (func_l3bfdf_hopper_update_N_coef(sid, fH) == FALSE)
-//			HcuErrorPrint("L3BFDF: Error set coeffience!\n");
 		cWg = gTaskL3bfdfContext.hopper[sid][fH].hopperValue + weight;
-//		hMax = tWg+tLm - gTaskL3bfdfContext.hopper[sid][fH].hopperValue - (tAvg-tSigma)*(double)gTaskL3bfdfContext.hopper[sid][fH].matLackIndex;
-//		hMin = tWg - gTaskL3bfdfContext.hopper[sid][fH].hopperValue  - (tAvg+tSigma)*(double)gTaskL3bfdfContext.hopper[sid][fH].matLackIndex;
-/*
-		HCU_DEBUG_PRINT_CRT("L3BFDF: S/G/H/High/Low/IndexMax/IndexMin=%d/%d/%d/%f/%f/%d/%d, tWg/tLmt/tAvg/tSigma=%f/%f/%f/%f, cWg/hMin/hMax=%f/%f/%f\n", \
-				sid, gid, fH, gTaskL3bfdfContext.group[sid][gid].rangeHigh, gTaskL3bfdfContext.group[sid][gid].rangeLow, gTaskL3bfdfContext.hopper[sid][fH].matLackIndexMax, gTaskL3bfdfContext.hopper[sid][fH].matLackIndexMin, tWg, tLm, tAvg, tSigma, cWg, hMin, hMax);
-		HCU_DEBUG_PRINT_CRT("L3BFDF: HopperValue=%f\n", gTaskL3bfdfContext.hopper[sid][fH].hopperValue);
-*/
 		if ((func_l3bfdf_hopper_judge_cur_mat_is_in_right_space(sid, fH, weight) == TRUE) && (cWg <= hFinal)) return fH;
 	}
 
@@ -2220,19 +2221,11 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, UINT
 	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fH))
 	{
 		cnt++;
-		if (gTaskL3bfdfContext.hopper[sid][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_VALID)
+		if ((gTaskL3bfdfContext.hopper[sid][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_VALID) &&\
+			(gTaskL3bfdfContext.hopper[sid][nextHopper].hopperStatus < HCU_L3BFDF_HOPPER_STATUS_BUF_FULL))
 		{
 			//在每一次反馈中，已经更新过最新的N系数了，不需要再更新
-//			if (func_l3bfdf_hopper_update_N_coef(sid, nextHopper) == FALSE)
-//				HcuErrorPrint("L3BFDF: Error set coeffience!\n");
 			cWg = gTaskL3bfdfContext.hopper[sid][nextHopper].hopperValue + weight;
-//			hMax = tWg+tLm - gTaskL3bfdfContext.hopper[sid][nextHopper].hopperValue - (tAvg-tSigma)*(double)gTaskL3bfdfContext.hopper[sid][nextHopper].matLackIndex;
-//			hMin = tWg - gTaskL3bfdfContext.hopper[sid][nextHopper].hopperValue  - (tAvg+tSigma)*(double)gTaskL3bfdfContext.hopper[sid][nextHopper].matLackIndex;
-/*
-			HCU_DEBUG_PRINT_CRT("L3BFDF: S/G/H/High/Low/IndexMax/IndexMin=%d/%d/%d/%f/%f/%d/%d, tWg/tLmt/tAvg/tSigma=%f/%f/%f/%f, cWg/hMin/hMax=%f/%f/%f\n", \
-					sid, gid, nextHopper, gTaskL3bfdfContext.group[sid][gid].rangeHigh, gTaskL3bfdfContext.group[sid][gid].rangeLow, gTaskL3bfdfContext.hopper[sid][nextHopper].matLackIndexMax, gTaskL3bfdfContext.hopper[sid][nextHopper].matLackIndexMin, tWg, tLm, tAvg, tSigma, cWg, hMin, hMax);
-			HCU_DEBUG_PRINT_CRT("L3BFDF: HopperValue=%f\n", gTaskL3bfdfContext.hopper[sid][nextHopper].hopperValue);
-*/
 			if ((func_l3bfdf_hopper_judge_cur_mat_is_in_right_space(sid, nextHopper, weight) == TRUE) && (cWg <= hFinal)) return nextHopper;
 		}
 		tmpHopper = gTaskL3bfdfContext.hopper[sid][nextHopper].nextHopperId;
@@ -2263,22 +2256,25 @@ bool func_l3bfdf_hopper_judge_cur_mat_is_in_right_space(UINT8 streamId, UINT16 h
 	if (gTaskL3bfdfContext.group[streamId][gid].rangeLow == 0) gTaskL3bfdfContext.group[streamId][gid].rangeLow = 500;  //5g是动态归零值
 
 	//目标重量
-	targetWgtL = gTaskL3bfdfContext.group[streamId][gid].targetWeight - gTaskL3bfdfContext.hopper[streamId][hid].hopperValue - weight;
+	if (gTaskL3bfdfContext.group[streamId][gid].targetWeight >= (gTaskL3bfdfContext.hopper[streamId][hid].hopperValue + weight)){
+		targetWgtL = gTaskL3bfdfContext.group[streamId][gid].targetWeight - gTaskL3bfdfContext.hopper[streamId][hid].hopperValue - weight;
+	}else{
+		targetWgtL = 0;
+	}
 	targetWgtH = targetWgtL + gTaskL3bfdfContext.group[streamId][gid].targetUpLimit;
 
 	//求最大最小范围
-	max = targetWgtH/gTaskL3bfdfContext.group[streamId][gid].rangeLow;
-	min = targetWgtL/gTaskL3bfdfContext.group[streamId][gid].rangeHigh;
+	max = targetWgtH/(double)gTaskL3bfdfContext.group[streamId][gid].rangeLow;
+	min = targetWgtL/(double)gTaskL3bfdfContext.group[streamId][gid].rangeHigh;
 	umax = (UINT32)max;
 	umin = (UINT32)min;
 
 	//不相等的情况下，是否覆盖整数
-/*
-	HcuDebugPrint("L3BFDF: max/min/umax/umin = %6.2f/%6.2f/%d/%d, weight/RangeL/H/Cur/Target/Up=%6.2f/%6.2f/%6.2f/%6.2f/%6.2f/%6.2f\n", max, min, umax, umin, weight, \
-			gTaskL3bfdfContext.group[streamId][gid].rangeLow, gTaskL3bfdfContext.group[streamId][gid].rangeHigh, \
+	HCU_DEBUG_PRINT_CRT("L3BFDF: Judge mat in normal space: max/min/targetWgtH/L = %6.2f/%6.2f/%6.2f/%6.2f, weight/RangeL/H/Cur/Target/Up=%d/%d/%d/%d/%d/%d\n", \
+			max, min, targetWgtH, targetWgtL, \
+			weight, gTaskL3bfdfContext.group[streamId][gid].rangeLow, gTaskL3bfdfContext.group[streamId][gid].rangeHigh, \
 			gTaskL3bfdfContext.hopper[streamId][hid].hopperValue, gTaskL3bfdfContext.group[streamId][gid].targetWeight, \
 			gTaskL3bfdfContext.group[streamId][gid].targetWeight+gTaskL3bfdfContext.group[streamId][gid].targetUpLimit);
-*/
 
 	//当最后两个Lack1/2的时候
 	index = gTaskL3bfdfContext.hopper[streamId][hid].matLackIndex;
@@ -2311,19 +2307,24 @@ bool func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(UINT8 streamId, UINT16 
 	if (gTaskL3bfdfContext.group[streamId][gid].rangeLow == 0) gTaskL3bfdfContext.group[streamId][gid].rangeLow = 500;  //5g是动态归零值
 
 	//目标重量
-	targetWgtL = gTaskL3bfdfContext.group[streamId][gid].targetWeight - gTaskL3bfdfContext.hopper[streamId][hid].buferValue - weight;
+	if (gTaskL3bfdfContext.group[streamId][gid].targetWeight >= (gTaskL3bfdfContext.hopper[streamId][hid].hopperValue + weight)){
+		targetWgtL = gTaskL3bfdfContext.group[streamId][gid].targetWeight - gTaskL3bfdfContext.hopper[streamId][hid].hopperValue - weight;
+	}else{
+		targetWgtL = 0;
+	}
 	targetWgtH = targetWgtL + gTaskL3bfdfContext.group[streamId][gid].targetUpLimit;
 
 	//求最大最小范围
-	max = targetWgtH/gTaskL3bfdfContext.group[streamId][gid].rangeLow;
-	min = targetWgtL/gTaskL3bfdfContext.group[streamId][gid].rangeHigh;
+	max = targetWgtH/(double)gTaskL3bfdfContext.group[streamId][gid].rangeLow;
+	min = targetWgtL/(double)gTaskL3bfdfContext.group[streamId][gid].rangeHigh;
 	umax = (UINT32)max;
 	umin = (UINT32)min;
 
 	//不相等的情况下，是否覆盖整数
-	HcuDebugPrint("L3BFDF: max/min/umax/umin = %6.2f/%6.2f/%d/%d, weight/RangeL/H/Cur/Target/Up=%d/%d/%d/%d/%d/%d\n", max, min, umax, umin, weight, \
-			gTaskL3bfdfContext.group[streamId][gid].rangeLow, gTaskL3bfdfContext.group[streamId][gid].rangeHigh, \
-			gTaskL3bfdfContext.hopper[streamId][hid].hopperValue, gTaskL3bfdfContext.group[streamId][gid].targetWeight, \
+	HCU_DEBUG_PRINT_INF("L3BFDF: Judge cur mat in buffer space: max/min/targetWgtH/L = %6.2f/%6.2f/%6.2f/%6.2f, weight/RangeL/H/Cur/Target/Up=%d/%d/%d/%d/%d/%d\n", \
+			max, min, targetWgtH, targetWgtL,\
+			weight, gTaskL3bfdfContext.group[streamId][gid].rangeLow, gTaskL3bfdfContext.group[streamId][gid].rangeHigh, \
+			gTaskL3bfdfContext.hopper[streamId][hid].buferValue, gTaskL3bfdfContext.group[streamId][gid].targetWeight, \
 			gTaskL3bfdfContext.group[streamId][gid].targetWeight+gTaskL3bfdfContext.group[streamId][gid].targetUpLimit);
 
 	//当最后两个Lack1/2的时候
@@ -2358,57 +2359,23 @@ bool func_l3bfdf_hopper_judge_buffer_is_lack_one_full(UINT8 sid, UINT16 hid, UIN
 
 	//获取基础信息
 	gid = gTaskL3bfdfContext.hopper[sid][hid].groupId;
-	//tWg = gTaskL3bfdfContext.group[sid][gid].targetWeight;
-	//tLm = gTaskL3bfdfContext.group[sid][gid].targetUpLimit;
 	tAvg = gTaskL3bfdfContext.group[sid][gid].rangeAvg;
 	tSigma = gTaskL3bfdfContext.group[sid][gid].rangeSigma;
-	cWg = gTaskL3bfdfContext.hopper[sid][hid].hopperValue + weight;
+	cWg = gTaskL3bfdfContext.hopper[sid][hid].buferValue + weight;
+
+	if (cWg > gTaskL3bfdfContext.group[sid][gid].bufWgtTarget) return FALSE;
 
 	//计算范围一次范围
-//	if (cWg > gTaskL3bfdfContext.hopper[sid][hid].buferValue) return FALSE;
-//	hMax = tWg+tLm - gTaskL3bfdfContext.hopper[sid][hid].hopperValue - (tAvg-tSigma)*(double)gTaskL3bfdfContext.hopper[sid][hid].matLackIndex;
-//	hMin = tWg - gTaskL3bfdfContext.hopper[sid][hid].hopperValue  - (tAvg+tSigma)*(double)gTaskL3bfdfContext.hopper[sid][hid].matLackIndex;
-//	if ((cWg < hMin) || (cWg > hMax)) return FALSE;
 	if (func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(sid, hid, weight) == FALSE)
 		return FALSE;
 
 	//计算二次范围：计算GAP比范围还小，则认为是最后一个
-	gap = gTaskL3bfdfContext.hopper[sid][hid].buferValue - cWg;
-	if (gap < (tAvg-tSigma)) return TRUE;
+	gap = gTaskL3bfdfContext.group[sid][gid].bufWgtTarget - cWg;
+	if (gap < tAvg) return TRUE;
 
 	//其他情况，均认为不是最后一个
 	return FALSE;
 }
-
-//判定BUFFER的当前物品时候合法
-//改函数，已经被其他函数所代替，不需要了
-//bool func_l3bfdf_hopper_judge_buffer_is_valid(UINT8 sid, UINT16 hid, UINT32 weight)
-//{
-//	UINT16 gid = 0;
-//	UINT32 tWg=0, tLm=0, tAvg=0, tSigma=0;
-//	UINT32 cWg=0, hMax=0, hMin=0;
-//
-//	//入参检查
-//	if ((sid >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) || (hid==0) || (hid >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
-//		return FALSE;
-//
-//	//获取基础信息
-//	gid = gTaskL3bfdfContext.hopper[sid][hid].groupId;
-//	tWg = gTaskL3bfdfContext.group[sid][gid].targetWeight;
-//	tLm = gTaskL3bfdfContext.group[sid][gid].targetUpLimit;
-//	tAvg = gTaskL3bfdfContext.group[sid][gid].rangeAvg;
-//	tSigma = gTaskL3bfdfContext.group[sid][gid].rangeSigma;
-//
-//	//计算范围一次范围
-//	cWg = gTaskL3bfdfContext.hopper[sid][hid].hopperValue + weight;
-//	if (cWg > gTaskL3bfdfContext.hopper[sid][hid].buferValue) return FALSE;
-//	hMax = tWg+tLm - gTaskL3bfdfContext.hopper[sid][hid].hopperValue - (tAvg-tSigma)*(double)gTaskL3bfdfContext.hopper[sid][hid].matLackIndex;
-//	hMin = tWg - gTaskL3bfdfContext.hopper[sid][hid].hopperValue  - (tAvg+tSigma)*(double)gTaskL3bfdfContext.hopper[sid][hid].matLackIndex;
-//	if ((cWg >= hMin) && (cWg <= hMax)) return TRUE;
-//
-//	//其他情况，均认为不是最后一个
-//	return FALSE;
-//}
 
 //正常篮筐未满条件下的出料发送，物料肯定直接进入篮筐
 bool func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(UINT8 streamId, UINT16 hopperId)
@@ -2459,10 +2426,8 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message_w_basket_full(UINT8 streamId, 
 
 	//先检查hopper状态
 	//printf("Send comb-out msg out, shall be full basket status, actual=%d\n", gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus);
-	if ((gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_VALID) &&\
-			(gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT) &&\
-			(gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) &&\
-			(gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_BUF_CONT))
+	if ((gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus < HCU_L3BFDF_HOPPER_STATUS_VALID) ||\
+			(gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BUF_FULL))
 	{
 		HCU_DEBUG_PRINT_IPT("L3BFDF: Hopper status error, Line/HopId=%d/%d, Status=%d\n", streamId, hopperId, gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus);
 		return FALSE;
@@ -2493,7 +2458,7 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message_w_double_full(UINT8 streamId, 
 		return FALSE;
 
 	//先检查hopper状态
-	if (gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) return FALSE;
+	if (gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus < HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) return FALSE;
 
 	//发送
 	msg_struct_l3bfdf_can_ws_comb_out_t snd;
@@ -2658,8 +2623,13 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 
 	//重要的统计功能挂载
 	if ((gTaskL3bfdfContext.elipseCnt%HCU_L3BFDF_STATISTIC_PRINT_FREQUENCY) == 0)
-	HCU_DEBUG_PRINT_CRT("L3BFDF: Control statistics, Total Up2Now Inc Cnt = [%d], Combination Rate = [%5.2f%%], TTT Rate = [%5.2f%%], Give-up Rate = [%5.2f%%], Local UI Shows AvgSpeed of [TTT Times/MatCnt/MatWgt] = %d/%d/%5.2f.\n",\
+	HCU_DEBUG_PRINT_CRT("L3BFDF: Control statistics, Total Up2Now Inc/Comb/TTT/TGV/Clean Cnt = [%d/%d/%d/%d/%d], TotalWgt=%d, Comb/TTT/TGV Rate = [%5.2f%%/%5.2f%%/%5.2f%%], Local UI Shows AvgSpeed of [TTT Times/MatCnt/MatWgt] = %d/%d/%5.2f.\n",\
 			gTaskL3bfdfContext.staUp2Now.wsIncMatCnt, \
+			gTaskL3bfdfContext.staUp2Now.wsCombTimes, \
+			gTaskL3bfdfContext.staUp2Now.wsTttTimes, \
+			gTaskL3bfdfContext.staUp2Now.wsTgvTimes, \
+			gTaskL3bfdfContext.staUp2Now.wsCallCellTimes, \
+			gTaskL3bfdfContext.staUp2Now.wsIncMatWgt, \
 			(float)(gTaskL3bfdfContext.staUp2Now.wsCombTimes)/(float)((gTaskL3bfdfContext.staUp2Now.wsIncMatCnt==0)?0.01:gTaskL3bfdfContext.staUp2Now.wsIncMatCnt) * 100.0, \
 			(float)(gTaskL3bfdfContext.staUp2Now.wsTttMatCnt)/(float)((gTaskL3bfdfContext.staUp2Now.wsIncMatCnt==0)?0.01:gTaskL3bfdfContext.staUp2Now.wsIncMatCnt) * 100.0, \
 			(float)(gTaskL3bfdfContext.staUp2Now.wsTgvMatCnt)/(float)((gTaskL3bfdfContext.staUp2Now.wsIncMatCnt==0)?0.01:gTaskL3bfdfContext.staUp2Now.wsIncMatCnt) * 100.0, \
