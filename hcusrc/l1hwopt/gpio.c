@@ -57,7 +57,8 @@ OPSTAT fsm_gpio_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0, conCounter=0;
+	int ret=0;
+	//int conCounter=0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -438,7 +439,7 @@ static struct port {
 };
 
 
-static void print_n(const char *name, int last)
+void print_n(const char *name, int last)
 {
 	int i;
 
@@ -608,7 +609,7 @@ static void set_pin(const struct port *p, int num, int c, int d, int r)
 /* ----- Dump all ports ---------------------------------------------------- */
 
 
-static void dump_all(void)
+void dump_all(void)
 {
 fprintf(stderr, "not yet implemented\n");
 exit(1);

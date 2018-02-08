@@ -104,6 +104,12 @@ UINT32 UsbUmtsHwReset();
 UINT32 UsbUmtsAtCommand(UINT16 fd, char *AtCmd, char *ReplyStr, int *ReplyCnt);
 void SetSystemTime(char *t);
 
+//External APIs
+extern UINT32 IsGprsPppdOk();
+extern void GpioPortOp(char *op);
+extern UINT32 IsNetItfExist(char *itfname);
+extern void KillPppdProcess();
+
 
 
 #endif /* L1HWOPT_CON3G4G_H_ */

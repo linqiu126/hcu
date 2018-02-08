@@ -49,5 +49,14 @@ UINT32 GprsPppdSystemStartup(GprsPppdConf_t *gpc);
 UINT32 AtCommand(SerialPortCom_t *pGprsSerialPortConfig, char *AtCmd, char *ReplyStr, int *ReplyCnt);
 void SetSystemTime(char *t);
 
+//External APIs
+extern UINT32 IsGprsPppdOk();
+//extern OPSTAT HcuGetSysInfo(HcuSysOsNetInfo_t *si, bool mode);
+extern void GpioPortOp(char *op);
+extern UINT32 IsNetItfExist(char *itfname);
+extern void KillPppdProcess();
+
+
+
 
 #endif /* L1HWOPT_APIGPRS_H_ */

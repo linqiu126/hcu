@@ -561,14 +561,23 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
 	//if (is_error(jsonobj))
 	if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Failed to create json object!\n");
 
-	srcNode_jsonobj = json_object_object_get(jsonobj, "srcNode");
-	destNode_jsonobj = json_object_object_get(jsonobj, "destNode");
-	srcId_jsonobj = json_object_object_get(jsonobj, "srcId");
-	destId_jsonobj = json_object_object_get(jsonobj, "destId");
-	topicId_jsonobj = json_object_object_get(jsonobj, "topicId");
-	cmdId_jsonobj = json_object_object_get(jsonobj, "cmdId");
-	cmdVal_jsonobj = json_object_object_get(jsonobj, "cmdValue");
-	cont_jsonobj = json_object_object_get(jsonobj, "hlContent");
+//	srcNode_jsonobj = json_object_object_get(jsonobj, "srcNode");
+//	destNode_jsonobj = json_object_object_get(jsonobj, "destNode");
+//	srcId_jsonobj = json_object_object_get(jsonobj, "srcId");
+//	destId_jsonobj = json_object_object_get(jsonobj, "destId");
+//	topicId_jsonobj = json_object_object_get(jsonobj, "topicId");
+//	cmdId_jsonobj = json_object_object_get(jsonobj, "cmdId");
+//	cmdVal_jsonobj = json_object_object_get(jsonobj, "cmdValue");
+//	cont_jsonobj = json_object_object_get(jsonobj, "hlContent");
+
+	if (json_object_object_get_ex(jsonobj, "srcNode", &srcNode_jsonobj) == (json_bool)FALSE) return -1;
+	if (json_object_object_get_ex(jsonobj, "destNode", &destNode_jsonobj) == (json_bool)FALSE) return -1;
+	if (json_object_object_get_ex(jsonobj, "srcId", &srcId_jsonobj) == (json_bool)FALSE) return -1;
+	if (json_object_object_get_ex(jsonobj, "destId", &destId_jsonobj) == (json_bool)FALSE) return -1;
+	if (json_object_object_get_ex(jsonobj, "topicId", &topicId_jsonobj) == (json_bool)FALSE) return -1;
+	if (json_object_object_get_ex(jsonobj, "cmdId", &cmdId_jsonobj) == (json_bool)FALSE) return -1;
+	if (json_object_object_get_ex(jsonobj, "cmdValue", &cmdVal_jsonobj) == (json_bool)FALSE) return -1;
+	if (json_object_object_get_ex(jsonobj, "hlContent", &cont_jsonobj) == (json_bool)FALSE) return -1;
 
 	//解码具体数值
 	//SRCNODE

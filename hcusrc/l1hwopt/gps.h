@@ -52,4 +52,7 @@ void UTC2BTC(hcuStrDateTime_t GPS);
 void func_gps_resolve_GPRMC(CHAR data);
 void func_gps_receive_data(UINT32 fd);
 
+//External APIs
+extern UINT32 hcu_sps485_serial_init(SerialPortCom_t *sp);
+
 #endif /* L1HWOPT_GPS_H_ */
