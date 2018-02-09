@@ -1017,12 +1017,6 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 		return SUCCESS;
 	}
 
-	//通知界面：该状态报告有一些问题，表达不了料斗的情况，待完善
-//	StrHlcIe_cui_hcu2uir_status_report_t status;
-//	memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
-//	status.boardStatus = 1;
-//	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.snrId, &status);
-
 	//PullIn confirm message
 	StrHlcIe_cui_hcu2uir_pullin_confirm_t buf;
 	memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_pullin_confirm_t));
@@ -2242,7 +2236,8 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, UINT
 	int cnt=0;
 	UINT16 fH=0, nextHopper=0, tmpHopper=0;
 	double cWg=0, tWg=0, tLm=0;
-	double tAvg=0, tSigma=0;
+	double tAvg=0;
+//	double tSigma=0;
 //	double hMin=0;
 //	double hMax=0;
 	double hFinal = 0;
@@ -2258,7 +2253,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, UINT
 	tWg = gTaskL3bfdfContext.group[sid][gid].targetWeight;
 	tLm = gTaskL3bfdfContext.group[sid][gid].targetUpLimit;
 	tAvg = gTaskL3bfdfContext.group[sid][gid].rangeAvg;
-	tSigma = gTaskL3bfdfContext.group[sid][gid].rangeSigma;
+	//tSigma = gTaskL3bfdfContext.group[sid][gid].rangeSigma;
 	hFinal = tWg+tLm;
 
 	//判定入口满足条件
@@ -2399,7 +2394,8 @@ bool func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(UINT8 streamId, UINT16 
 bool func_l3bfdf_hopper_judge_buffer_is_lack_one_full(UINT8 sid, UINT16 hid, UINT32 weight)
 {
 	UINT16 gid = 0;
-	UINT32 tAvg=0, tSigma=0;
+	UINT32 tAvg=0;
+	//UINT32 tSigma=0;
 	UINT32 cWg=0;
 	UINT32 gap=0;
 
@@ -2415,7 +2411,7 @@ bool func_l3bfdf_hopper_judge_buffer_is_lack_one_full(UINT8 sid, UINT16 hid, UIN
 	//获取基础信息
 	gid = gTaskL3bfdfContext.hopper[sid][hid].groupId;
 	tAvg = gTaskL3bfdfContext.group[sid][gid].rangeAvg;
-	tSigma = gTaskL3bfdfContext.group[sid][gid].rangeSigma;
+	//tSigma = gTaskL3bfdfContext.group[sid][gid].rangeSigma;
 	cWg = gTaskL3bfdfContext.hopper[sid][hid].buferValue + weight;
 
 	if (cWg > gTaskL3bfdfContext.group[sid][gid].bufWgtTarget) return FALSE;
@@ -2574,6 +2570,23 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 	gTaskL3bfdfContext.staLocalUi.wsAvgTttMatCnt = gTaskL3bfdfContext.staLocalUi.wsTttMatCnt;
 	gTaskL3bfdfContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfdfContext.staLocalUi.wsTttMatWgt;
 
+	//5s的LocalUI数据进行更新
+	if ((gTaskL3bfdfContext.elipseCnt % HCU_L3BFDF_STA_5S_CYCLE) == 0){
+		StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t buf;
+		memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t));
+		int i = 0;
+		for (i = 0; i<HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; i++){
+			buf.lineId = i;
+			buf.targetWeight = gTaskL3bfdfContext.group[i][1].targetWeight;
+			buf.upLimitWeight = gTaskL3bfdfContext.group[i][1].targetUpLimit;
+			buf.totalPackage = gTaskL3bfdfContext.staUp2Now.wsIncMatCnt;
+			buf.totalReject = gTaskL3bfdfContext.staUp2Now.wsTgvMatCnt;
+			buf.totalWeight = gTaskL3bfdfContext.staUp2Now.wsIncMatWgt;\
+			buf.throughputPerMin = gTaskL3bfdfContext.staLocalUi.wsAvgTttTimes;
+			hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report(gTaskL3bfdfContext.configId, &buf);
+		}
+	}
+
 	//更新1Min各个统计表单
 	gTaskL3bfdfContext.staOneMin.wsIncMatCnt += gTaskL3bfdfContext.cur.wsIncMatCnt;
 	gTaskL3bfdfContext.staOneMin.wsIncMatWgt += gTaskL3bfdfContext.cur.wsIncMatWgt;
@@ -2590,7 +2603,8 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 	gTaskL3bfdfContext.staOneMin.wsAvgTttMatCnt = (UINT32)(gTaskL3bfdfContext.staOneMin.wsTttMatCnt*timeRun1MinRatio);
 	gTaskL3bfdfContext.staOneMin.wsAvgTttMatWgt = (UINT32)(gTaskL3bfdfContext.staOneMin.wsTttMatWgt*timeRun1MinRatio);
 
-	//1分钟：是否需要分为2条线路？
+#if 0  //使用了5s的更新方式，不再需要1分钟的频度
+	//1分钟：是否需要分为2条线路：明确是按照整个系统为单位
 	if ((gTaskL3bfdfContext.elipseCnt % HCU_L3BFDF_STA_1M_CYCLE) == 0){
 		StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t buf;
 		memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t));
@@ -2605,10 +2619,10 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 			buf.throughputPerMin = gTaskL3bfdfContext.staOneMin.wsAvgTttTimes;
 			hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report(gTaskL3bfdfContext.configId, &buf);
 		}
-		//printf("\nSend one times' report to UI!\n\n");
 		//然后将1分钟统计数据表单清零，以便再次计数
 		memset(&(gTaskL3bfdfContext.staOneMin), 0, sizeof(HcuSysMsgIeL3bfdfContextStaElement_t));
 	}
+#endif
 
 	//更新60Min各个统计表单
 	gTaskL3bfdfContext.sta60Min.wsIncMatCnt += gTaskL3bfdfContext.cur.wsIncMatCnt;
