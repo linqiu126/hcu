@@ -503,8 +503,12 @@ typedef struct StrHlcIe_cui_hcu2uir_statistic_bfdf_report
 //HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report    = 0x0199,
 typedef struct StrHlcIe_cui_hcu2uir_statistic_bfhs_report
 {
-	UINT32	weight;  //in NF2
-	UINT8   wmcState;
+	UINT32	targetWeight;  //in NF2
+	UINT32	upLimitWeight;  //in NF2
+	UINT32	totalWeight;  //in NF2
+	UINT32	totalPackage;
+	UINT32	totalReject;
+	UINT32	throughputPerMin;
 }StrHlcIe_cui_hcu2uir_statistic_bfhs_report_t;
 //cmdValue = configID;
 

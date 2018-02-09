@@ -59,7 +59,7 @@ OPSTAT func_pm25sharp_int_init(void);
 //For sharp pm25
 void func_pm25sharp_read_data(UINT32 fd);
 extern OPSTAT dbi_HcuPm25SharpDataInfo_save(sensor_pm25_sharp_data_element_t *pm25Data);
-
+extern UINT32 hcu_sps485_serial_port_get(SerialPortCom_t *sp, UINT8 *rcv_buf, UINT32 Len);
 
 
 #endif /* L3APP_SENSORPM25SHARP_H_ */

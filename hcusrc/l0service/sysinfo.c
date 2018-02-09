@@ -39,9 +39,9 @@ int strcmp_Wrapper(const char *s1, const char *s2, int intCaseSensitive)
 int strstr_Wrapper(const char* haystack, const char* needle, int intCaseSensitive)
 {
     if (intCaseSensitive)
-        return (int) strstr(haystack, needle);
+        return (int)strstr(haystack, needle);
     else
-        return (int) strcasestr(haystack, needle);
+        return (int)strcasestr(haystack, needle);
 }
 
 pid_t GetPIDbyName_implements(const char* cchrptr_ProcessName, int intCaseSensitiveness, int intExactMatch)

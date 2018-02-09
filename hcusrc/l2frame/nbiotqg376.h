@@ -10,6 +10,7 @@
 
 #include "../l0comvm/vmlayer.h"
 #include "../l1com/l1comdef.h"
+#include "../l1hwopt/ethernet.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
