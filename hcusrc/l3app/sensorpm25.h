@@ -53,6 +53,9 @@ typedef struct gTaskPmContext
 	UINT8 currentSensorId;
 	UINT32 AlarmFlag;
 	sensor_modbus_opertion_general_t cfgData;
+	float PM25Value;
+	float PM10Value;
+	float TSP;
 }gTaskPm25Context_t;
 #define SENSOR_PM25_HW_STATUS_INVALID 0xFF
 #define SENSOR_PM25_HW_STATUS_ACTIVE 1

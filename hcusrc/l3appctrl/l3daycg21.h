@@ -27,8 +27,16 @@ enum FSM_STATE_L3DAYCG21
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
+typedef struct LedMsgBuf
+{
+	UINT32 curLen;
+	UINT8  curBuf[HCU_SYSDIM_MSG_BODY_LEN_MAX];
+}LedMsgBuf_t;
+
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3daycg21[];
+
+
 
 //API
 extern OPSTAT fsm_l3daycg21_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

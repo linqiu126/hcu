@@ -51,19 +51,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: PrjAqycG20
+all: PrjDaycG21
 
 # Tool invocations
-PrjAqycG20: $(OBJS) $(USER_OBJS)
+PrjDaycG21: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
-	g++ -L/usr/local/lib -o "PrjAqycG20" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L/usr/local/lib -o "PrjDaycG21" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) PrjAqycG20
+	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) PrjDaycG21
 	-@echo ' '
 
 .PHONY: all clean dependents

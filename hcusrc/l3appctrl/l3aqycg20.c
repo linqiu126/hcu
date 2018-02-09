@@ -14,6 +14,7 @@
 #include "../l1com/l1comdef.h"
 #include "../l2frame/cloudvela.h"
 #include "../l3app/sensornoise.h"
+#include "../l3app/sensorpm25.h"
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -7,6 +7,7 @@ C_SRCS += \
 /home/pi/workspace/hcu/hcusrc/l2frame/avorion.c \
 /home/pi/workspace/hcu/hcusrc/l2frame/cloudvela.c \
 /home/pi/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c \
+/home/pi/workspace/hcu/hcusrc/l2frame/l2packet.c \
 /home/pi/workspace/hcu/hcusrc/l2frame/llczhb.c \
 /home/pi/workspace/hcu/hcusrc/l2frame/modbus.c \
 /home/pi/workspace/hcu/hcusrc/l2frame/nbiotcj188.c \
@@ -18,6 +19,7 @@ OBJS += \
 ./src/l2frame/avorion.o \
 ./src/l2frame/cloudvela.o \
 ./src/l2frame/i2cbuslibra.o \
+./src/l2frame/l2packet.o \
 ./src/l2frame/llczhb.o \
 ./src/l2frame/modbus.o \
 ./src/l2frame/nbiotcj188.o \
@@ -29,6 +31,7 @@ C_DEPS += \
 ./src/l2frame/avorion.d \
 ./src/l2frame/cloudvela.d \
 ./src/l2frame/i2cbuslibra.d \
+./src/l2frame/l2packet.d \
 ./src/l2frame/llczhb.d \
 ./src/l2frame/modbus.d \
 ./src/l2frame/nbiotcj188.d \
@@ -53,6 +56,13 @@ src/l2frame/cloudvela.o: /home/pi/workspace/hcu/hcusrc/l2frame/cloudvela.c
 	@echo ' '
 
 src/l2frame/i2cbuslibra.o: /home/pi/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross GCC Compiler'
+	gcc -DTARGET_RASPBERRY_PI3B -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+src/l2frame/l2packet.o: /home/pi/workspace/hcu/hcusrc/l2frame/l2packet.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_RASPBERRY_PI3B -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"

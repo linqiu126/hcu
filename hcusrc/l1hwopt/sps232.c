@@ -147,7 +147,7 @@ OPSTAT func_sps232_int_init(void)
 	else zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 9600;
 	//else zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 38400;
 
-	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2009)//for led test
+	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)//for led test
 	{
 		zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 38400;
 	}
@@ -175,8 +175,8 @@ OPSTAT func_sps232_int_init(void)
 		HcuDebugPrint("SPS232: Init Serial Port Success ...\n");
 	}
 
-	//hcu_spsapi_SerialPortSetVtimeVmin(&zHcuVmCtrTab.hwinv.sps232.sp, 10, 5);
-	hcu_sps485_SerialPortSetVtimeVmin(&zHcuVmCtrTab.hwinv.sps485.modbus, 1, 20);
+	hcu_spsapi_SerialPortSetVtimeVmin(&zHcuVmCtrTab.hwinv.sps232.sp, 10, 5);
+	//lPortSetVtimeVmin(&zHcuVmCtrTab.hwinv.sps485.modbus, 1, 20);
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("SPS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  zHcuVmCtrTab.hwinv.sps232.sp.vTime, zHcuVmCtrTab.hwinv.sps232.sp.vMin);
 	}
