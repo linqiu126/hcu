@@ -1542,6 +1542,7 @@ OPSTAT hcu_write_errlog(const char* log)
 		    fclose(fd);//关闭文件
 		}
 
+		return SUCCESS;
 }
 
 

@@ -78,7 +78,7 @@ size_t func_huirestcodec_curl_write_callback(void *buffer, size_t size, size_t n
 	do{\
 		jsonobj = json_tokener_parse(receiveBuffer.buf);\
 		if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode json object!\n");\
-		cont_jsonobj = json_object_object_get(jsonobj, HUIREST_ACCESS_CONST_SERVICE_TAG);\
+		json_object_object_get_ex(jsonobj, HUIREST_ACCESS_CONST_SERVICE_TAG, &cont_jsonobj);\
 		if (cont_jsonobj == NULL)\
 		{\
 			json_object_put(jsonobj);\
@@ -96,7 +96,7 @@ size_t func_huirestcodec_curl_write_callback(void *buffer, size_t size, size_t n
 
 #define HCU_HUIREST_DECODE_ACTION_HEAD_ACTIONID(actionId) \
 	do{\
-		cont_jsonobj = json_object_object_get(jsonobj, HUIREST_ACCESS_CONST_ACTION_ID);\
+		json_object_object_get_ex(jsonobj, HUIREST_ACCESS_CONST_ACTION_ID, &cont_jsonobj);\
 		if (cont_jsonobj == NULL)\
 		{\
 			json_object_put(jsonobj);\
@@ -110,7 +110,7 @@ size_t func_huirestcodec_curl_write_callback(void *buffer, size_t size, size_t n
 
 #define HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FLAG(flag) \
 	do{\
-		cont_jsonobj = json_object_object_get(jsonobj, HUIREST_ACCESS_CONST_PAR_FLAG);\
+		json_object_object_get_ex(jsonobj, HUIREST_ACCESS_CONST_PAR_FLAG, &cont_jsonobj);\
 		if (cont_jsonobj == NULL)\
 		{\
 			json_object_put(jsonobj);\
@@ -124,7 +124,7 @@ size_t func_huirestcodec_curl_write_callback(void *buffer, size_t size, size_t n
 
 #define HCU_HUIREST_DECODE_ACTION_HEAD_PAR_CONTENT() \
 	do{\
-		cont_jsonobj = json_object_object_get(jsonobj, HUIREST_ACCESS_CONST_PAR_CONTENT);\
+		json_object_object_get_ex(jsonobj, HUIREST_ACCESS_CONST_PAR_CONTENT, &cont_jsonobj);\
 		if (cont_jsonobj == NULL)\
 		{\
 			json_object_put(jsonobj);\
@@ -134,7 +134,7 @@ size_t func_huirestcodec_curl_write_callback(void *buffer, size_t size, size_t n
 
 #define HCU_HUIREST_DECODE_ACTION_HEAD_PAR_GENERAL_FB() \
 	do{\
-		cont2_jsonobj = json_object_object_get(cont_jsonobj, "sucFlag");\
+		json_object_object_get_ex(cont_jsonobj, "sucFlag", &cont2_jsonobj);\
 		if (cont2_jsonobj == NULL)\
 		{\
 			json_object_put(cont_jsonobj);\
@@ -143,7 +143,7 @@ size_t func_huirestcodec_curl_write_callback(void *buffer, size_t size, size_t n
 		}\
 		out->sucFlag = json_object_get_boolean(cont2_jsonobj);\
 		json_object_put(cont2_jsonobj);\
-		cont2_jsonobj = json_object_object_get(cont_jsonobj, "errCode");\
+		json_object_object_get_ex(cont_jsonobj, "errCode", &cont2_jsonobj);\
 		if (cont2_jsonobj == NULL)\
 		{\
 			json_object_put(cont_jsonobj);\
@@ -158,7 +158,7 @@ size_t func_huirestcodec_curl_write_callback(void *buffer, size_t size, size_t n
 
 #define HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FB_ONE_DOMAIN(parInt, parString) \
 	do{\
-		cont2_jsonobj = json_object_object_get(cont_jsonobj, parString);\
+		json_object_object_get_ex(cont_jsonobj, parString, &cont2_jsonobj);\
 		if (cont2_jsonobj == NULL)\
 		{\
 			json_object_put(cont_jsonobj);\

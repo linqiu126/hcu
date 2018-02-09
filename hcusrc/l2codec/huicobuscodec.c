@@ -206,7 +206,7 @@ OPSTAT func_huicobuscodec_HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req_received_handl
 	if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC: Failed to create json object!\n");
 
 	//解码snrBitmap ARRAY
-	decode_jsonobj = json_object_object_get(jsonobj, "snrBitmap");
+	json_object_object_get_ex(jsonobj, "snrBitmap", &decode_jsonobj);
 	if (decode_jsonobj != NULL){
 //		int tt = json_object_array_length(decode_jsonobj);
 //		for (i = 0 ; i < json_object_array_length(decode_jsonobj); i++){
@@ -218,31 +218,31 @@ OPSTAT func_huicobuscodec_HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req_received_handl
 	  json_object_put(decode_jsonobj);
 	}
 	//解码cmdvalue1
-	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue1");
+	json_object_object_get_ex(jsonobj, "cmdTestValue1", &decode_jsonobj);
 	if (decode_jsonobj != NULL){
 		snd->cmdValue1 = json_object_get_int(decode_jsonobj);
 		json_object_put(decode_jsonobj);
 	}
 	//解码cmdvalue2
-	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue2");
+	json_object_object_get_ex(jsonobj, "cmdTestValue2", &decode_jsonobj);
 	if (decode_jsonobj != NULL){
 		snd->cmdValue2 = json_object_get_int(decode_jsonobj);
 		json_object_put(decode_jsonobj);
 	}
 	//解码cmdvalue3
-	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue3");
+	json_object_object_get_ex(jsonobj, "cmdTestValue3", &decode_jsonobj);
 	if (decode_jsonobj != NULL){
 		snd->cmdValue3 = json_object_get_int(decode_jsonobj);
 		json_object_put(decode_jsonobj);
 	}
 	//解码cmdvalue4
-	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue4");
+	json_object_object_get_ex(jsonobj, "cmdTestValue4", &decode_jsonobj);
 	if (decode_jsonobj != NULL){
 		snd->cmdValue4 = json_object_get_int(decode_jsonobj);
 		json_object_put(decode_jsonobj);
 	}
 	//解码cmdBuf
-	decode_jsonobj = json_object_object_get(jsonobj, "cmdBuf");
+	json_object_object_get_ex(jsonobj, "cmdBuf", &decode_jsonobj);
 	if (decode_jsonobj != NULL){
 		for (i = 0 ; i < json_object_array_length(decode_jsonobj); i++){
 			json_object *val = json_object_array_get_idx(decode_jsonobj, i);

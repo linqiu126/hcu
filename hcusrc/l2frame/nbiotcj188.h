@@ -10,6 +10,7 @@
 
 #include "../l0comvm/vmlayer.h"
 #include "../l1com/l1comdef.h"
+#include "../l1hwopt/ethernet.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -61,5 +62,7 @@ OPSTAT func_nbiotcj188_checksum_caculate(char *s, INT8 output);
 extern OPSTAT hcu_ethernet_socket_link_setup(void);
 extern OPSTAT hcu_ethernet_socket_link_disconnect(void);
 extern OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf);
+
+
 
 #endif /* L2FRAME_NBIOTCJ188_H_ */

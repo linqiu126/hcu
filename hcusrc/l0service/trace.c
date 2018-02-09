@@ -105,12 +105,12 @@ void ErrorTracePrintf(char *format, ...)
 
 		//打开源文件
 		FILE *fHandler;
-		if((fHandler=open("./hcuerr.log", O_RDWR|O_CREAT)) < 0){
+		if((int)(fHandler=open("./hcuerr.log", O_RDWR|O_CREAT)) < 0){
 		  return;
 		}
-		lseek(fHandler, 0L, SEEK_END); //移动文件到尾部
-		write(fHandler, gpuTraceBuffer, strlen(gpuTraceBuffer));
-		close(fHandler);
+		lseek((int)fHandler, 0L, SEEK_END); //移动文件到尾部
+		write((int)fHandler, gpuTraceBuffer, strlen((char*)gpuTraceBuffer));
+		close((int)fHandler);
 
 #if 0 // Print to File not implemented for the momnet
 

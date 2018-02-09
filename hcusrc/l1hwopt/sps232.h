@@ -70,4 +70,9 @@ OPSTAT func_sps232_read_data_ze08ch2o(void); //甲醛
 UINT8 func_sps232_check_sum_ze08ch2o(UINT8 *s, UINT8 len);
 UINT8 func_sps232_check_sum_pm25sharp(UINT8 *s, UINT8 len);
 
+//External APIs
+extern UINT32 hcu_sps485_SerialPortSetVtimeVmin(SerialPortCom_t *sp, UINT8 vTime, UINT8 vMin);
+
+
+
 #endif /* L1HWOPT_SPS232_H_ */

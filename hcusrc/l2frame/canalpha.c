@@ -465,8 +465,7 @@ OPSTAT fsm_canalpha_sui_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_
 			bitmap |= ((UINT32)1<<i);
 		}
 	}
-//	printf("CANALPHA: Suspend REQ, bitmap = %d/%d/%d/%d/%d/%d, send out bitmap=%x \n", rcv.boardBitmap[0], rcv.boardBitmap[1], rcv.boardBitmap[2], rcv.boardBitmap[3],\
-//			rcv.boardBitmap[4], rcv.boardBitmap[5], bitmap);
+//	printf("CANALPHA: Suspend REQ, bitmap = %d/%d/%d/%d/%d/%d, send out bitmap=%x \n", rcv.boardBitmap[0], rcv.boardBitmap[1], rcv.boardBitmap[2], rcv.boardBitmap[3], rcv.boardBitmap[4], rcv.boardBitmap[5], bitmap);
 
 	//准备组装发送消息
 	StrMsg_HUITP_MSGID_sui_com_suspend_req_t pMsgProc;
@@ -508,8 +507,7 @@ OPSTAT fsm_canalpha_sui_resume_req(UINT32 dest_id, UINT32 src_id, void * param_p
 		}
 
 	}
-//	printf("CANALPHA: Resume REQ, bitmap = %d/%d/%d/%d/%d/%d, send out bitmap=%x \n", rcv.boardBitmap[0], rcv.boardBitmap[1], rcv.boardBitmap[2], rcv.boardBitmap[3],\
-//			rcv.boardBitmap[4], rcv.boardBitmap[5], bitmap);
+//	printf("CANALPHA: Resume REQ, bitmap = %d/%d/%d/%d/%d/%d, send out bitmap=%x \n", rcv.boardBitmap[0], rcv.boardBitmap[1], rcv.boardBitmap[2], rcv.boardBitmap[3], rcv.boardBitmap[4], rcv.boardBitmap[5], bitmap);
 
 	//准备组装发送消息
 	StrMsg_HUITP_MSGID_sui_com_resume_req_t pMsgProc;

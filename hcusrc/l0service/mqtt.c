@@ -570,54 +570,14 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
 //	cmdVal_jsonobj = json_object_object_get(jsonobj, "cmdValue");
 //	cont_jsonobj = json_object_object_get(jsonobj, "hlContent");
 
-
 	json_object_object_get_ex(jsonobj, "srcNode", &srcNode_jsonobj);
-//	if (json_object_object_get_ex(jsonobj, "srcNode", &srcNode_jsonobj) == (json_bool)TRUE){
-//		printf("test1\n");
-//		return -1;
-//	}
-
 	json_object_object_get_ex(jsonobj, "destNode", &destNode_jsonobj);
-//	if (json_object_object_get_ex(jsonobj, "destNode", &destNode_jsonobj) == (json_bool)TRUE){
-//		printf("test2, destNode_jsonobj=%x\n", &destNode_jsonobj);
-//		return -1;
-//	}
-
 	json_object_object_get_ex(jsonobj, "srcId", &srcId_jsonobj);
-//	if (json_object_object_get_ex(jsonobj, "srcId", &srcId_jsonobj) == (json_bool)TRUE){
-//		printf("test3\n");
-//		return -1;
-//	}
-
 	json_object_object_get_ex(jsonobj, "destId", &destId_jsonobj);
-//	if (json_object_object_get_ex(jsonobj, "destId", &destId_jsonobj) == (json_bool)TRUE){
-//		printf("test4\n");
-//		return -1;
-//	}
-
 	json_object_object_get_ex(jsonobj, "topicId", &topicId_jsonobj);
-//	if (json_object_object_get_ex(jsonobj, "topicId", &topicId_jsonobj) == (json_bool)TRUE){
-//		printf("test5\n");
-//		return -1;
-//	}
-
 	json_object_object_get_ex(jsonobj, "cmdId", &cmdId_jsonobj);
-//	if (json_object_object_get_ex(jsonobj, "cmdId", &cmdId_jsonobj) == (json_bool)TRUE){
-//		printf("test6\n");
-//		return -1;
-//	}
-
 	json_object_object_get_ex(jsonobj, "cmdValue", &cmdVal_jsonobj);
-//	if (json_object_object_get_ex(jsonobj, "cmdValue", &cmdVal_jsonobj) == (json_bool)TRUE){
-//		printf("test7\n");
-//		return -1;
-//	}
-
 	json_object_object_get_ex(jsonobj, "hlContent", &cont_jsonobj);
-//	if (json_object_object_get_ex(jsonobj, "hlContent", &cont_jsonobj) == (json_bool)TRUE){
-//		printf("test8\n");
-//		return -1;
-//	}
 
 	//解码具体数值
 	//SRCNODE

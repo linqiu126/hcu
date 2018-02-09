@@ -492,7 +492,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	{
 		currentModbusBuf.curLen =ret;
 		HCU_DEBUG_PRINT_INF("MODBUS: Received PSW TSP data length: %d  \n", ret);
-		CurrentModusContext.TspHW_AlarmFlag == OFF;
+		CurrentModusContext.TspHW_AlarmFlag = 0xFF;
 		//UINT16 hwType = 0;
 		//hwType = zHcuSysEngPar.hwBurnId.hwType & 0xFFFF;
 		//HCU_DEBUG_PRINT_INF("MODBUS: zHcuSysEngPar.hwBurnId.hwType in Dec 0X%x  \n", hwType);
@@ -2748,7 +2748,7 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 		t0 = (t0 <<8) & 0xFF00;
 		t1 = t1 & 0xFF;
 		snd->winddir.winddirValue = t0 + t1;
-		snd->winddir.winddirValue + zHcuSysEngPar.winddircalibration;//风向校准
+		snd->winddir.winddirValue = zHcuSysEngPar.winddircalibration;//风向校准
 		if(snd->winddir.winddirValue > MODBUS_WINDDIR_CALIBRATION_MAX)
 		{
 			snd->winddir.winddirValue = snd->winddir.winddirValue - MODBUS_WINDDIR_CALIBRATION_MAX;
@@ -4121,7 +4121,7 @@ float hcu_hex2float(unsigned char *p)
     //获得指数
     e=e-127;
     //获得底数
-    long long int m=a&0x7FFFFF|0x800000;
+    long long int m = (a&0x7FFFFF)|0x800000;
     long long int c=0;
     float v = 0.0f, y = 1.0f;
     //向右移动

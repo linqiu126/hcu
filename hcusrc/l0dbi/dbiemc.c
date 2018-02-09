@@ -343,7 +343,8 @@ OPSTAT dbi_HcuEmcDataInfo_save_example(sensor_emc_data_element_t *emcData)
 			sid = 0;
 			while((sqlRow=mysql_fetch_row(resPtrChild)) != NULL)
 			{
-				if ((UINT32)sqlRow[1] > sid) sid = (UINT32)sqlRow[1];
+				if ((UINT32)sqlRow[1] > sid)
+					sid = (UINT32)sqlRow[1];
 			}
 			sid = sid + 1;
 			mysql_free_result(resPtrChild);

@@ -28,7 +28,7 @@ OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 	if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode json object!\n");
 
 	//ToUsr_jsonobj
-	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_TO_USER);
+	json_object_object_get_ex(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_TO_USER, &Cont_jsonobj);
 	if (Cont_jsonobj == NULL)
 	{
 		json_object_put(jsonobj);
@@ -44,7 +44,7 @@ OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 	}
 
 	//FrUsr_jsonobj
-	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_FROM_USER);;
+	json_object_object_get_ex(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_FROM_USER, &Cont_jsonobj);
 	if (Cont_jsonobj == NULL)
 	{
 		json_object_put(jsonobj);
@@ -53,7 +53,7 @@ OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 	json_object_put(Cont_jsonobj);
 
 	//CrTim_jsonobj
-	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_CREATE_TIME);;
+	json_object_object_get_ex(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_CREATE_TIME, &Cont_jsonobj);
 	if (Cont_jsonobj == NULL)
 	{
 		json_object_put(jsonobj);
@@ -62,7 +62,7 @@ OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 	json_object_put(Cont_jsonobj);
 
 	//MsgTp_jsonobj
-	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_MSG_TYPE);
+	json_object_object_get_ex(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_MSG_TYPE, &Cont_jsonobj);
 	if (Cont_jsonobj == NULL)
 	{
 		json_object_put(jsonobj);
@@ -79,7 +79,7 @@ OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 	}
 
 	//MsgId_jsonobj
-	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_MSG_ID);;
+	json_object_object_get_ex(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_MSG_ID, &Cont_jsonobj);
 	if (Cont_jsonobj == NULL)
 	{
 		json_object_put(jsonobj);
@@ -89,7 +89,7 @@ OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 	json_object_put(Cont_jsonobj);
 
 	//MsgLn_jsonobj
-	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_MSG_LEN);;
+	json_object_object_get_ex(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_MSG_LEN, &Cont_jsonobj);
 	if (Cont_jsonobj == NULL)
 	{
 		json_object_put(jsonobj);
@@ -99,7 +99,7 @@ OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 	json_object_put(Cont_jsonobj);
 
 	//FnFlg_jsonobj
-	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_FUNC_FLAG);;
+	json_object_object_get_ex(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_FUNC_FLAG, &Cont_jsonobj);
 	if (Cont_jsonobj == NULL)
 	{
 		json_object_put(jsonobj);
@@ -108,7 +108,7 @@ OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 	json_object_put(Cont_jsonobj);
 
 	//IeCnt_jsonobj
-	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_IE_CONTENT);
+	json_object_object_get_ex(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_IE_CONTENT, &Cont_jsonobj);
 	json_object_put(jsonobj);
 	if (msgLen==0){
 		if (Cont_jsonobj != NULL){
@@ -132,7 +132,7 @@ OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 		{
 			jsonobj = json_tokener_parse(stmp);
 			if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode json object!\n");
-			Cont_jsonobj = json_object_object_get(jsonobj, "cmdId");
+			json_object_object_get_ex(jsonobj, "cmdId", &Cont_jsonobj);
 			if (Cont_jsonobj != NULL){
 				//a = json_object_get_int(Cont_jsonobj); //赋值
 				json_object_put(Cont_jsonobj);
@@ -151,12 +151,12 @@ OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 		{
 			jsonobj = json_tokener_parse(stmp);
 			if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode json object!\n");
-			Cont_jsonobj = json_object_object_get(jsonobj, "cmdId");
+			json_object_object_get_ex(jsonobj, "cmdId", &Cont_jsonobj);
 			if (Cont_jsonobj != NULL){
 				//a = json_object_get_int(Cont_jsonobj); //赋值
 				json_object_put(Cont_jsonobj);
 			}
-			Cont_jsonobj = json_object_object_get(jsonobj, "result");
+			json_object_object_get_ex(jsonobj, "result", &Cont_jsonobj);
 			if (Cont_jsonobj != NULL){
 				//a = json_object_get_int(Cont_jsonobj); //赋值
 				json_object_put(Cont_jsonobj);
@@ -170,7 +170,7 @@ OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 		{
 			jsonobj = json_tokener_parse(stmp);
 			if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode json object!\n");
-			Cont_jsonobj = json_object_object_get(jsonobj, "rand");
+			json_object_object_get_ex(jsonobj, "rand", &Cont_jsonobj);
 			if (Cont_jsonobj != NULL){
 				//a = json_object_get_int(Cont_jsonobj); //赋值
 				json_object_put(Cont_jsonobj);

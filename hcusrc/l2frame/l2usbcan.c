@@ -737,14 +737,13 @@ void func_usbcan_RxCpltCallback(HcuUsbCanHandleTypeDef_t* CanHandle, VCI_CAN_OBJ
 	else
 		frame_desc = &g_can_packet_desc[1][wmc_id];
 
-//	printf("USBCAN: func_usbcan_RxCpltCallback (wmc_id=%d). DataLen=%d, %02X %02X %02X %02X %02X %02X %02X %02X\r\n", wmc_id, Can->DataLen, \
-//			Can->Data[0], Can->Data[1], Can->Data[2], Can->Data[3], Can->Data[4], Can->Data[5], Can->Data[6], Can->Data[7]);
-//	HCU_DEBUG_PRINT_INF("stdId 0x%x length %d, data: 0x%08x 0x%08x\n",
-//		Can->ID,
-//		Can->DataLen,
-//		*(uint32_t *)(&Can->Data[0]),
-//		*(uint32_t *)(&Can->Data[4])
-//		);
+	//printf("USBCAN: func_usbcan_RxCpltCallback (wmc_id=%d). DataLen=%d, %02X %02X %02X %02X %02X %02X %02X %02X\r\n", wmc_id, Can->DataLen, Can->Data[0], Can->Data[1], Can->Data[2], Can->Data[3], Can->Data[4], Can->Data[5], Can->Data[6], Can->Data[7]);
+	HCU_DEBUG_PRINT_INF("stdId 0x%x length %d, data: 0x%08x 0x%08x\n",
+		Can->ID,
+		Can->DataLen,
+		*(uint32_t *)(&Can->Data[0]),
+		*(uint32_t *)(&Can->Data[4])
+		);
 
 	l2packet_rx_bytes(frame_desc, &Can->Data[0], Can->DataLen);
 
