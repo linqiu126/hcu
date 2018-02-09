@@ -51,6 +51,8 @@ OPSTAT  func_bfhsuicomm_time_out_period_read_process(void);
 
 //External APIs
 extern OPSTAT dbi_HcuBfhs_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp(INT32 cmdValue, StrHlcIe_cui_hcu2uir_static_cali_resp_t *buf);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(INT32 cmdValue, StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t *buf);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_BFHSUICOMM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFHSUICOMM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

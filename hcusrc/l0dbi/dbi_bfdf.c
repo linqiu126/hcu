@@ -214,6 +214,36 @@ OPSTAT dbi_HcuBfdf_callcell_save(HcuSysMsgIeL3bfdfCallcellElement_t *input)
     return SUCCESS;
 }
 
+//删除对应用户所有超过90天的数据
+//缺省做成90天，如果参数错误，导致90天以内的数据强行删除，则不被认可
+OPSTAT dbi_HcuBfdf_callcell_delete_3monold(UINT32 days)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+    UINT32 cursec = 0;
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    if (days <DBI_BFDF_DATA_SAVE_DAYS_MIN) days = DBI_BFDF_DATA_SAVE_DAYS_MIN;
+
+    //建立数据库连接
+    HCU_L0DBICOM_INIT_DB_CONN();
+
+	//删除满足条件的数据
+    cursec = time(NULL);
+    days = days * 24 * 3600;
+    sprintf(strsql, "DELETE FROM `hcubfdfcallcell` WHERE (%d - `timestamp` > '%d')", cursec, days);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIBFHS: INSET data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
 
 
 

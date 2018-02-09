@@ -1556,7 +1556,6 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	int videoindex_v=-1,videoindex_out=-1;
 	int frame_index=0;
 	//int64_t cur_pts_v=0;
-	double cur_pts_v=0;
 
 	//const char *fdir = "/home/pi/workspace/hcu/RasberryPi/log/201607/avorion201606261823.h264";
 
@@ -1674,8 +1673,8 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 							pkt.duration=(double)calc_duration/(double)(av_q2d(time_base1)*AV_TIME_BASE);
 							frame_index++;
 						}
-
-						cur_pts_v=pkt.pts;
+//						double cur_pts_v=0;
+//						cur_pts_v=pkt.pts;
 						break;
 					}
 				}while(av_read_frame(ifmt_ctx, &pkt) >= 0);

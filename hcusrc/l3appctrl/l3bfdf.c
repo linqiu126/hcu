@@ -701,6 +701,9 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 	//printf("L3BFDF: New event, weight=0x%x\n", rcv.sensorWsValue);
 
+	//UPDATE UI
+	HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_DATA_VALID);
+
 	//Update latest boards status
 	func_l3bfdf_print_all_board_status();
 

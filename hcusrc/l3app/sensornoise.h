@@ -99,5 +99,8 @@ extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 data
 extern OPSTAT hcu_read_from_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);
 extern OPSTAT hcu_save_to_storage_mem(HcuDiscDataSampleStorageArray_t *record);
 extern OPSTAT dbi_HcuNoiseDataInfo_save(sensor_noise_data_element_t *noiseData);
+extern OPSTAT hcu_hsmmp_video_capture_start(const HKVisionOption_t HKVisionOption);
+extern OPSTAT hcu_hsmmp_video_capture_stop(const HKVisionOption_t HKVisionOption);
+
 
 #endif /* L3APP_SENSORNOISE_H_ */

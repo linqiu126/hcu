@@ -1031,6 +1031,19 @@ OPSTAT func_l3bfhs_time_out_statistic_scan_process(void)
 	gTaskL3bfhsContext.staLocalUi.wsAvgTttTimes = (UINT32)(gTaskL3bfhsContext.curAge.wsAvgTttTimesMid + 0.5);
 	gTaskL3bfhsContext.staLocalUi.wsAvgTgvTimes = (UINT32)(gTaskL3bfhsContext.curAge.wsAvgTgvTimesMid + 0.5);
 
+	//5s的LocalUI数据进行更新
+	if ((gTaskL3bfhsContext.elipseCnt % HCU_L3BFHS_STA_5S_CYCLE) == 0){
+		StrHlcIe_cui_hcu2uir_statistic_bfhs_report_t buf;
+		memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t));
+		buf.targetWeight = gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight;
+		buf.upLimitWeight = gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight;
+		buf.totalPackage = gTaskL3bfhsContext.staUp2Now.wsIncMatCnt;
+		buf.totalReject = gTaskL3bfhsContext.staUp2Now.wsOverCnt+gTaskL3bfhsContext.staUp2Now.wsUnderTotalCnt;
+		buf.totalWeight = gTaskL3bfhsContext.staUp2Now.wsIncMatWgt;
+		buf.throughputPerMin = gTaskL3bfhsContext.staLocalUi.wsAvgTttTimes;
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report(gTaskL3bfhsContext.configId, &buf);
+	}
+
 	//更新60Min各个统计表单
 	gTaskL3bfhsContext.sta60Min.wsIncMatCnt += gTaskL3bfhsContext.cur.wsIncMatCnt;
 	gTaskL3bfhsContext.sta60Min.wsIncMatWgt += gTaskL3bfhsContext.cur.wsIncMatWgt;
@@ -1114,7 +1127,7 @@ OPSTAT func_l3bfhs_time_out_statistic_scan_process(void)
 	gTaskL3bfhsContext.sta24H.wsUnderTu2Wgt += gTaskL3bfhsContext.cur.wsUnderTu2Wgt;
 	gTaskL3bfhsContext.sta24H.wsUnspecificCnt += gTaskL3bfhsContext.cur.wsUnspecificCnt;
 	gTaskL3bfhsContext.sta24H.wsUnspecificWgt += gTaskL3bfhsContext.cur.wsUnspecificWgt;
-	float timeRun24HourRatio = (float) HCU_L3BFHS_STA_24H_CYCLE / (float)(((gTaskL3bfhsContext.elipse24HourCnt%HCU_L3BFHS_STA_24H_CYCLE)==0)?HCU_L3BFHS_STA_24H_CYCLE:(gTaskL3bfhsContext.elipseCnt%HCU_L3BFHS_STA_24H_CYCLE));
+	//float timeRun24HourRatio = (float) HCU_L3BFHS_STA_24H_CYCLE / (float)(((gTaskL3bfhsContext.elipse24HourCnt%HCU_L3BFHS_STA_24H_CYCLE)==0)?HCU_L3BFHS_STA_24H_CYCLE:(gTaskL3bfhsContext.elipseCnt%HCU_L3BFHS_STA_24H_CYCLE));
 	gTaskL3bfhsContext.sta24H.wsAvgMatTimes = (UINT32)(gTaskL3bfhsContext.sta24H.wsIncMatCnt*timeRun60MinRatio);
 	gTaskL3bfhsContext.sta24H.wsAvgTttTimes = (UINT32)(gTaskL3bfhsContext.sta24H.wsNormalCnt*timeRun60MinRatio);
 	gTaskL3bfhsContext.sta24H.wsAvgTgvTimes = (UINT32)(gTaskL3bfhsContext.sta24H.wsOverCnt*timeRun60MinRatio) + (UINT32)(gTaskL3bfhsContext.sta60Min.wsUnderTotalCnt*timeRun60MinRatio);
