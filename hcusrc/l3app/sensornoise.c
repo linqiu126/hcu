@@ -451,36 +451,9 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	}
 
 
-
-
-	//For HKvision option setting
-	HKVisionOption_t HKVisionOption;
-	memset( (void *)&HKVisionOption, 0, sizeof(HKVisionOption_t));
-
-	strcat(HKVisionOption.user_key, "admin");
-	strcat(HKVisionOption.user_key, ":");
-	strcat(HKVisionOption.user_key, "Bxxh!123");
-
-	strcat(HKVisionOption.url_photo, "http://192.168.1.64/Streaming/channels/1/picture");
-	strcat(HKVisionOption.url_video_start, "http://192.168.1.64/ISAPI/ContentMgmt/record/control/manual/start/tracks/1");
-	strcat(HKVisionOption.url_video_stop, "http://192.168.1.64/ISAPI/ContentMgmt/record/control/manual/stop/tracks/1");
-
-
-	strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curPhotoDir);
-	strcat(HKVisionOption.file_photo, "/");
-	strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curHikvisionFname);
-	strcpy(HKVisionOption.file_photo_pure, zHcuVmCtrTab.clock.curHikvisionPureFname);
-
-	strcat(HKVisionOption.file_video, zHcuVmCtrTab.clock.curPhotoDir);
-	strcat(HKVisionOption.file_video, "/");
-	strcat(HKVisionOption.file_video, "hkvideo.txt");
-
 	//判断如果Noise超过阀值，若超过，则需要设alarm flag = ON, 启动拍照和录像，并触发告警，告警报告中需要包括告警类型，告警内容，及需要上传照片的文件名（包含设备名字日期时间）和录像的开始日期、时间和停止的日期、时间。
 	HCU_DEBUG_PRINT_INF("NOISE: noise = %d\n\n\n\n", (rcv.noise.noiseValue));
-	if(rcv.noise.noiseValue == 0 || rcv.noise.noiseValue >= HCU_SENSOR_NOISE_VALUE_ALARM_THRESHOLD*10)
-		gTaskNoiseContext.noiseValue = 35;
-	else
-		gTaskNoiseContext.noiseValue = (float)rcv.noise.noiseValue/10;
+	gTaskNoiseContext.noiseValue = (float)rcv.noise.noiseValue/10;
 
 	HCU_DEBUG_PRINT_INF("NOISE: noise = %.1f\n\n\n\n", gTaskNoiseContext.noiseValue);
 
@@ -508,14 +481,8 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		}
 */
 		if(FALSE == gTaskNoiseContext.AlarmFlag)
-		{
-			if(FAILURE == hcu_hsmmp_video_capture_start(HKVisionOption)){
-				HcuErrorPrint("NOISE: Start HK video capture error!\n\n");
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-			}
-		}
+			gTaskNoiseContext.AlarmFlag = TRUE;
 
-		gTaskNoiseContext.AlarmFlag = TRUE;
 
 		//send alarm report
 		msg_struct_com_alarm_report_t snd;
@@ -540,8 +507,12 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 */
 		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_ON for noise exceed threshold\n\n\n");//debug by shanchun
 
-		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+		if (zHcuSysEngPar.hwBurnId.hwType != HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
+		{
+			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+
+		}
 
 	}
 
@@ -553,13 +524,6 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 
 	{
 		gTaskNoiseContext.AlarmFlag = FALSE;
-
-		ret = hcu_hsmmp_video_capture_stop(HKVisionOption);
-		if(FAILURE == ret)
-		{
-			HcuErrorPrint("NOISE: Stop HK video capture error!\n\n");
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-		}
 
 		//send alarm clear report
 		msg_struct_com_alarm_report_t snd;
@@ -579,9 +543,11 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 
 		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_OFF for noise exceed threshold\n\n\n");//debug by shanchun
 
-		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
-
+		if (zHcuSysEngPar.hwBurnId.hwType != HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
+		{
+			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+		}
 	}
 
 
@@ -634,7 +600,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	//在线模式
 	//else if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 	//在线模式
-	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE) || ((zHcuSysEngPar.hwBurnId.hwType != HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)) )
 
 	{
 		//Online processing
