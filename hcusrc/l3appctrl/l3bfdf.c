@@ -1023,10 +1023,16 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	//PullIn confirm message
 	StrHlcIe_cui_hcu2uir_pullin_confirm_t buf;
 	memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_pullin_confirm_t));
-	buf.streamId = line;
+	buf.lineId = line;
 	buf.hopperId = locHopperId;
-	buf.targetWeight = gTaskL3bfdfContext.group[buf.streamId][gTaskL3bfdfContext.hopper[line][locHopperId].groupId].targetWeight;
-	buf.upLimitWeight = gTaskL3bfdfContext.group[buf.streamId][gTaskL3bfdfContext.hopper[line][locHopperId].groupId].targetUpLimit;
+	buf.groupId = gTaskL3bfdfContext.hopper[line][locHopperId].groupId;
+	buf.curWeight = gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue;
+	buf.bufWeight = gTaskL3bfdfContext.hopper[line][locHopperId].buferValue;
+	buf.curRatio = gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue;
+	buf.curRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue/\
+			(float)gTaskL3bfdfContext.group[line][buf.groupId].targetWeight*100.0)&0xFF;
+	buf.bufRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][locHopperId].buferValue/\
+			(float)gTaskL3bfdfContext.group[line][buf.groupId].bufWgtTarget*100.0)&0xFF;
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm(gTaskL3bfdfContext.configId, &buf);
 
 	//料斗重量更新：将最后一个物料增加到统计数据中
@@ -2239,7 +2245,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, UINT
 	int cnt=0;
 	UINT16 fH=0, nextHopper=0, tmpHopper=0;
 	double cWg=0, tWg=0, tLm=0;
-	double tAvg=0;
+	//double tAvg=0;
 //	double tSigma=0;
 //	double hMin=0;
 //	double hMax=0;
@@ -2255,7 +2261,7 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, UINT
 
 	tWg = gTaskL3bfdfContext.group[sid][gid].targetWeight;
 	tLm = gTaskL3bfdfContext.group[sid][gid].targetUpLimit;
-	tAvg = gTaskL3bfdfContext.group[sid][gid].rangeAvg;
+	//tAvg = gTaskL3bfdfContext.group[sid][gid].rangeAvg;
 	//tSigma = gTaskL3bfdfContext.group[sid][gid].rangeSigma;
 	hFinal = tWg+tLm;
 
