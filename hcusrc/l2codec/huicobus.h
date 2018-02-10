@@ -515,10 +515,14 @@ typedef struct StrHlcIe_cui_hcu2uir_statistic_bfhs_report
 //HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm         	= 0x019A,
 typedef struct StrHlcIe_cui_hcu2uir_pullin_confirm
 {
-	UINT8   streamId;
+	UINT8   lineId;
 	UINT8   hopperId;  //1-32, 33-64
-	UINT32  targetWeight;
-	UINT32	upLimitWeight;  //in NF2
+	UINT8   groupId;
+	UINT8   validFlag;	//TRUE=1, FALSE=0
+	UINT32  curWeight;  //in NF2
+	UINT32  bufWeight;  //in NF2
+	UINT8   curRatio;	//In INT0
+	UINT8   bufRatio;	//In INT0
 }StrHlcIe_cui_hcu2uir_pullin_confirm_t;
 //cmdValue = configID;
 
