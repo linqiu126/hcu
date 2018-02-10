@@ -181,17 +181,17 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		//对发送数据进行编码
 //////////////////////////////////////////////////////////
 		wchar_t *chinese_str = L"扬尘监控系统";
-		wchar_t *noise_str = L"噪声： ";
+		wchar_t *noise_str = L"噪声：";
 		unsigned int *p_noise = (wchar_t*)noise_str;
 
 		wchar_t *noise_unit_str = L" dB";
 		unsigned int *p_noise_unit = (wchar_t*)noise_unit_str;
 
 
-		wchar_t *tsp_str = L"   PM2.5 ： ";
+		wchar_t *tsp_str = L"  PM2.5：";
 		unsigned int *p_tsp = (wchar_t*)tsp_str;
 
-		wchar_t *tsp_unit_str = L" ug/m3                                                                                                                     ";
+		wchar_t *tsp_unit_str = L"ug/m3                                                                                                                     ";
 		unsigned int *p_tsp_unit = (wchar_t*)tsp_unit_str;
 
 /*
