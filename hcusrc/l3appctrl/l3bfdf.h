@@ -231,8 +231,6 @@ typedef struct gTaskL3bfdfContextStaEleMid
 #define HCU_L3BFDF_STA_DBI_TABLE_UP2NOW   	"BFDF_STA_UP_2_NOW"
 
 //主体上下文
-#define HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX    20
-#define HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX    	20
 typedef struct gTaskL3bfdfContext
 {
 	//静态配置参数部分

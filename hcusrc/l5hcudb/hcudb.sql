@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 07, 2018 at 02:39 PM
+-- Generation Time: Feb 12, 2018 at 09:58 PM
 -- Server version: 5.7.20-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -133,42 +133,56 @@ INSERT INTO `hcubfdfcallcell` (`sid`, `configid`, `timestamp`, `operator`, `grou
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hcubfdfgrouppara`
+--
+
+CREATE TABLE `hcubfdfgrouppara` (
+  `sid` int(4) NOT NULL,
+  `groupid` int(1) NOT NULL,
+  `lineid` int(1) NOT NULL,
+  `configid` int(4) NOT NULL,
+  `hoppernum` int(1) NOT NULL,
+  `hopperbitmap` int(4) NOT NULL,
+  `targetweight` int(4) NOT NULL,
+  `targetuplimit` int(4) NOT NULL,
+  `bufwgttarget` int(4) NOT NULL,
+  `rangelow` int(4) NOT NULL,
+  `rangehigh` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `hcubfdfgrouppara`
+--
+
+INSERT INTO `hcubfdfgrouppara` (`sid`, `groupid`, `lineid`, `configid`, `hoppernum`, `hopperbitmap`, `targetweight`, `targetuplimit`, `bufwgttarget`, `rangelow`, `rangehigh`) VALUES
+(1, 1, 0, 2, 0, 15, 20000, 100, 5000, 400, 500);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `hcubfdfproductpara`
 --
 
 CREATE TABLE `hcubfdfproductpara` (
-  `sid` int(4) NOT NULL,
-  `targetthroughput` int(6) NOT NULL,
-  `snrautozerorange` int(6) NOT NULL,
+  `configid` int(4) NOT NULL,
   `confname` varchar(50) NOT NULL,
+  `groupnum` int(1) NOT NULL,
   `currentconf` varchar(1) NOT NULL DEFAULT 'N',
   `baseconf` varchar(5) NOT NULL DEFAULT 'N',
   `confowner` varchar(20) NOT NULL DEFAULT 'System',
   `conficon` varchar(20) NOT NULL,
-  `confdescription` varchar(100) NOT NULL,
-  `targetweight` int(5) NOT NULL,
-  `tareweight` int(5) NOT NULL,
-  `targetspeed` int(4) NOT NULL,
-  `productlength` int(4) NOT NULL,
-  `armrollinginterval` int(4) NOT NULL,
-  `algorithmoption` int(4) NOT NULL,
-  `upperlimit` int(4) NOT NULL,
-  `tu1limit` int(4) NOT NULL,
-  `tu2limit` int(4) NOT NULL,
-  `maxtu1` int(4) NOT NULL,
-  `rejectoroption` int(4) NOT NULL,
-  `statisticsswitch` int(4) NOT NULL
+  `confdescription` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `hcubfdfproductpara`
 --
 
-INSERT INTO `hcubfdfproductpara` (`sid`, `targetthroughput`, `snrautozerorange`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `targetweight`, `tareweight`, `targetspeed`, `productlength`, `armrollinginterval`, `algorithmoption`, `upperlimit`, `tu1limit`, `tu2limit`, `maxtu1`, `rejectoroption`, `statisticsswitch`) VALUES
-(2, 0, 0, 'fish1', 'N', 'Y', 'System', 'fish37.svg', '', 999, 66, 44, 33, 22, 11, 444, 55, 0, 9, 5, 8),
-(3, 0, 0, 'fish2', 'Y', 'N', 'System', 'fish37.svg', '', 999, 66, 44, 33, 22, 11, 444, 55, 0, 9, 5, 8),
-(4, 0, 0, 'appl1', 'N', 'N', '', 'apple12.svg', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(13, 0, 0, 'candy', 'N', 'N', '', 'bread4.svg', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `hcubfdfproductpara` (`configid`, `confname`, `groupnum`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`) VALUES
+(2, 'fish1', 3, 'N', 'Y', 'System', 'fish37.svg', ''),
+(3, 'fish2', 3, 'Y', 'N', 'System', 'fish37.svg', ''),
+(4, 'appl1', 2, 'N', 'N', '', 'apple12.svg', ''),
+(13, 'candy', 5, 'N', 'N', '', 'bread4.svg', '');
 
 -- --------------------------------------------------------
 
@@ -212,22 +226,29 @@ INSERT INTO `hcubfdfstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `ws
 --
 
 CREATE TABLE `hcubfdfsystempara` (
-  `weighterlength` int(4) NOT NULL DEFAULT '350',
-  `rejectorposition` int(4) NOT NULL,
-  `maxallowedweight` int(4) NOT NULL,
-  `minallowedweight` int(4) NOT NULL,
-  `counterweight` int(4) NOT NULL,
-  `autozerosignal` int(4) NOT NULL DEFAULT '500',
-  `autozeroswitch` int(4) NOT NULL,
-  `autozerolimit` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `sid` int(4) NOT NULL,
+  `linenum` int(1) NOT NULL,
+  `boardnumperline` int(1) NOT NULL,
+  `loaddetecttime` int(4) NOT NULL,
+  `loadthread` int(4) NOT NULL,
+  `emptydetecttime` int(4) NOT NULL,
+  `emptythread` int(4) NOT NULL,
+  `stdreadytime` int(4) NOT NULL,
+  `maxallowwgt` int(4) NOT NULL,
+  `staticzerovalue` int(4) NOT NULL,
+  `tailorvalue` int(4) NOT NULL,
+  `dynzerothread` int(4) NOT NULL,
+  `dynzerohysteresis` int(4) NOT NULL,
+  `pickupthread` int(4) NOT NULL,
+  `pickupdetecttime` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfdfsystempara`
 --
 
-INSERT INTO `hcubfdfsystempara` (`weighterlength`, `rejectorposition`, `maxallowedweight`, `minallowedweight`, `counterweight`, `autozerosignal`, `autozeroswitch`, `autozerolimit`) VALUES
-(400, 500, 500, 500, 500, 500, 500, 500);
+INSERT INTO `hcubfdfsystempara` (`sid`, `linenum`, `boardnumperline`, `loaddetecttime`, `loadthread`, `emptydetecttime`, `emptythread`, `stdreadytime`, `maxallowwgt`, `staticzerovalue`, `tailorvalue`, `dynzerothread`, `dynzerohysteresis`, `pickupthread`, `pickupdetecttime`) VALUES
+(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 300, 500);
 
 -- --------------------------------------------------------
 
@@ -262,14 +283,14 @@ INSERT INTO `hcubfhscallcell` (`sid`, `configid`, `timestamp`, `operator`, `targ
 
 CREATE TABLE `hcubfhsproductpara` (
   `sid` int(4) NOT NULL,
-  `confname` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `confname` varchar(20) CHARACTER SET utf8 NOT NULL,
   `currentconf` char(1) CHARACTER SET utf8 NOT NULL DEFAULT 'N',
   `baseconf` char(1) CHARACTER SET utf8 NOT NULL DEFAULT 'N',
   `confowner` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT 'System',
   `conficon` varchar(20) CHARACTER SET utf8 NOT NULL,
   `confdescription` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `targetweight` int(5) NOT NULL,
-  `tareweight` int(5) NOT NULL,
+  `targetweight` int(4) NOT NULL,
+  `tareweight` int(4) NOT NULL,
   `targetspeed` int(4) NOT NULL,
   `productlength` int(4) NOT NULL,
   `armrollinginterval` int(4) NOT NULL,
@@ -277,10 +298,10 @@ CREATE TABLE `hcubfhsproductpara` (
   `upperlimit` int(4) NOT NULL,
   `tu1limit` int(4) NOT NULL,
   `tu2limit` int(4) NOT NULL,
-  `maxtu1` float NOT NULL,
+  `maxtu1` int(4) NOT NULL,
   `rejectoroption` int(4) NOT NULL,
-  `statisticsswitch` int(4) NOT NULL DEFAULT '2',
-  `targetthroughput` int(6) NOT NULL DEFAULT '10000',
+  `statisticsswitch` int(1) NOT NULL DEFAULT '0',
+  `targetthroughput` int(4) NOT NULL DEFAULT '10000',
   `snrautozerorange` int(4) NOT NULL,
   `snrstandstillrange` int(4) NOT NULL,
   `snrfiltercutofffreq` int(4) NOT NULL,
@@ -5814,15 +5835,27 @@ ALTER TABLE `hcubfdfcallcell`
   ADD PRIMARY KEY (`sid`);
 
 --
+-- Indexes for table `hcubfdfgrouppara`
+--
+ALTER TABLE `hcubfdfgrouppara`
+  ADD PRIMARY KEY (`sid`);
+
+--
 -- Indexes for table `hcubfdfproductpara`
 --
 ALTER TABLE `hcubfdfproductpara`
-  ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`configid`);
 
 --
 -- Indexes for table `hcubfdfstadatainfo`
 --
 ALTER TABLE `hcubfdfstadatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcubfdfsystempara`
+--
+ALTER TABLE `hcubfdfsystempara`
   ADD PRIMARY KEY (`sid`);
 
 --
@@ -6167,15 +6200,25 @@ ALTER TABLE `hcualcoholmq3alcodatainfo`
 ALTER TABLE `hcubfdfcallcell`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
+-- AUTO_INCREMENT for table `hcubfdfgrouppara`
+--
+ALTER TABLE `hcubfdfgrouppara`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT for table `hcubfdfproductpara`
 --
 ALTER TABLE `hcubfdfproductpara`
-  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `configid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `hcubfdfstadatainfo`
 --
 ALTER TABLE `hcubfdfstadatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `hcubfdfsystempara`
+--
+ALTER TABLE `hcubfdfsystempara`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `hcubfhscallcell`
 --
