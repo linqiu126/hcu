@@ -292,7 +292,7 @@ OPSTAT dbi_HcuBfdf_sysConfigData_read(UINT32  sysConfigData[HCU_SYSCFG_BFDF_DB_C
 	    return SUCCESS;
 	}
 
-OPSTAT dbi_HcuBfdf_productConfigData_read(UINT16 configId, DbiL3BfdfProductPara_t productConfigData)
+OPSTAT dbi_HcuBfdf_productConfigData_read(UINT16 configId, DbiL3BfdfProductPara_t *productConfigData)
 	{
 		MYSQL *sqlHandler;
 		MYSQL_RES *resPtr;
@@ -327,9 +327,9 @@ OPSTAT dbi_HcuBfdf_productConfigData_read(UINT16 configId, DbiL3BfdfProductPara_
 		}
 		else{
 			UINT8  index = 0;
-			if (sqlRow[index])  productConfigData.configId = (UINT16)atol(sqlRow[index++]);
-			if (sqlRow[index]) strncpy(productConfigData.configName, sqlRow[index], HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX-1);
-			if (sqlRow[index])  productConfigData.groupPerLine = (UINT8)atol(sqlRow[index++]);
+			if (sqlRow[index])  productConfigData->configId = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  productConfigData->groupPerLine = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+			if (sqlRow[index]) strncpy(productConfigData->configName, sqlRow[index++], HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX-1);
 		}
 
 		//释放记录集
@@ -370,7 +370,6 @@ OPSTAT dbi_HcuBfdf_groupConfigData_read(UINT16 configId, UINT8 groupTotal, DbiL3
 			UINT8  index = 1;
 			if (sqlRow[index]) groupConfigData[group].groupId = (UINT16)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].lineId = (UINT8)atol(sqlRow[index++]);
-			if (sqlRow[index]) groupConfigData[group].configId = (UINT16)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].configId = (UINT16)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].hopperNum = (UINT16)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].hopperBitmap = (UINT32)atol(sqlRow[index++]);

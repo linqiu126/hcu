@@ -45,7 +45,7 @@ extern UINT32 dbi_HcuBfdf_CallCellMaxIdGet(void);
 extern OPSTAT dbi_HcuBfdf_callcell_save(HcuSysMsgIeL3bfdfCallcellElement_t *input);
 extern OPSTAT dbi_HcuBfdf_callcell_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuBfdf_sysConfigData_read(UINT32  sysConfigData[HCU_SYSCFG_BFDF_DB_COLUMN_NUM_MAX]);
-extern OPSTAT dbi_HcuBfdf_productConfigData_read(UINT16 configId, DbiL3BfdfProductPara_t productConfigData);
+extern OPSTAT dbi_HcuBfdf_productConfigData_read(UINT16 configId, DbiL3BfdfProductPara_t *productConfigData);
 extern OPSTAT dbi_HcuBfdf_groupConfigData_read(UINT16 configId, UINT8 groupTotal, DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2]);
 
 //引用外部的API

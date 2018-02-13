@@ -439,7 +439,7 @@ bool func_bfdfuicomm_hopper_bitmap_validate(UINT32 hopperBitmap, UINT8 hopperNum
 	memset(hopperArr, 0, HCU_SYSCFG_BFDF_HOPPER_NBR_MAX);
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){ //bitmap: 0~31
 		if (((hopperBitmap>>i) & 1) == 1){
-			hopperArr[j] = i+1;
+			hopperArr[j+1] = i+1;
 			j++;
 		}
 	}
@@ -551,21 +551,22 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 	/*** Initialize PRODUCT configuration, these parameters are different for each product ***/
 
 	//Read productPara table
-	if (dbi_HcuBfdf_productConfigData_read(configId, productConfigData) == FAILURE)
+	if (dbi_HcuBfdf_productConfigData_read(configId, &productConfigData) == FAILURE)
 		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB PRODUCT configuration data failed \n");
 
 	gTaskL3bfdfContext.configId = configId;
-	memcpy(gTaskL3bfdfContext.operatorName, operatorName, HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX);
+	//strncpy(gTaskL3bfdfContext.operatorName, operatorName, HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX);
 	groupPerLine = productConfigData.groupPerLine;
 	groupTotal = groupPerLine * gTaskL3bfdfContext.nbrStreamLine;
 	for(line = 0; line < gTaskL3bfdfContext.nbrStreamLine; line++)
 		gTaskL3bfdfContext.totalGroupNbr[line] = groupPerLine;
 
-	memcpy(gTaskL3bfdfContext.configName, productConfigData.configName, HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX-1);
+	strncpy(gTaskL3bfdfContext.configName, productConfigData.configName, HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX-1);
 
 	//Read groupPara table
 	if (dbi_HcuBfdf_groupConfigData_read(configId, groupTotal, groupConfigData) == FAILURE)
-		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB GROUP configuration data failed \n");
+		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB GROUP configuration data failed, groupTotal=%d \n", groupTotal);
+
 	UINT16 hopperId = 0;
 	UINT16 groupId = 0;
 	UINT16 lineId = 0;
@@ -599,14 +600,18 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 			gTaskL3bfdfContext.hopper[lineId][hopperId].groupId = groupId;
 			gTaskL3bfdfContext.hopper[lineId][hopperId].hopperId = hopperId;
 			gTaskL3bfdfContext.hopper[lineId][hopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_INIT_ALLOC;
+
 			if(hopper == 1){
 				gTaskL3bfdfContext.group[lineId][groupId].firstHopperId = hopperId;
 				gTaskL3bfdfContext.group[lineId][groupId].fillHopperId = hopperId;
-				if (groupHooperNum <= 1)
+				if (groupHooperNum <= 1){
 					gTaskL3bfdfContext.hopper[lineId][hopperId].nextHopperId = hopperId;
-				else
+					gTaskL3bfdfContext.hopper[lineId][hopperId].preHopperId = hopperId;
+				}
+				else{
 					gTaskL3bfdfContext.hopper[lineId][hopperId].nextHopperId = hopperArr[hopper+1];
-				gTaskL3bfdfContext.hopper[lineId][hopperId].preHopperId = hopperArr[groupHooperNum];
+					gTaskL3bfdfContext.hopper[lineId][hopperId].preHopperId = hopperArr[groupHooperNum];
+				}
 			}
 			else if(hopper >1 && hopper < groupHooperNum){
 				gTaskL3bfdfContext.hopper[lineId][hopperId].nextHopperId = hopperArr[hopper+1];

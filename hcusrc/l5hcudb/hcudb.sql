@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 12, 2018 at 09:58 PM
+-- Generation Time: Feb 13, 2018 at 01:43 PM
 -- Server version: 5.7.20-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -155,7 +155,12 @@ CREATE TABLE `hcubfdfgrouppara` (
 --
 
 INSERT INTO `hcubfdfgrouppara` (`sid`, `groupid`, `lineid`, `configid`, `hoppernum`, `hopperbitmap`, `targetweight`, `targetuplimit`, `bufwgttarget`, `rangelow`, `rangehigh`) VALUES
-(1, 1, 0, 2, 0, 15, 20000, 100, 5000, 400, 500);
+(1, 1, 0, 2, 4, 15, 25000, 200, 10000, 400, 500),
+(2, 2, 0, 2, 2, 192, 10000, 100, 5000, 200, 300),
+(3, 3, 0, 2, 2, 48, 10000, 100, 5000, 200, 300),
+(4, 1, 1, 2, 4, 15, 25000, 200, 10000, 400, 500),
+(5, 2, 1, 2, 3, 112, 10000, 100, 5000, 200, 300),
+(6, 3, 1, 2, 1, 128, 10000, 100, 5000, 200, 300);
 
 -- --------------------------------------------------------
 
@@ -165,8 +170,8 @@ INSERT INTO `hcubfdfgrouppara` (`sid`, `groupid`, `lineid`, `configid`, `hoppern
 
 CREATE TABLE `hcubfdfproductpara` (
   `configid` int(4) NOT NULL,
-  `confname` varchar(50) NOT NULL,
   `groupnum` int(1) NOT NULL,
+  `confname` varchar(50) NOT NULL,
   `currentconf` varchar(1) NOT NULL DEFAULT 'N',
   `baseconf` varchar(5) NOT NULL DEFAULT 'N',
   `confowner` varchar(20) NOT NULL DEFAULT 'System',
@@ -178,11 +183,11 @@ CREATE TABLE `hcubfdfproductpara` (
 -- Dumping data for table `hcubfdfproductpara`
 --
 
-INSERT INTO `hcubfdfproductpara` (`configid`, `confname`, `groupnum`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`) VALUES
-(2, 'fish1', 3, 'N', 'Y', 'System', 'fish37.svg', ''),
-(3, 'fish2', 3, 'Y', 'N', 'System', 'fish37.svg', ''),
-(4, 'appl1', 2, 'N', 'N', '', 'apple12.svg', ''),
-(13, 'candy', 5, 'N', 'N', '', 'bread4.svg', '');
+INSERT INTO `hcubfdfproductpara` (`configid`, `groupnum`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`) VALUES
+(2, 3, 'fish1', 'Y', 'Y', 'System', 'fish37.svg', ''),
+(3, 3, 'fish2', 'N', 'N', 'System', 'fish37.svg', ''),
+(4, 2, 'appl1', 'N', 'N', '', 'apple12.svg', ''),
+(13, 5, 'candy', 'N', 'N', '', 'bread4.svg', '');
 
 -- --------------------------------------------------------
 
@@ -248,7 +253,7 @@ CREATE TABLE `hcubfdfsystempara` (
 --
 
 INSERT INTO `hcubfdfsystempara` (`sid`, `linenum`, `boardnumperline`, `loaddetecttime`, `loadthread`, `emptydetecttime`, `emptythread`, `stdreadytime`, `maxallowwgt`, `staticzerovalue`, `tailorvalue`, `dynzerothread`, `dynzerohysteresis`, `pickupthread`, `pickupdetecttime`) VALUES
-(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 300, 500);
+(1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 300, 500);
 
 -- --------------------------------------------------------
 
@@ -3612,7 +3617,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (3, 'TID_1S_LED_GALOWAG_SCAN', 1, 1),
 (4, 'TID_1S_EMC_PERIOD_READ', 1, 600),
 (5, 'TID_1S_EMC_MODBUS_FB', 1, 10),
-(6, 'TID_1S_PM25_PERIOD_READ', 1, 31),
+(6, 'TID_1S_PM25_PERIOD_READ', 1, 600),
 (7, 'TID_1S_PM25_MODBUS_FB', 1, 10),
 (8, 'TID_1S_WINDDIR_PERIOD_READ', 1, 600),
 (9, 'TID_1S_WINDDIR_MODBUS_FB', 1, 10),
@@ -3622,8 +3627,8 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (13, 'TID_1S_TEMP_FB', 1, 10),
 (14, 'TID_1S_HUMID_PERIOD_READ', 1, 600),
 (15, 'TID_1S_HUMID_MODBUS_FB', 1, 10),
-(16, 'TID_1S_NOISE_PERIOD_READ', 1, 7),
-(17, 'TID_1S_NOISE_MODBUS_FB', 1, 5),
+(16, 'TID_1S_NOISE_PERIOD_READ', 1, 600),
+(17, 'TID_1S_NOISE_MODBUS_FB', 1, 10),
 (18, 'TID_1S_NOISE_SPSVIRGO_FB', 1, 10),
 (19, 'TID_1S_HSMMP_PERIOD_AVORION_READ', 1, 600),
 (20, 'TID_1S_HSMMP_AVORION_FB', 1, 10),
@@ -3649,7 +3654,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (40, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 900),
 (41, 'TID_1S_SYSSWM_SEG_DL_WAIT', 1, 3),
 (42, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
-(43, 'TID_1S_CANALPHA_WORKING_SCAN', 1, 10),
+(43, 'TID_1S_CANALPHA_WORKING_SCAN', 1, 2),
 (44, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
 (45, 'TID_1S_L3BFSC_SYS_START_WAIT_FB', 1, 15),
 (46, 'TID_1S_L3BFSC_SYS_STOP_WAIT_FB', 1, 15),
@@ -3661,7 +3666,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (52, 'TID_1S_L3BFDF_SUSPEND_WAIT_FB', 1, 15),
 (53, 'TID_1S_L3BFDF_RESUME_WAIT_FB', 1, 15),
 (54, 'TID_1S_L3BFDF_TTT_WAIT_FB', 1, 3),
-(55, 'TID_1S_BFDFUICOMM_PERIOD_READ', 1, 600),
+(55, 'TID_1S_BFDFUICOMM_PERIOD_READ', 1, 100),
 (56, 'TID_1S_L3BFHS_CFG_START_WAIT_FB', 1, 5),
 (57, 'TID_1S_L3BFHS_SUSPEND_WAIT_FB', 1, 5),
 (58, 'TID_1S_L3BFHS_RESUME_WAIT_FB', 1, 5),
@@ -3677,7 +3682,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (68, 'TID_1S_L3AQYCG20_STOP_HOUR_REPORT', 1, 60),
 (69, 'TID_1S_L3AQYCG20_START_DAY_REPORT', 1, 60),
 (70, 'TID_1S_L3AQYCG20_STOP_DAY_REPORT', 1, 60),
-(71, 'TID_1S_L3DAYCG21_PERIOD_READ', 1, 10),
+(71, 'TID_1S_L3DAYCG21_PERIOD_READ', 1, 60),
 (72, 'TID_1S_L3TBSWRG30_PERIOD_READ', 1, 600),
 (73, 'TID_1S_L3GQYBG40_PERIOD_READ', 1, 600),
 (74, 'TID_1S_L3CXGLACM_PERIOD_READ', 1, 600),
@@ -3691,7 +3696,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (82, 'TID_10MS_SVRCON_TEST', 2, 10000),
 (83, 'TID_10MS_L3BFSC_PERIOD_STA_SCAN', 2, 50),
 (84, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 20),
-(85, 'TID_10MS_CANALPHA_SIMULATION_DATA', 2, 20),
+(85, 'TID_10MS_CANALPHA_SIMULATION_DATA', 2, 5),
 (86, 'TID_10MS_L3BFDF_PERIOD_STA_SCAN', 2, 50),
 (87, 'TID_10MS_L3BFHS_PERIOD_STA_SCAN', 2, 50),
 (88, 'TID_10MS_MAX', 2, 0),
@@ -6203,7 +6208,7 @@ ALTER TABLE `hcubfdfcallcell`
 -- AUTO_INCREMENT for table `hcubfdfgrouppara`
 --
 ALTER TABLE `hcubfdfgrouppara`
-  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `hcubfdfproductpara`
 --
