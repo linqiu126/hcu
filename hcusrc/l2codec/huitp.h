@@ -6207,7 +6207,21 @@ typedef struct StrHuiIe_WeightSensorBfhsParamaters
 	UINT8   WeightSensorAlgoSelect;  //weight algorithm select
 	UINT32  WeightSensorReadStartMs;  //Weight sensor start sampling after infrared detector trigger
 	UINT32  WeightSensorReadStopMs;   //Weight sensor stop sampling after infrared detector trigger
+	UINT32  WeightSensorTareWeight;			//Tare weight of each material
+	UINT32  WeightSensorTargetThroughput;	//Selection stop as given 'this para' pcs good material
+	UINT32  WeightSensorAlgoAutoZeroSignal; //If autozero cannot be done during 'this para' pcs input, there will be a warning for operator
+	UINT32	WeightSensorAlgoTu1Limit;
+	UINT32	WeightSensorAlgoTu2Limit;
+	UINT32	WeightSensorAlgoMaxTu1Ratio;  	//NF2, for example, 250 means 2.5%
+	UINT8	WeightSensorAlgoRejectOption;
+
 }StrHuiIe_WeightSensorBfhsParamaters_t;
+
+#define HUITP_IEID_SUI_BFSC_ALGO_REJECTOR_OPTION_NULL  			0
+#define HUITP_IEID_SUI_BFSC_ALGO_REJECTOR_OPTION_OVERWEIGHT  	1
+#define HUITP_IEID_SUI_BFSC_ALGO_REJECTOR_OPTION_UNDERWEIGHT  	2
+#define HUITP_IEID_SUI_BFSC_ALGO_REJECTOR_OPTION_BOTHSIDE  		3
+#define HUITP_IEID_SUI_BFSC_ALGO_REJECTOR_OPTION_INVALID  		0xFF
 
 typedef struct StrHuiIe_MotorControlBfhsParamaters
 {

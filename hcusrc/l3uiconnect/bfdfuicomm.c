@@ -133,18 +133,8 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//延迟并启动系统，进入测试模式
 	hcu_sleep(2);
-	//设置configIndex=1
-	func_bfdfuicomm_read_cfg_file_into_ctrl_table(1);
-	//发送启动消息给L3BFDF
-//	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
-//	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
-//	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
-//	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
-//	ret = hcu_message_send(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM, &snd, snd.length);
-//	if (ret == FAILURE){
-//		HcuErrorPrint("BFDFUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
-//		return FAILURE;
-//	}
+	//设置configIndex=2
+	func_bfdfuicomm_read_cfg_file_into_ctrl_table(2);
 
 	//初始化sessionId
 	gTaskL3bfdfContext.sessionId = dbi_HcuBfdf_CallCellMaxIdGet() + 1;
@@ -207,7 +197,7 @@ OPSTAT fsm_bfdfuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 //启动停止反馈
 OPSTAT fsm_bfdfuicomm_l3bfdf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+//	int ret=0;
 	UINT8	validFlag = 0;
 	UINT8	cmdid = 0;
 
@@ -249,11 +239,11 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 //一般性测试命令的反馈
 OPSTAT fsm_bfdfuicomm_sui_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
-	UINT32  adcvalue = 0;
-	UINT16 	errorcode;
-	UINT8  	sensorid = 0;
-	UINT8	validFlag = 0;
+//	int ret=0;
+//	UINT32  adcvalue = 0;
+//	UINT16 	errorcode;
+//	UINT8  	sensorid = 0;
+//	UINT8	validFlag = 0;
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_can_uicomm_test_cmd_resp_t);
 
