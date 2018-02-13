@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 13, 2018 at 01:43 PM
+-- Generation Time: Feb 13, 2018 at 04:53 PM
 -- Server version: 5.7.20-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -172,9 +172,9 @@ CREATE TABLE `hcubfdfproductpara` (
   `configid` int(4) NOT NULL,
   `groupnum` int(1) NOT NULL,
   `confname` varchar(50) NOT NULL,
+  `confowner` varchar(20) NOT NULL DEFAULT 'System',
   `currentconf` varchar(1) NOT NULL DEFAULT 'N',
   `baseconf` varchar(5) NOT NULL DEFAULT 'N',
-  `confowner` varchar(20) NOT NULL DEFAULT 'System',
   `conficon` varchar(20) NOT NULL,
   `confdescription` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -183,11 +183,11 @@ CREATE TABLE `hcubfdfproductpara` (
 -- Dumping data for table `hcubfdfproductpara`
 --
 
-INSERT INTO `hcubfdfproductpara` (`configid`, `groupnum`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`) VALUES
-(2, 3, 'fish1', 'Y', 'Y', 'System', 'fish37.svg', ''),
-(3, 3, 'fish2', 'N', 'N', 'System', 'fish37.svg', ''),
-(4, 2, 'appl1', 'N', 'N', '', 'apple12.svg', ''),
-(13, 5, 'candy', 'N', 'N', '', 'bread4.svg', '');
+INSERT INTO `hcubfdfproductpara` (`configid`, `groupnum`, `confname`, `confowner`, `currentconf`, `baseconf`, `conficon`, `confdescription`) VALUES
+(2, 3, 'fish1', 'Admin', 'Y', 'Y', 'fish37.svg', ''),
+(3, 3, 'fish2', 'Admin', 'N', 'N', 'fish37.svg', ''),
+(4, 2, 'appl1', 'Bofeng', 'N', 'N', 'apple12.svg', ''),
+(13, 5, 'candy', 'Bofeng', 'N', 'N', 'bread4.svg', '');
 
 -- --------------------------------------------------------
 
@@ -380,6 +380,7 @@ INSERT INTO `hcubfhsstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `ws
 --
 
 CREATE TABLE `hcubfhssystempara` (
+  `sid` int(4) NOT NULL,
   `weighterlength` int(4) NOT NULL DEFAULT '350',
   `rejectorposition` int(4) NOT NULL,
   `maxallowedweight` int(4) NOT NULL,
@@ -394,8 +395,8 @@ CREATE TABLE `hcubfhssystempara` (
 -- Dumping data for table `hcubfhssystempara`
 --
 
-INSERT INTO `hcubfhssystempara` (`weighterlength`, `rejectorposition`, `maxallowedweight`, `minallowedweight`, `counterweight`, `autozerosignal`, `autozeroswitch`, `autozerolimit`) VALUES
-(400, 500, 500, 5, 1000, 6, 100000, 3);
+INSERT INTO `hcubfhssystempara` (`sid`, `weighterlength`, `rejectorposition`, `maxallowedweight`, `minallowedweight`, `counterweight`, `autozerosignal`, `autozeroswitch`, `autozerolimit`) VALUES
+(1, 400, 500, 500, 5, 1000, 6, 100000, 3);
 
 -- --------------------------------------------------------
 
@@ -5882,6 +5883,12 @@ ALTER TABLE `hcubfhsstadatainfo`
   ADD PRIMARY KEY (`sid`);
 
 --
+-- Indexes for table `hcubfhssystempara`
+--
+ALTER TABLE `hcubfhssystempara`
+  ADD PRIMARY KEY (`sid`);
+
+--
 -- Indexes for table `hcubfsccalibration`
 --
 ALTER TABLE `hcubfsccalibration`
@@ -6238,6 +6245,11 @@ ALTER TABLE `hcubfhsproductpara`
 -- AUTO_INCREMENT for table `hcubfhsstadatainfo`
 --
 ALTER TABLE `hcubfhsstadatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `hcubfhssystempara`
+--
+ALTER TABLE `hcubfhssystempara`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `hcubfsccalibration`

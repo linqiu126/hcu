@@ -330,6 +330,7 @@ OPSTAT dbi_HcuBfdf_productConfigData_read(UINT16 configId, DbiL3BfdfProductPara_
 			if (sqlRow[index])  productConfigData->configId = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if (sqlRow[index])  productConfigData->groupPerLine = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 			if (sqlRow[index]) strncpy(productConfigData->configName, sqlRow[index++], HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX-1);
+			if (sqlRow[index]) strncpy(productConfigData->operatorName, sqlRow[index++], HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX-1);
 		}
 
 		//释放记录集

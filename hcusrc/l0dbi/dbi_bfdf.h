@@ -12,8 +12,6 @@
 
 #define DBI_BFDF_DATA_SAVE_DAYS_MIN 90  //最短90天，不能再短
 #define HCU_SYSCFG_BFDF_DB_COLUMN_NUM_MAX 15
-#define HCU_PRODUCTCFG_BFDF_DB_COLUMN_NUM_MAX 2  //only first two collumn are needed
-#define HCU_GROUPCFG_BFDF_DB_COLUMN_NUM_MAX 11
 
 #define HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX    20
 #define HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX    	20
@@ -23,6 +21,7 @@ typedef struct DbiL3BfdfProductPara
 	UINT16	configId;  				//用来标识系统工作在哪一套配置参数中
 	UINT8   groupPerLine;
 	char    configName[HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX];
+	char    operatorName[HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX];
 } DbiL3BfdfProductPara_t;
 
 typedef struct DbiL3BfdfGroupPara

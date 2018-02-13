@@ -309,13 +309,16 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void 
 
 OPSTAT fsm_bfdfuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	UINT16 configId = 0;
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_start_resume_req_t);
 	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
 	snd.cmdValue = rcv.cmdValue;
-	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
+	configId = rcv.cmdValue;
+	if(func_bfdfuicomm_read_cfg_file_into_ctrl_table(configId) == SUCCESS)
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
 	return SUCCESS;
 }
@@ -487,10 +490,9 @@ bool func_bfdfuicomm_hopper_state_set_init(UINT8 streamId)
 //扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
 OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 {
-	UINT8 line, group, hopper;
 	UINT8 index;
+	UINT8 line, group, hopper;
 	UINT8 groupPerLine = 0, groupTotal = 0;
-	char operatorName[HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX];
 	UINT32 sysConfigData[HCU_SYSCFG_BFDF_DB_COLUMN_NUM_MAX];
 	DbiL3BfdfProductPara_t productConfigData;
 	DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2];
@@ -516,7 +518,7 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 		}
 	}
 
-	//查询用户动态配置参数
+	//查询系统配置参数
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  sysConfigData[index++];
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadThread = sysConfigData[index++];
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = sysConfigData[index++];
@@ -552,16 +554,16 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 
 	//Read productPara table
 	if (dbi_HcuBfdf_productConfigData_read(configId, &productConfigData) == FAILURE)
-		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB PRODUCT configuration data failed \n");
+		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB PRODUCT configuration data failed, configId = %d \n", productConfigData.configId);
 
 	gTaskL3bfdfContext.configId = configId;
-	//strncpy(gTaskL3bfdfContext.operatorName, operatorName, HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX);
 	groupPerLine = productConfigData.groupPerLine;
 	groupTotal = groupPerLine * gTaskL3bfdfContext.nbrStreamLine;
 	for(line = 0; line < gTaskL3bfdfContext.nbrStreamLine; line++)
 		gTaskL3bfdfContext.totalGroupNbr[line] = groupPerLine;
 
 	strncpy(gTaskL3bfdfContext.configName, productConfigData.configName, HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX-1);
+	strncpy(gTaskL3bfdfContext.operatorName, productConfigData.operatorName, HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX-1);
 
 	//Read groupPara table
 	if (dbi_HcuBfdf_groupConfigData_read(configId, groupTotal, groupConfigData) == FAILURE)
