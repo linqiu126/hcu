@@ -9,6 +9,7 @@
 
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
+#include "../l2codec/huitp.h"
 
 
 /*
@@ -112,7 +113,9 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 	//进入等待反馈状态
 	while(1){
-		func_hwinv_scan_all();
+
+		if(zHcuSysEngPar.hwBurnId.hwType != HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
+		   func_hwinv_scan_all();
 		hcu_sleep(15);  //休息15S后，继续重复SCAN所有的硬件状态
 		//收下消息，防止消息BUFFER爆满而出错
 		//如果出现阻塞现象，说明这里不应该收消息，注意观察
@@ -594,6 +597,7 @@ OPSTAT hcu_hwinv_engpar_read_mac_address(void)
 
 void func_hwinv_scan_all(void)
 {
+
 	func_hwinv_scan_date();
 	//func_hwinv_scan_sysinfo();//bug fix by shanchun for segment fault when plug in the 3G dougle, root cause to be check
 	func_hwinv_scan_flash();

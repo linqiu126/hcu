@@ -181,17 +181,16 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		//对发送数据进行编码
 //////////////////////////////////////////////////////////
 		wchar_t *chinese_str = L"扬尘监控系统";
-		wchar_t *noise_str = L"噪声：";
+		wchar_t *noise_str = L"噪声: ";
 		unsigned int *p_noise = (wchar_t*)noise_str;
 
 		wchar_t *noise_unit_str = L" dB";
 		unsigned int *p_noise_unit = (wchar_t*)noise_unit_str;
 
-
-		wchar_t *tsp_str = L"  PM2.5：";
+		wchar_t *tsp_str = L"     PM25：";
 		unsigned int *p_tsp = (wchar_t*)tsp_str;
 
-		wchar_t *tsp_unit_str = L"ug/m3                                                                                                                     ";
+		wchar_t *tsp_unit_str = L" ug/m3                                                                                                                     ";
 		unsigned int *p_tsp_unit = (wchar_t*)tsp_unit_str;
 
 /*
@@ -222,14 +221,15 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 */
 		///////////////////////////////////////////////////
 		if(gTaskNoiseContext.noiseValue == 0 || gTaskNoiseContext.noiseValue >= 80)
-			gTaskNoiseContext.noiseValue = 35.9;
+			gTaskNoiseContext.noiseValue = 35;
 
-		float noise = gTaskNoiseContext.noiseValue;
+		unsigned int noise = gTaskNoiseContext.noiseValue;
 		char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 		memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
-		//itoa(number,string,16);
-		sprintf(CStr,"%.1f",noise);
-		printf("integer = %f CStr = %s\n", noise,CStr);
+
+		//sprintf(CStr,"%.1f",noise);
+		sprintf(CStr,"%d",noise);
+		printf("integer = %d CStr = %s\n", noise,CStr);
 
 	   //把char*转换为wchar_t*
 		size_t len = strlen(CStr) + 1;
@@ -243,15 +243,16 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 		///////////////////////////////////////////////////
 		if(gTaskPm25Context.PM25Value == 0 || gTaskPm25Context.PM25Value >= 80)
-			gTaskPm25Context.PM25Value = 98.3;
+			gTaskPm25Context.PM25Value = 56;
 
-		float tsp = gTaskPm25Context.PM25Value;
+		unsigned int tsp = gTaskPm25Context.PM25Value;
 
 		//char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 		memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
-		//itoa(number,string,16);
-		sprintf(CStr,"%.1f",tsp);
-		printf("integer = %f CStr = %s\n", tsp,CStr);
+
+		//sprintf(CStr,"%.1f",tsp);
+		sprintf(CStr,"%d",tsp);
+		printf("integer = %d CStr = %s\n", tsp,CStr);
 
 	   //把char*转换为wchar_t*
 		len = strlen(CStr) + 1;
@@ -433,7 +434,8 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 		unsigned int i = 0;
 		unsigned int j = 0;
-/*				/////////////////////////////////////////
+/*
+ 	 /////////////////////////////////////////
 			for(i=0;i<wcslen(chinese_str); i++)
 		{
 			curBuf[curLen+j] = p_chinese[i] >> 8;
@@ -447,12 +449,6 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		curLen = curLen+2*wcslen(chinese_str);
 
 
-		for(i=0;i<curLen;i++)
-		{
-
-			printf("%02x  ",curBuf[i]);
-		}
-		printf("\n");
 	/////////////////////////////////////////
 */
 	/////////////////////////////////////////
@@ -460,22 +456,15 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		for(i=0;i<wcslen(noise_str); i++)
 		{
 			curBuf[curLen+j] = p_noise[i] >> 8;
-			printf("%02x  ",curBuf[curLen+j]);
+			//printf("%02x  ",curBuf[curLen+j]);
 			curBuf[curLen+j+1] = p_noise[i];
-			printf("%02x  ",curBuf[curLen+j+1]);
+			//printf("%02x  ",curBuf[curLen+j+1]);
 			j=j+2;
 		}
 
-		printf("\n");
+		//printf("\n");
 		curLen = curLen+2*wcslen(noise_str);
 
-
-		for(i=0;i<curLen;i++)
-		{
-
-			printf("%02x  ",curBuf[i]);
-		}
-		printf("\n");
 	/////////////////////////////////////////
 
 	/////////////////////////////////////////
@@ -483,22 +472,15 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		for(i=0;i<wcslen(noise_value_str); i++)
 		{
 			curBuf[curLen+j] = p_noise_value[i] >> 8;
-			printf("%02x  ",curBuf[curLen+j]);
+			//printf("%02x  ",curBuf[curLen+j]);
 			curBuf[curLen+j+1] = p_noise_value[i];
-			printf("%02x  ",curBuf[curLen+j+1]);
+			//printf("%02x  ",curBuf[curLen+j+1]);
 			j=j+2;
 		}
 
-		printf("\n\n\n\n\n\n\n\n\n");
+		//printf("\n\n\n\n\n\n\n\n\n");
 		curLen = curLen+2*wcslen(noise_value_str);
 
-
-		for(i=0;i<curLen;i++)
-		{
-
-			printf("%02x  ",curBuf[i]);
-		}
-		printf("\n");
 	/////////////////////////////////////////
 
 	/////////////////////////////////////////
@@ -506,45 +488,28 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		for(i=0;i<wcslen(noise_unit_str); i++)
 		{
 			curBuf[curLen+j] = p_noise_unit[i] >> 8;
-			printf("%02x  ",curBuf[curLen+j]);
+			//printf("%02x  ",curBuf[curLen+j]);
 			curBuf[curLen+j+1] = p_noise_unit[i];
-			printf("%02x  ",curBuf[curLen+j+1]);
+			//printf("%02x  ",curBuf[curLen+j+1]);
 			j=j+2;
 		}
 
-		printf("\n");
+		//printf("\n");
 		curLen = curLen+2*wcslen(noise_unit_str);
-
-
-		for(i=0;i<curLen;i++)
-		{
-
-			printf("%02x  ",curBuf[i]);
-		}
-		printf("\n");
-	/////////////////////////////////////////
 
 	/////////////////////////////////////////
 		j = 0;
 		for(i=0;i<wcslen(tsp_str); i++)
 		{
 			curBuf[curLen+j] = p_tsp[i] >> 8;
-			printf("%02x  ",curBuf[curLen+j]);
+			//printf("%02x  ",curBuf[curLen+j]);
 			curBuf[curLen+j+1] = p_tsp[i];
-			printf("%02x  ",curBuf[curLen+j+1]);
+			//printf("%02x  ",curBuf[curLen+j+1]);
 			j=j+2;
 		}
 
-		printf("\n");
+		//printf("\n");
 		curLen = curLen+2*wcslen(tsp_str);
-
-
-		for(i=0;i<curLen;i++)
-		{
-
-			printf("%02x  ",curBuf[i]);
-		}
-		printf("\n");
 	/////////////////////////////////////////
 
 	/////////////////////////////////////////
@@ -552,22 +517,16 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		for(i=0;i<wcslen(tsp_value_str); i++)
 		{
 			curBuf[curLen+j] = p_tsp_value[i] >> 8;
-			printf("%02x  ",curBuf[curLen+j]);
+			//printf("%02x  ",curBuf[curLen+j]);
 			curBuf[curLen+j+1] = p_tsp_value[i];
-			printf("%02x  ",curBuf[curLen+j+1]);
+			//printf("%02x  ",curBuf[curLen+j+1]);
 			j=j+2;
 		}
 
-		printf("\n\n\n\n\n\n\n\n\n");
+		//printf("\n\n\n\n\n\n\n\n\n");
 		curLen = curLen+2*wcslen(tsp_value_str);
 
 
-		for(i=0;i<curLen;i++)
-		{
-
-			printf("%02x  ",curBuf[i]);
-		}
-		printf("\n");
 	/////////////////////////////////////////
 
 	/////////////////////////////////////////
@@ -575,22 +534,15 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		for(i=0;i<wcslen(tsp_unit_str); i++)
 		{
 			curBuf[curLen+j] = p_tsp_unit[i] >> 8;
-			printf("%02x  ",curBuf[curLen+j]);
+			//printf("%02x  ",curBuf[curLen+j]);
 			curBuf[curLen+j+1] = p_tsp_unit[i];
-			printf("%02x  ",curBuf[curLen+j+1]);
+			//printf("%02x  ",curBuf[curLen+j+1]);
 			j=j+2;
 		}
 
-		printf("\n\n\n\n\n\n\n\n\n");
+		//printf("\n\n\n\n\n\n\n\n\n");
 		curLen = curLen+2*wcslen(tsp_unit_str);
 
-
-		for(i=0;i<curLen;i++)
-		{
-
-			printf("%02x  ",curBuf[i]);
-		}
-		printf("\n");
 	/////////////////////////////////////////
 
 
@@ -598,44 +550,42 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		memcpy(&curBuf[curLen], sample3, 2);
 
 		unsigned int DataLen = curLen+2-6;
-		printf("Total Length: %d\n",DataLen);
-		printf("Total Length: %02x\n  ",DataLen);
+		HCU_DEBUG_PRINT_INF("Total Length: %d\n",DataLen);
+		HCU_DEBUG_PRINT_INF("Total Length: %02x\n  ",DataLen);
 
 		//第五位需要更新为DataLen的十六进制 unsigned char
 		//memcpy(&curBuf[4], DataLen, 2);
 		//curBuf[4] = DataLen;
 		curBuf[4] = DataLen;
 		curBuf[5] = DataLen >> 8;
-		printf("Total Length: %02x\n  ",curBuf[4]);
-		printf("Total Length: %02x\n  ",curBuf[5]);
+		HCU_DEBUG_PRINT_INF("Total Length: %02x\n  ",curBuf[4]);
+		HCU_DEBUG_PRINT_INF("Total Length: %02x\n  ",curBuf[5]);
 
 		unsigned char checksum = 0;
 		for(i=0;i<(curLen + 2);i++)
 		{
-			//printf("0x%x  ",sample[i]);
-			printf("%02x  ",curBuf[i]);
+			//printf("%02x  ",curBuf[i]);
 			checksum = checksum + curBuf[i];
-
 		}
 
-		printf("\n");
-		printf("checksum: 0x%2x  ", checksum);
-		printf("\n");
+		HCU_DEBUG_PRINT_INF("checksum: 0x%2x\n  ", checksum);
 
 		curBuf[curLen+2] = checksum;
 		curBuf[curLen+3] = 0x1A;
-
 
 		for(i=0;i<(curLen+4);i++)
 		{
 			printf("%02x  ",curBuf[i]);
 		}
+		printf("\n");
 
 //////////////////////////////////////////////////////////
 
 		//发送串口指令
 		//ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps485.modbus), currentSpsBuf.curBuf, currentSpsBuf.curLen);
 		ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps232.sp), curBuf, curLen+4);
+
+		memset(&curBuf, 0, HCU_SYSDIM_MSG_BODY_LEN_MAX);
 
 		if (FAILURE == ret)
 		{
@@ -646,13 +596,20 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		else
 		{
 			//HCU_DEBUG_PRINT_INF("L3DAYCG20: Send ZH data succeed %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
-			return SUCCESS;
+			ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);
+
+			if(ret > 0){
+				HCU_DEBUG_PRINT_INF("L3DAYCG20: Received LCD data length %d\n", ret);
+				HCU_DEBUG_PRINT_INF("L3DAYCG20: Received LCD response data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",curBuf[0],curBuf[1],curBuf[2],curBuf[3],curBuf[4],curBuf[5],curBuf[6],curBuf[7]);
+				return SUCCESS;
+			}
+			else
+				return FAILURE;
 		}
 
 		//等待短时
-		hcu_usleep(5);
+		//hcu_usleep(5);
 		//send the first frame end
-
 	}
 }
 

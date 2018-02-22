@@ -294,6 +294,13 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
+
+
+	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008 || zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)//test for PMS
+	{
+	       rcv.equId = 66;
+	}
+
 	currentSensorEqpId = rcv.equId;
 
 	//Equipment Id can not be 0
@@ -311,8 +318,8 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008 || zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)//test for PMS
 	{
-
 		currentModbusBuf.curLen = 7;
+		//rcv.equId = 66;
 		UINT8 sample1[] = {0x42,0x4D,0xE1,0x00,0x00,0x01,0x70};
 		UINT8 sample2[] = {0x42,0x4D,0xE2,0x00,0x00,0x01,0x71};
 		if(InitForPMW == 0)
@@ -1696,9 +1703,12 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
     //对于LC版本，此处需要改为sps232或sps485带测试（与所有传感器共用一个端口）
 	//HCU_DEBUG_PRINT_INF("MODBUS: SPS232 series port sp =%d \n", zHcuVmCtrTab.hwinv.sps232.sp.fd);
 	//HCU_DEBUG_PRINT_INF("MODBUS: SPS485 series port sp =%d \n\n\n\n", zHcuVmCtrTab.hwinv.sps485.modbus.fd);
-    //ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, currentModbusBuf.curLen); //use the separate serial port avoid the interferace with other sensors(noise read period is 1s)
 
-    ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+
+	if(zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
+		ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	else
+		ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
@@ -1718,8 +1728,11 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	//ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
-	ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
+
+	if(zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
+		ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);
+	else
+		ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);
 
 	if ((ret <= 0) && (CurrentModusContext.NoiseHW_AlarmFlag == OFF))
 	{
@@ -2222,6 +2235,7 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
+		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", rcv->equId);
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
