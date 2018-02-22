@@ -3210,6 +3210,13 @@ typedef struct strMsgIe_bfhs_WgtSnrParamaters
 	UINT8   WeightSensorAlgoSelect;  //weight algorithm select
 	UINT32  WeightSensorReadStartMs;  //Weight sensor start sampling after infrared detector trigger
 	UINT32  WeightSensorReadStopMs;   //Weight sensor stop sampling after infrared detector trigger
+	UINT32  WeightSensorTareWeight;			//Tare weight of each material
+	UINT32  WeightSensorTargetThroughput;	//Selection stop as given 'this para' pcs good material
+	UINT32  WeightSensorAlgoAutoZeroSignal; //If autozero cannot be done during 'this para' pcs input, there will be a warning for operator
+	UINT32	WeightSensorAlgoTu1Limit;
+	UINT32	WeightSensorAlgoTu2Limit;
+	UINT32	WeightSensorAlgoMaxTu1Ratio;  	//NF2, for example, 250 means 2.5%
+	UINT8	WeightSensorAlgoRejectOption;
 }strMsgIe_bfhs_WgtSnrParamaters_t;
 
 typedef struct strMsgIe_bfhs_ArmCtrlParamaters

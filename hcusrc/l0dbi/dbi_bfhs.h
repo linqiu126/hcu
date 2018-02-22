@@ -11,13 +11,16 @@
 #include "../l0comvm/vmlayer.h"
 
 #define DBI_BFHS_DATA_SAVE_DAYS_MIN 90  //最短90天，不能再短
-
+#define HCU_SYSCFG_BFHS_DB_COLUMN_NUM_MAX 9
+#define HCU_PRODUCTCFG_BFHS_DB_COLUMN_NUM_MAX 37
 
 //APIs
 extern OPSTAT dbi_HcuBfhs_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfhsContextStaElement_t *StaDatainfo);
 extern UINT32 dbi_HcuBfhs_CallCellMaxIdGet(void);
 extern OPSTAT dbi_HcuBfhs_callcell_save(HcuSysMsgIeL3bfhsCallcellElement_t *input);
 extern OPSTAT dbi_HcuBfhs_callcell_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuBfhs_sysConfigData_read(UINT32  sysConfigData[HCU_SYSCFG_BFHS_DB_COLUMN_NUM_MAX]);
+extern OPSTAT dbi_HcuBfhs_productConfigData_read(UINT16 configId, UINT32 productConfigData[HCU_PRODUCTCFG_BFHS_DB_COLUMN_NUM_MAX]);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

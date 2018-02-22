@@ -242,4 +242,96 @@ OPSTAT dbi_HcuBfhs_callcell_delete_3monold(UINT32 days)
     return SUCCESS;
 }
 
+OPSTAT dbi_HcuBfhs_sysConfigData_read(UINT32 sysConfigData[HCU_SYSCFG_BFHS_DB_COLUMN_NUM_MAX])
+	{
+		MYSQL *sqlHandler;
+		MYSQL_RES *resPtr;
+		MYSQL_ROW sqlRow;
+	    int result = 0;
+	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+	    //建立数据库连接
+	    HCU_L0DBICOM_INIT_DB_CONN();
+
+		//获取数据
+	    sprintf(strsql, "SELECT * FROM `hcubfhssystempara` WHERE (1)");
+		result = mysql_query(sqlHandler, strsql);
+		if(result){  //成功返回0
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFHS: SELECT data from hcubfhssystempara error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+		//查具体的结果
+		resPtr = mysql_use_result(sqlHandler);
+		if (!resPtr){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFHS: mysql_use_result error!\n");
+	        return FAILURE;
+		}
+		//只读取第一条记录
+		if ((sqlRow = mysql_fetch_row(resPtr)) == NULL){
+			mysql_free_result(resPtr);
+			mysql_close(sqlHandler);
+			HcuErrorPrint("DBIBFDF: mysql_fetch_row NULL error! strsql = %s\n", strsql);
+			return FAILURE;
+		}
+		else{
+			UINT8  index;
+			for (index =0; index < resPtr->field_count; index++){
+				if (sqlRow[index] && index<HCU_SYSCFG_BFHS_DB_COLUMN_NUM_MAX)  sysConfigData[index] = (UINT32)atol(sqlRow[index]);
+			}
+		}
+
+		//释放记录集
+		mysql_free_result(resPtr);
+	    mysql_close(sqlHandler);
+	    return SUCCESS;
+	}
+
+OPSTAT dbi_HcuBfhs_productConfigData_read(UINT16 configId, UINT32 productConfigData[HCU_PRODUCTCFG_BFHS_DB_COLUMN_NUM_MAX])
+	{
+		MYSQL *sqlHandler;
+		MYSQL_RES *resPtr;
+		MYSQL_ROW sqlRow;
+	    int result = 0;
+	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+	    //建立数据库连接
+	    HCU_L0DBICOM_INIT_DB_CONN();
+
+		//获取数据
+	    sprintf(strsql, "SELECT * FROM `hcubfhsproductpara` WHERE (`currentconf` = 'Y' && `configid` = '%d')" , configId);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){  //成功返回0
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFHS: SELECT data from hcubfhsproductpara error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+		//查具体的结果
+		resPtr = mysql_use_result(sqlHandler);
+		if (!resPtr){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFHS: mysql_use_result error!\n");
+	        return FAILURE;
+		}
+		//只读取第一条记录
+		if ((sqlRow = mysql_fetch_row(resPtr)) == NULL){
+			mysql_free_result(resPtr);
+			mysql_close(sqlHandler);
+			HcuErrorPrint("DBIBFDF: mysql_fetch_row NULL error! strsql = %s\n", strsql);
+			return FAILURE;
+		}
+		else{
+			UINT8  index;
+			for (index =0; index < resPtr->field_count; index++){
+				if (sqlRow[index] && index<HCU_PRODUCTCFG_BFHS_DB_COLUMN_NUM_MAX)  productConfigData[index] = (UINT32)atol(sqlRow[index]);
+			}
+		}
+
+		//释放记录集
+		mysql_free_result(resPtr);
+	    mysql_close(sqlHandler);
+	    return SUCCESS;
+	}
+
 

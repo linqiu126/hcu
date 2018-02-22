@@ -236,7 +236,7 @@ OPSTAT dbi_HcuBfdf_callcell_delete_3monold(UINT32 days)
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIBFHS: INSET data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFDF: DELETE data error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 
@@ -245,7 +245,156 @@ OPSTAT dbi_HcuBfdf_callcell_delete_3monold(UINT32 days)
     return SUCCESS;
 }
 
+//Read system configuration parameter into gTaskL3bfdfContext
+OPSTAT dbi_HcuBfdf_sysConfigData_read(UINT32  sysConfigData[HCU_SYSCFG_BFDF_DB_COLUMN_NUM_MAX])
+	{
+		MYSQL *sqlHandler;
+		MYSQL_RES *resPtr;
+		MYSQL_ROW sqlRow;
+	    int result = 0;
+	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
+	    //建立数据库连接
+	    HCU_L0DBICOM_INIT_DB_CONN();
+
+		//获取数据
+	    sprintf(strsql, "SELECT * FROM `hcubfdfsystempara` WHERE (1)");
+		result = mysql_query(sqlHandler, strsql);
+		if(result){  //成功返回0
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFDF: SELECT data from hcubfdfsystempara error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+		//查具体的结果
+		resPtr = mysql_use_result(sqlHandler);
+		if (!resPtr){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFDF: mysql_use_result error!\n");
+	        return FAILURE;
+		}
+		//只读取第一条记录
+		if ((sqlRow = mysql_fetch_row(resPtr)) == NULL){
+			mysql_free_result(resPtr);
+			mysql_close(sqlHandler);
+			HcuErrorPrint("DBIBFDF: mysql_fetch_row NULL error! strsql = %s\n", strsql);
+			return FAILURE;
+		}
+		else{
+			UINT8  index;
+			for (index =0; index < resPtr->field_count; index++){
+				if (sqlRow[index] && index<HCU_SYSCFG_BFDF_DB_COLUMN_NUM_MAX)  sysConfigData[index] = (UINT32)atol(sqlRow[index]);
+			}
+		}
+
+		//释放记录集
+		mysql_free_result(resPtr);
+	    mysql_close(sqlHandler);
+	    return SUCCESS;
+	}
+
+OPSTAT dbi_HcuBfdf_productConfigData_read(UINT16 configId, DbiL3BfdfProductPara_t *productConfigData)
+	{
+		MYSQL *sqlHandler;
+		MYSQL_RES *resPtr;
+		MYSQL_ROW sqlRow;
+	    int result = 0;
+	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+	    //建立数据库连接
+	    HCU_L0DBICOM_INIT_DB_CONN();
+
+		//获取数据
+	    sprintf(strsql, "SELECT * FROM `hcubfdfproductpara` WHERE (`currentconf` = 'Y' && `configid` = '%d')" , configId);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){  //成功返回0
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFDF: SELECT data from hcubfdfproductpara error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+		//查具体的结果
+		resPtr = mysql_use_result(sqlHandler);
+		if (!resPtr){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFDF: mysql_use_result error!\n");
+	        return FAILURE;
+		}
+		//只读取第一条记录
+		if ((sqlRow = mysql_fetch_row(resPtr)) == NULL){
+			mysql_free_result(resPtr);
+			mysql_close(sqlHandler);
+			HcuErrorPrint("DBIBFDF: mysql_fetch_row NULL error! strsql = %s\n", strsql);
+			return FAILURE;
+		}
+		else{
+			UINT8  index = 0;
+			if (sqlRow[index])  productConfigData->configId = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  productConfigData->groupPerLine = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+			if (sqlRow[index]) strncpy(productConfigData->configName, sqlRow[index++], HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX-1);
+			if (sqlRow[index]) strncpy(productConfigData->operatorName, sqlRow[index++], HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX-1);
+		}
+
+		//释放记录集
+		mysql_free_result(resPtr);
+	    mysql_close(sqlHandler);
+	    return SUCCESS;
+	}
+
+OPSTAT dbi_HcuBfdf_groupConfigData_read(UINT16 configId, UINT8 groupTotal, DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2])
+	{
+		MYSQL *sqlHandler;
+		MYSQL_RES *resPtr;
+		MYSQL_ROW sqlRow;
+	    int result = 0;
+	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+	    //建立数据库连接
+	    HCU_L0DBICOM_INIT_DB_CONN();
+
+		//获取数据
+	    sprintf(strsql, "SELECT * FROM `hcubfdfgrouppara` WHERE (`configid` = '%d')" , configId);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){  //成功返回0
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFDF: SELECT data from hcubfdfgrouppara error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+		//查具体的结果
+		resPtr = mysql_use_result(sqlHandler);
+		if (!resPtr){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFDF: mysql_use_result error!\n");
+	        return FAILURE;
+		}
+		//Read all record
+		UINT8  group = 1;
+	    while ((sqlRow = mysql_fetch_row(resPtr)) != NULL){
+			UINT8  index = 1;
+			if (sqlRow[index]) groupConfigData[group].groupId = (UINT16)atol(sqlRow[index++]);
+			if (sqlRow[index]) groupConfigData[group].lineId = (UINT8)atol(sqlRow[index++]);
+			if (sqlRow[index]) groupConfigData[group].configId = (UINT16)atol(sqlRow[index++]);
+			if (sqlRow[index]) groupConfigData[group].hopperNum = (UINT16)atol(sqlRow[index++]);
+			if (sqlRow[index]) groupConfigData[group].hopperBitmap = (UINT32)atol(sqlRow[index++]);
+			if (sqlRow[index]) groupConfigData[group].targetWeight = (UINT32)atol(sqlRow[index++]);
+			if (sqlRow[index]) groupConfigData[group].targetUpLimit = (UINT32)atol(sqlRow[index++]);
+			if (sqlRow[index]) groupConfigData[group].bufWgtTarget = (UINT32)atol(sqlRow[index++]);
+			if (sqlRow[index]) groupConfigData[group].rangeLow = (UINT32)atol(sqlRow[index++]);
+			if (sqlRow[index]) groupConfigData[group].rangeHigh = (UINT32)atol(sqlRow[index++]);
+
+			group++;
+		}
+
+		//释放记录集
+		mysql_free_result(resPtr);
+	    mysql_close(sqlHandler);
+
+	    group--;
+		if (groupTotal != group){
+	    	HcuErrorPrint("DBIBFDF: hcubfdfgrouppara total group number[=%d] mismatch!\n", group);
+	        return FAILURE;
+		}
+
+	    return SUCCESS;
+	}
 
 
 

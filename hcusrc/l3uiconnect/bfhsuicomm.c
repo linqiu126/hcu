@@ -508,8 +508,8 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfhsContext.configId = config_index;
 
 	//称重传感器配置参数
-	gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight = 1000;
-	gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight  = 0;
+	gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight = 1050;
+	gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight  = 950;
 	gTaskL3bfhsContext.wgtSnrPar.snrAlgoSelect = 1;
 	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs = 100;
 	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams =  500;
@@ -525,6 +525,13 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = 100;
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs = 10000;
 	gTaskL3bfhsContext.wgtSnrPar.snrTimeGrid = 100;
+	gTaskL3bfhsContext.wgtSnrPar.snrTareWeight = 0;
+	gTaskL3bfhsContext.wgtSnrPar.snrTargetThroughput = 0;
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoAutoZeroSignal = 10000;
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu1Limit = 995;
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu2Limit = 990;
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoMaxTu1Ratio = 250;  //2.5%
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoRejectOption = 3;
 
 	//马达配置参数
 	gTaskL3bfhsContext.motoCtrlPar.MotorDirection =  1;
