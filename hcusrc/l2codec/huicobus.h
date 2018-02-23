@@ -504,10 +504,14 @@ typedef struct StrHlcIe_cui_hcu2uir_statistic_bfdf_report
 typedef struct StrHlcIe_cui_hcu2uir_statistic_bfhs_report
 {
 	UINT32	targetWeight;  //in NF2
+	UINT32	tu1LimitWeight;
+	UINT32	tu2LimitWeight;
 	UINT32	upLimitWeight;  //in NF2
 	UINT32	totalWeight;  //in NF2
 	UINT32	totalPackage;
-	UINT32	totalReject;
+	UINT32	totalGoodPackage;
+	UINT32	totalOverReject;
+	UINT32	totalUnderReject;
 	UINT32	throughputPerMin;
 }StrHlcIe_cui_hcu2uir_statistic_bfhs_report_t;
 //cmdValue = configID;

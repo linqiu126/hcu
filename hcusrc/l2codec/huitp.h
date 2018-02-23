@@ -2201,8 +2201,8 @@ typedef struct StrIe_HUITP_IEID_uni_hsmmp_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	char   linkName[HUITP_IEID_UNI_HSMMP_LINK_FILE_LEN_MAX];
-	UINT32 timeStampStart;
-	UINT32 timeStampEnd;
+	UINT32 timeStamp;
+	UINT8  alarmFlag;
 }StrIe_HUITP_IEID_uni_hsmmp_value_t;
 
 //HUITP_IEID_uni_hsmmp_motive                     = 0x2C01,

@@ -1036,9 +1036,13 @@ OPSTAT func_l3bfhs_time_out_statistic_scan_process(void)
 		StrHlcIe_cui_hcu2uir_statistic_bfhs_report_t buf;
 		memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t));
 		buf.targetWeight = gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight;
+		buf.tu1LimitWeight = gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu1Limit;
+		buf.tu2LimitWeight = gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu2Limit;
 		buf.upLimitWeight = gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight;
 		buf.totalPackage = gTaskL3bfhsContext.staUp2Now.wsIncMatCnt;
-		buf.totalReject = gTaskL3bfhsContext.staUp2Now.wsOverCnt+gTaskL3bfhsContext.staUp2Now.wsUnderTotalCnt;
+		buf.totalGoodPackage = gTaskL3bfhsContext.staUp2Now.wsNormalCnt;
+		buf.totalOverReject = gTaskL3bfhsContext.staUp2Now.wsOverCnt;
+		buf.totalUnderReject = gTaskL3bfhsContext.staUp2Now.wsUnderTotalCnt;
 		buf.totalWeight = gTaskL3bfhsContext.staUp2Now.wsIncMatWgt;
 		buf.throughputPerMin = gTaskL3bfhsContext.staLocalUi.wsAvgTttTimes;
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report(gTaskL3bfhsContext.configId, &buf);

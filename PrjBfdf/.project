@@ -170,6 +170,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0dbi/dbi_bfdf.h</locationURI>
 		</link>
 		<link>
+			<name>src/l0dbi/dbi_bfhs.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0dbi/dbi_bfhs.c</locationURI>
+		</link>
+		<link>
+			<name>src/l0dbi/dbi_bfhs.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0dbi/dbi_bfhs.h</locationURI>
+		</link>
+		<link>
 			<name>src/l0dbi/dbi_sysswm.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0dbi/dbi_sysswm.c</locationURI>

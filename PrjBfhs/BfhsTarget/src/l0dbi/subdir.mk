@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+/home/test/workspace/hcu/hcusrc/l0dbi/dbi_bfhs.c \
 /home/test/workspace/hcu/hcusrc/l0dbi/dbi_sysswm.c \
 /home/test/workspace/hcu/hcusrc/l0dbi/dbiairprs.c \
 /home/test/workspace/hcu/hcusrc/l0dbi/dbialcohol.c \
@@ -28,6 +29,7 @@ C_SRCS += \
 /home/test/workspace/hcu/hcusrc/l0dbi/dbiwindspd.c 
 
 OBJS += \
+./src/l0dbi/dbi_bfhs.o \
 ./src/l0dbi/dbi_sysswm.o \
 ./src/l0dbi/dbiairprs.o \
 ./src/l0dbi/dbialcohol.o \
@@ -52,6 +54,7 @@ OBJS += \
 ./src/l0dbi/dbiwindspd.o 
 
 C_DEPS += \
+./src/l0dbi/dbi_bfhs.d \
 ./src/l0dbi/dbi_sysswm.d \
 ./src/l0dbi/dbiairprs.d \
 ./src/l0dbi/dbialcohol.d \
@@ -77,6 +80,13 @@ C_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
+src/l0dbi/dbi_bfhs.o: /home/test/workspace/hcu/hcusrc/l0dbi/dbi_bfhs.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross GCC Compiler'
+	gcc -DTARGET_LINUX_X86 -DTARGET_LINUX_X86_ADVANTECH -I/usr/include/libxml2 -I/usr/include/x86_64-linux-gnu/ -I/usr/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -Wl,--hash-style=sysv -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
 src/l0dbi/dbi_sysswm.o: /home/test/workspace/hcu/hcusrc/l0dbi/dbi_sysswm.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'

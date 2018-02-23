@@ -779,11 +779,15 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report(INT32 cmdValu
     if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC: Failed to create json object!\n");
 
     json_object_object_add(jsonobj, "targetWeight", json_object_new_int(buf->targetWeight));
-    json_object_object_add(jsonobj, "upLimitWeight", json_object_new_int(buf->upLimitWeight));
+    json_object_object_add(jsonobj, "tu1Limit", json_object_new_int(buf->tu1LimitWeight));
+    json_object_object_add(jsonobj, "tu2Limit", json_object_new_int(buf->tu2LimitWeight));
+    json_object_object_add(jsonobj, "upperLimit", json_object_new_int(buf->upLimitWeight));
     json_object_object_add(jsonobj, "totalWeight", json_object_new_int(buf->totalWeight));
     json_object_object_add(jsonobj, "totalPackage", json_object_new_int(buf->totalPackage));
-    json_object_object_add(jsonobj, "totalReject", json_object_new_int(buf->totalReject));
-    json_object_object_add(jsonobj, "throughputPerMin", json_object_new_int(buf->throughputPerMin));
+    json_object_object_add(jsonobj, "throughput", json_object_new_int(buf->throughputPerMin));
+    json_object_object_add(jsonobj, "goodPackage", json_object_new_int(buf->totalGoodPackage));
+    json_object_object_add(jsonobj, "overWeight", json_object_new_int(buf->totalOverReject));
+    json_object_object_add(jsonobj, "underWeight", json_object_new_int(buf->totalUnderReject));
 
     sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
     json_object_put(jsonobj);//free

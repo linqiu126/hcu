@@ -518,8 +518,8 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo =  1;
 	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat = 2;
 	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue = 625;
-	gTaskL3bfhsContext.wgtSnrPar.snrReadStartMs = 50;
-	gTaskL3bfhsContext.wgtSnrPar.snrReadStopMs = 50;
+	gTaskL3bfhsContext.wgtSnrPar.snrReadStartMs = 300;
+	gTaskL3bfhsContext.wgtSnrPar.snrReadStopMs = 500;
 	gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs = 100;
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams = 500;
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = 100;
@@ -534,7 +534,7 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfhsContext.wgtSnrPar.snrAlgoRejectOption = 3;
 
 	//马达配置参数
-	gTaskL3bfhsContext.motoCtrlPar.MotorDirection =  1;
+	gTaskL3bfhsContext.motoCtrlPar.MotorDirection =  0;
 	gTaskL3bfhsContext.motoCtrlPar.MotorSpeed = 1000;
 
 	//摇臂配置参数
