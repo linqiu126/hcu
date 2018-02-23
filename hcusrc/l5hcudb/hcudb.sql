@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2018-02-22 09:39:35
+-- Generation Time: 2018-02-23 06:57:01
 -- 服务器版本： 5.6.17
 -- PHP Version: 5.5.12
 
@@ -301,7 +301,7 @@ INSERT INTO `hcubfhscallcell` (`sid`, `configid`, `timestamp`, `operator`, `targ
 --
 
 CREATE TABLE IF NOT EXISTS `hcubfhsproductpara` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `configid` int(4) NOT NULL AUTO_INCREMENT,
   `confname` varchar(20) CHARACTER SET utf8 NOT NULL,
   `currentconf` char(1) CHARACTER SET utf8 NOT NULL DEFAULT 'N',
   `baseconf` char(1) CHARACTER SET utf8 NOT NULL DEFAULT 'N',
@@ -338,21 +338,20 @@ CREATE TABLE IF NOT EXISTS `hcubfhsproductpara` (
   `armrollingstop` int(4) NOT NULL,
   `armfailvaration` int(4) NOT NULL,
   `armfailtime` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+  PRIMARY KEY (`configid`),
+  UNIQUE KEY `confname` (`confname`),
+  UNIQUE KEY `confname_2` (`confname`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
 
 --
 -- 转存表中的数据 `hcubfhsproductpara`
 --
 
-INSERT INTO `hcubfhsproductpara` (`sid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `targetweight`, `tareweight`, `targetspeed`, `productlength`, `armrollinginterval`, `algorithmoption`, `upperlimit`, `tu1limit`, `tu2limit`, `maxtu1`, `rejectoroption`, `statisticsswitch`, `targetthroughput`, `snrautozerorange`, `snrstandstillrange`, `snrfiltercutofffreq`, `snrringbuftime`, `snrautotaringtime`, `snrpreloadvalue`, `snrpreloadvalueformat`, `snrstandstilltimeout`, `snrstandstilltime`, `snrmeasurementrange`, `snrtimegrid`, `motorspeed`, `motordirection`, `armrollingstart`, `armrollingstop`, `armfailvaration`, `armfailtime`) VALUES
-(13, 'fish888', 'Y', 'N', 'System', 'fish37.svg', '', 1000, 995, 990, 0, 2, 2, 800, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(14, 'apple', 'N', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(15, 'qyyy', 'N', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(16, 'apple', 'N', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(17, 'apple', 'N', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(18, 'apple', 'N', 'N', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(19, 'fish888', 'N', 'N', 'System', 'fish37.svg', '', 1000, 995, 990, 0, 2, 2, 800, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `hcubfhsproductpara` (`configid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `targetweight`, `tareweight`, `targetspeed`, `productlength`, `armrollinginterval`, `algorithmoption`, `upperlimit`, `tu1limit`, `tu2limit`, `maxtu1`, `rejectoroption`, `statisticsswitch`, `targetthroughput`, `snrautozerorange`, `snrstandstillrange`, `snrfiltercutofffreq`, `snrringbuftime`, `snrautotaringtime`, `snrpreloadvalue`, `snrpreloadvalueformat`, `snrstandstilltimeout`, `snrstandstilltime`, `snrmeasurementrange`, `snrtimegrid`, `motorspeed`, `motordirection`, `armrollingstart`, `armrollingstop`, `armfailvaration`, `armfailtime`) VALUES
+(15, 'qyyy', 'N', 'Y', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(16, 'apple', 'N', 'Y', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(20, 'fish', 'N', 'N', 'System', 'fish13.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(23, 'banana', 'Y', 'N', 'System', 'banana3.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -895,18 +894,18 @@ INSERT INTO `hcubfscstaticpara` (`sid`, `calmaxallowedwgt`, `calfullwgt`, `calad
 --
 
 CREATE TABLE IF NOT EXISTS `hcubfznaccount` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `uid` int(4) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) CHARACTER SET utf8 NOT NULL,
   `password` varchar(50) CHARACTER SET utf8 NOT NULL,
   `memo` text CHARACTER SET utf8,
-  PRIMARY KEY (`sid`)
+  PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- 转存表中的数据 `hcubfznaccount`
 --
 
-INSERT INTO `hcubfznaccount` (`sid`, `username`, `password`, `memo`) VALUES
+INSERT INTO `hcubfznaccount` (`uid`, `username`, `password`, `memo`) VALUES
 (1, 'admin', '0DPiKuNIrrVmD8IUCuw1hQxNqZc', '管理员'),
 (4, 'bfzn', '123456', NULL),
 (10, 'wxl', '123456', NULL),
