@@ -546,6 +546,8 @@ enum HCU_INTER_TASK_MSG_ID
 	//BFDF
 	MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,
 	MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,
+	MSG_ID_L3BFDF_CAN_DYN_CAL_REQ,
+	MSG_ID_CAN_L3BFDF_DYN_CAL_RESP,
 	MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,
 	MSG_ID_L3BFDF_CAN_WS_COMB_OUT,
 	MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,
@@ -3091,7 +3093,7 @@ typedef struct strMsgIe_l3bfdf_WeightSensorParamaters
 	UINT32	WeightSensorPickupThread;						// NOT for GUI
 	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
 	UINT32	StardardReadyTimeMs;								//???
-	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+	UINT32	MaxAllowedWeight;										//BFDF: 如果发现超过这个最大值，说明Sensor出错
 	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
 	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
 	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
@@ -3144,6 +3146,62 @@ typedef struct msg_struct_can_l3bfdf_sys_cfg_resp
 	UINT16 errCode;
 	UINT32 length;
 }msg_struct_can_l3bfdf_sys_cfg_resp_t;
+
+//MSG_ID_L3BFDF_CAN_DYN_CAL_REQ
+typedef struct StrMsgIe_bfdf_calibration_req
+{
+    UINT8            calibration_zero_or_full; /* 1 for ZERO, 2 for FULL */
+    UINT8            calibration_iteration;    /* 8 for ZERO, 4 for FULL */
+    UINT16           TWeightInd;
+    UINT32           full_weight; /* in 0.01g */
+    UINT32           motor_speed;
+    UINT32           adc_sample_freq;
+    UINT32           adc_gain;
+    UINT32           noise_floor_filter_factor;   /* 0 - 100: 0.00 to 1.00, y = factor * x(n) + (1-factor) * x(n-1), 0 means disable */
+    UINT32           max_allowed_weight; /* in 0.01g */
+    UINT32           WeightSensorTailorValue;
+}StrMsgIe_bfdf_calibration_req_t;
+
+typedef struct msg_struct_l3bfdf_can_dyn_cal_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	StrMsgIe_bfdf_calibration_req_t dynCalReq;
+	UINT32 length;
+}msg_struct_l3bfdf_can_dyn_cal_req_t;
+
+//MSG_ID_CAN_L3BFDF_DYN_CAL_RESP
+typedef struct StrMsgIe_bfdf_calibration_resp //
+{
+    UINT16  errCode;
+    UINT8   calibration_zero_or_full;
+    UINT8   calibration_cur_iteration;
+    UINT8   calibration_result;
+    UINT8   spare2;
+    UINT32  full_weight; /* in 0.01g */
+    UINT32  noise_floor_period_10ms;
+    UINT32  noise_floor_period_10ms_max;
+    UINT32  weight_report_offset_wrt_infra;
+    UINT32  noise_floor_sd_mean;
+    UINT32  noise_floor_sd_max;
+    UINT32  noise_floor_sd_min;
+    UINT32  noise_floor_sd_sd;
+    UINT32  noise_floor_mean_mean;
+    UINT32  noise_floor_mean_max;
+    UINT32  noise_floor_mean_min;
+    UINT32  noise_floor_mean_sd;
+    UINT32  full_offset_peak_wrt_infra[4];
+    UINT32  full_coefficiency_average;            /* in 0.0001, MIN: 0.0001, MAX: 429496.7295 */
+    UINT32  estimated_error_iteration[4];
+    UINT32  estimated_error_max_possible;
+    UINT32  estimated_error_average;
+}StrMsgIe_bfdf_calibration_resp_t;
+
+typedef struct msg_struct_can_l3bfdf_dyn_cal_resp
+{
+	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	StrMsgIe_bfdf_calibration_resp_t dynCalResp;
+	UINT32 length;
+}msg_struct_can_l3bfdf_dyn_cal_resp_t;
 
 //MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,  	//传感器新数据事件
 typedef struct msg_struct_can_l3bfdf_new_ready_event

@@ -288,6 +288,36 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_SUSPEND);
 	}
 
+	//DYNAMIC_CALI
+	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI){
+		msg_struct_l3bfdf_can_dyn_cal_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_dyn_zero_req_t));
+		snd.dynCalReq.TWeightInd = gTaskL3bfdfContext.dynCalPar.TWeightInd;
+		snd.dynCalReq.WeightSensorTailorValue = gTaskL3bfdfContext.dynCalPar.WeightSensorTailorValue;
+		snd.dynCalReq.adc_gain = gTaskL3bfdfContext.dynCalPar.adc_gain;
+		snd.dynCalReq.adc_sample_freq = gTaskL3bfdfContext.dynCalPar.adc_sample_freq;
+		snd.dynCalReq.full_weight = gTaskL3bfdfContext.dynCalPar.full_weight;
+		snd.dynCalReq.max_allowed_weight = gTaskL3bfdfContext.dynCalPar.max_allowed_weight;
+		snd.dynCalReq.motor_speed = gTaskL3bfdfContext.dynCalPar.motor_speed;
+		snd.dynCalReq.noise_floor_filter_factor = gTaskL3bfdfContext.dynCalPar.noise_floor_filter_factor;
+
+		if(rcv.cmdValue == HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO){
+			snd.dynCalReq.calibration_zero_or_full = 1;
+			snd.dynCalReq.calibration_iteration = gTaskL3bfdfContext.dynCalPar.zero_cal_iteration;
+			snd.length = sizeof(msg_struct_l3bfdf_can_dyn_cal_req_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_DYN_CAL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
+		}
+		else if(rcv.cmdValue == HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL){
+			snd.dynCalReq.calibration_zero_or_full = 2;
+			snd.dynCalReq.calibration_iteration = gTaskL3bfdfContext.dynCalPar.full_cal_iteration;
+			snd.length = sizeof(msg_struct_l3bfdf_can_dyn_cal_req_t);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_DYN_CAL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
+			//动态校准可以重复进行，一次request后用户重复放置砝码会有多次response返回
+		}
+		else
+			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receive cmdValue error for CMDID_DYNAMIC_CALI!\n");
+	}
+
 	//差错
 	else HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receive message error! Rcv.cmdId=%x, Rcv.value=%x.\n", rcv.cmdid, rcv.cmdValue);
 

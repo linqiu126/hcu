@@ -61,7 +61,7 @@ typedef void                      VOID;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #define HUITP_USE_IN_HCU	1
 #define HUITP_USE_IN_IHU	2
-#define HUITP_USE_SET		HUITP_USE_IN_HCU
+#define HUITP_USE_SET		HUITP_USE_IN_IHU
 
 /*
  *
@@ -6330,49 +6330,49 @@ typedef struct StrHuiIe_BfdfErrorCode
 /* FOR EXTERNAL INTERFACE AND INTERNAL VARIABLES  */
 typedef struct StrHuiIe_BfdfWeightSensorParam
 {
-		UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
-		UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
-		UINT32	WeightSensorEmptyThread;
-		UINT32	WeightSensorEmptyDetectionTimeMs;
-		UINT32	WeightSensorPickupThread;						// NOT for GUI
-		UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
-		UINT32	StardardReadyTimeMs;								//???
-    UINT32	MaxAllowedWeight;										//BFDF: 如果发现超过这个最大值，说明Sensor出错
-		UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
-		UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
-		UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
-		UINT32	WeightSensorCalibrationFullWeight;
-		UINT32	WeightSensorStaticZeroValue;
-		UINT32	WeightSensorTailorValue;
-		UINT32	WeightSensorDynamicZeroThreadValue;
-		UINT32	WeightSensorDynamicZeroHysteresisMs;
-		UINT32  WeightSensorMovingEverageSample;
+	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
+	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
+	UINT32	WeightSensorEmptyThread;
+	UINT32	WeightSensorEmptyDetectionTimeMs;
+	UINT32	WeightSensorPickupThread;						// NOT for GUI
+	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
+	UINT32	StardardReadyTimeMs;								//???
+	UINT32	MaxAllowedWeight;										//BFDF: 如果发现超过这个最大值，说明Sensor出错
+	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullWeight;
+	UINT32	WeightSensorStaticZeroValue;
+	UINT32	WeightSensorTailorValue;
+	UINT32	WeightSensorDynamicZeroThreadValue;
+	UINT32	WeightSensorDynamicZeroHysteresisMs;
+	UINT32  WeightSensorMovingEverageSample;
 }StrHuiIe_BfdfWeightSensorParam_t;
 
 /* FOR EXTERNAL INTERFACE AND INTERNAL VARIABLES  */
 typedef struct StrHuiIe_BfdfMotorCtrlParam
 {
-		UINT32	MotorSpeed;
-		UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
-		UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
-		UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
+	UINT32	MotorSpeed;
+	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
+	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
+	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
 }StrHuiIe_BfdfMotorControlParam_t;
 
 /* FOR EXTERNAL INTERFACE AND INTERNAL VARIABLES  */
 typedef struct StrHuiIe_BfdfActionCtrlParam
 {
-    UINT16  TWeightInd;                     /* After INFRA INT, Wait for how long to send WEIGHT_IND, unit is 10ms Tick */
-	  UINT16  T0bis;                          /* After INFRA INT, INFRA INT sent to Node 2 to 5, unit is 10ms Tick */
-    UINT16  TA0;                            /* After INFRA INT, Deay to AP01 */
-  	UINT16  TActCmd;
-	  UINT16  TArmStart;
-	  UINT16  TArmStop;
-	  UINT16  TDoorCloseLightOn;
-	  UINT16  TApIntervalMin;
-	  UINT16  TApInterval[HUITP_IEID_SUI_BFDF_MAX_GLOBAL_AP_NUM];
-	  UINT16  TLocalAp[HUITP_IEID_SUI_BFDF_MAX_LOCAL_AP_NUM];
-	  UINT16  DelayNode1ToX;
-	  UINT16  DelayUpHcuAlgoDl;
+	UINT16  TWeightInd;                     /* After INFRA INT, Wait for how long to send WEIGHT_IND, unit is 10ms Tick */
+	UINT16  T0bis;                          /* After INFRA INT, INFRA INT sent to Node 2 to 5, unit is 10ms Tick */
+	UINT16  TA0;                            /* After INFRA INT, Deay to AP01 */
+	UINT16  TActCmd;
+	UINT16  TArmStart;
+	UINT16  TArmStop;
+	UINT16  TDoorCloseLightOn;
+	UINT16  TApIntervalMin;
+	UINT16  TApInterval[HUITP_IEID_SUI_BFDF_MAX_GLOBAL_AP_NUM];
+	UINT16  TLocalAp[HUITP_IEID_SUI_BFDF_MAX_LOCAL_AP_NUM];
+	UINT16  DelayNode1ToX;
+	UINT16  DelayUpHcuAlgoDl;
 }StrHuiIe_BfdfActionCtrlParam_t;
 
 typedef struct StrMsg_HUITP_MSGID_sui_bfdf_set_config_req
@@ -6390,7 +6390,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp
 {
 	UINT16	msgid;
 	UINT16  length;
-  UINT8   validFlag;  //是否执行成功
+	UINT8   validFlag;  //是否执行成功
 	UINT8   spare1;
 	UINT16  errCode;
 }StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t;
@@ -6435,16 +6435,16 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind
 //HUITP_MSGID_sui_bfdf_infra_ind                   = 0x3BB4, 
 typedef struct StrHuiIe_bfdf_infra_ind //
 {
-    UINT32 infra_counters;
-    UINT32 infra_int_last_interval_ms;
-	  UINT32 is_infra_int_too_close;
+	UINT32 infra_counters;
+	UINT32 infra_int_last_interval_ms;
+	UINT32 is_infra_int_too_close;
 }StrHuiIe_bfdf_infra_ind_t;
 
 typedef struct StrMsg_HUITP_MSGID_sui_bfdf_infra_ind //
 {
-	  UINT16           msgid;
-	  UINT16           length;
-	  StrHuiIe_bfdf_infra_ind_t bfdf_infra_ind;
+	UINT16           msgid;
+	UINT16           length;
+	StrHuiIe_bfdf_infra_ind_t bfdf_infra_ind;
 }StrMsg_HUITP_MSGID_sui_bfdf_infra_ind_t;
 
 //HUITP_MSGID_sui_bfdf_calibration_req             = 0x3B36, 
@@ -6454,21 +6454,21 @@ typedef struct StrHuiIe_bfdf_calibration_req //
 {
     UINT8            calibration_zero_or_full; /* 1 for ZERO, 2 for FULL */
     UINT8            calibration_iteration;    /* 8 for ZERO, 4 for FULL */ 
-    UINT8            spare;
-    UINT8            spare1;
+    UINT16           TWeightInd;
     UINT32           full_weight; /* in 0.01g */
     UINT32           motor_speed;
     UINT32           adc_sample_freq;
     UINT32           adc_gain;
     UINT32           noise_floor_filter_factor;   /* 0 - 100: 0.00 to 1.00, y = factor * x(n) + (1-factor) * x(n-1), 0 means disable */
     UINT32           max_allowed_weight; /* in 0.01g */
+    UINT32           WeightSensorTailorValue;
 }StrHuiIe_bfdf_calibration_req_t;
 
 typedef struct StrMsg_HUITP_MSGID_sui_bfdf_calibration_req //
 {
-	  UINT16           msgid;
-	  UINT16           length;
-    StrHuiIe_bfdf_calibration_req_t cal_req;
+	UINT16           msgid;
+	UINT16           length;
+	StrHuiIe_bfdf_calibration_req_t cal_req;
 }StrMsg_HUITP_MSGID_sui_bfdf_calibration_req_t;
 
 //HUITP_MSGID_sui_bfdf_calibration_resp            = 0x3BB6,

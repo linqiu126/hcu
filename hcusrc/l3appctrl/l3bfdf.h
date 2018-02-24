@@ -154,7 +154,7 @@ typedef struct gTaskL3bfdfContextWeightSensorParamaters
 	UINT32	WeightSensorPickupThread;						// NOT for GUI
 	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
 	UINT32	StardardReadyTimeMs;								//???
-	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+	UINT32	MaxAllowedWeight;										//BFDF: 如果发现超过这个最大值，说明Sensor出错
 	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
 	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
 	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
@@ -187,6 +187,20 @@ typedef struct gTaskL3bfdfContextActionControlParamaters
 	UINT16  DelayNode1ToX;
 	UINT16  DelayUpHcuAlgoDl;
 }gTaskL3bfdfContextActionControlParamaters_t;
+typedef struct gTaskL3bfdfContextDynCalibrationParamaters
+{
+    UINT8            calibration_zero_or_full; /* 1 for ZERO, 2 for FULL */
+    UINT8            zero_cal_iteration;    /* 8 for ZERO, 4 for FULL */
+    UINT8            full_cal_iteration;
+    UINT16           TWeightInd;
+    UINT32           full_weight; /* in 0.01g */
+    UINT32           motor_speed;
+    UINT32           adc_sample_freq;
+    UINT32           adc_gain;
+    UINT32           noise_floor_filter_factor;   /* 0 - 100: 0.00 to 1.00, y = factor * x(n) + (1-factor) * x(n-1), 0 means disable */
+    UINT32           max_allowed_weight; /* in 0.01g */
+    UINT32           WeightSensorTailorValue;
+}gTaskL3bfdfContextDynCalibrationParamaters_t;
 
 //统计信息：为了提高本地计算的精度
 typedef struct gTaskL3bfdfContextStaEleMid
@@ -238,6 +252,7 @@ typedef struct gTaskL3bfdfContext
 	gTaskL3bfdfContextMotorControlParamaters_t			motMainPar;
 	gTaskL3bfdfContextMotorControlParamaters_t			motSecondPar;
 	gTaskL3bfdfContextActionControlParamaters_t			actionCtrlPar;
+	gTaskL3bfdfContextDynCalibrationParamaters_t			dynCalPar;
 	UINT32  start24hStaTimeInUnix;						//系统配置的参数，表示24小时统计的日历起点
 
 	//动态部分

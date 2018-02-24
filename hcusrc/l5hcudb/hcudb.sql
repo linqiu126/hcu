@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2018-02-23 06:57:01
+-- Generation Time: 2018-02-24 05:14:28
 -- 服务器版本： 5.6.17
 -- PHP Version: 5.5.12
 
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `hcubfdfgrouppara` (
   `rangelow` int(4) NOT NULL,
   `rangehigh` int(4) NOT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=30 ;
 
 --
 -- 转存表中的数据 `hcubfdfgrouppara`
@@ -167,7 +167,15 @@ INSERT INTO `hcubfdfgrouppara` (`sid`, `groupid`, `lineid`, `configid`, `hoppern
 (3, 3, 0, 2, 2, 48, 10000, 100, 5000, 200, 300),
 (4, 1, 1, 2, 4, 15, 25000, 200, 10000, 400, 500),
 (5, 2, 1, 2, 3, 112, 10000, 100, 5000, 200, 300),
-(6, 3, 1, 2, 1, 128, 10000, 100, 5000, 200, 300);
+(6, 3, 1, 2, 1, 128, 10000, 100, 5000, 200, 300),
+(16, 1, 0, 16, 4, 15, 25000, 200, 10000, 400, 500),
+(17, 2, 0, 16, 4, 240, 10000, 100, 5000, 200, 300),
+(18, 1, 1, 16, 5, 31, 25000, 200, 10000, 400, 500),
+(19, 2, 1, 16, 3, 224, 10000, 100, 5000, 200, 300),
+(26, 1, 0, 19, 4, 15, 25000, 200, 10000, 400, 500),
+(27, 2, 0, 19, 4, 240, 10000, 100, 5000, 200, 300),
+(28, 1, 1, 19, 4, 15, 25000, 200, 10000, 400, 500),
+(29, 2, 1, 19, 4, 240, 10000, 100, 5000, 200, 300);
 
 -- --------------------------------------------------------
 
@@ -184,18 +192,19 @@ CREATE TABLE IF NOT EXISTS `hcubfdfproductpara` (
   `baseconf` varchar(5) NOT NULL DEFAULT 'N',
   `conficon` varchar(20) NOT NULL,
   `confdescription` varchar(100) NOT NULL,
-  PRIMARY KEY (`configid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=14 ;
+  PRIMARY KEY (`configid`),
+  UNIQUE KEY `confname` (`confname`),
+  UNIQUE KEY `confname_2` (`confname`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=20 ;
 
 --
 -- 转存表中的数据 `hcubfdfproductpara`
 --
 
 INSERT INTO `hcubfdfproductpara` (`configid`, `groupnum`, `confname`, `confowner`, `currentconf`, `baseconf`, `conficon`, `confdescription`) VALUES
-(2, 3, 'fish1', 'Admin', 'Y', 'Y', 'fish37.svg', ''),
-(3, 3, 'fish2', 'Admin', 'N', 'N', 'fish37.svg', ''),
-(4, 2, 'appl1', 'Bofeng', 'N', 'N', 'apple12.svg', ''),
-(13, 5, 'candy', 'Bofeng', 'N', 'N', 'bread4.svg', '');
+(2, 3, 'fish', 'Admin', 'N', 'Y', 'fish37.svg', ''),
+(16, 2, 'apple', 'admin', 'N', 'N', 'apple54.svg', ''),
+(19, 2, 'yellowfish', 'admin', 'Y', 'N', 'fish37.svg', '');
 
 -- --------------------------------------------------------
 
@@ -350,8 +359,8 @@ CREATE TABLE IF NOT EXISTS `hcubfhsproductpara` (
 INSERT INTO `hcubfhsproductpara` (`configid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `targetweight`, `tareweight`, `targetspeed`, `productlength`, `armrollinginterval`, `algorithmoption`, `upperlimit`, `tu1limit`, `tu2limit`, `maxtu1`, `rejectoroption`, `statisticsswitch`, `targetthroughput`, `snrautozerorange`, `snrstandstillrange`, `snrfiltercutofffreq`, `snrringbuftime`, `snrautotaringtime`, `snrpreloadvalue`, `snrpreloadvalueformat`, `snrstandstilltimeout`, `snrstandstilltime`, `snrmeasurementrange`, `snrtimegrid`, `motorspeed`, `motordirection`, `armrollingstart`, `armrollingstop`, `armfailvaration`, `armfailtime`) VALUES
 (15, 'qyyy', 'N', 'Y', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (16, 'apple', 'N', 'Y', 'System', 'apple54.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(20, 'fish', 'N', 'N', 'System', 'fish13.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(23, 'banana', 'Y', 'N', 'System', 'banana3.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+(20, 'fish', 'Y', 'N', 'System', 'fish13.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(23, 'banana', 'N', 'N', 'System', 'banana3.svg', '', 990, 995, 990, 0, 2, 2, 999, 5, 25, 350, 10, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -606,7 +615,7 @@ CREATE TABLE IF NOT EXISTS `hcubfscfb2ui` (
   `validflag` int(1) NOT NULL,
   `fbinfo` char(80) NOT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- 转存表中的数据 `hcubfscfb2ui`
@@ -615,7 +624,8 @@ CREATE TABLE IF NOT EXISTS `hcubfscfb2ui` (
 INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 (1, 1, 1, 'Configuration success'),
 (2, 2, 0, 'Start failure due to WS not reachable'),
-(3, 3, 0, 'Stop failure due to WS not reachable');
+(3, 3, 0, 'Stop failure due to WS not reachable'),
+(4, 1, 0, '');
 
 -- --------------------------------------------------------
 
@@ -659,7 +669,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsclanguagedict` (
   `arabic` varchar(200) DEFAULT NULL,
   `thai` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=128 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=132 ;
 
 --
 -- 转存表中的数据 `hcubfsclanguagedict`
@@ -781,7 +791,7 @@ INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japan
 (113, 'Statistical functional switch', NULL, NULL, NULL, NULL, NULL, NULL),
 (114, 'Target Throughput', NULL, NULL, NULL, NULL, NULL, NULL),
 (115, 'Given through overdose(pcs)', NULL, NULL, NULL, NULL, NULL, NULL),
-(116, 'Rejector parameters', NULL, NULL, NULL, NULL, NULL, NULL),
+(116, 'RejectorParameters', '分选参数', NULL, NULL, NULL, NULL, NULL),
 (117, 'Total Weight', '总重量', NULL, NULL, NULL, NULL, NULL),
 (118, 'Total Package', '总包数', NULL, NULL, NULL, NULL, NULL),
 (119, 'Throughput', '分选速度', NULL, NULL, NULL, NULL, NULL),
@@ -792,7 +802,11 @@ INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japan
 (124, 'Current Weight', '当前重量', NULL, NULL, NULL, NULL, NULL),
 (125, 'g', '克', NULL, NULL, NULL, NULL, NULL),
 (126, 'pcs', '包', NULL, NULL, NULL, NULL, NULL),
-(127, 'pcs/min', '包/分钟', NULL, NULL, NULL, NULL, NULL);
+(127, 'pcs/min', '包/分钟', NULL, NULL, NULL, NULL, NULL),
+(128, 'Target UpLimit', NULL, NULL, NULL, NULL, NULL, NULL),
+(129, 'Bufwgt Target', NULL, NULL, NULL, NULL, NULL, NULL),
+(130, 'Range Low', NULL, NULL, NULL, NULL, NULL, NULL),
+(131, 'Range High', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
