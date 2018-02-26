@@ -490,24 +490,22 @@ bool func_bfdfuicomm_hopper_state_set_init(UINT8 streamId)
 //扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
 OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 {
-	UINT8 index;
 	UINT8 line, group, hopper;
 	UINT8 groupPerLine = 0, groupTotal = 0;
-	UINT32 sysConfigData[HCU_SYSCFG_BFDF_DB_COLUMN_NUM_MAX];
+	DbiL3BfdfSystemPara_t sysConfigData;
+	DbiL3BfdfCalibrationPara_t calConfigData;
 	DbiL3BfdfProductPara_t productConfigData;
 	DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2];
 
 	/*** Initialize SYSTEM configuration, these parameters are common for all products ***/
 
-	if (dbi_HcuBfdf_sysConfigData_read(sysConfigData) == FAILURE)
-		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB SYSTEM configuration data failed \n");
+	if (dbi_HcuBfdf_sysConfigData_read(&sysConfigData, &calConfigData) == FAILURE)
+		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB System and Calibration configuration data failed \n");
 
-	index = 1; //First collumn is sid
 	//配置系统的DIMENSIONING
-	gTaskL3bfdfContext.nbrStreamLine = sysConfigData[index++];
-	gTaskL3bfdfContext.nbrIoBoardPerLine = sysConfigData[index++];
-//	gTaskL3bfdfContext.nbrStreamLine = 1;
-//	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
+	gTaskL3bfdfContext.nbrStreamLine = sysConfigData.lineNum;
+	gTaskL3bfdfContext.nbrIoBoardPerLine = sysConfigData.boardNumPerLine;
+
 	//Hopper初始化
 	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
 		func_bfdfuicomm_hopper_state_set_init(line);
@@ -519,21 +517,13 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 	}
 
 	//查询系统配置参数
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadThread = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyThread = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.StardardReadyTimeMs = sysConfigData[index++];
+	memcpy(&gTaskL3bfdfContext.motMainPar, &sysConfigData.motMainPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
+	memcpy(&gTaskL3bfdfContext.motSecondPar, &sysConfigData.motSecondPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
+	memcpy(&gTaskL3bfdfContext.actionCtrlPar, &sysConfigData.armCtrlPar, sizeof(gTaskL3bfdfContextActionControlParamaters_t));
+	memcpy(&gTaskL3bfdfContext.dynCalPar, &calConfigData, sizeof(gTaskL3bfdfContextDynCalibrationParamaters_t));
 
-	gTaskL3bfdfContext.wgtSnrPar.MaxAllowedWeight = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorStaticZeroValue = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorTailorValue = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = sysConfigData[index++];
-
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupThread = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs = sysConfigData[index++];
-
+//	gTaskL3bfdfContext.nbrStreamLine = 1;
+//	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
 //	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  1;
 //	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadThread = 1;
 //	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = 1;

@@ -3148,7 +3148,7 @@ typedef struct msg_struct_can_l3bfdf_sys_cfg_resp
 }msg_struct_can_l3bfdf_sys_cfg_resp_t;
 
 //MSG_ID_L3BFDF_CAN_DYN_CAL_REQ
-typedef struct StrMsgIe_bfdf_calibration_req
+typedef struct strMsgIe_bfdf_calibration_req
 {
     UINT8            calibration_zero_or_full; /* 1 for ZERO, 2 for FULL */
     UINT8            calibration_iteration;    /* 8 for ZERO, 4 for FULL */
@@ -3160,17 +3160,17 @@ typedef struct StrMsgIe_bfdf_calibration_req
     UINT32           noise_floor_filter_factor;   /* 0 - 100: 0.00 to 1.00, y = factor * x(n) + (1-factor) * x(n-1), 0 means disable */
     UINT32           max_allowed_weight; /* in 0.01g */
     UINT32           WeightSensorTailorValue;
-}StrMsgIe_bfdf_calibration_req_t;
+}strMsgIe_bfdf_calibration_req_t;
 
 typedef struct msg_struct_l3bfdf_can_dyn_cal_req
 {
 	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-	StrMsgIe_bfdf_calibration_req_t dynCalReq;
+	strMsgIe_bfdf_calibration_req_t dynCalReq;
 	UINT32 length;
 }msg_struct_l3bfdf_can_dyn_cal_req_t;
 
 //MSG_ID_CAN_L3BFDF_DYN_CAL_RESP
-typedef struct StrMsgIe_bfdf_calibration_resp //
+typedef struct strMsgIe_bfdf_calibration_resp //
 {
     UINT16  errCode;
     UINT8   calibration_zero_or_full;
@@ -3194,12 +3194,12 @@ typedef struct StrMsgIe_bfdf_calibration_resp //
     UINT32  estimated_error_iteration[4];
     UINT32  estimated_error_max_possible;
     UINT32  estimated_error_average;
-}StrMsgIe_bfdf_calibration_resp_t;
+}strMsgIe_bfdf_calibration_resp_t;
 
 typedef struct msg_struct_can_l3bfdf_dyn_cal_resp
 {
 	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-	StrMsgIe_bfdf_calibration_resp_t dynCalResp;
+	strMsgIe_bfdf_calibration_resp_t dynCalResp;
 	UINT32 length;
 }msg_struct_can_l3bfdf_dyn_cal_resp_t;
 

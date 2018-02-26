@@ -189,7 +189,6 @@ typedef struct gTaskL3bfdfContextActionControlParamaters
 }gTaskL3bfdfContextActionControlParamaters_t;
 typedef struct gTaskL3bfdfContextDynCalibrationParamaters
 {
-    UINT8            calibration_zero_or_full; /* 1 for ZERO, 2 for FULL */
     UINT8            zero_cal_iteration;    /* 8 for ZERO, 4 for FULL */
     UINT8            full_cal_iteration;
     UINT16           TWeightInd;
@@ -252,7 +251,7 @@ typedef struct gTaskL3bfdfContext
 	gTaskL3bfdfContextMotorControlParamaters_t			motMainPar;
 	gTaskL3bfdfContextMotorControlParamaters_t			motSecondPar;
 	gTaskL3bfdfContextActionControlParamaters_t			actionCtrlPar;
-	gTaskL3bfdfContextDynCalibrationParamaters_t			dynCalPar;
+	gTaskL3bfdfContextDynCalibrationParamaters_t		dynCalPar;
 	UINT32  start24hStaTimeInUnix;						//系统配置的参数，表示24小时统计的日历起点
 
 	//动态部分

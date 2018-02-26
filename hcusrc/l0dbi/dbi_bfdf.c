@@ -246,7 +246,7 @@ OPSTAT dbi_HcuBfdf_callcell_delete_3monold(UINT32 days)
 }
 
 //Read system configuration parameter into gTaskL3bfdfContext
-OPSTAT dbi_HcuBfdf_sysConfigData_read(UINT32  sysConfigData[HCU_SYSCFG_BFDF_DB_COLUMN_NUM_MAX])
+OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfCalibrationPara_t *dynCalPar)
 	{
 		MYSQL *sqlHandler;
 		MYSQL_RES *resPtr;
@@ -280,10 +280,53 @@ OPSTAT dbi_HcuBfdf_sysConfigData_read(UINT32  sysConfigData[HCU_SYSCFG_BFDF_DB_C
 			return FAILURE;
 		}
 		else{
-			UINT8  index;
-			for (index =0; index < resPtr->field_count; index++){
-				if (sqlRow[index] && index<HCU_SYSCFG_BFDF_DB_COLUMN_NUM_MAX)  sysConfigData[index] = (UINT32)atol(sqlRow[index]);
-			}
+			UINT8 i = 0;
+			UINT32 temp = 0;
+			UINT8  index = 1; // First field is SID
+
+			if (sqlRow[index])  sysPara->lineNum = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+			if (sqlRow[index])  sysPara->boardNumPerLine = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+			//main motor parameters
+			if (sqlRow[index])  sysPara->motMainPar.MotorSpeed = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motMainPar.MotorDirection = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motMainPar.MotorFailureDetectionVaration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motMainPar.MotorFailureDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+
+			//secondary motor parameters
+			if (sqlRow[index])  sysPara->motSecondPar.MotorSpeed = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motSecondPar.MotorDirection = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motSecondPar.MotorFailureDetectionVaration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motSecondPar.MotorFailureDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+
+			//Arm control parameters
+			if (sqlRow[index])  sysPara->armCtrlPar.TWeightInd = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.T0bis = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TA0 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TActCmd = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TArmStart = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TArmStop = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TDoorCloseLightOn = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TApIntervalMin = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  temp = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			for (i=1; i<HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX; i++)
+				sysPara->armCtrlPar.TApInterval[i] = temp;
+			if (sqlRow[index])  temp = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			for (i=0; i<HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX; i++)
+				sysPara->armCtrlPar.TLocalAp[i] = temp;
+			if (sqlRow[index])  sysPara->armCtrlPar.DelayNode1ToX = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.DelayUpHcuAlgoDl = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+
+			//calibration parameters
+			if (sqlRow[index])  dynCalPar->zero_cal_iteration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->full_cal_iteration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->full_weight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->adc_sample_freq = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->adc_gain = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->noise_floor_filter_factor = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->max_allowed_weight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->WeightSensorTailorValue = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->TWeightInd = sysPara->armCtrlPar.TWeightInd;
+			if (sqlRow[index])  dynCalPar->motor_speed = sysPara->motMainPar.MotorSpeed; //same as main motor speed
 		}
 
 		//释放记录集
