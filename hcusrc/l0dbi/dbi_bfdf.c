@@ -281,7 +281,7 @@ OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfC
 		}
 		else{
 			UINT8 i = 0;
-			UINT32 temp = 0;
+			UINT16 temp = 0;
 			UINT8  index = 1; // First field is SID
 
 			if (sqlRow[index])  sysPara->lineNum = (UINT8)(atol(sqlRow[index++]) & 0xFF);
@@ -299,26 +299,26 @@ OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfC
 			if (sqlRow[index])  sysPara->motSecondPar.MotorFailureDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 
 			//Arm control parameters
-			if (sqlRow[index])  sysPara->armCtrlPar.TWeightInd = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-			if (sqlRow[index])  sysPara->armCtrlPar.T0bis = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-			if (sqlRow[index])  sysPara->armCtrlPar.TA0 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-			if (sqlRow[index])  sysPara->armCtrlPar.TActCmd = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-			if (sqlRow[index])  sysPara->armCtrlPar.TArmStart = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-			if (sqlRow[index])  sysPara->armCtrlPar.TArmStop = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-			if (sqlRow[index])  sysPara->armCtrlPar.TDoorCloseLightOn = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-			if (sqlRow[index])  sysPara->armCtrlPar.TApIntervalMin = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-			if (sqlRow[index])  temp = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TWeightInd = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.T0bis = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TA0 = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TActCmd = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TArmStart = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TArmStop = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TDoorCloseLightOn = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TApIntervalMin = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  temp = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			for (i=1; i<HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX; i++)
 				sysPara->armCtrlPar.TApInterval[i] = temp;
-			if (sqlRow[index])  temp = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  temp = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			for (i=0; i<HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX; i++)
 				sysPara->armCtrlPar.TLocalAp[i] = temp;
-			if (sqlRow[index])  sysPara->armCtrlPar.DelayNode1ToX = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-			if (sqlRow[index])  sysPara->armCtrlPar.DelayUpHcuAlgoDl = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.DelayNode1ToX = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.DelayUpHcuAlgoDl = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 
 			//calibration parameters
-			if (sqlRow[index])  dynCalPar->zero_cal_iteration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-			if (sqlRow[index])  dynCalPar->full_cal_iteration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->zero_cal_iteration = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+			if (sqlRow[index])  dynCalPar->full_cal_iteration = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 			if (sqlRow[index])  dynCalPar->full_weight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 			if (sqlRow[index])  dynCalPar->adc_sample_freq = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 			if (sqlRow[index])  dynCalPar->adc_gain = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);

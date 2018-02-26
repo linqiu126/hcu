@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 26, 2018 at 02:52 PM
+-- Generation Time: Feb 26, 2018 at 03:11 PM
 -- Server version: 5.7.20-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -249,20 +249,20 @@ CREATE TABLE `hcubfdfsystempara` (
   `secmotdirection` int(4) NOT NULL,
   `secmotfailvaration` int(4) NOT NULL,
   `secmotfailtime` int(4) NOT NULL,
-  `tweightind` int(4) NOT NULL,
-  `t0bis` int(4) NOT NULL,
-  `ta0` int(4) NOT NULL,
-  `tactcmd` int(4) NOT NULL,
-  `tarmstart` int(4) NOT NULL,
-  `tarmstop` int(4) NOT NULL,
-  `tdoorcloselight` int(4) NOT NULL,
-  `tapintervalmin` int(4) NOT NULL,
-  `tapinterval` int(4) NOT NULL,
-  `tlocalap` int(4) NOT NULL,
-  `delaynode1tox` int(4) NOT NULL,
-  `delayuphcualgo` int(4) NOT NULL,
-  `zerocaliteration` int(4) NOT NULL,
-  `fullcaliteration` int(4) NOT NULL,
+  `tweightind` int(2) NOT NULL,
+  `t0bis` int(2) NOT NULL,
+  `ta0` int(2) NOT NULL,
+  `tactcmd` int(2) NOT NULL,
+  `tarmstart` int(2) NOT NULL,
+  `tarmstop` int(2) NOT NULL,
+  `tdoorcloselight` int(2) NOT NULL,
+  `tapintervalmin` int(2) NOT NULL,
+  `tapinterval` int(2) NOT NULL,
+  `tlocalap` int(2) NOT NULL,
+  `delaynode1tox` int(2) NOT NULL,
+  `delayuphcualgo` int(2) NOT NULL,
+  `zerocaliteration` int(2) NOT NULL,
+  `fullcaliteration` int(2) NOT NULL,
   `fullweight` int(4) NOT NULL,
   `adcsamplefreq` int(4) NOT NULL,
   `adcgain` int(4) NOT NULL,
