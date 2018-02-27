@@ -47,6 +47,7 @@ HcuFsmStateItem_t HcuFsmL3bfdf[] =
 	//只为出现ACTIVED状态，入口自动被COMMON屏蔽
 	{MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,       		FSM_STATE_L3BFDF_ACTIVED,          	fsm_l3bfdf_canitf_sys_config_resp},
 	{MSG_ID_SUI_SUSPEND_RESP,       			FSM_STATE_L3BFDF_ACTIVED,          	fsm_l3bfdf_canitf_sys_suspend_resp},//这个是先转移状态，再发送命令
+	{MSG_ID_CAN_L3BFDF_DYN_CAL_RESP,       		FSM_STATE_L3BFDF_ACTIVED,          	fsm_l3bfdf_canitf_dyn_cal_resp},
 
 	//进料组合态
 	{MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,      FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_ws_new_ready_event},
@@ -301,8 +302,9 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		snd.dynCalReq.motor_speed = gTaskL3bfdfContext.dynCalPar.motor_speed;
 		snd.dynCalReq.noise_floor_filter_factor = gTaskL3bfdfContext.dynCalPar.noise_floor_filter_factor;
 
+		HCU_L3BFDF_FILL_WGT_BOARD_BITMAP();
 		if(rcv.cmdValue == HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO){
-			snd.dynCalReq.calibration_zero_or_full = 1;
+			snd.dynCalReq.calibration_zero_or_full = 1; /* 1 for ZERO, 2 for FULL */
 			snd.dynCalReq.calibration_iteration = gTaskL3bfdfContext.dynCalPar.zero_cal_iteration;
 			snd.length = sizeof(msg_struct_l3bfdf_can_dyn_cal_req_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_DYN_CAL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
@@ -651,6 +653,21 @@ OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 		hcu_timer_stop(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_SUSPEND_WAIT_FB, TIMER_RESOLUTION_1S);
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_SUSPEND);
 	}
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfdf_canitf_dyn_cal_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_dyn_cal_resp_t);
+
+	msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI;
+	snd.validFlag = TRUE;
+	snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF);
 
 	//返回
 	return SUCCESS;

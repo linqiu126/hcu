@@ -6281,17 +6281,15 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_req
 {
 	UINT16 msgid;
 	UINT16 length;
-	StrHuiIe_WeightSensorBfhsCalibrationZeroReqParamaters_t weight_sensor_calibration_zero;
-	StrHuiIe_MotorControlBfhsParamaters_t motor_control_para;
 }StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_req_t;
 
 //HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp   = 0x3BC4,
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp
 {
-	UINT16 msgid;
-	UINT16 length;
-	UINT8  validFlag;  //是否执行成功
-	UINT8  spare1;
+	UINT16  msgid;
+	UINT16  length;
+	UINT8   validFlag;  //是否执行成功
+	UINT8   spare1;
 	UINT16  errCode;
 }StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp_t;
 
@@ -6300,18 +6298,19 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_req
 {
 	UINT16 msgid;
 	UINT16 length;
-	StrHuiIe_WeightSensorBfhsCalibrationFullReqParamaters_t weight_sensor_calibration_full;
+    UINT32 adjustingWeight;
+	UINT32 motorSpeed;
+	UINT32 motorDirection;
 }StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_req_t;
 
 //HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp   = 0x3BC5,
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp
 {
-	UINT16 msgid;
-	UINT16 length;
-	UINT8  validFlag;  //是否执行成功
-	UINT8  spare1;
+	UINT16  msgid;
+	UINT16  length;
+	UINT8   validFlag;  //是否执行成功
+	UINT8   spare1;
 	UINT16  errCode;
-	StrHuiIe_WeightSensorBfhsCalibrationFullRespParamaters_t weight_sensor_calibration_full;
 }StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t;
 
 

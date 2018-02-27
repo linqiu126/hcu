@@ -55,6 +55,7 @@ HcuFsmStateItem_t HcuFsmCanalpha[] =
 	//Normal task status：BFDF
 	{MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfdf_sys_cfg_req},  	//初始化配置
 	{MSG_ID_L3BFDF_CAN_WS_COMB_OUT,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfdf_ws_comb_out},  	//组合指令
+	{MSG_ID_L3BFDF_CAN_DYN_CAL_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfdf_dyn_cal_req},   //人工命令
 
 	//Normal task status：BFHS
 	{MSG_ID_L3BFHS_CAN_SYS_CFG_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfhs_sys_cfg_req},  	//初始化配置
@@ -348,6 +349,43 @@ OPSTAT fsm_canalpha_l3bfdf_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * par
 	return SUCCESS;
 }
 
+OPSTAT fsm_canalpha_l3bfdf_dyn_cal_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int i=0;
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_l3bfdf_can_dyn_cal_req_t);
+
+	//生成bitmap
+	UINT32 bitmap = 0;
+	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
+		if (rcv.boardBitmap[i] == TRUE){
+			bitmap |= ((UINT32)1<<i);
+		}
+	}
+
+	//准备组装发送消息
+	StrMsg_HUITP_MSGID_sui_bfdf_calibration_req_t pMsgProc;
+	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfdf_calibration_req_t);
+	memset(&pMsgProc, 0, msgProcLen);
+	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfdf_calibration_req);
+	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+	pMsgProc.cal_req.TWeightInd = HUITP_ENDIAN_EXG16(rcv.dynCalReq.TWeightInd);
+	pMsgProc.cal_req.WeightSensorTailorValue = HUITP_ENDIAN_EXG32(rcv.dynCalReq.WeightSensorTailorValue);
+	pMsgProc.cal_req.adc_gain = HUITP_ENDIAN_EXG32(rcv.dynCalReq.adc_gain);
+	pMsgProc.cal_req.adc_sample_freq = HUITP_ENDIAN_EXG32(rcv.dynCalReq.adc_sample_freq);
+	pMsgProc.cal_req.calibration_iteration = HUITP_ENDIAN_EXG8(rcv.dynCalReq.calibration_iteration);
+	pMsgProc.cal_req.calibration_zero_or_full = HUITP_ENDIAN_EXG8(rcv.dynCalReq.calibration_zero_or_full);
+	pMsgProc.cal_req.full_weight = HUITP_ENDIAN_EXG32(rcv.dynCalReq.full_weight);
+	pMsgProc.cal_req.max_allowed_weight = HUITP_ENDIAN_EXG32(rcv.dynCalReq.max_allowed_weight);
+	pMsgProc.cal_req.motor_speed = HUITP_ENDIAN_EXG32(rcv.dynCalReq.motor_speed);
+	pMsgProc.cal_req.noise_floor_filter_factor = HUITP_ENDIAN_EXG32(rcv.dynCalReq.noise_floor_filter_factor);
+
+	//发送消息
+	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
+
+	//返回
+	return SUCCESS;
+}
 
 //通用过程
 OPSTAT fsm_canalpha_sysswm_inventory_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -614,6 +652,7 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	pMsgProc.arm_control_param.ArmRollingIntervalMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingIntervalMs);
 	pMsgProc.arm_control_param.ArmFailureDetectionVaration = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmFailureDetectionVaration);
 	pMsgProc.arm_control_param.ArmFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmFailureDetectionTimeMs);
+	pMsgProc.arm_control_param.ArmStartActionMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmStartActionMs);
 
 	//更新传感器状态
 	//gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
@@ -726,19 +765,6 @@ OPSTAT fsm_canalpha_l3bfhs_dyn_zero_req(UINT32 dest_id, UINT32 src_id, void * pa
 	memset(&pMsgProc, 0, msgProcLen);
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfhs_dyn_calibration_zero_req);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
-	pMsgProc.weight_sensor_calibration_zero.WeightSensorFilterCutOffFreqHz = HUITP_ENDIAN_EXG32(rcv.dynZeroPar.WeightSensorFilterCutOffFreqHz);
-	pMsgProc.weight_sensor_calibration_zero.WeightSensorAutoZeroCaptureRangeGrams = HUITP_ENDIAN_EXG32(rcv.dynZeroPar.WeightSensorAutoZeroCaptureRangeGrams);
-	pMsgProc.weight_sensor_calibration_zero.WeightSensorStandstillRangeGrams = HUITP_ENDIAN_EXG32(rcv.dynZeroPar.WeightSensorStandstillRangeGrams);
-	pMsgProc.weight_sensor_calibration_zero.WeightSensorAutoZeroAutotaringTimeMs = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorAutoZeroAutotaringTimeMs);
-	pMsgProc.weight_sensor_calibration_zero.WeightSensorPreloadComPensationValuePercent = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorPreloadComPensationValuePercent);
-	pMsgProc.weight_sensor_calibration_zero.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint);
-	pMsgProc.weight_sensor_calibration_zero.WeightSensorStandstillTimeoutMs = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorStandstillTimeoutMs);
-	pMsgProc.weight_sensor_calibration_zero.WeightSensorStandstillTime = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorStandstillTime);
-	pMsgProc.weight_sensor_calibration_zero.WeightSensorRingBufTimeMs = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorRingBufTimeMs);
-	pMsgProc.weight_sensor_calibration_zero.WeightSensorMeasurementRangeNo = HUITP_ENDIAN_EXG8(rcv.dynZeroPar.WeightSensorMeasurementRangeNo);
-	pMsgProc.weight_sensor_calibration_zero.WeightSensorAutoZero = HUITP_ENDIAN_EXG8(rcv.dynZeroPar.WeightSensorAutoZero);
-	pMsgProc.motor_control_para.MotorDirection = HUITP_ENDIAN_EXG32(rcv.dynMotoPar.MotorDirection);
-	pMsgProc.motor_control_para.MotorSpeed = HUITP_ENDIAN_EXG32(rcv.dynMotoPar.MotorSpeed);
 
 	//发送消息
 	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
@@ -768,8 +794,9 @@ OPSTAT fsm_canalpha_l3bfhs_dyn_full_req(UINT32 dest_id, UINT32 src_id, void * pa
 	memset(&pMsgProc, 0, msgProcLen);
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfhs_dyn_calibration_full_req);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
-	pMsgProc.weight_sensor_calibration_full.WeightSensorAdjustingWeightGrams = HUITP_ENDIAN_EXG32(rcv.dynFullPar.WeightSensorAdjustingWeightGrams);
-	pMsgProc.weight_sensor_calibration_full.WeightSensorAdjustingTolerancePercent = HUITP_ENDIAN_EXG32(rcv.dynFullPar.WeightSensorAdjustingTolerancePercent);
+	pMsgProc.adjustingWeight = HUITP_ENDIAN_EXG32(rcv.adjustingWeight);
+	pMsgProc.motorSpeed = HUITP_ENDIAN_EXG32(rcv.motorSpeed);
+	pMsgProc.motorDirection = HUITP_ENDIAN_EXG32(rcv.motorDirection);
 
 	//发送消息
 	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
@@ -805,6 +832,18 @@ OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void *
 			HCU_ERROR_PRINT_CANALPHA("CANALPHA: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t*)(rcv.databuf);
 		ret = func_canalpha_l2frame_msg_bfdf_set_config_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	//BFDF消息
+	case HUITP_MSGID_sui_bfdf_calibration_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANALPHA: Receive L3 MSG = HUITP_MSGID_sui_bfdf_calibration_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_calibration_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_calibration_resp_t) - 4))
+			HCU_ERROR_PRINT_CANALPHA("CANALPHA: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_calibration_resp_t*)(rcv.databuf);
+		ret = func_canalpha_l2frame_msg_bfdf_calibration_resp_received_handle(snd, rcv.nodeId);
 	}
 	break;
 
@@ -1080,6 +1119,42 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_set_config_resp_received_handle(StrMsg_HUI
 	return SUCCESS;
 }
 
+OPSTAT func_canalpha_l2frame_msg_bfdf_calibration_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_calibration_resp_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+
+	//发送到L3BFDF
+	msg_struct_can_l3bfdf_dyn_cal_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_dyn_cal_resp_t));
+	snd.dynCalResp.errCode = HUITP_ENDIAN_EXG16(rcv->cal_resp.errCode);
+	snd.dynCalResp.calibration_cur_iteration = HUITP_ENDIAN_EXG8(rcv->cal_resp.calibration_cur_iteration);
+	snd.dynCalResp.calibration_result = HUITP_ENDIAN_EXG8(rcv->cal_resp.calibration_result);
+	snd.dynCalResp.calibration_zero_or_full = HUITP_ENDIAN_EXG8(rcv->cal_resp.calibration_zero_or_full);
+	snd.dynCalResp.spare2 = HUITP_ENDIAN_EXG8(rcv->cal_resp.spare2);
+	snd.dynCalResp.estimated_error_average = HUITP_ENDIAN_EXG32(rcv->cal_resp.estimated_error_average);
+	snd.dynCalResp.estimated_error_iteration[0] = HUITP_ENDIAN_EXG32(rcv->cal_resp.estimated_error_iteration[0]);
+	snd.dynCalResp.estimated_error_iteration[1] = HUITP_ENDIAN_EXG32(rcv->cal_resp.estimated_error_iteration[1]);
+	snd.dynCalResp.estimated_error_iteration[2] = HUITP_ENDIAN_EXG32(rcv->cal_resp.estimated_error_iteration[2]);
+	snd.dynCalResp.estimated_error_iteration[3] = HUITP_ENDIAN_EXG32(rcv->cal_resp.estimated_error_iteration[3]);
+	snd.dynCalResp.estimated_error_max_possible = HUITP_ENDIAN_EXG32(rcv->cal_resp.estimated_error_max_possible);
+	snd.dynCalResp.full_coefficiency_average = HUITP_ENDIAN_EXG32(rcv->cal_resp.full_coefficiency_average);
+	snd.dynCalResp.full_offset_peak_wrt_infra[0] = HUITP_ENDIAN_EXG32(rcv->cal_resp.full_offset_peak_wrt_infra[0]);
+	snd.dynCalResp.full_offset_peak_wrt_infra[1] = HUITP_ENDIAN_EXG32(rcv->cal_resp.full_offset_peak_wrt_infra[1]);
+	snd.dynCalResp.full_offset_peak_wrt_infra[2] = HUITP_ENDIAN_EXG32(rcv->cal_resp.full_offset_peak_wrt_infra[2]);
+	snd.dynCalResp.full_offset_peak_wrt_infra[3] = HUITP_ENDIAN_EXG32(rcv->cal_resp.full_offset_peak_wrt_infra[3]);
+	snd.dynCalResp.full_weight = HUITP_ENDIAN_EXG32(rcv->cal_resp.full_weight);
+	snd.dynCalResp.noise_floor_mean_max = HUITP_ENDIAN_EXG32(rcv->cal_resp.noise_floor_mean_max);
+	snd.dynCalResp.noise_floor_mean_mean = HUITP_ENDIAN_EXG32(rcv->cal_resp.noise_floor_mean_mean);
+	snd.dynCalResp.noise_floor_mean_min = HUITP_ENDIAN_EXG32(rcv->cal_resp.noise_floor_mean_min);
+	snd.dynCalResp.noise_floor_mean_sd = HUITP_ENDIAN_EXG32(rcv->cal_resp.noise_floor_sd_min);
+	snd.dynCalResp.weight_report_offset_wrt_infra = HUITP_ENDIAN_EXG32(rcv->cal_resp.weight_report_offset_wrt_infra);
+
+	snd.length = sizeof(msg_struct_can_l3bfdf_dyn_cal_resp_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_DYN_CAL_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
+	return SUCCESS;
+}
+
 OPSTAT func_canalpha_l2frame_msg_bfdf_new_ws_event_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t *rcv, UINT8 nodeId)
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
@@ -1239,36 +1314,6 @@ OPSTAT func_canalpha_l2frame_msg_bfhs_dyn_calibration_full_resp_received_handle(
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_dyn_full_resp_t));
 	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
-	snd.dynFullRespPar.WeightSensorFilterCutOffFreqHz = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorFilterCutOffFreqHz);
-	snd.dynFullRespPar.WeightSensorCurrentZeroPointGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorCurrentZeroPointGrams);
-	snd.dynFullRespPar.WeightSensorReferenceZeroPointGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorReferenceZeroPointGrams);
-	snd.dynFullRespPar.WeightSensorNegativeZeroSettingRangeGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorNegativeZeroSettingRangeGrams);
-	snd.dynFullRespPar.WeightSensorPositiveZeroSettingRangeGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorPositiveZeroSettingRangeGrams);
-	snd.dynFullRespPar.WeightSensorMeasurementRange = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorMeasurementRange);
-	snd.dynFullRespPar.WeightSensorScaleIntervalValue = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorScaleIntervalValue);
-	snd.dynFullRespPar.WeightSensorCalibrationValue = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorCalibrationValue);
-	snd.dynFullRespPar.WeightSensorAutoZeroCaptureRangeGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorAutoZeroCaptureRangeGrams);
-	snd.dynFullRespPar.WeightSensorAdjustingWeightGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorAdjustingWeightGrams);
-	snd.dynFullRespPar.WeightSensorAdjustingFactor = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorAdjustingFactor);
-	snd.dynFullRespPar.WeightSensorAdjustingTolerancePercent = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorAdjustingTolerancePercent);
-	snd.dynFullRespPar.WeightSensorStandstillRangeGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorStandstillRangeGrams);
-	snd.dynFullRespPar.WeightSensorTemperatureInMagnetSystem = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorTemperatureInMagnetSystem);
-	snd.dynFullRespPar.WeightSensorTemperatureAtMeasuringShunt = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorTemperatureAtMeasuringShunt);
-	snd.dynFullRespPar.WeightSensorSamplingFreqHz = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorSamplingFreqHz);
-	snd.dynFullRespPar.WeightSensorRingBufTimeMs = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorRingBufTimeMs);
-	snd.dynFullRespPar.WeightSensorAutoZeroAutotaringTimeMs = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorAutoZeroAutotaringTimeMs);
-	snd.dynFullRespPar.WeightSensorPreloadComPensationValuePercent = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorPreloadComPensationValuePercent);
-	snd.dynFullRespPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorPreloadComPensationPlacesAfterDecimalPoint);
-	snd.dynFullRespPar.WeightSensorStandstillTimeoutMs = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorStandstillTimeoutMs);
-	snd.dynFullRespPar.WeightSensorStandstillTime = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorStandstillTime);
-	snd.dynFullRespPar.WeightSensorMeasurementRangeNo = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorMeasurementRangeNo);
-	snd.dynFullRespPar.WeightSensorPlacesAfterDecimalPoint = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorPlacesAfterDecimalPoint);
-	memcpy(snd.dynFullRespPar.WeightSensorUintString,  rcv->weight_sensor_calibration_full.WeightSensorUintString, 64);
-	snd.dynFullRespPar.WeightSensorAutoZero = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorAutoZero);
-	snd.dynFullRespPar.WeightSensorCellAddress = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorCellAddress);
-	snd.dynFullRespPar.WeightSensorTimeGrid = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorTimeGrid);
-	snd.dynFullRespPar.Weight = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.Weight);
-
 	snd.length = sizeof(msg_struct_can_l3bfhs_dyn_full_resp_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_DYN_FULL_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 

@@ -11,8 +11,8 @@
 #include "../l0comvm/vmlayer.h"
 
 #define DBI_BFHS_DATA_SAVE_DAYS_MIN 90  //最短90天，不能再短
-#define HCU_SYSCFG_BFHS_DB_COLUMN_NUM_MAX 9
-#define HCU_PRODUCTCFG_BFHS_DB_COLUMN_NUM_MAX 37
+#define HCU_SYSCFG_BFHS_DB_COLUMN_NUM_MAX 11
+#define HCU_PRODUCTCFG_BFHS_DB_COLUMN_NUM_MAX 40
 
 //APIs
 extern OPSTAT dbi_HcuBfhs_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfhsContextStaElement_t *StaDatainfo);
