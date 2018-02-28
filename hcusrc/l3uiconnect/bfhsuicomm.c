@@ -124,11 +124,7 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	//延迟并启动系统，进入测试模式
 	hcu_sleep(2);
 	//设置configIndex=1
-	func_bfhsuicomm_read_cfg_db_into_ctrl_table(1);
-
-	//初始化sessionId
-	gTaskL3bfhsContext.sessionId = dbi_HcuBfhs_CallCellMaxIdGet() + 1;
-
+	func_bfhsuicomm_read_cfg_db_into_ctrl_table(24);
 
 	//发送启动消息给L3BFHS：有了界面后，这个就不需要了，以后需要删除
 //	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
@@ -389,6 +385,11 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_i
 	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
 	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START;
 	snd.cmdValue = rcv.cmdValue;
+
+	//Initialize gTaskL3bfhsContext
+	if(func_bfhsuicomm_read_cfg_db_into_ctrl_table(rcv.cmdValue) == FAILURE)
+		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: get DB data and initialize gTaskL3bfhsContext failed \n");
+
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
 }
@@ -615,7 +616,3 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 configId)
 
 	return SUCCESS;
 }
-
-
-
-

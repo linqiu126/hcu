@@ -6090,13 +6090,6 @@ typedef struct StrHuiIe_WeightSensorBfhsCalibrationZeroReqParamaters
 	UINT8   spare1;
 	UINT8   spare2;
 }StrHuiIe_WeightSensorBfhsCalibrationZeroReqParamaters_t;
-
-typedef struct StrHuiIe_WeightSensorBfhsCalibrationFullReqParamaters
-{
-	UINT32  WeightSensorAdjustingWeightGrams;      //object 0x2080, adjusting weight,first set this value, then combined with command 'C'
-	UINT32  WeightSensorAdjustingTolerancePercent; //object0x2082, Current adjusting factor = 0.500000, adjusting tolerance = 1 %,The new factor must lie in the range 0.495000 ≤ Factornew ≤ 0.505000
-}StrHuiIe_WeightSensorBfhsCalibrationFullReqParamaters_t;
-
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_req
 {
 	UINT16 msgid;
@@ -6107,14 +6100,19 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_req
 //HUITP_MSGID_sui_bfhs_calibration_zero_resp       = 0x3BC2,
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_resp
 {
-	UINT16 msgid;
-	UINT16 length;
-	UINT8  validFlag;  //是否执行成功
-	UINT8  spare1;
+	UINT16  msgid;
+	UINT16  length;
+	UINT8   validFlag;  //是否执行成功
+	UINT8   spare1;
 	UINT16  errCode;
 }StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_resp_t;
 
 //HUITP_MSGID_sui_bfhs_calibration_full_req        = 0x3B43,
+typedef struct StrHuiIe_WeightSensorBfhsCalibrationFullReqParamaters
+{
+	UINT32  WeightSensorAdjustingWeightGrams;      //object 0x2080, adjusting weight,first set this value, then combined with command 'C'
+	UINT32  WeightSensorAdjustingTolerancePercent; //object0x2082, Current adjusting factor = 0.500000, adjusting tolerance = 1 %,The new factor must lie in the range 0.495000 ≤ Factornew ≤ 0.505000
+}StrHuiIe_WeightSensorBfhsCalibrationFullReqParamaters_t;
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_req
 {
 	UINT16 msgid;
@@ -6179,7 +6177,6 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp
 	StrHuiIe_WeightSensorBfhsCalibrationFullRespParamaters_t weight_sensor_calibration_full;
 }StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp_t;
 
-
 //HUITP_MSGID_sui_bfhs_set_config_req              = 0x3B41,
 typedef struct StrHuiIe_WeightSensorBfhsParamaters
 {
@@ -6217,7 +6214,6 @@ typedef struct StrHuiIe_WeightSensorBfhsParamaters
 #define HUITP_IEID_SUI_BFHS_ALGO_REJECTOR_OPTION_UNDERWEIGHT  	2
 #define HUITP_IEID_SUI_BFHS_ALGO_REJECTOR_OPTION_BOTHSIDE  		3
 #define HUITP_IEID_SUI_BFHS_ALGO_REJECTOR_OPTION_INVALID  		0xFF
-
 
 typedef struct StrHuiIe_MotorControlBfhsParamaters
 {
