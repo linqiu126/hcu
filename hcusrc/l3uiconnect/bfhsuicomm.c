@@ -122,38 +122,8 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//延迟并启动系统，进入测试模式
-	hcu_sleep(2);
-	//设置configIndex=1
-	func_bfhsuicomm_read_cfg_db_into_ctrl_table(24);
-
-	//发送启动消息给L3BFHS：有了界面后，这个就不需要了，以后需要删除
-//	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
-//	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
-//	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START;
-//	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
-//	ret = hcu_message_send(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM, &snd, snd.length);
-//	if (ret == FAILURE){
-//		HcuErrorPrint("BFHSUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFHSUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
-//		return FAILURE;
-//	}
-
-	//TEST MQTT
-//	while(1){
-//		StrHlcIe_cui_hcu2uir_inswgt_bfhs_report_t buf;
-//		buf.weight = rand()%500;
-//		buf.wmcState = 1;
-//		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(buf.weight, &buf);
-
-//		msg_struct_com_mqtt_send_t snd;
-//		memset(&snd, 0, sizeof(msg_struct_com_mqtt_send_t));
-//		snd.cmdId = HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report;
-//		snd.cmdValue = buf.weight;
-//		snd.destId = HUICOBUS_MQTT_CLID_UIROUTER;
-//		snd.topicId = HUICOBUS_MQTT_TPID_HCU2UIR;
-//		snd.length = 11;
-//		hcu_mqtt_msg_send_syn_mode(&snd);
-//		hcu_sleep(2);
-//	}
+	//hcu_sleep(2);
+	//func_bfhsuicomm_read_cfg_db_into_ctrl_table(24);
 
 	//返回
 	return SUCCESS;

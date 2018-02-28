@@ -21,6 +21,7 @@ extern OPSTAT dbi_HcuBfhs_callcell_save(HcuSysMsgIeL3bfhsCallcellElement_t *inpu
 extern OPSTAT dbi_HcuBfhs_callcell_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuBfhs_sysConfigData_read(UINT32  sysConfigData[HCU_SYSCFG_BFHS_DB_COLUMN_NUM_MAX]);
 extern OPSTAT dbi_HcuBfhs_productConfigData_read(UINT16 configId, UINT32 productConfigData[HCU_PRODUCTCFG_BFHS_DB_COLUMN_NUM_MAX]);
+extern OPSTAT dbi_HcuBfhs_calData_save(UINT16 configId, StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t *input);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);
