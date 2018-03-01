@@ -290,9 +290,9 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	}
 
 	//DYNAMIC_CALI
-	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI){
+	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI){
 		msg_struct_l3bfdf_can_dyn_cal_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_dyn_zero_req_t));
+		memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_dyn_cal_req_t));
 		snd.dynCalReq.TWeightInd = gTaskL3bfdfContext.dynCalPar.TWeightInd;
 		snd.dynCalReq.WeightSensorTailorValue = gTaskL3bfdfContext.dynCalPar.WeightSensorTailorValue;
 		snd.dynCalReq.adc_gain = gTaskL3bfdfContext.dynCalPar.adc_gain;
@@ -664,8 +664,12 @@ OPSTAT fsm_l3bfdf_canitf_dyn_cal_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 	msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
+
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI;
 	snd.validFlag = TRUE;
+	snd.sensorid = rcv.snrId;
+	snd.errCode = rcv.dynCalResp.errCode;
+	memcpy(&snd.dynCalResp, &rcv.dynCalResp, sizeof(strMsgIe_bfdf_calibration_resp_t));
 	snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF);
 

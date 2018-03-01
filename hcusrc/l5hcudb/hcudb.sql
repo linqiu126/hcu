@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 27, 2018 at 06:01 PM
+-- Generation Time: Mar 01, 2018 at 07:45 PM
 -- Server version: 5.7.20-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -271,15 +271,16 @@ CREATE TABLE `hcubfdfsystempara` (
   `tailorvalue` int(4) NOT NULL,
   `sysstatus` int(1) NOT NULL DEFAULT '0',
   `hcusw` varchar(100) DEFAULT NULL,
-  `ihusw` varchar(100) DEFAULT NULL
+  `ihusw` varchar(100) DEFAULT NULL,
+  `engswitch` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfdfsystempara`
 --
 
-INSERT INTO `hcubfdfsystempara` (`sid`, `linenum`, `boardnumperline`, `mainmotspeed`, `mainmotdirection`, `mainmotfailvaration`, `mainmotfailtime`, `secmotspeed`, `secmotdirection`, `secmotfailvaration`, `secmotfailtime`, `tweightind`, `t0bis`, `ta0`, `tactcmd`, `tarmstart`, `tarmstop`, `tdoorcloselight`, `tapintervalmin`, `tapinterval`, `tlocalap`, `delaynode1tox`, `delayuphcualgo`, `zerocaliteration`, `fullcaliteration`, `fullweight`, `adcsamplefreq`, `adcgain`, `nffilterfactor`, `maxallowedwgt`, `tailorvalue`, `sysstatus`, `hcusw`, `ihusw`) VALUES
-(1, 2, 1, 200, 0, 1, 1, 300, 0, 1, 1, 90, 1, 100, 1, 20, 50, 70, 20, 70, 1, 1, 1, 8, 4, 100000, 6, 3, 20, 1000000, 0, 0, 'HCU', 'IHU');
+INSERT INTO `hcubfdfsystempara` (`sid`, `linenum`, `boardnumperline`, `mainmotspeed`, `mainmotdirection`, `mainmotfailvaration`, `mainmotfailtime`, `secmotspeed`, `secmotdirection`, `secmotfailvaration`, `secmotfailtime`, `tweightind`, `t0bis`, `ta0`, `tactcmd`, `tarmstart`, `tarmstop`, `tdoorcloselight`, `tapintervalmin`, `tapinterval`, `tlocalap`, `delaynode1tox`, `delayuphcualgo`, `zerocaliteration`, `fullcaliteration`, `fullweight`, `adcsamplefreq`, `adcgain`, `nffilterfactor`, `maxallowedwgt`, `tailorvalue`, `sysstatus`, `hcusw`, `ihusw`, `engswitch`) VALUES
+(1, 2, 1, 200, 0, 1, 1, 300, 0, 1, 1, 90, 1, 100, 1, 20, 50, 70, 20, 70, 1, 1, 1, 8, 4, 100000, 6, 3, 20, 1000000, 0, 0, 'HCU', 'IHU', 0);
 
 -- --------------------------------------------------------
 
@@ -415,15 +416,16 @@ CREATE TABLE `hcubfhssystempara` (
   `autozeroswitch` int(1) NOT NULL,
   `sysstatus` int(1) NOT NULL DEFAULT '0',
   `hcusw` varchar(100) DEFAULT NULL,
-  `ihusw` varchar(100) DEFAULT NULL
+  `ihusw` varchar(100) DEFAULT NULL,
+  `engswitch` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `hcubfhssystempara`
 --
 
-INSERT INTO `hcubfhssystempara` (`sid`, `weighterlength`, `rejectorposition`, `counterweight`, `maxallowedweight`, `minallowedweight`, `autozerosignal`, `autozeroswitch`, `sysstatus`, `hcusw`, `ihusw`) VALUES
-(1, 400, 500, 1000, 50000, 5, 100000, 1, 0, 'HCU', 'IHU');
+INSERT INTO `hcubfhssystempara` (`sid`, `weighterlength`, `rejectorposition`, `counterweight`, `maxallowedweight`, `minallowedweight`, `autozerosignal`, `autozeroswitch`, `sysstatus`, `hcusw`, `ihusw`, `engswitch`) VALUES
+(1, 400, 500, 1000, 50000, 5, 100000, 1, 0, 'HCU', 'IHU', 0);
 
 -- --------------------------------------------------------
 
@@ -3735,11 +3737,11 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (36, 'TID_1S_IHM_PERIOD_READ', 1, 600),
 (37, 'TID_1S_IGM_PERIOD_READ', 1, 600),
 (38, 'TID_1S_IPM_PERIOD_READ', 1, 600),
-(39, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 3600),
-(40, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 900),
+(39, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 36000),
+(40, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 90000),
 (41, 'TID_1S_SYSSWM_SEG_DL_WAIT', 1, 3),
 (42, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
-(43, 'TID_1S_CANALPHA_WORKING_SCAN', 1, 2),
+(43, 'TID_1S_CANALPHA_WORKING_SCAN', 1, 10),
 (44, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
 (45, 'TID_1S_L3BFSC_SYS_START_WAIT_FB', 1, 15),
 (46, 'TID_1S_L3BFSC_SYS_STOP_WAIT_FB', 1, 15),
@@ -3751,7 +3753,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (52, 'TID_1S_L3BFDF_SUSPEND_WAIT_FB', 1, 15),
 (53, 'TID_1S_L3BFDF_RESUME_WAIT_FB', 1, 15),
 (54, 'TID_1S_L3BFDF_TTT_WAIT_FB', 1, 3),
-(55, 'TID_1S_BFDFUICOMM_PERIOD_READ', 1, 100),
+(55, 'TID_1S_BFDFUICOMM_PERIOD_READ', 1, 600),
 (56, 'TID_1S_L3BFHS_CFG_START_WAIT_FB', 1, 5),
 (57, 'TID_1S_L3BFHS_SUSPEND_WAIT_FB', 1, 5),
 (58, 'TID_1S_L3BFHS_RESUME_WAIT_FB', 1, 5),
@@ -5783,66 +5785,66 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (242, 'MSG_ID_USBCAN_L2FRAME_RCV', 1, 1, 1),
 (243, 'MSG_ID_L3BFDF_CAN_SYS_CFG_REQ', 1, 1, 1),
 (244, 'MSG_ID_CAN_L3BFDF_SYS_CFG_RESP', 1, 1, 1),
-(245, 'MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT', 1, 1, 1),
-(246, 'MSG_ID_L3BFDF_CAN_WS_COMB_OUT', 1, 1, 1),
-(247, 'MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB', 1, 1, 1),
-(248, 'MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND', 1, 1, 1),
-(249, 'MSG_ID_L3BFHS_CAN_SYS_CFG_REQ', 1, 1, 1),
-(250, 'MSG_ID_CAN_L3BFHS_SYS_CFG_RESP', 1, 1, 1),
-(251, 'MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ', 1, 1, 1),
-(252, 'MSG_ID_CAN_L3BFHS_CAL_ZERO_RESP', 1, 1, 1),
-(253, 'MSG_ID_L3BFHS_CAN_CAL_FULL_REQ', 1, 1, 1),
-(254, 'MSG_ID_CAN_L3BFHS_CAL_FULL_RESP', 1, 1, 1),
-(255, 'MSG_ID_L3BFHS_CAN_DYN_ZERO_REQ', 1, 1, 1),
-(256, 'MSG_ID_CAN_L3BFHS_DYN_ZERO_RESP', 1, 1, 1),
-(257, 'MSG_ID_L3BFHS_CAN_DYN_FULL_REQ', 1, 1, 1),
-(258, 'MSG_ID_CAN_L3BFHS_DYN_FULL_RESP', 1, 1, 1),
-(259, 'MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT', 1, 1, 1),
-(260, 'MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND', 1, 1, 1),
-(261, 'MSG_ID_UICOMM_L3BFSC_CMD_REQ', 1, 1, 1),
-(262, 'MSG_ID_L3BFSC_UICOMM_CMD_RESP', 1, 1, 1),
-(263, 'MSG_ID_UICOMM_L3BFSC_CFG_REQ', 1, 1, 1),
-(264, 'MSG_ID_L3BFSC_UICOMM_CFG_RESP', 1, 1, 1),
-(265, 'MSG_ID_UICOMM_CAN_TEST_CMD_REQ', 1, 1, 1),
-(266, 'MSG_ID_CAN_UICOMM_TEST_CMD_RESP', 1, 1, 1),
-(267, 'MSG_ID_UICOMM_L3BFDF_CMD_REQ', 1, 1, 1),
-(268, 'MSG_ID_L3BFDF_UICOMM_CMD_RESP', 1, 1, 1),
-(269, 'MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ', 1, 1, 1),
-(270, 'MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP', 1, 1, 1),
-(271, 'MSG_ID_SUI_TEST_CMD_REQ', 1, 1, 1),
-(272, 'MSG_ID_SUI_TEST_CMD_RESP', 1, 1, 1),
-(273, 'MSG_ID_SUI_STARTUP_IND', 1, 1, 1),
-(274, 'MSG_ID_SUI_FAULT_IND', 1, 1, 1),
-(275, 'MSG_ID_SUI_SUSPEND_REQ', 1, 1, 1),
-(276, 'MSG_ID_SUI_SUSPEND_RESP', 1, 1, 1),
-(277, 'MSG_ID_SUI_RESUME_REQ', 1, 1, 1),
-(278, 'MSG_ID_SUI_RESUME_RESP', 1, 1, 1),
-(279, 'MSG_ID_SUI_HEART_BEAT_REPORT', 1, 1, 1),
-(280, 'MSG_ID_SUI_HEART_BEAT_CONFIRM', 1, 1, 1),
-(281, 'MSG_ID_HUICOBUS_UIR_INIT_REQ', 1, 1, 1),
-(282, 'MSG_ID_HUICOBUS_UIR_START_RESUME_REQ', 1, 1, 1),
-(283, 'MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ', 1, 1, 1),
-(284, 'MSG_ID_HUICOBUS_UIR_STATIC_CALI_REQ', 1, 1, 1),
-(285, 'MSG_ID_HUICOBUS_UIR_DYNAMIC_CALI_REQ', 1, 1, 1),
-(286, 'MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ', 1, 1, 1),
-(287, 'MSG_ID_HUICOBUS_UIR_ONE_KEY_ZERO_REQ', 1, 1, 1),
-(288, 'MSG_ID_L3AQYC_EXG_CTRL_REQ', 1, 1, 1),
-(289, 'MSG_ID_L3AQYC_EXG_CTRL_RESP', 1, 1, 1),
-(290, 'MSG_ID_L3AQYC_EXG_DATA_REPORT', 1, 1, 1),
-(291, 'MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ', 1, 1, 1),
-(292, 'MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP', 1, 1, 1),
-(293, 'MSG_ID_LLCZHB_L3MOD_CTRL_REQ', 1, 1, 1),
-(294, 'MSG_ID_L3MOD_LLCZHB_CTRL_RESP', 1, 1, 1),
-(295, 'MSG_ID_L3MOD_LLCZHB_DATA_REPORT', 1, 1, 1),
-(296, 'MSG_ID_ZHBL3MOD_EXG_CTRL_REQ', 1, 1, 1),
-(297, 'MSG_ID_ZHBL3MOD_EXG_CTRL_RESP', 1, 1, 1),
-(298, 'MSG_ID_ZHBL3MOD_EXG_DATA_REPORT', 1, 1, 1),
-(299, 'MSG_ID_L3HATE_TC_START', 1, 1, 1),
-(300, 'MSG_ID_ETH_L3HATE_FRAME_RCV', 1, 1, 1),
-(301, 'MSG_ID_SPS_L3HATE_FRAME_RCV', 1, 1, 1),
-(302, 'MSG_ID_CAN_L3HATE_FRAME_RCV', 1, 1, 1),
-(303, 'MSG_ID_MQTT_L3HATE_FRAME_RCV', 1, 1, 1),
-(304, 'MSG_ID_COM_MAX', 0, 0, 0);
+(247, 'MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT', 1, 1, 1),
+(248, 'MSG_ID_L3BFDF_CAN_WS_COMB_OUT', 1, 1, 1),
+(249, 'MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB', 1, 1, 1),
+(250, 'MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND', 1, 1, 1),
+(251, 'MSG_ID_L3BFHS_CAN_SYS_CFG_REQ', 1, 1, 1),
+(252, 'MSG_ID_CAN_L3BFHS_SYS_CFG_RESP', 1, 1, 1),
+(253, 'MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ', 1, 1, 1),
+(254, 'MSG_ID_CAN_L3BFHS_CAL_ZERO_RESP', 1, 1, 1),
+(255, 'MSG_ID_L3BFHS_CAN_CAL_FULL_REQ', 1, 1, 1),
+(256, 'MSG_ID_CAN_L3BFHS_CAL_FULL_RESP', 1, 1, 1),
+(257, 'MSG_ID_L3BFHS_CAN_DYN_ZERO_REQ', 1, 1, 1),
+(258, 'MSG_ID_CAN_L3BFHS_DYN_ZERO_RESP', 1, 1, 1),
+(259, 'MSG_ID_L3BFHS_CAN_DYN_FULL_REQ', 1, 1, 1),
+(260, 'MSG_ID_CAN_L3BFHS_DYN_FULL_RESP', 1, 1, 1),
+(261, 'MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT', 1, 1, 1),
+(262, 'MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND', 1, 1, 1),
+(263, 'MSG_ID_UICOMM_L3BFSC_CMD_REQ', 1, 1, 1),
+(264, 'MSG_ID_L3BFSC_UICOMM_CMD_RESP', 1, 1, 1),
+(265, 'MSG_ID_UICOMM_L3BFSC_CFG_REQ', 1, 1, 1),
+(266, 'MSG_ID_L3BFSC_UICOMM_CFG_RESP', 1, 1, 1),
+(267, 'MSG_ID_UICOMM_CAN_TEST_CMD_REQ', 1, 1, 1),
+(268, 'MSG_ID_CAN_UICOMM_TEST_CMD_RESP', 1, 1, 1),
+(269, 'MSG_ID_UICOMM_L3BFDF_CMD_REQ', 1, 1, 1),
+(270, 'MSG_ID_L3BFDF_UICOMM_CMD_RESP', 1, 1, 1),
+(271, 'MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ', 1, 1, 1),
+(272, 'MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP', 1, 1, 1),
+(273, 'MSG_ID_SUI_TEST_CMD_REQ', 1, 1, 1),
+(274, 'MSG_ID_SUI_TEST_CMD_RESP', 1, 1, 1),
+(275, 'MSG_ID_SUI_STARTUP_IND', 1, 1, 1),
+(276, 'MSG_ID_SUI_FAULT_IND', 1, 1, 1),
+(277, 'MSG_ID_SUI_SUSPEND_REQ', 1, 1, 1),
+(278, 'MSG_ID_SUI_SUSPEND_RESP', 1, 1, 1),
+(279, 'MSG_ID_SUI_RESUME_REQ', 1, 1, 1),
+(280, 'MSG_ID_SUI_RESUME_RESP', 1, 1, 1),
+(281, 'MSG_ID_SUI_HEART_BEAT_REPORT', 1, 1, 1),
+(282, 'MSG_ID_SUI_HEART_BEAT_CONFIRM', 1, 1, 1),
+(283, 'MSG_ID_HUICOBUS_UIR_INIT_REQ', 1, 1, 1),
+(284, 'MSG_ID_HUICOBUS_UIR_START_RESUME_REQ', 1, 1, 1),
+(285, 'MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ', 1, 1, 1),
+(286, 'MSG_ID_HUICOBUS_UIR_STATIC_CALI_REQ', 1, 1, 1),
+(287, 'MSG_ID_HUICOBUS_UIR_DYNAMIC_CALI_REQ', 1, 1, 1),
+(288, 'MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ', 1, 1, 1),
+(289, 'MSG_ID_HUICOBUS_UIR_ONE_KEY_ZERO_REQ', 1, 1, 1),
+(290, 'MSG_ID_L3AQYC_EXG_CTRL_REQ', 1, 1, 1),
+(291, 'MSG_ID_L3AQYC_EXG_CTRL_RESP', 1, 1, 1),
+(292, 'MSG_ID_L3AQYC_EXG_DATA_REPORT', 1, 1, 1),
+(293, 'MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ', 1, 1, 1),
+(294, 'MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP', 1, 1, 1),
+(295, 'MSG_ID_LLCZHB_L3MOD_CTRL_REQ', 1, 1, 1),
+(296, 'MSG_ID_L3MOD_LLCZHB_CTRL_RESP', 1, 1, 1),
+(297, 'MSG_ID_L3MOD_LLCZHB_DATA_REPORT', 1, 1, 1),
+(298, 'MSG_ID_ZHBL3MOD_EXG_CTRL_REQ', 1, 1, 1),
+(299, 'MSG_ID_ZHBL3MOD_EXG_CTRL_RESP', 1, 1, 1),
+(300, 'MSG_ID_ZHBL3MOD_EXG_DATA_REPORT', 1, 1, 1),
+(301, 'MSG_ID_L3HATE_TC_START', 1, 1, 1),
+(302, 'MSG_ID_ETH_L3HATE_FRAME_RCV', 1, 1, 1),
+(303, 'MSG_ID_SPS_L3HATE_FRAME_RCV', 1, 1, 1),
+(304, 'MSG_ID_CAN_L3HATE_FRAME_RCV', 1, 1, 1),
+(305, 'MSG_ID_MQTT_L3HATE_FRAME_RCV', 1, 1, 1),
+(306, 'MSG_ID_COM_MAX', 0, 0, 0);
 
 -- --------------------------------------------------------
 

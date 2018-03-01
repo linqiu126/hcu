@@ -342,6 +342,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(INT32 cmdValue, S
     json_object_object_add(jsonobj, "validFlag", json_object_new_int(buf->validFlag));
     json_object_object_add(jsonobj, "errCode", json_object_new_int(buf->errCode));
     json_object_object_add(jsonobj, "weight", json_object_new_int(buf->weight));
+    json_object_object_add(jsonobj, "debugInfo", json_object_new_string(buf->debugInfo));
     sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
     json_object_put(jsonobj);//free
     pMsgProc.hlcLen = strlen(pMsgProc.hlContent);

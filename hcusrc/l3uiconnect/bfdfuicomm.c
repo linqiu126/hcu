@@ -45,7 +45,7 @@ HcuFsmStateItem_t HcuFsmBfdfuicomm[] =
 
     //Normal working status
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_BFDFUICOMM_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP,    FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_l3bfdf_cmd_resp},	//人工控制反馈
+	{MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP,    FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp},	//人工控制反馈
 	{MSG_ID_SUI_TEST_CMD_RESP,      		FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_sui_test_cmd_resp},  //测试命令反馈
 
 	//UIR2HCU MSG RCV
@@ -194,43 +194,84 @@ OPSTAT fsm_bfdfuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	return SUCCESS;
 }
 
-//启动停止反馈
-OPSTAT fsm_bfdfuicomm_l3bfdf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+//控制命令的反馈
+OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-//	int ret=0;
-	UINT8	validFlag = 0;
-	UINT8	cmdid = 0;
-
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
 
-	validFlag = rcv.validFlag;
-	cmdid = rcv.cmdid;
-	//测试用的打印命令
-	HCU_DEBUG_PRINT_INF("BFDFUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag, cmdid);
+	if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START){
+		//通知界面
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		if(rcv.validFlag == TRUE)
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR;
+		else
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_OK;
 
-/*
-	//存入数据库表单，通知界面新的状态信息
-	if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_START)){
-		//do nothing
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
-	else if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP)){
-		//do nothing
+	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP){
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STOP;
+		//通知界面
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
-	else if((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND)){
-		ret = dbi_HcuBfdf_WmcStatusForceSuspend();
-		if (ret == FAILURE) {
-			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Save data error!\n");
+	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND){
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_SUSPEND;
+		//通知界面
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+	}
+	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME){
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_RESUME;
+		//通知界面
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+	}
+	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI){
+		UINT32 cmdValue;
+		char debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];
+		StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t));
+		if (rcv.dynCalResp.calibration_zero_or_full == 1){        /* 1 for ZERO, 2 for FULL */
+			cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO;
+			status.weight = 0;
+		}
+		else if (rcv.dynCalResp.calibration_zero_or_full == 2){
+			cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL;
+			status.weight = rcv.dynCalResp.full_weight;
+		}
+		else{
+			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid parameter of dynamic calibration response!\n");
 			return FAILURE;
 		}
+		status.validFlag = rcv.validFlag;
+		status.errCode = rcv.errCode;
+		sprintf(debugInfo, "calibration_cur_iteration='%d'; calibration_result=%d; noise_floor_period_10ms=%d; noise_floor_period_10ms_max=%d; weight_report_offset_wrt_infra=%d; \
+				nf_sd_mean=%d; nf_sd_max=%d; nf_sd_min=%d; nf_sd_sd=%d; nf_mean_mean=%d; nf_mean_max=%d; nf_mean_min=%d; nf_mean_sd=%d; full_offset_peak_wrt_infra[0]=%d; \
+				full_offset_peak_wrt_infra[1]=%d; full_offset_peak_wrt_infra[2]=%d; full_offset_peak_wrt_infra[3]=%d; full_coefficiency_average=%d; estimated_error_iteration[0]=%d; \
+				estimated_error_iteration[1]=%d; estimated_error_iteration[2]=%d; estimated_error_iteration[3]=%d; estimated_error_max_possible=%d; estimated_error_average=%d)",\
+				rcv.dynCalResp.calibration_cur_iteration, rcv.dynCalResp.calibration_result, rcv.dynCalResp.noise_floor_period_10ms, rcv.dynCalResp.noise_floor_period_10ms_max, \
+				rcv.dynCalResp.weight_report_offset_wrt_infra, rcv.dynCalResp.noise_floor_sd_mean, rcv.dynCalResp.noise_floor_sd_max, rcv.dynCalResp.noise_floor_sd_min, rcv.dynCalResp.noise_floor_sd_sd, \
+				rcv.dynCalResp.noise_floor_mean_mean, rcv.dynCalResp.noise_floor_mean_max, rcv.dynCalResp.noise_floor_mean_min, rcv.dynCalResp.noise_floor_mean_sd, \
+				rcv.dynCalResp.full_offset_peak_wrt_infra[0], rcv.dynCalResp.full_offset_peak_wrt_infra[1], rcv.dynCalResp.full_offset_peak_wrt_infra[2], rcv.dynCalResp.full_offset_peak_wrt_infra[3], \
+				rcv.dynCalResp.full_coefficiency_average, rcv.dynCalResp.estimated_error_iteration[0], rcv.dynCalResp.estimated_error_iteration[1], rcv.dynCalResp.estimated_error_iteration[2], \
+				rcv.dynCalResp.estimated_error_iteration[3], rcv.dynCalResp.estimated_error_max_possible, rcv.dynCalResp.estimated_error_average);
+		strncpy(status.debugInfo, debugInfo, HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX);
+		//通知界面
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(cmdValue, &status);
 	}
-	else if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME)){
-		//do nothing
+	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_ONE_KEY_ZERO){
+		//TBD
+		printf ("fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp: rcv.cmdid = %d\n", rcv.cmdid);
 	}
 	else{
 		HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid command response!\n");
 		return FAILURE;
 	}
-*/
 
 	//返回
 	return SUCCESS;

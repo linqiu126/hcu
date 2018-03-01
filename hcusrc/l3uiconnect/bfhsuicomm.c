@@ -192,38 +192,38 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 
 	if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START){
-		//通知界面
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
 		if(rcv.validFlag == TRUE)
 			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR;
 		else
 			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_OK;
-
+		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP){
-		//通知界面
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
 		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STOP;
-
+		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND){
-		//通知界面
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
 		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_SUSPEND;
+		//通知界面
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME){
-		//通知界面
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
 		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_RESUME;
+		//通知界面
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI){
-		//通知界面
+		char debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];
 		StrHlcIe_cui_hcu2uir_static_cali_resp_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_static_cali_resp_t));
 
@@ -236,8 +236,21 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			status.validFlag = rcv.validFlag;
 			status.errCode = rcv.errCode;
 			status.weight = rcv.calFullRespPar.Weight;
-			printf("BFHSUICOMM: STATIC_CALI_FULL weight = %d \n", status.weight);
+			sprintf(debugInfo, "cutoffFreq='%d'; curZeroPoint=%d; refZeroPoint=%d; negZeroRange=%d; posZeroRange=%d; measRange=%d; scaleInterval=%d; calValue=%d; autoZeroRange=%d; \
+					adjustWgt=%d; adjustFactor=%d; adjustTolerance=%d; standstillRange=%d; tempInSystem=%d; tempAtMeas=%d; sampleFreq=%d; ringBufTime=%d; autoZeroTime=%d; \
+					preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime=%d; measRange=%d; placesDecimal=%d; aotoZero=%d; cellAddr=%d; timeGrid=%d)",\
+					rcv.calFullRespPar.WeightSensorFilterCutOffFreqHz, rcv.calFullRespPar.WeightSensorCurrentZeroPointGrams, rcv.calFullRespPar.WeightSensorReferenceZeroPointGrams,\
+					rcv.calFullRespPar.WeightSensorNegativeZeroSettingRangeGrams, rcv.calFullRespPar.WeightSensorPositiveZeroSettingRangeGrams, rcv.calFullRespPar.WeightSensorMeasurementRange,\
+					rcv.calFullRespPar.WeightSensorScaleIntervalValue, rcv.calFullRespPar.WeightSensorCalibrationValue, rcv.calFullRespPar.WeightSensorAutoZeroCaptureRangeGrams,\
+					rcv.calFullRespPar.WeightSensorAdjustingWeightGrams, rcv.calFullRespPar.WeightSensorAdjustingFactor, rcv.calFullRespPar.WeightSensorAdjustingTolerancePercent,\
+					rcv.calFullRespPar.WeightSensorStandstillRangeGrams, rcv.calFullRespPar.WeightSensorTemperatureInMagnetSystem, rcv.calFullRespPar.WeightSensorTemperatureAtMeasuringShunt,\
+					rcv.calFullRespPar.WeightSensorSamplingFreqHz, rcv.calFullRespPar.WeightSensorRingBufTimeMs, rcv.calFullRespPar.WeightSensorAutoZeroAutotaringTimeMs,\
+					rcv.calFullRespPar.WeightSensorPreloadComPensationValuePercent, rcv.calFullRespPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint,rcv.calFullRespPar.WeightSensorStandstillTimeoutMs,\
+					rcv.calFullRespPar.WeightSensorStandstillTime, rcv.calFullRespPar.WeightSensorMeasurementRange, rcv.calFullRespPar.WeightSensorPlacesAfterDecimalPoint, rcv.calFullRespPar.WeightSensorAutoZero,\
+					rcv.calFullRespPar.WeightSensorCellAddress, rcv.calFullRespPar.WeightSensorTimeGrid);
+			strncpy(status.debugInfo, debugInfo, HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX);
 		}
+		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp(rcv.cmdValue, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI){
@@ -254,6 +267,7 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			status.errCode = rcv.errCode;
 			status.weight = rcv.calFullRespPar.Weight;
 		}
+		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(rcv.cmdValue, &status);
 	}
 	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_ONE_KEY_ZERO){

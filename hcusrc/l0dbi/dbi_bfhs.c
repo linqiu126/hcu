@@ -86,7 +86,7 @@ OPSTAT dbi_HcuBfhs_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
 
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
     if (configId == 0){
-    	HcuErrorPrint("DBIBFHS: Function dbi_HcuBfsc_StaDatainfo_save() ConfigId=0, no processing!\n");
+    	HcuErrorPrint("DBIBFHS: Function dbi_HcuBfhs_StaDatainfo_save() ConfigId=0, no processing!\n");
     	return SUCCESS;
     }
 
@@ -272,7 +272,7 @@ OPSTAT dbi_HcuBfhs_sysConfigData_read(UINT32 sysConfigData[HCU_SYSCFG_BFHS_DB_CO
 		if ((sqlRow = mysql_fetch_row(resPtr)) == NULL){
 			mysql_free_result(resPtr);
 			mysql_close(sqlHandler);
-			HcuErrorPrint("DBIBFDF: mysql_fetch_row NULL error! strsql = %s\n", strsql);
+			HcuErrorPrint("DBIBFHS: mysql_fetch_row NULL error! strsql = %s\n", strsql);
 			return FAILURE;
 		}
 		else{
@@ -318,7 +318,7 @@ OPSTAT dbi_HcuBfhs_productConfigData_read(UINT16 configId, UINT32 productConfigD
 		if ((sqlRow = mysql_fetch_row(resPtr)) == NULL){
 			mysql_free_result(resPtr);
 			mysql_close(sqlHandler);
-			HcuErrorPrint("DBIBFDF: mysql_fetch_row NULL error! strsql = %s\n", strsql);
+			HcuErrorPrint("DBIBFHS: mysql_fetch_row NULL error! strsql = %s\n", strsql);
 			return FAILURE;
 		}
 		else{
@@ -355,7 +355,7 @@ OPSTAT dbi_HcuBfhs_calData_save(StrMsgIe_WeightSensorBfhsCalibrationFullRespPara
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 	    	mysql_close(sqlHandler);
-	    	HcuErrorPrint("DBIBFDF: UPDATE data error, err cause = %s\n", mysql_error(sqlHandler));
+	    	HcuErrorPrint("DBIBFHS: UPDATE data error, err cause = %s\n", mysql_error(sqlHandler));
 	        return FAILURE;
 		}
 

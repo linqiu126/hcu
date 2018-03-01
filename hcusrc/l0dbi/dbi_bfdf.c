@@ -90,7 +90,7 @@ OPSTAT dbi_HcuBfdf_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
 
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
     if (configId == 0){
-    	HcuErrorPrint("DBIBFDF: Function dbi_HcuBfsc_StaDatainfo_save() ConfigId=0, no processing!\n");
+    	HcuErrorPrint("DBIBFDF: Function dbi_HcuBfdf_StaDatainfo_save() ConfigId=0, no processing!\n");
     	return SUCCESS;
     }
 

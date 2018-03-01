@@ -324,11 +324,13 @@ typedef struct StrHlcIe_cui_hcu2uir_stop_suspend_resp
 //cmdValue = NULL
 
 //HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp     		= 0x0183,
+#define HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX  1000
 typedef struct StrHlcIe_cui_hcu2uir_static_cali_resp
 {
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
 	UINT32  weight;
+	char    debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];
 }StrHlcIe_cui_hcu2uir_static_cali_resp_t;
 //cmdValue = adcValue
 
@@ -338,6 +340,7 @@ typedef struct StrHlcIe_cui_hcu2uir_dynamic_cali_resp
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
 	UINT32  weight;
+	char    debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];
 }StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t;
 //cmdValue = adcValue
 
