@@ -334,7 +334,7 @@ OPSTAT dbi_HcuBfhs_productConfigData_read(UINT16 configId, UINT32 productConfigD
 	    return SUCCESS;
 	}
 
-OPSTAT dbi_HcuBfhs_calData_save(UINT16 configId, StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t *input)
+OPSTAT dbi_HcuBfhs_calData_save(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t *input)
 {
 	MYSQL *sqlHandler;
 	    int result = 0;
@@ -347,15 +347,15 @@ OPSTAT dbi_HcuBfhs_calData_save(UINT16 configId, StrMsgIe_WeightSensorBfhsCalibr
 
 		//UPDATE新的数据
 	    sprintf(strsql, "UPDATE `hcubfhsproductpara` SET snrautotaringtime = '%d',snrautozerorange = '%d',snrstandstilltime = '%d',snrstandstilltimeout = '%d',snrstandstillrange = '%d',\
-	    		snrfiltercutoffreq = '%d',snrringbuftime = '%d',snrpreloadvalue = '%d',snrpreloadvalueformat = '%d',snrmeasurementrange = '%d',snrtimegrid = '%d'\
-	    		WHERE (`configid` = configId)", input->WeightSensorAutoZeroAutotaringTimeMs,input->WeightSensorStandstillTime,input->WeightSensorStandstillTimeoutMs,input->WeightSensorStandstillRangeGrams,\
+	    		snrfiltercutoffreq = '%d',snrringbuftime = '%d',snrpreloadvalue = '%d',snrpreloadvalueformat = '%d',snrmeasurementrange = '%d',snrtimegrid = '%d' WHERE (1)", \
+	    		input->WeightSensorAutoZeroAutotaringTimeMs,input->WeightSensorStandstillTime,input->WeightSensorStandstillTimeoutMs,input->WeightSensorStandstillRangeGrams,\
 				input->WeightSensorFilterCutOffFreqHz,input->WeightSensorRingBufTimeMs,input->WeightSensorPreloadComPensationValuePercent,input->WeightSensorPreloadComPensationPlacesAfterDecimalPoint,\
 				input->WeightSensorMeasurementRange,input->WeightSensorTimeGrid);
 
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 	    	mysql_close(sqlHandler);
-	    	HcuErrorPrint("DBIBFDF: UPDATE data error, configId=%d, err cause = %s\n", configId, mysql_error(sqlHandler));
+	    	HcuErrorPrint("DBIBFDF: UPDATE data error, err cause = %s\n", mysql_error(sqlHandler));
 	        return FAILURE;
 		}
 
