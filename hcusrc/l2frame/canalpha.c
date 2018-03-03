@@ -910,6 +910,7 @@ OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void *
 	//BFHS消息
 	case HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp:
 	{
+		printf("CANALPHA: Receive DYNAMIC_CALI_ZERO resp \n");
 		HCU_DEBUG_PRINT_INF("CANALPHA: Receive L3 MSG = HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp \n");
 		StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp_t) - 4))
@@ -922,6 +923,7 @@ OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void *
 	//BFHS消息
 	case HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp:
 	{
+		printf("CANALPHA: Receive DYNAMIC_CALI_FULL resp \n");
 		HCU_DEBUG_PRINT_INF("CANALPHA: Receive L3 MSG = HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp \n");
 		StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t) - 4))

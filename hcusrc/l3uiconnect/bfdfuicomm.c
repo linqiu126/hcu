@@ -132,10 +132,11 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//延迟并启动系统，进入测试模式
-	hcu_sleep(2);
+	//hcu_sleep(2);
 	//设置configIndex=2
-	func_bfdfuicomm_read_cfg_file_into_ctrl_table(2);
 
+	//初始化系统参数
+	func_bfdfuicomm_read_sys_config_into_ctrl_table ();
 	//初始化sessionId
 	gTaskL3bfdfContext.sessionId = dbi_HcuBfdf_CallCellMaxIdGet() + 1;
 
@@ -248,6 +249,7 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid parameter of dynamic calibration response!\n");
 			return FAILURE;
 		}
+		status.engModeSwitch = gTaskL3bfdfContext.engModeSwitch;
 		status.validFlag = rcv.validFlag;
 		status.errCode = rcv.errCode;
 		sprintf(debugInfo, "calibration_cur_iteration='%d'; calibration_result=%d; noise_floor_period_10ms=%d; noise_floor_period_10ms_max=%d; weight_report_offset_wrt_infra=%d; \
@@ -358,7 +360,7 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_i
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
 	snd.cmdValue = rcv.cmdValue;
 	configId = rcv.cmdValue;
-	if(func_bfdfuicomm_read_cfg_file_into_ctrl_table(configId) == SUCCESS)
+	if(func_bfdfuicomm_read_product_config_into_ctrl_table(configId) == SUCCESS)
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
 	return SUCCESS;
@@ -405,8 +407,10 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_dynamic_cali_req(UINT32 dest_id, UINT32 src_i
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI;
 	if(rcv.cmdValue == HUICOBUS_CMDVALUE_dynamic_cali_zero)
 		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO;
-	else if (rcv.cmdValue == HUICOBUS_CMDVALUE_dynamic_cali_full)
+	else if (rcv.cmdValue == HUICOBUS_CMDVALUE_dynamic_cali_full){
 		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL;
+		printf("BFDFUICOMM: receive HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL\n");
+	}
 	else
 		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_INVALID;
 
@@ -454,7 +458,7 @@ OPSTAT func_bfdfuicomm_time_out_period_read_process(void)
 //	if ((state == FSM_STATE_L3BFDF_ACTIVED) || (state == FSM_STATE_L3BFDF_OPR_CFG)) {
 //		//启动完成以后，等待一小会儿，然后将缺省的参数读入到系统内存，并发送CFG_REQ给L3BFDF
 //		//如果缺省参数读取不成功，等待人工干预并读取，然后再发送给L3BFDF
-//		if (func_bfdfuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
+//		if (func_bfdfuicomm_read_product_config_into_ctrl_table() == SUCCESS){
 //			msg_struct_uicomm_l3bfdf_cfg_req_t snd;
 //			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_cfg_req_t));
 //			snd.length = sizeof(msg_struct_uicomm_l3bfdf_cfg_req_t);
@@ -528,21 +532,19 @@ bool func_bfdfuicomm_hopper_state_set_init(UINT8 streamId)
 	return TRUE;
 }
 
-//扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
-OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
+OPSTAT func_bfdfuicomm_read_sys_config_into_ctrl_table ()
 {
-	UINT8 line, group, hopper;
-	UINT8 groupPerLine = 0, groupTotal = 0;
+	UINT8 line, hopper;
+	UINT8 engModeSwitch = 0;
 	DbiL3BfdfSystemPara_t sysConfigData;
 	DbiL3BfdfCalibrationPara_t calConfigData;
-	DbiL3BfdfProductPara_t productConfigData;
-	DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2];
 
 	/*** Initialize SYSTEM configuration, these parameters are common for all products ***/
 
-	if (dbi_HcuBfdf_sysConfigData_read(&sysConfigData, &calConfigData) == FAILURE)
+	if (dbi_HcuBfdf_sysConfigData_read(&sysConfigData, &calConfigData, engModeSwitch) == FAILURE)
 		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB System and Calibration configuration data failed \n");
 
+	gTaskL3bfdfContext.engModeSwitch = engModeSwitch;
 	//配置系统的DIMENSIONING
 	gTaskL3bfdfContext.nbrStreamLine = sysConfigData.lineNum;
 	gTaskL3bfdfContext.nbrIoBoardPerLine = sysConfigData.boardNumPerLine;
@@ -553,7 +555,64 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 	}
 	for (line = gTaskL3bfdfContext.nbrStreamLine; line< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; line++){
 		for (hopper=0; hopper<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; hopper++){
-			gTaskL3bfdfContext.hopper[hopper][hopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_OFFLINE;
+			gTaskL3bfdfContext.hopper[line][hopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_OFFLINE;
+		}
+	}
+
+	//查询系统配置参数
+	memcpy(&gTaskL3bfdfContext.motMainPar, &sysConfigData.motMainPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
+	memcpy(&gTaskL3bfdfContext.motSecondPar, &sysConfigData.motSecondPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
+	memcpy(&gTaskL3bfdfContext.actionCtrlPar, &sysConfigData.armCtrlPar, sizeof(gTaskL3bfdfContextActionControlParamaters_t));
+	memcpy(&gTaskL3bfdfContext.dynCalPar, &calConfigData, sizeof(gTaskL3bfdfContextDynCalibrationParamaters_t));
+
+//	gTaskL3bfdfContext.nbrStreamLine = 1;
+//	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
+//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  1;
+//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadThread = 1;
+//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = 1;
+//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyThread = 1;
+//	gTaskL3bfdfContext.wgtSnrPar.StardardReadyTimeMs = 1;
+//
+//	gTaskL3bfdfContext.wgtSnrPar.MaxAllowedWeight = 1;
+//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorStaticZeroValue = 1;
+//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorTailorValue = 1;
+//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = 1;
+//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = 1;
+//
+//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupThread = 300;
+//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs = 500;
+
+	return SUCCESS;
+}
+
+//扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
+OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table (UINT16 configId)
+{
+	UINT8 line, group, hopper;
+	UINT8 groupPerLine = 0, groupTotal = 0;
+	UINT8 engModeSwitch = 0;
+	DbiL3BfdfSystemPara_t sysConfigData;
+	DbiL3BfdfCalibrationPara_t calConfigData;
+	DbiL3BfdfProductPara_t productConfigData;
+	DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2];
+
+	/*** Initialize SYSTEM configuration, these parameters are common for all products ***/
+
+	if (dbi_HcuBfdf_sysConfigData_read(&sysConfigData, &calConfigData, engModeSwitch) == FAILURE)
+		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB System and Calibration configuration data failed \n");
+
+	gTaskL3bfdfContext.engModeSwitch = engModeSwitch;
+	//配置系统的DIMENSIONING
+	gTaskL3bfdfContext.nbrStreamLine = sysConfigData.lineNum;
+	gTaskL3bfdfContext.nbrIoBoardPerLine = sysConfigData.boardNumPerLine;
+
+	//Hopper初始化
+	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
+		func_bfdfuicomm_hopper_state_set_init(line);
+	}
+	for (line = gTaskL3bfdfContext.nbrStreamLine; line< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; line++){
+		for (hopper=0; hopper<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; hopper++){
+			gTaskL3bfdfContext.hopper[line][hopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_OFFLINE;
 		}
 	}
 

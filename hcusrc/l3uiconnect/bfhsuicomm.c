@@ -228,11 +228,13 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_static_cali_resp_t));
 
 		if (rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO){
+			status.engModeSwitch = gTaskL3bfhsContext.engModeSwitch;
 			status.validFlag = rcv.validFlag;
 			status.errCode = rcv.errCode;
 			status.weight = 0;
 		}
 		else if (rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL){
+			status.engModeSwitch = gTaskL3bfhsContext.engModeSwitch;
 			status.validFlag = rcv.validFlag;
 			status.errCode = rcv.errCode;
 			status.weight = rcv.calFullRespPar.Weight;
@@ -249,6 +251,8 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 					rcv.calFullRespPar.WeightSensorStandstillTime, rcv.calFullRespPar.WeightSensorMeasurementRange, rcv.calFullRespPar.WeightSensorPlacesAfterDecimalPoint, rcv.calFullRespPar.WeightSensorAutoZero,\
 					rcv.calFullRespPar.WeightSensorCellAddress, rcv.calFullRespPar.WeightSensorTimeGrid);
 			strncpy(status.debugInfo, debugInfo, HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX);
+
+			printf("Receive STATIC_CALI_FULL resp, validFlag = %d; errCode = %d \n",rcv.validFlag,rcv.errCode);
 		}
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp(rcv.cmdValue, &status);
@@ -258,17 +262,21 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t));
 
 		if (rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO){
+			status.engModeSwitch = gTaskL3bfhsContext.engModeSwitch;
 			status.validFlag = rcv.validFlag;
 			status.errCode = rcv.errCode;
 			status.weight = 0;
+			printf("Receive DYNAMIC_CALI_ZERO resp, validFlag = %d; errCode = %d \n",rcv.validFlag,rcv.errCode);
 		}
 		else if (rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL){
+			status.engModeSwitch = gTaskL3bfhsContext.engModeSwitch;
 			status.validFlag = rcv.validFlag;
 			status.errCode = rcv.errCode;
 			status.weight = rcv.calFullRespPar.Weight;
+			printf("Receive DYNAMIC_CALI_FULL resp, validFlag = %d; errCode = %d \n",rcv.validFlag,rcv.errCode);
 		}
 		//通知界面
-		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(rcv.cmdValue, &status);
+		//hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(rcv.cmdValue, &status);
 	}
 	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_ONE_KEY_ZERO){
 		//TBD
@@ -372,7 +380,7 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_i
 
 	//Initialize gTaskL3bfhsContext
 	if(func_bfhsuicomm_read_cfg_db_into_ctrl_table(rcv.cmdValue) == FAILURE)
-		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: get DB data and initialize gTaskL3bfhsContext failed \n");
+		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: get DB data and initialize gTaskL3bfhsContext failed, configId = %d \n", rcv.cmdValue);
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
@@ -403,6 +411,10 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_static_cali_req(UINT32 dest_id, UINT32 src_id
 		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL;
 	else
 		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_INVALID;
+
+	//For temp test
+	func_bfhsuicomm_read_cfg_db_into_ctrl_table (16);
+	printf("BFHSUICOMM: for check AutoZeroAutotaringTime = %d\n",gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZeroAutotaringTimeMs);
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
@@ -497,7 +509,7 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 configId)
 	gTaskL3bfhsContext.configId = configId;
 
 	if (dbi_HcuBfhs_productConfigData_read(configId,productConfigData) == FAILURE)
-		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: Get DB product configuration data failed \n");
+		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: Get DB product configuration data failed, configId = %d \n", configId);
 
 	index = 12;
 	//摇臂配置参数
@@ -594,6 +606,8 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 configId)
 //	gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight  = 950;
 //	gTaskL3bfhsContext.wgtSnrPar.snrAlgoAutoZeroSignal = 10000;
 //	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch = 1;
+
+	gTaskL3bfhsContext.engModeSwitch = sysConfigData[index++];
 
 	//读取数据库，更新批次数据
 	gTaskL3bfhsContext.sessionId = 1;

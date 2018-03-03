@@ -246,7 +246,7 @@ OPSTAT dbi_HcuBfdf_callcell_delete_3monold(UINT32 days)
 }
 
 //Read system configuration parameter into gTaskL3bfdfContext
-OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfCalibrationPara_t *dynCalPar)
+OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfCalibrationPara_t *dynCalPar, UINT8 engModeSwitch)
 	{
 		MYSQL *sqlHandler;
 		MYSQL_RES *resPtr;
@@ -327,6 +327,8 @@ OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfC
 			if (sqlRow[index])  dynCalPar->WeightSensorTailorValue = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 			if (sqlRow[index])  dynCalPar->TWeightInd = sysPara->armCtrlPar.TWeightInd;
 			if (sqlRow[index])  dynCalPar->motor_speed = sysPara->motMainPar.MotorSpeed; //same as main motor speed
+
+			if (sqlRow[index])  engModeSwitch = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		}
 
 		//释放记录集

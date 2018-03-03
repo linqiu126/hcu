@@ -258,6 +258,7 @@ typedef struct gTaskL3bfdfContext
 	UINT32  sessionId;								//批次数据
 	char    operatorName[HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX];
 	UINT16	configId;  								//用来标识系统工作在哪一套配置参数中
+	UINT8   engModeSwitch;  //Engineering mode switch
 	char    configName[HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX];
 	UINT8   nbrStreamLine;			//缺省为2，最大不能超过4
 	UINT8   nbrIoBoardPerLine;		//缺省为4，最大不能超过4

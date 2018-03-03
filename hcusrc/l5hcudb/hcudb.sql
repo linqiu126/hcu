@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 01, 2018 at 07:45 PM
+-- Generation Time: Mar 02, 2018 at 11:11 AM
 -- Server version: 5.7.20-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -269,18 +269,18 @@ CREATE TABLE `hcubfdfsystempara` (
   `nffilterfactor` int(4) NOT NULL,
   `maxallowedwgt` int(4) NOT NULL,
   `tailorvalue` int(4) NOT NULL,
+  `engswitch` int(1) NOT NULL DEFAULT '0',
   `sysstatus` int(1) NOT NULL DEFAULT '0',
   `hcusw` varchar(100) DEFAULT NULL,
-  `ihusw` varchar(100) DEFAULT NULL,
-  `engswitch` int(1) NOT NULL DEFAULT '0'
+  `ihusw` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfdfsystempara`
 --
 
-INSERT INTO `hcubfdfsystempara` (`sid`, `linenum`, `boardnumperline`, `mainmotspeed`, `mainmotdirection`, `mainmotfailvaration`, `mainmotfailtime`, `secmotspeed`, `secmotdirection`, `secmotfailvaration`, `secmotfailtime`, `tweightind`, `t0bis`, `ta0`, `tactcmd`, `tarmstart`, `tarmstop`, `tdoorcloselight`, `tapintervalmin`, `tapinterval`, `tlocalap`, `delaynode1tox`, `delayuphcualgo`, `zerocaliteration`, `fullcaliteration`, `fullweight`, `adcsamplefreq`, `adcgain`, `nffilterfactor`, `maxallowedwgt`, `tailorvalue`, `sysstatus`, `hcusw`, `ihusw`, `engswitch`) VALUES
-(1, 2, 1, 200, 0, 1, 1, 300, 0, 1, 1, 90, 1, 100, 1, 20, 50, 70, 20, 70, 1, 1, 1, 8, 4, 100000, 6, 3, 20, 1000000, 0, 0, 'HCU', 'IHU', 0);
+INSERT INTO `hcubfdfsystempara` (`sid`, `linenum`, `boardnumperline`, `mainmotspeed`, `mainmotdirection`, `mainmotfailvaration`, `mainmotfailtime`, `secmotspeed`, `secmotdirection`, `secmotfailvaration`, `secmotfailtime`, `tweightind`, `t0bis`, `ta0`, `tactcmd`, `tarmstart`, `tarmstop`, `tdoorcloselight`, `tapintervalmin`, `tapinterval`, `tlocalap`, `delaynode1tox`, `delayuphcualgo`, `zerocaliteration`, `fullcaliteration`, `fullweight`, `adcsamplefreq`, `adcgain`, `nffilterfactor`, `maxallowedwgt`, `tailorvalue`, `engswitch`, `sysstatus`, `hcusw`, `ihusw`) VALUES
+(1, 2, 1, 200, 0, 1, 1, 300, 0, 1, 1, 90, 1, 100, 1, 20, 50, 70, 20, 70, 1, 1, 1, 8, 4, 100000, 6, 3, 20, 1000000, 0, 0, 0, 'HCU', 'IHU');
 
 -- --------------------------------------------------------
 
@@ -414,18 +414,18 @@ CREATE TABLE `hcubfhssystempara` (
   `minallowedweight` int(4) NOT NULL,
   `autozerosignal` int(4) NOT NULL,
   `autozeroswitch` int(1) NOT NULL,
+  `engswitch` int(1) NOT NULL DEFAULT '0',
   `sysstatus` int(1) NOT NULL DEFAULT '0',
   `hcusw` varchar(100) DEFAULT NULL,
-  `ihusw` varchar(100) DEFAULT NULL,
-  `engswitch` int(1) NOT NULL DEFAULT '0'
+  `ihusw` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `hcubfhssystempara`
 --
 
-INSERT INTO `hcubfhssystempara` (`sid`, `weighterlength`, `rejectorposition`, `counterweight`, `maxallowedweight`, `minallowedweight`, `autozerosignal`, `autozeroswitch`, `sysstatus`, `hcusw`, `ihusw`, `engswitch`) VALUES
-(1, 400, 500, 1000, 50000, 5, 100000, 1, 0, 'HCU', 'IHU', 0);
+INSERT INTO `hcubfhssystempara` (`sid`, `weighterlength`, `rejectorposition`, `counterweight`, `maxallowedweight`, `minallowedweight`, `autozerosignal`, `autozeroswitch`, `engswitch`, `sysstatus`, `hcusw`, `ihusw`) VALUES
+(1, 400, 500, 1000, 50000, 5, 100000, 1, 0, 0, 'HCU', 'IHU');
 
 -- --------------------------------------------------------
 
