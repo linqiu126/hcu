@@ -44,8 +44,8 @@ HcuFsmStateItem_t HcuFsmBfhsuicomm[] =
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          					fsm_bfhsuicomm_timeout},
 
     //Normal working status
-	{MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP,   		FSM_STATE_BFHSUICOMM_ACTIVED,      		fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp},	//人工控制反馈
-	{MSG_ID_SUI_TEST_CMD_RESP,      			FSM_STATE_BFHSUICOMM_ACTIVED,      		fsm_bfhsuicomm_sui_test_cmd_resp},  //测试命令反馈
+	{MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP,   		FSM_STATE_BFHSUICOMM_ACTIVED,      		fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp},	//控制命令反馈
+	{MSG_ID_SUI_TEST_CMD_RESP,      			FSM_STATE_BFHSUICOMM_ACTIVED,      		fsm_bfhsuicomm_sui_test_cmd_resp},      //测试命令反馈
 
 	//UIR2HCU MSG RCV
 	{MSG_ID_HUICOBUS_UIR_INIT_REQ,      		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_init_req},
@@ -103,8 +103,6 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFHSUICOMM] = 0;
 
-	//启动MQTT服务内容
-
 	//启动周期性定时器
 /*
 	ret = hcu_timer_start(TASK_ID_BFHSUICOMM, TIMER_ID_1S_BFHSUICOMM_PERIOD_READ, \
@@ -123,7 +121,8 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//延迟并启动系统，进入测试模式
 	//hcu_sleep(2);
-	//func_bfhsuicomm_read_cfg_db_into_ctrl_table(24);
+	if(func_bfhsuicomm_read_system_config_into_ctrl_table () == FAILURE)
+		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: get DB data and initialize system config failed!\n");
 
 	//返回
 	return SUCCESS;
@@ -179,14 +178,13 @@ OPSTAT fsm_bfhsuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 			}//FsmSetState
 		}
 
-
 		//Do nothing
 		func_bfhsuicomm_time_out_period_read_process();
 	}
 	return SUCCESS;
 }
 
-//启动停止反馈
+//控制命令反馈
 OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
@@ -379,8 +377,8 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_i
 	snd.cmdValue = rcv.cmdValue;
 
 	//Initialize gTaskL3bfhsContext
-	if(func_bfhsuicomm_read_cfg_db_into_ctrl_table(rcv.cmdValue) == FAILURE)
-		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: get DB data and initialize gTaskL3bfhsContext failed, configId = %d \n", rcv.cmdValue);
+	if(func_bfhsuicomm_read_product_config_into_ctrl_table(rcv.cmdValue) == FAILURE)
+		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: get DB data and initialize product config failed, configId = %d \n", rcv.cmdValue);
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
@@ -411,10 +409,6 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_static_cali_req(UINT32 dest_id, UINT32 src_id
 		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL;
 	else
 		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_INVALID;
-
-	//For temp test
-	func_bfhsuicomm_read_cfg_db_into_ctrl_table (16);
-	printf("BFHSUICOMM: for check AutoZeroAutotaringTime = %d\n",gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZeroAutotaringTimeMs);
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
@@ -498,20 +492,103 @@ OPSTAT func_bfhsuicomm_time_out_period_read_process(void)
 	return SUCCESS;
 }
 
-//扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
-OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 configId)
+OPSTAT func_bfhsuicomm_read_system_config_into_ctrl_table ()
 {
-	//Update config id to gTaskL3bfhsContext
+	UINT8 index;
+	UINT32 sysConfigData[HCU_SYSCFG_BFHS_DB_COLUMN_NUM_MAX];
+
+	if (dbi_HcuBfhs_sysConfigData_read(sysConfigData) == FAILURE)
+		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: Get DB system configuration data failed \n");
+
+	index = 4;
+	//CAL FULL REQ
+	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingTolerancePercent = sysConfigData[index++];
+	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams = sysConfigData[index++];
+
+//	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingTolerancePercent = 3000;
+//	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams = 20000;
+
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoAutoZeroSignal = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight  = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrTimeGrid = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs = sysConfigData[index++];
+	gTaskL3bfhsContext.engModeSwitch = sysConfigData[index++];
+//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoAutoZeroSignal = 10000;
+//	gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight = 1050;
+//	gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight  = 950;
+//	gTaskL3bfhsContext.wgtSnrPar.snrTimeGrid = 10;
+//  gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch = 1;
+//	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs = 100;
+//	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams =  500;
+//	gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz  = 20000;
+//	gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo =  1;
+//	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat = 2;
+//	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue = 625;
+//	gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs = 100;
+//	gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams = 500;
+//	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = 100;
+//	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs = 10000;
+//  gTaskL3bfhsContext.engModeSwitch = 0; //0-off,1-on
+
+	//Copy to CAL_ZERO_REQ
+	gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZero = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZeroAutotaringTimeMs = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZeroCaptureRangeGrams = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorFilterCutOffFreqHz = gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorMeasurementRangeNo = gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorPreloadComPensationValuePercent = gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorRingBufTimeMs = gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorStandstillRangeGrams = gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorStandstillTime = gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime;
+	gTaskL3bfhsContext.calZeroPar.WeightSensorStandstillTimeoutMs = gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs;
+
+	return SUCCESS;
+}
+
+//扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
+OPSTAT func_bfhsuicomm_read_product_config_into_ctrl_table (UINT16 configId)
+{
 	UINT8 index;
 	UINT32 productConfigData[HCU_PRODUCTCFG_BFHS_DB_COLUMN_NUM_MAX];
-	UINT32 sysConfigData[HCU_SYSCFG_BFHS_DB_COLUMN_NUM_MAX];
 
 	gTaskL3bfhsContext.configId = configId;
 
 	if (dbi_HcuBfhs_productConfigData_read(configId,productConfigData) == FAILURE)
 		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: Get DB product configuration data failed, configId = %d \n", configId);
 
-	index = 12;
+	index = 11;
+	//称重传感器配置参数
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoSelect = productConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoRejectOption = productConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrTargetThroughput = productConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrTareWeight = productConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu1Limit = productConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoMaxTu1Ratio = productConfigData[index++];  //2.5%
+	gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu2Limit = productConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrReadStartMs = productConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrReadStopMs = productConfigData[index++];
+//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoSelect =1;
+//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoRejectOption = 3;
+//	gTaskL3bfhsContext.wgtSnrPar.snrTargetThroughput = 50000;
+//	gTaskL3bfhsContext.wgtSnrPar.snrTareWeight = 0;
+//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu1Limit = 995;
+//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoMaxTu1Ratio = 250;  //2.5%
+//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu2Limit = 990;
+//	gTaskL3bfhsContext.wgtSnrPar.snrReadStartMs = 300;
+//	gTaskL3bfhsContext.wgtSnrPar.snrReadStopMs = 380;
+
 	//摇臂配置参数
 	gTaskL3bfhsContext.armCtrlPar.ArmFailureDetectionTimeMs = productConfigData[index++];
 	gTaskL3bfhsContext.armCtrlPar.ArmFailureDetectionVaration = productConfigData[index++];
@@ -531,83 +608,6 @@ OPSTAT func_bfhsuicomm_read_cfg_db_into_ctrl_table (UINT16 configId)
 	gTaskL3bfhsContext.motoCtrlPar.MotorSpeed = productConfigData[index++];
 //	gTaskL3bfhsContext.motoCtrlPar.MotorDirection =  0;
 //	gTaskL3bfhsContext.motoCtrlPar.MotorSpeed = 750;
-
-	//称重传感器配置参数
-	gTaskL3bfhsContext.wgtSnrPar.snrAlgoSelect = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrTareWeight = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu1Limit = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrAlgoMaxTu1Ratio = productConfigData[index++];  //2.5%
-	gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu2Limit = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrAlgoRejectOption = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrTargetThroughput = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams =  productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz  = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrTimeGrid = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrReadStartMs = productConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrReadStopMs = productConfigData[index++];
-//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoSelect =1;
-//	gTaskL3bfhsContext.wgtSnrPar.snrTareWeight = 0;
-//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu1Limit = 995;
-//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoMaxTu1Ratio = 250;  //2.5%
-//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu2Limit = 990;
-//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoRejectOption = 3;
-//	gTaskL3bfhsContext.wgtSnrPar.snrTargetThroughput = 0;
-//	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs = 100;
-//	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams =  500;
-//	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = 100;
-//	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs = 10000;
-//	gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams = 500;
-//	gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz  = 20000;
-//	gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs = 100;
-//	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue = 625;
-//	gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat = 2;
-//	gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo =  1;
-//	gTaskL3bfhsContext.wgtSnrPar.snrTimeGrid = 10;
-//	gTaskL3bfhsContext.wgtSnrPar.snrReadStartMs = 300;
-//	gTaskL3bfhsContext.wgtSnrPar.snrReadStopMs = 380;
-
-	//CAL ZERO REQ
-	gTaskL3bfhsContext.calZeroPar.WeightSensorFilterCutOffFreqHz = gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz;
-	gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZeroCaptureRangeGrams = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams;
-	gTaskL3bfhsContext.calZeroPar.WeightSensorStandstillRangeGrams = gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams;
-	gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZeroAutotaringTimeMs = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs;
-	gTaskL3bfhsContext.calZeroPar.WeightSensorPreloadComPensationValuePercent = gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue;
-	gTaskL3bfhsContext.calZeroPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat;
-	gTaskL3bfhsContext.calZeroPar.WeightSensorStandstillTimeoutMs = gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs;
-	gTaskL3bfhsContext.calZeroPar.WeightSensorStandstillTime = gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime;
-	gTaskL3bfhsContext.calZeroPar.WeightSensorRingBufTimeMs = gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs;
-	gTaskL3bfhsContext.calZeroPar.WeightSensorMeasurementRangeNo = gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo;
-	gTaskL3bfhsContext.calZeroPar.WeightSensorAutoZero = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch;
-
-	if (dbi_HcuBfhs_sysConfigData_read(sysConfigData) == FAILURE)
-		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: Get DB system configuration data failed \n");
-
-	index = 3;
-	//CAL FULL REQ
-	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams = sysConfigData[index++];
-//	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams = 22000;
-	gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingTolerancePercent = 3000;
-
-	//System Parameter
-	gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight = sysConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight  = sysConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrAlgoAutoZeroSignal = sysConfigData[index++];
-	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch = sysConfigData[index++];
-
-//	gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight = 1050;
-//	gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight  = 950;
-//	gTaskL3bfhsContext.wgtSnrPar.snrAlgoAutoZeroSignal = 10000;
-//	gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch = 1;
-
-	gTaskL3bfhsContext.engModeSwitch = sysConfigData[index++];
 
 	//读取数据库，更新批次数据
 	gTaskL3bfhsContext.sessionId = 1;

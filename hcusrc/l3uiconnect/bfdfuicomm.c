@@ -136,7 +136,7 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	//设置configIndex=2
 
 	//初始化系统参数
-	func_bfdfuicomm_read_sys_config_into_ctrl_table ();
+	func_bfdfuicomm_read_system_config_into_ctrl_table ();
 	//初始化sessionId
 	gTaskL3bfdfContext.sessionId = dbi_HcuBfdf_CallCellMaxIdGet() + 1;
 
@@ -532,7 +532,7 @@ bool func_bfdfuicomm_hopper_state_set_init(UINT8 streamId)
 	return TRUE;
 }
 
-OPSTAT func_bfdfuicomm_read_sys_config_into_ctrl_table ()
+OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table ()
 {
 	UINT8 line, hopper;
 	UINT8 engModeSwitch = 0;
@@ -585,60 +585,13 @@ OPSTAT func_bfdfuicomm_read_sys_config_into_ctrl_table ()
 	return SUCCESS;
 }
 
-//扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
+//配置系统参数控制表
 OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table (UINT16 configId)
 {
 	UINT8 line, group, hopper;
 	UINT8 groupPerLine = 0, groupTotal = 0;
-	UINT8 engModeSwitch = 0;
-	DbiL3BfdfSystemPara_t sysConfigData;
-	DbiL3BfdfCalibrationPara_t calConfigData;
 	DbiL3BfdfProductPara_t productConfigData;
 	DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2];
-
-	/*** Initialize SYSTEM configuration, these parameters are common for all products ***/
-
-	if (dbi_HcuBfdf_sysConfigData_read(&sysConfigData, &calConfigData, engModeSwitch) == FAILURE)
-		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB System and Calibration configuration data failed \n");
-
-	gTaskL3bfdfContext.engModeSwitch = engModeSwitch;
-	//配置系统的DIMENSIONING
-	gTaskL3bfdfContext.nbrStreamLine = sysConfigData.lineNum;
-	gTaskL3bfdfContext.nbrIoBoardPerLine = sysConfigData.boardNumPerLine;
-
-	//Hopper初始化
-	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
-		func_bfdfuicomm_hopper_state_set_init(line);
-	}
-	for (line = gTaskL3bfdfContext.nbrStreamLine; line< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; line++){
-		for (hopper=0; hopper<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; hopper++){
-			gTaskL3bfdfContext.hopper[line][hopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_OFFLINE;
-		}
-	}
-
-	//查询系统配置参数
-	memcpy(&gTaskL3bfdfContext.motMainPar, &sysConfigData.motMainPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
-	memcpy(&gTaskL3bfdfContext.motSecondPar, &sysConfigData.motSecondPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
-	memcpy(&gTaskL3bfdfContext.actionCtrlPar, &sysConfigData.armCtrlPar, sizeof(gTaskL3bfdfContextActionControlParamaters_t));
-	memcpy(&gTaskL3bfdfContext.dynCalPar, &calConfigData, sizeof(gTaskL3bfdfContextDynCalibrationParamaters_t));
-
-//	gTaskL3bfdfContext.nbrStreamLine = 1;
-//	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
-//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  1;
-//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadThread = 1;
-//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = 1;
-//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyThread = 1;
-//	gTaskL3bfdfContext.wgtSnrPar.StardardReadyTimeMs = 1;
-//
-//	gTaskL3bfdfContext.wgtSnrPar.MaxAllowedWeight = 1;
-//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorStaticZeroValue = 1;
-//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorTailorValue = 1;
-//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = 1;
-//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = 1;
-//
-//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupThread = 300;
-//	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs = 500;
-
 
 	/*** Initialize PRODUCT configuration, these parameters are different for each product ***/
 
@@ -647,7 +600,7 @@ OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table (UINT16 configId)
 		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB PRODUCT configuration data failed, configId = %d \n", productConfigData.configId);
 
 	gTaskL3bfdfContext.configId = configId;
-	groupPerLine = productConfigData.groupPerLine;
+	groupPerLine = gTaskL3bfdfContext.nbrIoBoardPerLine;
 	groupTotal = groupPerLine * gTaskL3bfdfContext.nbrStreamLine;
 	for(line = 0; line < gTaskL3bfdfContext.nbrStreamLine; line++)
 		gTaskL3bfdfContext.totalGroupNbr[line] = groupPerLine;

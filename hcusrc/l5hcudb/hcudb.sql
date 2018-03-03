@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 02, 2018 at 11:11 AM
+-- Generation Time: Mar 03, 2018 at 04:53 PM
 -- Server version: 5.7.20-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -322,10 +322,18 @@ CREATE TABLE `hcubfhsproductpara` (
   `conficon` varchar(20) CHARACTER SET utf8 NOT NULL,
   `confdescription` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `targetweight` int(4) NOT NULL,
+  `upperlimit` int(4) NOT NULL,
   `targetspeed` int(4) NOT NULL,
   `productlength` int(4) NOT NULL,
-  `upperlimit` int(4) NOT NULL,
-  `statisticsswitch` int(1) NOT NULL DEFAULT '0',
+  `algorithmoption` int(4) NOT NULL,
+  `rejectoroption` int(4) NOT NULL,
+  `targetthroughput` int(4) NOT NULL DEFAULT '10000',
+  `tareweight` int(4) NOT NULL,
+  `tu1limit` int(4) NOT NULL,
+  `maxtu1` int(4) NOT NULL,
+  `tu2limit` int(4) NOT NULL,
+  `readstarttime` int(4) NOT NULL,
+  `readstoptime` int(4) NOT NULL,
   `armfailtime` int(4) NOT NULL,
   `armfailvaration` int(4) NOT NULL,
   `armrollinginterval` int(4) NOT NULL,
@@ -333,37 +341,17 @@ CREATE TABLE `hcubfhsproductpara` (
   `armrollingstop` int(4) NOT NULL,
   `armstartaction` int(4) NOT NULL,
   `motordirection` int(4) NOT NULL,
-  `motorspeed` int(4) NOT NULL,
-  `algorithmoption` int(4) NOT NULL,
-  `tareweight` int(4) NOT NULL,
-  `tu1limit` int(4) NOT NULL,
-  `maxtu1` int(4) NOT NULL,
-  `tu2limit` int(4) NOT NULL,
-  `rejectoroption` int(4) NOT NULL,
-  `targetthroughput` int(4) NOT NULL DEFAULT '10000',
-  `snrautotaringtime` int(2) NOT NULL,
-  `snrautozerorange` int(4) NOT NULL,
-  `snrstandstilltime` int(2) NOT NULL,
-  `snrstandstilltimeout` int(2) NOT NULL,
-  `snrstandstillrange` int(4) NOT NULL,
-  `snrfiltercutoffreq` int(4) NOT NULL,
-  `snrringbuftime` int(2) NOT NULL,
-  `snrpreloadvalue` int(2) NOT NULL,
-  `snrpreloadvalueformat` int(2) NOT NULL,
-  `snrmeasurementrange` int(1) NOT NULL,
-  `snrtimegrid` int(1) NOT NULL,
-  `readstarttime` int(4) NOT NULL,
-  `readstoptime` int(4) NOT NULL
+  `motorspeed` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `hcubfhsproductpara`
 --
 
-INSERT INTO `hcubfhsproductpara` (`configid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `targetweight`, `targetspeed`, `productlength`, `upperlimit`, `statisticsswitch`, `armfailtime`, `armfailvaration`, `armrollinginterval`, `armrollingstart`, `armrollingstop`, `armstartaction`, `motordirection`, `motorspeed`, `algorithmoption`, `tareweight`, `tu1limit`, `maxtu1`, `tu2limit`, `rejectoroption`, `targetthroughput`, `snrautotaringtime`, `snrautozerorange`, `snrstandstilltime`, `snrstandstilltimeout`, `snrstandstillrange`, `snrfiltercutoffreq`, `snrringbuftime`, `snrpreloadvalue`, `snrpreloadvalueformat`, `snrmeasurementrange`, `snrtimegrid`, `readstarttime`, `readstoptime`) VALUES
-(16, 'apple', 'N', 'Y', 'System', 'apple54.svg', 'Apple base configuratuion', 1000, 1000, 100, 1000, 2, 100, 1, 100, 1, 1, 2000, 0, 750, 1, 0, 995, 250, 990, 3, 0, 100, 500, 100, 10000, 500, 20000, 100, 625, 2, 1, 10, 300, 380),
-(24, 'fish', 'Y', 'N', 'System', 'fish13.svg', 'Fish configuratuion', 1000, 1000, 100, 1000, 2, 100, 1, 100, 1, 1, 2000, 0, 750, 1, 0, 995, 250, 990, 3, 0, 100, 500, 100, 10000, 500, 20000, 100, 625, 2, 1, 10, 300, 380),
-(25, 'Banana', 'N', 'N', 'System', 'banana3.svg', 'Banana configuratuion', 1000, 1000, 100, 1000, 2, 100, 1, 100, 1, 1, 2000, 1, 750, 1, 0, 995, 250, 990, 3, 0, 100, 500, 100, 10000, 500, 20000, 100, 625, 2, 1, 10, 300, 380);
+INSERT INTO `hcubfhsproductpara` (`configid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `targetweight`, `upperlimit`, `targetspeed`, `productlength`, `algorithmoption`, `rejectoroption`, `targetthroughput`, `tareweight`, `tu1limit`, `maxtu1`, `tu2limit`, `readstarttime`, `readstoptime`, `armfailtime`, `armfailvaration`, `armrollinginterval`, `armrollingstart`, `armrollingstop`, `armstartaction`, `motordirection`, `motorspeed`) VALUES
+(16, 'apple', 'N', 'Y', 'System', 'apple54.svg', 'Apple base configuratuion', 1000, 1000, 1000, 100, 1, 3, 0, 0, 995, 250, 990, 300, 380, 100, 1, 100, 1, 1, 2000, 0, 750),
+(24, 'fish', 'N', 'N', 'System', 'fish13.svg', 'Fish configuratuion', 1000, 1000, 1000, 100, 1, 3, 0, 0, 995, 250, 990, 300, 380, 2, 2, 500, 2, 2, 2, 1, 2),
+(25, 'Banana', 'N', 'N', 'System', 'banana3.svg', 'Banana configuratuion', 1000, 1000, 1000, 100, 1, 3, 0, 0, 995, 250, 990, 300, 380, 100, 1, 100, 1, 1, 2000, 1, 750);
 
 -- --------------------------------------------------------
 
@@ -409,11 +397,24 @@ CREATE TABLE `hcubfhssystempara` (
   `sid` int(4) NOT NULL,
   `weighterlength` int(4) NOT NULL,
   `rejectorposition` int(4) NOT NULL,
+  `statisticsswitch` int(1) NOT NULL,
+  `counterwgttolerance` int(4) NOT NULL,
   `counterweight` int(4) NOT NULL,
+  `autozerosignal` int(4) NOT NULL,
   `maxallowedweight` int(4) NOT NULL,
   `minallowedweight` int(4) NOT NULL,
-  `autozerosignal` int(4) NOT NULL,
+  `snrtimegrid` int(1) NOT NULL,
   `autozeroswitch` int(1) NOT NULL,
+  `snrautotaringtime` int(2) NOT NULL,
+  `snrautozerorange` int(4) NOT NULL,
+  `snrfiltercutoffreq` int(4) NOT NULL,
+  `snrmeasrangeno` int(1) NOT NULL,
+  `snrpreloadvalueformat` int(2) NOT NULL,
+  `snrpreloadvalue` int(2) NOT NULL,
+  `snrringbuftime` int(2) NOT NULL,
+  `snrstandstillrange` int(4) NOT NULL,
+  `snrstandstilltime` int(2) NOT NULL,
+  `snrstandstilltimeout` int(2) NOT NULL,
   `engswitch` int(1) NOT NULL DEFAULT '0',
   `sysstatus` int(1) NOT NULL DEFAULT '0',
   `hcusw` varchar(100) DEFAULT NULL,
@@ -424,8 +425,8 @@ CREATE TABLE `hcubfhssystempara` (
 -- Dumping data for table `hcubfhssystempara`
 --
 
-INSERT INTO `hcubfhssystempara` (`sid`, `weighterlength`, `rejectorposition`, `counterweight`, `maxallowedweight`, `minallowedweight`, `autozerosignal`, `autozeroswitch`, `engswitch`, `sysstatus`, `hcusw`, `ihusw`) VALUES
-(1, 400, 500, 1000, 50000, 5, 100000, 1, 0, 0, 'HCU', 'IHU');
+INSERT INTO `hcubfhssystempara` (`sid`, `weighterlength`, `rejectorposition`, `statisticsswitch`, `counterwgttolerance`, `counterweight`, `autozerosignal`, `maxallowedweight`, `minallowedweight`, `snrtimegrid`, `autozeroswitch`, `snrautotaringtime`, `snrautozerorange`, `snrfiltercutoffreq`, `snrmeasrangeno`, `snrpreloadvalueformat`, `snrpreloadvalue`, `snrringbuftime`, `snrstandstillrange`, `snrstandstilltime`, `snrstandstilltimeout`, `engswitch`, `sysstatus`, `hcusw`, `ihusw`) VALUES
+(1, 400, 500, 0, 3000, 20000, 50000, 500, 5, 0, 2, 100, 500, 1000, 1, 2, 625, 100, 500, 100, 10, 0, 0, 'HCU', 'IHU');
 
 -- --------------------------------------------------------
 
@@ -800,7 +801,43 @@ INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japan
 (128, 'Target UpLimit', NULL, NULL, NULL, NULL, NULL, NULL),
 (129, 'Bufwgt Target', NULL, NULL, NULL, NULL, NULL, NULL),
 (130, 'Range Low', NULL, NULL, NULL, NULL, NULL, NULL),
-(131, 'Range High', NULL, NULL, NULL, NULL, NULL, NULL);
+(131, 'Range High', NULL, NULL, NULL, NULL, NULL, NULL),
+(132, 'Sorting parameters', NULL, NULL, NULL, NULL, NULL, NULL),
+(133, 'Main  Motor Speed', NULL, NULL, NULL, NULL, NULL, NULL),
+(134, 'Main Motor Speed', NULL, NULL, NULL, NULL, NULL, NULL),
+(135, 'Main Motor Direction', NULL, NULL, NULL, NULL, NULL, NULL),
+(136, 'Main Motor Failure Detection Vation', NULL, NULL, NULL, NULL, NULL, NULL),
+(137, 'Main Motor Failure Detection Time Ms', NULL, NULL, NULL, NULL, NULL, NULL),
+(138, 'Main MotorSpeed', NULL, NULL, NULL, NULL, NULL, NULL),
+(139, 'Second Motor Speed', NULL, NULL, NULL, NULL, NULL, NULL),
+(140, 'Seconde Motor Speed', NULL, NULL, NULL, NULL, NULL, NULL),
+(141, 'Second Motor Failure Detection Varation', NULL, NULL, NULL, NULL, NULL, NULL),
+(142, 'Second Motor Failure Detection Time Ms', NULL, NULL, NULL, NULL, NULL, NULL),
+(143, 'Second MotorSpeed', NULL, NULL, NULL, NULL, NULL, NULL),
+(144, 'TWeightInd', NULL, NULL, NULL, NULL, NULL, NULL),
+(145, 'T0bis', NULL, NULL, NULL, NULL, NULL, NULL),
+(146, 'TA0', NULL, NULL, NULL, NULL, NULL, NULL),
+(147, 'TActCmd', NULL, NULL, NULL, NULL, NULL, NULL),
+(148, 'TArmStart', NULL, NULL, NULL, NULL, NULL, NULL),
+(149, 'TArmStop', NULL, NULL, NULL, NULL, NULL, NULL),
+(150, 'TDoorCloseLightOn', NULL, NULL, NULL, NULL, NULL, NULL),
+(151, 'TApIntervalMin', NULL, NULL, NULL, NULL, NULL, NULL),
+(152, 'TApInterval', NULL, NULL, NULL, NULL, NULL, NULL),
+(153, 'TLocalAp', NULL, NULL, NULL, NULL, NULL, NULL),
+(154, 'DelayNodelTox', NULL, NULL, NULL, NULL, NULL, NULL),
+(155, 'DelayUpHcuALgoDl', NULL, NULL, NULL, NULL, NULL, NULL),
+(156, 'Rocket parameters', NULL, NULL, NULL, NULL, NULL, NULL),
+(157, 'Calibration Zero ', NULL, NULL, NULL, NULL, NULL, NULL),
+(158, 'Calibration Full', NULL, NULL, NULL, NULL, NULL, NULL),
+(159, ' Full Weight', NULL, NULL, NULL, NULL, NULL, NULL),
+(160, 'Full Weight', NULL, NULL, NULL, NULL, NULL, NULL),
+(161, 'Adc Sample Freq', NULL, NULL, NULL, NULL, NULL, NULL),
+(162, 'Abc Sample Freq', NULL, NULL, NULL, NULL, NULL, NULL),
+(163, 'Adc Gain', NULL, NULL, NULL, NULL, NULL, NULL),
+(164, 'Noise Floor Filter Factor', NULL, NULL, NULL, NULL, NULL, NULL),
+(165, 'Max Allowed Weight', NULL, NULL, NULL, NULL, NULL, NULL),
+(166, 'Weight Sensor Tailor Value', NULL, NULL, NULL, NULL, NULL, NULL),
+(167, 'Calibration parameters', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -6365,7 +6402,7 @@ ALTER TABLE `hcubfscflowsheet`
 -- AUTO_INCREMENT for table `hcubfsclanguagedict`
 --
 ALTER TABLE `hcubfsclanguagedict`
-  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=168;
 --
 -- AUTO_INCREMENT for table `hcubfscstadatainfo`
 --
