@@ -249,6 +249,7 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid parameter of dynamic calibration response!\n");
 			return FAILURE;
 		}
+		status.lineId = rcv.sensorid>>3;
 		status.engModeSwitch = gTaskL3bfdfContext.engModeSwitch;
 		status.validFlag = rcv.validFlag;
 		status.errCode = rcv.errCode;

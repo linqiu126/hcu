@@ -338,6 +338,7 @@ typedef struct StrHlcIe_cui_hcu2uir_static_cali_resp
 //HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp     		= 0x0184,
 typedef struct StrHlcIe_cui_hcu2uir_dynamic_cali_resp
 {
+	UINT8   lineId;
 	UINT8   engModeSwitch;  //Engineering mode switch
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;

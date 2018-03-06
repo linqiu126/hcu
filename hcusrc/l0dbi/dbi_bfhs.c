@@ -346,12 +346,12 @@ OPSTAT dbi_HcuBfhs_calData_save(StrMsgIe_WeightSensorBfhsCalibrationFullRespPara
 	    HCU_L0DBICOM_INIT_DB_CONN();
 
 		//UPDATE新的数据
-	    sprintf(strsql, "UPDATE `hcubfhsproductpara` SET snrautotaringtime = '%d',snrautozerorange = '%d',snrstandstilltime = '%d',snrstandstilltimeout = '%d',snrstandstillrange = '%d',\
-	    		snrfiltercutoffreq = '%d',snrringbuftime = '%d',snrpreloadvalue = '%d',snrpreloadvalueformat = '%d',snrtimegrid = '%d' WHERE (1)", \
-	    		input->WeightSensorAutoZeroAutotaringTimeMs,input->WeightSensorAutoZeroCaptureRangeGrams,input->WeightSensorStandstillTime,input->WeightSensorStandstillTimeoutMs,input->WeightSensorStandstillRangeGrams,\
-				input->WeightSensorFilterCutOffFreqHz,input->WeightSensorRingBufTimeMs,input->WeightSensorPreloadComPensationValuePercent,input->WeightSensorPreloadComPensationPlacesAfterDecimalPoint,\
-				input->WeightSensorTimeGrid);
-	    //input->WeightSensorMeasurementRange,
+	    sprintf(strsql, "UPDATE `hcubfhsproductpara` SET snrtimegrid='%d', autozeroswitch='%d', snrautotaringtime ='%d', snrautozerorange ='%d', snrfiltercutoffreq ='%d',\
+	    		snrmeasrangeno='%d', snrpreloadvalueformat='%d', snrpreloadvalue='%d', snrringbuftime ='%d', \
+	    		snrstandstilltime='%d', snrstandstilltimeout='%d', snrstandstillrange='%d' WHERE (1)", \
+				input->WeightSensorTimeGrid, input->WeightSensorAutoZero, input->WeightSensorAutoZeroAutotaringTimeMs,input->WeightSensorAutoZeroCaptureRangeGrams,input->WeightSensorFilterCutOffFreqHz,\
+				input->WeightSensorMeasurementRangeNo, input->WeightSensorPreloadComPensationPlacesAfterDecimalPoint, input->WeightSensorPreloadComPensationValuePercent, input->WeightSensorRingBufTimeMs,\
+				input->WeightSensorStandstillTime,input->WeightSensorStandstillTimeoutMs,input->WeightSensorStandstillRangeGrams);
 
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
