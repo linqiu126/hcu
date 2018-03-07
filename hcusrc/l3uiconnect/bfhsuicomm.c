@@ -403,12 +403,7 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_static_cali_req(UINT32 dest_id, UINT32 src_id
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
 	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
-	if(rcv.cmdValue == HUICOBUS_CMDVALUE_static_cali_zero)
-		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO;
-	else if (rcv.cmdValue == HUICOBUS_CMDVALUE_static_cali_full)
-		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL;
-	else
-		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_INVALID;
+	snd.cmdValue = rcv.cmdValue;
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
@@ -421,12 +416,7 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_dynamic_cali_req(UINT32 dest_id, UINT32 src_i
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
 	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI;
-	if(rcv.cmdValue == HUICOBUS_CMDVALUE_dynamic_cali_zero)
-		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO;
-	else if (rcv.cmdValue == HUICOBUS_CMDVALUE_dynamic_cali_full)
-		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL;
-	else
-		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_INVALID;
+	snd.cmdValue = rcv.cmdValue;
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;

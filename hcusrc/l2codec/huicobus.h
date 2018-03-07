@@ -164,10 +164,14 @@ typedef enum HuicobusCmdvalueCuiDefination
 	HUICOBUS_CMDVALUE_cui_null                  	  		= 0x0000,
 
 	//校准命令参数
-	HUICOBUS_CMDVALUE_static_cali_zero	         	  		= 0x0001,
-	HUICOBUS_CMDVALUE_static_cali_full	        	  		= 0x0002,
-	HUICOBUS_CMDVALUE_dynamic_cali_zero		      	  		= 0x0003,
-	HUICOBUS_CMDVALUE_dynamic_cali_full		      	  		= 0x0004,
+	HUICOBUS_CMDVALUE_static_cali_zero_line0	         	  		= 0x0001,
+	HUICOBUS_CMDVALUE_static_cali_full_line0	        	  		= 0x0002,
+	HUICOBUS_CMDVALUE_dynamic_cali_zero_line0		      	  		= 0x0003,
+	HUICOBUS_CMDVALUE_dynamic_cali_full_line0		      	  		= 0x0004,
+	HUICOBUS_CMDVALUE_static_cali_zero_line1	         	  		= 0x0005,
+	HUICOBUS_CMDVALUE_static_cali_full_line1	        	  		= 0x0006,
+	HUICOBUS_CMDVALUE_dynamic_cali_zero_line1		      	  		= 0x0007,
+	HUICOBUS_CMDVALUE_dynamic_cali_full_line1		      	  		= 0x0008,
 
 	HUICOBUS_CMDVALUE_cui_invalid                  	  		= 0xFFFF, //无效
 }HuicobusCuiCmdvalueDefination_t;
