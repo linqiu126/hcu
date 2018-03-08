@@ -246,7 +246,7 @@ OPSTAT dbi_HcuBfdf_callcell_delete_3monold(UINT32 days)
 }
 
 //Read system configuration parameter into gTaskL3bfdfContext
-OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfCalibrationPara_t *dynCalPar, UINT8 engModeSwitch)
+OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfCalibrationPara_t *dynCalPar)
 	{
 		MYSQL *sqlHandler;
 		MYSQL_RES *resPtr;
@@ -308,18 +308,18 @@ OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfC
 			if (sqlRow[index])  sysPara->armCtrlPar.TDoorCloseLightOn = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if (sqlRow[index])  sysPara->armCtrlPar.TApIntervalMin = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if (sqlRow[index])  temp = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
-			for (i=1; i<HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX; i++)
+			for (i=0; i<HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX; i++){
 				sysPara->armCtrlPar.TApInterval[i] = temp;
+			}
 			if (sqlRow[index])  temp = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
-			for (i=0; i<HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX; i++)
+			for (i=0; i<HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX; i++){
 				sysPara->armCtrlPar.TLocalAp[i] = temp;
+			}
 			if (sqlRow[index])  sysPara->armCtrlPar.DelayNode1ToX = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if (sqlRow[index])  sysPara->armCtrlPar.DelayUpHcuAlgoDl = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
-			printf ("BFDF DBI: sysPara->armCtrlPar.DelayUpHcuAlgoDl = %d\n", sysPara->armCtrlPar.DelayUpHcuAlgoDl);
+
 			//calibration parameters
 			if (sqlRow[index])  dynCalPar->zero_cal_iteration = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-			printf ("BFDF DBI: dynCalPar->zero_cal_iteration = %d\n", dynCalPar->zero_cal_iteration);
-
 			if (sqlRow[index])  dynCalPar->full_cal_iteration = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 			if (sqlRow[index])  dynCalPar->full_weight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 			if (sqlRow[index])  dynCalPar->adc_sample_freq = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
@@ -330,7 +330,7 @@ OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfC
 			if (sqlRow[index])  dynCalPar->TWeightInd = sysPara->armCtrlPar.TWeightInd;
 			if (sqlRow[index])  dynCalPar->motor_speed = sysPara->motMainPar.MotorSpeed; //same as main motor speed
 
-			if (sqlRow[index])  engModeSwitch = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+			if (sqlRow[index])  sysPara->engModeSwitch = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		}
 
 		//释放记录集

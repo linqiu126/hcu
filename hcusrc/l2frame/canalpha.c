@@ -255,6 +255,8 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	pMsgProc.bfdf_mcp_main.MotorFailureDetectionVaration = HUITP_ENDIAN_EXG32(rcv.motMainPar.MotorFailureDetectionVaration);
 	pMsgProc.bfdf_mcp_main.MotorFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(rcv.motMainPar.MotorFailureDetectionTimeMs);
 
+	printf("CANALPHA: MotorSpeed = %d\n", pMsgProc.bfdf_mcp_main.MotorSpeed);
+
 	pMsgProc.bfdf_mcp_secondary.MotorSpeed = HUITP_ENDIAN_EXG32(rcv.motSecondPar.MotorSpeed);
 	pMsgProc.bfdf_mcp_secondary.MotorDirection = HUITP_ENDIAN_EXG32(rcv.motSecondPar.MotorDirection);
 	pMsgProc.bfdf_mcp_secondary.MotorFailureDetectionVaration = HUITP_ENDIAN_EXG32(rcv.motSecondPar.MotorFailureDetectionVaration);
@@ -277,7 +279,7 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	for (i=0; i<HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX; i++){
 		pMsgProc.bfdf_acp.TLocalAp[i] = HUITP_ENDIAN_EXG16(rcv.actionCtrlPar.TLocalAp[i]);
 	}
-
+	printf("CANALPHA: DelayNode1ToX = %d\n", pMsgProc.bfdf_acp.DelayNode1ToX);
 	//更新传感器状态
 	//gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
 
@@ -1146,6 +1148,8 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_calibration_resp_received_handle(StrMsg_HU
 	snd.dynCalResp.full_offset_peak_wrt_infra[2] = HUITP_ENDIAN_EXG32(rcv->cal_resp.full_offset_peak_wrt_infra[2]);
 	snd.dynCalResp.full_offset_peak_wrt_infra[3] = HUITP_ENDIAN_EXG32(rcv->cal_resp.full_offset_peak_wrt_infra[3]);
 	snd.dynCalResp.full_weight = HUITP_ENDIAN_EXG32(rcv->cal_resp.full_weight);
+	snd.dynCalResp.noise_floor_period_10ms = HUITP_ENDIAN_EXG32(rcv->cal_resp.noise_floor_period_10ms);
+	snd.dynCalResp.noise_floor_period_10ms_max = HUITP_ENDIAN_EXG32(rcv->cal_resp.noise_floor_period_10ms_max);
 	snd.dynCalResp.noise_floor_mean_max = HUITP_ENDIAN_EXG32(rcv->cal_resp.noise_floor_mean_max);
 	snd.dynCalResp.noise_floor_mean_mean = HUITP_ENDIAN_EXG32(rcv->cal_resp.noise_floor_mean_mean);
 	snd.dynCalResp.noise_floor_mean_min = HUITP_ENDIAN_EXG32(rcv->cal_resp.noise_floor_mean_min);

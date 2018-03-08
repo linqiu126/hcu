@@ -53,6 +53,7 @@ typedef struct DbiL3BfdfCalibrationPara
 
 typedef struct DbiL3BfdfSystemPara
 {
+	UINT8												engModeSwitch;
 	UINT8												lineNum;
 	UINT8												boardNumPerLine;
 	strMsgIe_l3bfdf_MotorControlParamaters_t			motMainPar;
@@ -65,7 +66,7 @@ extern OPSTAT dbi_HcuBfdf_StaDatainfo_save(char *StaType, UINT16 configId, HcuSy
 extern UINT32 dbi_HcuBfdf_CallCellMaxIdGet(void);
 extern OPSTAT dbi_HcuBfdf_callcell_save(HcuSysMsgIeL3bfdfCallcellElement_t *input);
 extern OPSTAT dbi_HcuBfdf_callcell_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfCalibrationPara_t *dynCalPar, UINT8 engModeSwitch);
+extern OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfCalibrationPara_t *dynCalPar);
 extern OPSTAT dbi_HcuBfdf_productConfigData_read(UINT16 configId, DbiL3BfdfProductPara_t *productConfigData);
 extern OPSTAT dbi_HcuBfdf_groupConfigData_read(UINT16 configId, UINT8 groupTotal, DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2]);
 

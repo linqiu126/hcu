@@ -343,7 +343,8 @@ typedef struct StrHlcIe_cui_hcu2uir_static_cali_resp
 typedef struct StrHlcIe_cui_hcu2uir_dynamic_cali_resp
 {
 	UINT8   engModeSwitch;  //Engineering mode switch
-	UINT8   validFlag;  //是否执行成功
+	UINT8	iteration;
+	UINT8   validFlag;  	//是否执行成功
 	UINT16  errCode;
 	UINT32  weight;
 	char    debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];

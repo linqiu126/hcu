@@ -236,7 +236,7 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI){
-		UINT32 cmdValue;
+		UINT32 cmdValue = 0;
 		char debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];
 		StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t));
@@ -267,8 +267,8 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid parameter of dynamic calibration response!\n");
 			return FAILURE;
 		}
-
 		status.engModeSwitch = gTaskL3bfdfContext.engModeSwitch;
+		status.iteration = rcv.dynCalResp.calibration_cur_iteration;
 		status.validFlag = rcv.validFlag;
 		status.errCode = rcv.errCode;
 		sprintf(debugInfo, "cali_cur_itera=%d; cali_result=%d; nf_period_10ms=%d; nf_period_10ms_max=%d; wgt_offset_wrt_infra=%d; \
@@ -282,8 +282,6 @@ estimate_err_itera[1]=%d; estimate_err_itera[2]=%d; estimate_err_itera[3]=%d; es
 				rcv.dynCalResp.full_coefficiency_average, rcv.dynCalResp.estimated_error_iteration[0], rcv.dynCalResp.estimated_error_iteration[1], rcv.dynCalResp.estimated_error_iteration[2], \
 				rcv.dynCalResp.estimated_error_iteration[3], rcv.dynCalResp.estimated_error_max_possible, rcv.dynCalResp.estimated_error_average);
 		strncpy(status.debugInfo, debugInfo, sizeof(debugInfo)<HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX?sizeof(debugInfo):HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX);
-
-		printf ("BFDFUICOMM: rcv.sensorid = %d, size = %d, debugInfo = %s\n", rcv.sensorid, sizeof(debugInfo), debugInfo);
 
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(cmdValue, &status);
@@ -545,17 +543,16 @@ bool func_bfdfuicomm_hopper_state_set_init(UINT8 streamId)
 OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table ()
 {
 	UINT8 line, hopper;
-	UINT8 engModeSwitch = 0;
 	DbiL3BfdfSystemPara_t sysConfigData;
 	DbiL3BfdfCalibrationPara_t calConfigData;
 
 	/*** Initialize SYSTEM configuration, these parameters are common for all products ***/
 
-	if (dbi_HcuBfdf_sysConfigData_read(&sysConfigData, &calConfigData, engModeSwitch) == FAILURE){
+	if (dbi_HcuBfdf_sysConfigData_read(&sysConfigData, &calConfigData) == FAILURE){
 		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB System and Calibration configuration data failed \n");
 		return FALSE;
 	}
-	gTaskL3bfdfContext.engModeSwitch = engModeSwitch;
+	gTaskL3bfdfContext.engModeSwitch = sysConfigData.engModeSwitch;
 	//配置系统的DIMENSIONING
 	gTaskL3bfdfContext.nbrStreamLine = sysConfigData.lineNum;
 	gTaskL3bfdfContext.nbrIoBoardPerLine = sysConfigData.boardNumPerLine;
@@ -575,7 +572,6 @@ OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table ()
 	memcpy(&gTaskL3bfdfContext.motSecondPar, &sysConfigData.motSecondPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
 	memcpy(&gTaskL3bfdfContext.actionCtrlPar, &sysConfigData.armCtrlPar, sizeof(gTaskL3bfdfContextActionControlParamaters_t));
 	memcpy(&gTaskL3bfdfContext.dynCalPar, &calConfigData, sizeof(DbiL3BfdfCalibrationPara_t));
-	printf ("L3BFDF: calConfigData.zero_cal_iteration = %d, gTaskL3bfdfContext.zero_cal_iteration = %d\n", calConfigData.zero_cal_iteration, gTaskL3bfdfContext.dynCalPar.zero_cal_iteration);
 //	gTaskL3bfdfContext.nbrStreamLine = 1;
 //	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
 //	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  1;
@@ -611,7 +607,7 @@ OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table (UINT16 configId)
 		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB PRODUCT configuration data failed, configId = %d \n", productConfigData.configId);
 
 	gTaskL3bfdfContext.configId = configId;
-	groupPerLine = gTaskL3bfdfContext.nbrIoBoardPerLine;
+	groupPerLine = productConfigData.groupPerLine;
 	groupTotal = groupPerLine * gTaskL3bfdfContext.nbrStreamLine;
 	for(line = 0; line < gTaskL3bfdfContext.nbrStreamLine; line++)
 		gTaskL3bfdfContext.totalGroupNbr[line] = groupPerLine;
