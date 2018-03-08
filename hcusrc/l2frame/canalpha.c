@@ -1154,7 +1154,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_calibration_resp_received_handle(StrMsg_HU
 
 	snd.snrId = nodeId;
 	snd.length = sizeof(msg_struct_can_l3bfdf_dyn_cal_resp_t);
-	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_DYN_CAL_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_DYN_CAL_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 	return SUCCESS;
 }
 

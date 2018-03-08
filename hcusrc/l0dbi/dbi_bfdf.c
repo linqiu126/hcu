@@ -315,9 +315,11 @@ OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfC
 				sysPara->armCtrlPar.TLocalAp[i] = temp;
 			if (sqlRow[index])  sysPara->armCtrlPar.DelayNode1ToX = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if (sqlRow[index])  sysPara->armCtrlPar.DelayUpHcuAlgoDl = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
-
+			printf ("BFDF DBI: sysPara->armCtrlPar.DelayUpHcuAlgoDl = %d\n", sysPara->armCtrlPar.DelayUpHcuAlgoDl);
 			//calibration parameters
 			if (sqlRow[index])  dynCalPar->zero_cal_iteration = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+			printf ("BFDF DBI: dynCalPar->zero_cal_iteration = %d\n", dynCalPar->zero_cal_iteration);
+
 			if (sqlRow[index])  dynCalPar->full_cal_iteration = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 			if (sqlRow[index])  dynCalPar->full_weight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 			if (sqlRow[index])  dynCalPar->adc_sample_freq = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);

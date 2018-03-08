@@ -250,7 +250,7 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 					rcv.calFullRespPar.WeightSensorCellAddress, rcv.calFullRespPar.WeightSensorTimeGrid);
 			strncpy(status.debugInfo, debugInfo, HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX);
 
-			printf("Receive STATIC_CALI_FULL resp, validFlag = %d; errCode = %d \n",rcv.validFlag,rcv.errCode);
+			printf("Receive STATIC_CALI_FULL resp, validFlag = %d; debugInfo = %s \n",rcv.validFlag,status.debugInfo);
 		}
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp(rcv.cmdValue, &status);

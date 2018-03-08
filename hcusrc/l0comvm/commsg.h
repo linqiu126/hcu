@@ -1161,7 +1161,7 @@ typedef struct msg_struct_com_pm_report
 }msg_struct_com_pm_report_t;
 
 //MSG_ID_COM_MQTT_SEND,
-#define HCU_SYSMSG_MQTT_DESC_MAX_LEN  300
+#define HCU_SYSMSG_MQTT_DESC_MAX_LEN  800
 typedef struct msg_struct_com_mqtt_send
 {
 	UINT16 srcNode;

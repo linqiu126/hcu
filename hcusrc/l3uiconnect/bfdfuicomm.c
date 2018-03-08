@@ -133,10 +133,13 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//延迟并启动系统，进入测试模式
 	//hcu_sleep(2);
-	//设置configIndex=2
 
+	//秤盘数据表单控制表初始化
+	memset(&gTaskL3bfdfContext, 0, sizeof(gTaskL3bfdfContext_t));
 	//初始化系统参数
-	func_bfdfuicomm_read_system_config_into_ctrl_table ();
+	if (func_bfdfuicomm_read_system_config_into_ctrl_table () == FAILURE)
+		HcuErrorPrint("BFDFUICOMM: read system config into ctrl_table failure!\n");
+
 	//初始化sessionId
 	gTaskL3bfdfContext.sessionId = dbi_HcuBfdf_CallCellMaxIdGet() + 1;
 
@@ -238,32 +241,50 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 		StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t));
 		if (rcv.dynCalResp.calibration_zero_or_full == 1){        /* 1 for ZERO, 2 for FULL */
-			cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO;
+			if (rcv.sensorid == 1)
+				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO_LINE0;
+			else if (rcv.sensorid == 9)
+				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO_LINE1;
+			else{
+				HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid sensorId of dynamic calibration zero response, sensorId = %d!\n", rcv.sensorid);
+				return FAILURE;
+			}
+
 			status.weight = 0;
 		}
 		else if (rcv.dynCalResp.calibration_zero_or_full == 2){
-			cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL;
+			if (rcv.sensorid == 1)
+				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL_LINE0;
+			else if (rcv.sensorid == 9)
+				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL_LINE1;
+			else{
+				HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid sensorId of dynamic calibration full response, sensorId = %d!\n", rcv.sensorid);
+				return FAILURE;
+			}
 			status.weight = rcv.dynCalResp.full_weight;
 		}
 		else{
 			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid parameter of dynamic calibration response!\n");
 			return FAILURE;
 		}
-		status.lineId = rcv.sensorid>>3;
+
 		status.engModeSwitch = gTaskL3bfdfContext.engModeSwitch;
 		status.validFlag = rcv.validFlag;
 		status.errCode = rcv.errCode;
-		sprintf(debugInfo, "calibration_cur_iteration='%d'; calibration_result=%d; noise_floor_period_10ms=%d; noise_floor_period_10ms_max=%d; weight_report_offset_wrt_infra=%d; \
-				nf_sd_mean=%d; nf_sd_max=%d; nf_sd_min=%d; nf_sd_sd=%d; nf_mean_mean=%d; nf_mean_max=%d; nf_mean_min=%d; nf_mean_sd=%d; full_offset_peak_wrt_infra[0]=%d; \
-				full_offset_peak_wrt_infra[1]=%d; full_offset_peak_wrt_infra[2]=%d; full_offset_peak_wrt_infra[3]=%d; full_coefficiency_average=%d; estimated_error_iteration[0]=%d; \
-				estimated_error_iteration[1]=%d; estimated_error_iteration[2]=%d; estimated_error_iteration[3]=%d; estimated_error_max_possible=%d; estimated_error_average=%d)",\
+		sprintf(debugInfo, "cali_cur_itera=%d; cali_result=%d; nf_period_10ms=%d; nf_period_10ms_max=%d; wgt_offset_wrt_infra=%d; \
+nf_sd_mean=%d; nf_sd_max=%d; nf_sd_min=%d; nf_sd_sd=%d; nf_mean_mean=%d; nf_mean_max=%d; nf_mean_min=%d; nf_mean_sd=%d; offset_peak_wrt_infra[0]=%d; \
+offset_peak_wrt_infra[1]=%d; offset_peak_wrt_infra[2]=%d; offset_peak_wrt_infra[3]=%d; full_coeff_average=%d; estimate_err_itera[0]=%d; \
+estimate_err_itera[1]=%d; estimate_err_itera[2]=%d; estimate_err_itera[3]=%d; estimate_err_max_possible=%d; estimate_err_average=%d",\
 				rcv.dynCalResp.calibration_cur_iteration, rcv.dynCalResp.calibration_result, rcv.dynCalResp.noise_floor_period_10ms, rcv.dynCalResp.noise_floor_period_10ms_max, \
 				rcv.dynCalResp.weight_report_offset_wrt_infra, rcv.dynCalResp.noise_floor_sd_mean, rcv.dynCalResp.noise_floor_sd_max, rcv.dynCalResp.noise_floor_sd_min, rcv.dynCalResp.noise_floor_sd_sd, \
 				rcv.dynCalResp.noise_floor_mean_mean, rcv.dynCalResp.noise_floor_mean_max, rcv.dynCalResp.noise_floor_mean_min, rcv.dynCalResp.noise_floor_mean_sd, \
 				rcv.dynCalResp.full_offset_peak_wrt_infra[0], rcv.dynCalResp.full_offset_peak_wrt_infra[1], rcv.dynCalResp.full_offset_peak_wrt_infra[2], rcv.dynCalResp.full_offset_peak_wrt_infra[3], \
 				rcv.dynCalResp.full_coefficiency_average, rcv.dynCalResp.estimated_error_iteration[0], rcv.dynCalResp.estimated_error_iteration[1], rcv.dynCalResp.estimated_error_iteration[2], \
 				rcv.dynCalResp.estimated_error_iteration[3], rcv.dynCalResp.estimated_error_max_possible, rcv.dynCalResp.estimated_error_average);
-		strncpy(status.debugInfo, debugInfo, HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX);
+		strncpy(status.debugInfo, debugInfo, sizeof(debugInfo)<HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX?sizeof(debugInfo):HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX);
+
+		printf ("BFDFUICOMM: rcv.sensorid = %d, size = %d, debugInfo = %s\n", rcv.sensorid, sizeof(debugInfo), debugInfo);
+
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(cmdValue, &status);
 	}
@@ -530,9 +551,10 @@ OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table ()
 
 	/*** Initialize SYSTEM configuration, these parameters are common for all products ***/
 
-	if (dbi_HcuBfdf_sysConfigData_read(&sysConfigData, &calConfigData, engModeSwitch) == FAILURE)
+	if (dbi_HcuBfdf_sysConfigData_read(&sysConfigData, &calConfigData, engModeSwitch) == FAILURE){
 		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB System and Calibration configuration data failed \n");
-
+		return FALSE;
+	}
 	gTaskL3bfdfContext.engModeSwitch = engModeSwitch;
 	//配置系统的DIMENSIONING
 	gTaskL3bfdfContext.nbrStreamLine = sysConfigData.lineNum;
@@ -552,8 +574,8 @@ OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table ()
 	memcpy(&gTaskL3bfdfContext.motMainPar, &sysConfigData.motMainPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
 	memcpy(&gTaskL3bfdfContext.motSecondPar, &sysConfigData.motSecondPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
 	memcpy(&gTaskL3bfdfContext.actionCtrlPar, &sysConfigData.armCtrlPar, sizeof(gTaskL3bfdfContextActionControlParamaters_t));
-	memcpy(&gTaskL3bfdfContext.dynCalPar, &calConfigData, sizeof(gTaskL3bfdfContextDynCalibrationParamaters_t));
-
+	memcpy(&gTaskL3bfdfContext.dynCalPar, &calConfigData, sizeof(DbiL3BfdfCalibrationPara_t));
+	printf ("L3BFDF: calConfigData.zero_cal_iteration = %d, gTaskL3bfdfContext.zero_cal_iteration = %d\n", calConfigData.zero_cal_iteration, gTaskL3bfdfContext.dynCalPar.zero_cal_iteration);
 //	gTaskL3bfdfContext.nbrStreamLine = 1;
 //	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
 //	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  1;

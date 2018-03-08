@@ -243,10 +243,12 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     gTaskMqttContextPubmsg.retained = 0;
     memset(topic, 0, sizeof(topic));
     func_mqtt_topicid_translate_to_text(in->topicId, topic);
+
     MQTTClient_publishMessage(gTaskMqttContext.gclient, topic, &gTaskMqttContextPubmsg, &gTaskMqttContext.gtoken);
     HCU_DEBUG_PRINT_INF("MQTT: Waiting for up to %d seconds for publication of %s\n, on topic %s for client with ClientID: %s\n", (int)(HUICOBUS_MQTT_TIMEOUT_CONST/1000), input, topic, HUICOBUS_MQTT_CLIENTID_HCUENTRY);
     rc = MQTTClient_waitForCompletion(gTaskMqttContext.gclient, gTaskMqttContext.gtoken, HUICOBUS_MQTT_TIMEOUT_CONST);
     HCU_DEBUG_PRINT_INF("MQTT: Message with delivery token %d delivered\n", gTaskMqttContext.gtoken);
+
     return rc;
 #endif
 }

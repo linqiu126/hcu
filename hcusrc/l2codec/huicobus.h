@@ -328,7 +328,7 @@ typedef struct StrHlcIe_cui_hcu2uir_stop_suspend_resp
 //cmdValue = NULL
 
 //HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp     		= 0x0183,
-#define HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX  1000
+#define HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX  700
 typedef struct StrHlcIe_cui_hcu2uir_static_cali_resp
 {
 	UINT8   engModeSwitch;  //Engineering mode switch
@@ -342,7 +342,6 @@ typedef struct StrHlcIe_cui_hcu2uir_static_cali_resp
 //HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp     		= 0x0184,
 typedef struct StrHlcIe_cui_hcu2uir_dynamic_cali_resp
 {
-	UINT8   lineId;
 	UINT8   engModeSwitch;  //Engineering mode switch
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;

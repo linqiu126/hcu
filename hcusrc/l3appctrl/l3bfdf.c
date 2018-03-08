@@ -146,7 +146,7 @@ OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: module timer statistic parameter set error!\n");
 
 	//秤盘数据表单控制表初始化
-	memset(&gTaskL3bfdfContext, 0, sizeof(gTaskL3bfdfContext_t));
+//	memset(&gTaskL3bfdfContext, 0, sizeof(gTaskL3bfdfContext_t));
 	//第0号板子一定是垃圾桶：跟后面的逻辑是否相配？
 	for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
 		gTaskL3bfdfContext.nodeDyn[i][0].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID;
@@ -302,13 +302,12 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		snd.dynCalReq.motor_speed = gTaskL3bfdfContext.dynCalPar.motor_speed;
 		snd.dynCalReq.noise_floor_filter_factor = gTaskL3bfdfContext.dynCalPar.noise_floor_filter_factor;
 
-		HCU_L3BFDF_FILL_WGT_BOARD_BITMAP();
 		int boardId = 0, lineId = 0;
 		if(rcv.cmdValue == HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO_LINE0){
 			snd.dynCalReq.calibration_zero_or_full = 1; /* 1 for ZERO, 2 for FULL */
 			snd.dynCalReq.calibration_iteration = gTaskL3bfdfContext.dynCalPar.zero_cal_iteration;
 			lineId = 0;
-			boardId = lineId<<3 + 1;
+			boardId = (lineId<<3) + 1;
 			snd.boardBitmap[boardId] = 1;
 			snd.length = sizeof(msg_struct_l3bfdf_can_dyn_cal_req_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_DYN_CAL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
@@ -317,7 +316,7 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 			snd.dynCalReq.calibration_zero_or_full = 2;
 			snd.dynCalReq.calibration_iteration = gTaskL3bfdfContext.dynCalPar.full_cal_iteration;
 			lineId = 0;
-			boardId = lineId<<3 + 1;
+			boardId = (lineId<<3) + 1;
 			snd.boardBitmap[boardId] = 1;
 			snd.length = sizeof(msg_struct_l3bfdf_can_dyn_cal_req_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_DYN_CAL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
