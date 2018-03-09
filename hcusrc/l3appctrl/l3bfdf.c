@@ -1099,12 +1099,12 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	//PullIn confirm message
 	StrHlcIe_cui_hcu2uir_pullin_confirm_t buf;
 	memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_pullin_confirm_t));
+	buf.validFlag = 1;
 	buf.lineId = line;
 	buf.hopperId = locHopperId;
 	buf.groupId = gTaskL3bfdfContext.hopper[line][locHopperId].groupId;
 	buf.curWeight = gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue;
 	buf.bufWeight = gTaskL3bfdfContext.hopper[line][locHopperId].buferValue;
-	buf.curRatio = gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue;
 	buf.curRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue/\
 			(float)gTaskL3bfdfContext.group[line][buf.groupId].targetWeight*100.0)&0xFF;
 	buf.bufRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][locHopperId].buferValue/\
@@ -1193,16 +1193,6 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 	//如果此时也条件允许，也产生出料：不太可能。一般情况下，只有BUF的深度=篮筐的深度，才有这个可能性。
 	//另外，HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL也表达不了这个，需要HCU_L3BFDF_HOPPER_STATUS_BUF_FULL以及两者深度相同才行。本项目中不存在。
 
-	//通知界面：CallCell报告
-	StrHlcIe_cui_hcu2uir_callcell_bfdf_report_t callcell;
-	memset(&callcell, 0, sizeof(StrHlcIe_cui_hcu2uir_callcell_bfdf_report_t));
-	callcell.hopperId = locHopperId;
-	callcell.combWeight = gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue;
-	int groupId = gTaskL3bfdfContext.hopper[line][locHopperId].groupId;
-	callcell.targetWeight = gTaskL3bfdfContext.group[line][groupId].targetWeight;
-	callcell.upLimitWeight = gTaskL3bfdfContext.group[line][groupId].targetUpLimit;
-
-	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(rcv.snrId, &callcell);
 
 	//本地的CallCell数据存储更新，表示一个完整的料箱搞完成了
 	HcuSysMsgIeL3bfdfCallcellElement_t data;
@@ -1225,6 +1215,23 @@ OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * 
 	gTaskL3bfdfContext.hopper[line][locHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT;
 	gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue = gTaskL3bfdfContext.hopper[line][locHopperId].buferValue;
 	gTaskL3bfdfContext.hopper[line][locHopperId].buferValue = 0;
+
+	//通知界面：CallCell报告
+	StrHlcIe_cui_hcu2uir_callcell_bfdf_report_t callcell;
+	memset(&callcell, 0, sizeof(StrHlcIe_cui_hcu2uir_callcell_bfdf_report_t));
+	int groupId = gTaskL3bfdfContext.hopper[line][locHopperId].groupId;
+	callcell.validFlag = 1;
+	callcell.lineId = line;
+	callcell.hopperId = locHopperId;
+	callcell.groupId = gTaskL3bfdfContext.hopper[line][locHopperId].groupId;
+	callcell.curWgt = gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue;
+	callcell.bufWgt = gTaskL3bfdfContext.hopper[line][locHopperId].buferValue;
+	callcell.curRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][locHopperId].hopperValue/\
+			(float)gTaskL3bfdfContext.group[line][groupId].targetWeight*100.0)&0xFF;
+	callcell.bufRatio = (UINT8)((float)gTaskL3bfdfContext.hopper[line][locHopperId].buferValue/\
+			(float)gTaskL3bfdfContext.group[line][groupId].bufWgtTarget*100.0)&0xFF;
+
+	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(rcv.snrId, &callcell);
 
 	//更新统计信息
 	gTaskL3bfdfContext.cur.wsCallCellTimes++;

@@ -558,8 +558,9 @@ OPSTAT func_bfhsuicomm_read_product_config_into_ctrl_table (UINT16 configId)
 	if (dbi_HcuBfhs_productConfigData_read(configId,productConfigData) == FAILURE)
 		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: Get DB product configuration data failed, configId = %d \n", configId);
 
-	index = 11;
+	index = 10;
 	//称重传感器配置参数
+	gTaskL3bfhsContext.wgtSnrPar.snrUpperLimit = productConfigData[index++];
 	gTaskL3bfhsContext.wgtSnrPar.snrAlgoSelect = productConfigData[index++];
 	gTaskL3bfhsContext.wgtSnrPar.snrAlgoRejectOption = productConfigData[index++];
 	gTaskL3bfhsContext.wgtSnrPar.snrTargetThroughput = productConfigData[index++];

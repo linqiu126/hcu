@@ -232,6 +232,7 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfdf_set_config_req);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 
+	//Weight sensor
 	pMsgProc.bfdf_wsp.WeightSensorLoadDetectionTimeMs = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorLoadDetectionTimeMs);
 	pMsgProc.bfdf_wsp.WeightSensorLoadThread = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorLoadThread);
 	pMsgProc.bfdf_wsp.WeightSensorEmptyThread = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorEmptyThread);
@@ -250,18 +251,19 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	pMsgProc.bfdf_wsp.WeightSensorDynamicZeroHysteresisMs = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs);
 	pMsgProc.bfdf_wsp.WeightSensorMovingEverageSample = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorMovingEverageSample);
 
+	//Main Motor
 	pMsgProc.bfdf_mcp_main.MotorSpeed = HUITP_ENDIAN_EXG32(rcv.motMainPar.MotorSpeed);
 	pMsgProc.bfdf_mcp_main.MotorDirection = HUITP_ENDIAN_EXG32(rcv.motMainPar.MotorDirection);
 	pMsgProc.bfdf_mcp_main.MotorFailureDetectionVaration = HUITP_ENDIAN_EXG32(rcv.motMainPar.MotorFailureDetectionVaration);
 	pMsgProc.bfdf_mcp_main.MotorFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(rcv.motMainPar.MotorFailureDetectionTimeMs);
 
-	printf("CANALPHA: MotorSpeed = %d\n", pMsgProc.bfdf_mcp_main.MotorSpeed);
-
+	//Secondary motor
 	pMsgProc.bfdf_mcp_secondary.MotorSpeed = HUITP_ENDIAN_EXG32(rcv.motSecondPar.MotorSpeed);
 	pMsgProc.bfdf_mcp_secondary.MotorDirection = HUITP_ENDIAN_EXG32(rcv.motSecondPar.MotorDirection);
 	pMsgProc.bfdf_mcp_secondary.MotorFailureDetectionVaration = HUITP_ENDIAN_EXG32(rcv.motSecondPar.MotorFailureDetectionVaration);
 	pMsgProc.bfdf_mcp_secondary.MotorFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(rcv.motSecondPar.MotorFailureDetectionTimeMs);
 
+	//Arm controller
 	pMsgProc.bfdf_acp.TWeightInd = HUITP_ENDIAN_EXG16(rcv.actionCtrlPar.TWeightInd);
 	pMsgProc.bfdf_acp.T0bis = HUITP_ENDIAN_EXG16(rcv.actionCtrlPar.T0bis);
 	pMsgProc.bfdf_acp.TA0 = HUITP_ENDIAN_EXG16(rcv.actionCtrlPar.TA0);
@@ -629,7 +631,7 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	memset(&pMsgProc, 0, msgProcLen);
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfhs_set_config_req);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
-
+	//Weight Sensor parameters
 	pMsgProc.weight_sensor_param.WeightSensorAutoZeroCaptureRangeGrams = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAutoZeroCaptureRangeGrams);
 	pMsgProc.weight_sensor_param.WeightSensorStandstillRangeGrams = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorStandstillRangeGrams);
 	pMsgProc.weight_sensor_param.MaxAllowedWeight = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.MaxAllowedWeight);
@@ -647,8 +649,18 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	pMsgProc.weight_sensor_param.WeightSensorAlgoSelect = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorAlgoSelect);
 	pMsgProc.weight_sensor_param.WeightSensorReadStartMs = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorReadStartMs);
 	pMsgProc.weight_sensor_param.WeightSensorReadStopMs = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorReadStopMs);
+	pMsgProc.weight_sensor_param.WeightSensorTareWeight = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorTareWeight);
+	pMsgProc.weight_sensor_param.WeightSensorTargetThroughput = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorTargetThroughput);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoAutoZeroSignal = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAlgoAutoZeroSignal);
+	pMsgProc.weight_sensor_param.WeightSensorUpperLimit = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorUpperLimit);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoTu1Limit = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAlgoTu1Limit);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoTu2Limit = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAlgoTu2Limit);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoMaxTu1Ratio = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAlgoMaxTu1Ratio);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoRejectOption = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorAlgoRejectOption);
+	//Motor parameters
 	pMsgProc.motor_control_param.MotorSpeed = HUITP_ENDIAN_EXG32(rcv.motoCtrlPar.MotorSpeed);
 	pMsgProc.motor_control_param.MotorDirection = HUITP_ENDIAN_EXG32(rcv.motoCtrlPar.MotorDirection);
+	//Arm controller parameters
 	pMsgProc.arm_control_param.ArmRollingStartMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingStartMs);
 	pMsgProc.arm_control_param.ArmRollingStopMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingStopMs);
 	pMsgProc.arm_control_param.ArmRollingIntervalMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingIntervalMs);

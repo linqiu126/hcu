@@ -132,6 +132,7 @@ typedef struct gTaskL3bfhsContextWgtSnrParamaters
 	UINT32  snrTareWeight;			//Tare weight of each material
 	UINT32  snrTargetThroughput;	//Selection stop as given 'this para' pcs good material
 	UINT32  snrAlgoAutoZeroSignal; //If autozero cannot be done during 'this para' pcs input, there will be a warning for operator
+	UINT32  snrUpperLimit;
 	UINT32	snrAlgoTu1Limit;
 	UINT32	snrAlgoTu2Limit;
 	UINT32	snrAlgoMaxTu1Ratio;  	//NF2, for example, 250 means 2.5%

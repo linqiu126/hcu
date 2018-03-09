@@ -458,10 +458,14 @@ typedef struct StrHlcIe_cui_hcu2uir_callcell_bfsc_report
 //HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report     = 0x0194,
 typedef struct StrHlcIe_cui_hcu2uir_callcell_bfdf_report
 {
+	UINT8   lineId;  //line id
 	UINT8   hopperId;  //1-32, 33-64
-	UINT32  targetWeight;
-	UINT32	upLimitWeight;  //in NF2
-	UINT32	combWeight;  //in NF2
+	UINT8   groupId;
+	UINT8   validFlag;
+	UINT32  curWgt; //in NF2
+	UINT32  bufWgt; // in NF2
+	UINT8  curRatio; //in INT
+	UINT8  bufRatio; //in INT
 }StrHlcIe_cui_hcu2uir_callcell_bfdf_report_t;
 //cmdValue = configID;
 

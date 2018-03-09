@@ -676,6 +676,8 @@ OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table (UINT16 configId)
 		}
 	}
 
+	//printf("BFDFUI: MotorSpeed = %d, WeightSensorTailorValue = %d\n", gTaskL3bfdfContext.motMainPar.MotorSpeed, gTaskL3bfdfContext.dynCalPar.WeightSensorTailorValue);
+
 //	//Hopper初始化
 //	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
 //		func_bfdfuicomm_hopper_state_set_init(line);

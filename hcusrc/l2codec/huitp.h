@@ -6202,7 +6202,8 @@ typedef struct StrHuiIe_WeightSensorBfhsParamaters
 	UINT32  WeightSensorReadStopMs;   //Weight sensor stop sampling after infrared detector trigger
 	UINT32  WeightSensorTareWeight;			//NEW	
 	UINT32  WeightSensorTargetThroughput;	//NEW	
-	UINT32  WeightSensorAlgoAutoZeroSignal; //NEW	
+	UINT32  WeightSensorAlgoAutoZeroSignal; //NEW
+	UINT32	WeightSensorUpperLimit;
 	UINT32	WeightSensorAlgoTu1Limit;  		//NEW	
 	UINT32	WeightSensorAlgoTu2Limit;  		//NEW	
 	UINT32	WeightSensorAlgoMaxTu1Ratio;  	//NEW, NF2, for example, 250 means 2.5%	
