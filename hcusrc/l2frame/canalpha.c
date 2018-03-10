@@ -720,6 +720,7 @@ OPSTAT fsm_canalpha_l3bfhs_cal_zero_req(UINT32 dest_id, UINT32 src_id, void * pa
 	pMsgProc.weight_sensor_calibration_zero.WeightSensorMeasurementRangeNo = HUITP_ENDIAN_EXG8(rcv.calZeroPar.WeightSensorMeasurementRangeNo);
 	pMsgProc.weight_sensor_calibration_zero.WeightSensorAutoZero = HUITP_ENDIAN_EXG8(rcv.calZeroPar.WeightSensorAutoZero);
 
+	printf("CANALPHA: WeightSensorAutoZeroAutotaringTimeMs = %d\n\n\n", pMsgProc.weight_sensor_calibration_zero.WeightSensorAutoZeroAutotaringTimeMs);
 	//发送消息
 	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");

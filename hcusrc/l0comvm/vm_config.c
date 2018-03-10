@@ -570,6 +570,8 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	//BFDF
 	{MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,       	  	  "MSG_ID_L3BFDF_CAN_SYS_CFG_REQ",      		1, 1, 1},
 	{MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,       	      "MSG_ID_CAN_L3BFDF_SYS_CFG_RESP",      		1, 1, 1},
+	{MSG_ID_L3BFDF_CAN_DYN_CAL_REQ,       	  	  "MSG_ID_L3BFDF_CAN_DYN_CAL_REQ",      		1, 1, 1},
+	{MSG_ID_CAN_L3BFDF_DYN_CAL_RESP,       	      "MSG_ID_CAN_L3BFDF_DYN_CAL_RESP",      		1, 1, 1},
 	{MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,        "MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT",      	1, 1, 1},
 	{MSG_ID_L3BFDF_CAN_WS_COMB_OUT,       	      "MSG_ID_L3BFDF_CAN_WS_COMB_OUT",      		1, 1, 1},
 	{MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,       	  "MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB",      		1, 1, 1},

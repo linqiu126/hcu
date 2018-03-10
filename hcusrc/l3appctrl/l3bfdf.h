@@ -58,10 +58,7 @@ extern HcuFsmStateItem_t HcuFsmL3bfdf[];
 	 ＝＞由于HUITP.H中以及使用了1-32/33-64的分类，这里就按照这个方式进行编码
 	AP/HOOPERID:
 			0: =>固定垃圾桶
-			1-32: 	=>第1条流水线
-			33-64: 	=>第2条流水线
-			65-96: 	=>第3条流水线
-			97-128: =>第4条流水线
+			1-32: 	=>fix for all lines
 */
 //统一下位机板子的控制信息
 typedef struct L3BfdfNodeBoardInfo

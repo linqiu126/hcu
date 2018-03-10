@@ -6416,7 +6416,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp
 {
 	UINT16 	msgid;
 	UINT16 	length;
-	UINT8   apHopperId;  //1-32 for Line1, 33-64 for line2
+	UINT8   apHopperId;  //1-32 for all lines
 }StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t;
 
 //篮筐清零报告
@@ -6425,7 +6425,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind
 {
 	UINT16 	msgid;
 	UINT16 	length;
-	UINT8   apHopperId;  //1-32 for Line1, 33-64 for line2
+	UINT8   apHopperId;  //1-32 for all lines
 }StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t;
 	
 //HUITP_MSGID_sui_bfdf_infra_ind                   = 0x3BB4, 

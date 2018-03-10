@@ -3355,7 +3355,7 @@ typedef struct msg_struct_can_l3bfdf_new_ready_event
 typedef struct msg_struct_l3bfdf_can_ws_comb_out
 {
 	UINT8  snrId;
-	UINT16 hopperId;
+	UINT8  hopperId;
 	UINT8   basketFullStatus;    //0-FALSE, 1-TRUE
 	UINT8   bufferFullStatus;	   //0-FALSE, 1-TRUE
 	UINT32 length;
@@ -3365,7 +3365,7 @@ typedef struct msg_struct_l3bfdf_can_ws_comb_out
 typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
 {
 	UINT8  snrId;
-	UINT16 hopperId;
+	UINT8  hopperId;
 	UINT16 errCode;
 	UINT8  validFlag; //是否执行成功
 	UINT32 length;
@@ -3375,7 +3375,7 @@ typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
 typedef struct msg_struct_can_l3bfdf_basket_clean_ind
 {
 	UINT8  snrId;
-	UINT16 hopperId;
+	UINT8 hopperId;
 	UINT32 length;
 }msg_struct_can_l3bfdf_basket_clean_ind_t;
 

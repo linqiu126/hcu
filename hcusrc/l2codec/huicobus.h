@@ -849,7 +849,7 @@ typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp
 	StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_hcu2uir_cali_full_resp_t;
 
-//HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp      		= 0x0187,
+//HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp      		= 0x0185,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;

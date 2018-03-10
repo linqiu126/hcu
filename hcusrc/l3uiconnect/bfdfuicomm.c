@@ -595,7 +595,7 @@ OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table ()
 //配置系统参数控制表
 OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table (UINT16 configId)
 {
-	UINT8 line, group, hopper;
+	UINT8 line, index, hopper;
 	UINT8 groupPerLine = 0, groupTotal = 0;
 	DbiL3BfdfProductPara_t productConfigData;
 	DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2];
@@ -625,21 +625,21 @@ OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table (UINT16 configId)
 	UINT8 groupHooperNum;
 	UINT32 groupHopperBitmap;
 	UINT8 hopperArr[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
-	for(group = 1; group <= groupTotal; group++){
-		groupId = groupConfigData[group].groupId;
-		lineId = groupConfigData[group].lineId;
-		if (configId != groupConfigData[group].configId)
+	for(index = 1; index <= groupTotal; index++){
+		groupId = groupConfigData[index].groupId;
+		lineId = groupConfigData[index].lineId;
+		if (configId != groupConfigData[index].configId)
 			HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: hcubfdfgrouppara DB data error, configId[=%d] groupId[=%d] mismatch!\n", configId, groupId);
 
-		groupHooperNum = groupConfigData[group].hopperNum;
-		groupHopperBitmap = groupConfigData[group].hopperBitmap;
-		gTaskL3bfdfContext.group[lineId][groupId].targetWeight = groupConfigData[group].targetWeight;
-		gTaskL3bfdfContext.group[lineId][groupId].targetUpLimit = groupConfigData[group].targetUpLimit;
-		gTaskL3bfdfContext.group[lineId][groupId].bufWgtTarget = groupConfigData[group].bufWgtTarget;
-		gTaskL3bfdfContext.group[lineId][groupId].rangeLow = groupConfigData[group].rangeLow;
-		gTaskL3bfdfContext.group[lineId][groupId].rangeHigh = groupConfigData[group].rangeHigh;
-		gTaskL3bfdfContext.group[lineId][groupId].rangeAvg = (gTaskL3bfdfContext.group[lineId][group].rangeLow + gTaskL3bfdfContext.group[lineId][group].rangeHigh)/2;
-		gTaskL3bfdfContext.group[lineId][groupId].rangeSigma = (gTaskL3bfdfContext.group[lineId][group].rangeHigh - gTaskL3bfdfContext.group[lineId][group].rangeLow)/2;
+		groupHooperNum = groupConfigData[index].hopperNum;
+		groupHopperBitmap = groupConfigData[index].hopperBitmap;
+		gTaskL3bfdfContext.group[lineId][groupId].targetWeight = groupConfigData[index].targetWeight;
+		gTaskL3bfdfContext.group[lineId][groupId].targetUpLimit = groupConfigData[index].targetUpLimit;
+		gTaskL3bfdfContext.group[lineId][groupId].bufWgtTarget = groupConfigData[index].bufWgtTarget;
+		gTaskL3bfdfContext.group[lineId][groupId].rangeLow = groupConfigData[index].rangeLow;
+		gTaskL3bfdfContext.group[lineId][groupId].rangeHigh = groupConfigData[index].rangeHigh;
+		gTaskL3bfdfContext.group[lineId][groupId].rangeAvg = (gTaskL3bfdfContext.group[lineId][groupId].rangeLow + gTaskL3bfdfContext.group[lineId][groupId].rangeHigh)/2;
+		gTaskL3bfdfContext.group[lineId][groupId].rangeSigma = (gTaskL3bfdfContext.group[lineId][groupId].rangeHigh - gTaskL3bfdfContext.group[lineId][groupId].rangeLow)/2;
 		gTaskL3bfdfContext.group[lineId][groupId].groupId = groupId;
 		gTaskL3bfdfContext.group[lineId][groupId].groupStatus = HCU_L3BFDF_GROUP_STATUS_ACTIVE;
 		gTaskL3bfdfContext.group[lineId][groupId].totalHopperNbr = groupHooperNum;
