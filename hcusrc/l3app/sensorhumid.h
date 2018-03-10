@@ -43,6 +43,7 @@ typedef struct gTaskHumidContext
 {
 	gTaskHumidContextElement_t humid[MAX_NUM_OF_SENSOR_HUMID_INSTALLED];
 	UINT8 currentSensorId;
+	UINT32 humidValue;
 }gTaskHumidContext_t;
 #define SENSOR_HUMID_HW_STATUS_INVALID 0xFF
 #define SENSOR_HUMID_HW_STATUS_ACTIVE 1
@@ -63,6 +64,9 @@ typedef struct gTaskHumidContext
 
 //#define HUMID_TIMER_DURATION_PERIOD_READ 180 //should be 60 second, in second
 //#define HUMID_TIMER_DURATION_MODBUS_FB 3    //通过MODBUS访问硬件，回应的时间，不给硬件太多的时间考虑问题
+
+
+extern gTaskHumidContext_t		gTaskHumidContext;
 
 //API
 extern OPSTAT fsm_humid_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

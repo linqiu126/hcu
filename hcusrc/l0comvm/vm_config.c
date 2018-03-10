@@ -226,13 +226,16 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_L3HATE,        "L3HATE",           &HcuFsmL3hate,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_DAYCG21_RASBERRY_ID)
 	//{TASK_ID_GPIO,          "GPIO",             &HcuFsmGpio,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SYSSWM,        "SYSSWM",           &HcuFsmSysswm,           HCU_SYSCFG_TASK_PNP_OFF,     1, 1, 1, 1, 1},
 	{TASK_ID_SYSPM,         "SYSPM",            &HcuFsmSyspm,            HCU_SYSCFG_TASK_PNP_OFF,     1, 1, 1, 1, 1},
 	{TASK_ID_SPS232,        "SPS232",           &HcuFsmSps232,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_SPS485,        "SPS485",           &HcuFsmSps485,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_SPSVIRGO,      "SPSVIRGO",         &HcuFsmSpsvirgo,         HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_MODBUS,        "MODBUS",           &HcuFsmModbus,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_PM25,          "PM25",             &HcuFsmPm25,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
-	{TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	//{TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HUMID,         "HUMID",            &HcuFsmHumid,            HCU_SYSCFG_TASK_PNP_ON,    1, 1, 1, 1, 1},
+	{TASK_ID_TEMP,          "TEMP",             &HcuFsmTemp,             HCU_SYSCFG_TASK_PNP_ON,    1, 1, 1, 1, 1},
 	{TASK_ID_L3DAYCG21,     "L3DAYCG21",        &HcuFsmL3daycg21,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_L3HATE,        "L3HATE",           &HcuFsmL3hate,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
@@ -772,12 +775,16 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            3600,    TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           600,     TIMER_RESOLUTION_1S},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_DAYCG21_RASBERRY_ID)
-	{TIMER_ID_1S_PM25_PERIOD_READ,                   "TID_1S_PM25_PERIOD_READ",                10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_PM25_PERIOD_READ,                   "TID_1S_PM25_PERIOD_READ",                15,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_PM25_MODBUS_FB,                     "TID_1S_PM25_MODBUS_FB",                  10,      TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NOISE_PERIOD_READ,                  "TID_1S_NOISE_PERIOD_READ",               7,       TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NOISE_MODBUS_FB,                    "TID_1S_NOISE_MODBUS_FB",                 5,       TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NOISE_SPSVIRGO_FB,                  "TID_1S_NOISE_SPSVIRGO_FB",               10,      TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_L3DAYCG21_PERIOD_READ,          	 "TID_1S_L3DAYCG21_PERIOD_READ",           10,      TIMER_RESOLUTION_1S},
+	//{TIMER_ID_1S_NOISE_PERIOD_READ,                  "TID_1S_NOISE_PERIOD_READ",               7,       TIMER_RESOLUTION_1S},
+	//{TIMER_ID_1S_NOISE_MODBUS_FB,                    "TID_1S_NOISE_MODBUS_FB",                 5,       TIMER_RESOLUTION_1S},
+	//{TIMER_ID_1S_NOISE_SPSVIRGO_FB,                  "TID_1S_NOISE_SPSVIRGO_FB",               10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3DAYCG21_PERIOD_READ,          	 "TID_1S_L3DAYCG21_PERIOD_READ",           60,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_TEMP_PERIOD_READ,                   "TID_1S_TEMP_PERIOD_READ",                19,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_TEMP_FB,                            "TID_1S_TEMP_FB",                         10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HUMID_PERIOD_READ,                  "TID_1S_HUMID_PERIOD_READ",               11,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HUMID_MODBUS_FB,                    "TID_1S_HUMID_MODBUS_FB",                 10,      TIMER_RESOLUTION_1S},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)

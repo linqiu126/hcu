@@ -43,6 +43,8 @@ typedef struct gTaskTempContext
 {
 	gTaskTempContextElement_t temp[MAX_NUM_OF_SENSOR_TEMP_INSTALLED];
 	UINT8 currentSensorId;
+	UINT32 tempFlag;
+	UINT32 tempValue;
 }gTaskTempContext_t;
 #define SENSOR_TEMP_HW_STATUS_INVALID 0xFF
 #define SENSOR_TEMP_HW_STATUS_ACTIVE 1
@@ -62,6 +64,8 @@ typedef struct gTaskTempContext
 
 //#define TEMP_TIMER_DURATION_PERIOD_READ 180 //should be 60 second, in second
 //#define TEMP_TIMER_DURATION_MODBUS_FB 3    //通过MODBUS访问硬件，回应的时间，不给硬件太多的时间考虑问题
+
+extern gTaskTempContext_t		gTaskTempContext;
 
 //API
 extern OPSTAT fsm_temp_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

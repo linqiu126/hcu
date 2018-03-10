@@ -337,6 +337,11 @@ OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		HcuErrorPrint("HUMID: Error stop timer!\n");
 		return FAILURE;
 	}
+
+	//HCU_DEBUG_PRINT_INF("HUMID: humid = %d\n\n\n\n", (rcv.humid.humidValue));
+	gTaskHumidContext.humidValue = rcv.humid.humidValue/10;
+
+	HCU_DEBUG_PRINT_INF("HUMID: humid = %d\n\n\n\n", gTaskHumidContext.humidValue);
 /*
 	//离线模式
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
@@ -381,97 +386,100 @@ OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			}
 	}
 */
-	//在线模式
-	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+	if(zHcuSysEngPar.hwBurnId.hwType != HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
 	{
-		///////////
-		//L2信息
-		msg_struct_humid_cloudvela_data_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_humid_cloudvela_data_resp_t));
-		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
-			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
-		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
-				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
-		snd.comHead.timeStamp = time(0);
-		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-		strcpy(snd.comHead.funcFlag, "0");
+		//在线模式
+		if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+		{
+			///////////
+			//L2信息
+			msg_struct_humid_cloudvela_data_resp_t snd;
+			memset(&snd, 0, sizeof(msg_struct_humid_cloudvela_data_resp_t));
+			strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+				sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+			strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+					sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+			snd.comHead.timeStamp = time(0);
+			snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+			strcpy(snd.comHead.funcFlag, "0");
 
-		//CONTENT
-		snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
-		snd.usercmdid = rcv.usercmdid;
-		snd.cmdIdBackType = rcv.cmdIdBackType;
-		snd.useroptid = rcv.useroptid;
+			//CONTENT
+			snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
+			snd.usercmdid = rcv.usercmdid;
+			snd.cmdIdBackType = rcv.cmdIdBackType;
+			snd.useroptid = rcv.useroptid;
 
-		snd.humid.equipid = rcv.humid.equipid;
-		snd.humid.timeStamp = rcv.humid.timeStamp;
-		snd.humid.dataFormat = rcv.humid.dataFormat;
-		snd.humid.humidValue = rcv.humid.humidValue;
-		snd.humid.gps.gpsx = rcv.humid.gps.gpsx;
-		snd.humid.gps.gpsy = rcv.humid.gps.gpsy;
-		snd.humid.gps.gpsz = rcv.humid.gps.gpsz;
-		snd.humid.gps.ew = rcv.humid.gps.ew;
-		snd.humid.gps.ns = rcv.humid.gps.ns;
-		snd.humid.nTimes = rcv.humid.nTimes;
-		snd.humid.onOffLineFlag = rcv.humid.onOffLineFlag;
-		snd.length = sizeof(msg_struct_humid_cloudvela_data_resp_t);
+			snd.humid.equipid = rcv.humid.equipid;
+			snd.humid.timeStamp = rcv.humid.timeStamp;
+			snd.humid.dataFormat = rcv.humid.dataFormat;
+			snd.humid.humidValue = rcv.humid.humidValue;
+			snd.humid.gps.gpsx = rcv.humid.gps.gpsx;
+			snd.humid.gps.gpsy = rcv.humid.gps.gpsy;
+			snd.humid.gps.gpsz = rcv.humid.gps.gpsz;
+			snd.humid.gps.ew = rcv.humid.gps.ew;
+			snd.humid.gps.ns = rcv.humid.gps.ns;
+			snd.humid.nTimes = rcv.humid.nTimes;
+			snd.humid.onOffLineFlag = rcv.humid.onOffLineFlag;
+			snd.length = sizeof(msg_struct_humid_cloudvela_data_resp_t);
 
-		//发送后台
-		//if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL) == TRUE){
-		if (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL){
-			ret = hcu_message_send(MSG_ID_HUMID_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_HUMID, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-				HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-				return FAILURE;
+			//发送后台
+			//if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL) == TRUE){
+			if (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL){
+				ret = hcu_message_send(MSG_ID_HUMID_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_HUMID, &snd, snd.length);
+				if (ret == FAILURE){
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+					HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+					return FAILURE;
+				}
 			}
+
+			///////////
+			//Save to disk as request：在线是为了备份，离线是为了重发给后台
+			//该函数，有待完成
+			if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
+				//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
+				memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
+				record.equipid = rcv.humid.equipid;
+				record.sensortype = L3CI_temp;
+				record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
+				record.timestamp = rcv.humid.timeStamp;
+				record.dataFormat = rcv.humid.dataFormat;
+				record.humidValue = rcv.humid.humidValue;
+				record.gpsx = rcv.humid.gps.gpsx;
+				record.gpsy = rcv.humid.gps.gpsy;
+				record.gpsz = rcv.humid.gps.gpsz;
+				record.ew = rcv.humid.gps.ew;
+				record.ns = rcv.humid.gps.ns;
+				//RECORD还要存入数据库
+				sensor_humid_data_element_t humidData;
+				memset(&humidData, 0, sizeof(sensor_humid_data_element_t));
+				humidData.equipid = record.equipid;
+				humidData.timeStamp = record.timestamp;
+				humidData.dataFormat = record.dataFormat;
+				humidData.humidValue = record.humidValue;
+				humidData.gps.gpsx = record.gpsx;
+				humidData.gps.gpsy = record.gpsy;
+				humidData.gps.gpsz = record.gpsz;
+				humidData.gps.ew = record.ew;
+				humidData.gps.ns = record.ns;
+				humidData.onOffLineFlag = record.onOffLine;
+				ret = dbi_HcuHumidDataInfo_save(&humidData);
+				if (ret == FAILURE){
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
+					HcuErrorPrint("HUMID: Can not save data into database!\n");
+				}
+			}// Period mode OK!
+			// Instance mode, no need store!
 		}
 
-		///////////
-		//Save to disk as request：在线是为了备份，离线是为了重发给后台
-		//该函数，有待完成
-		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
-			//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
-			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-			record.equipid = rcv.humid.equipid;
-			record.sensortype = L3CI_temp;
-			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
-			record.timestamp = rcv.humid.timeStamp;
-			record.dataFormat = rcv.humid.dataFormat;
-			record.humidValue = rcv.humid.humidValue;
-			record.gpsx = rcv.humid.gps.gpsx;
-			record.gpsy = rcv.humid.gps.gpsy;
-			record.gpsz = rcv.humid.gps.gpsz;
-			record.ew = rcv.humid.gps.ew;
-			record.ns = rcv.humid.gps.ns;
-			//RECORD还要存入数据库
-			sensor_humid_data_element_t humidData;
-			memset(&humidData, 0, sizeof(sensor_humid_data_element_t));
-			humidData.equipid = record.equipid;
-			humidData.timeStamp = record.timestamp;
-			humidData.dataFormat = record.dataFormat;
-			humidData.humidValue = record.humidValue;
-			humidData.gps.gpsx = record.gpsx;
-			humidData.gps.gpsy = record.gpsy;
-			humidData.gps.gpsz = record.gpsz;
-			humidData.gps.ew = record.ew;
-			humidData.gps.ns = record.ns;
-			humidData.onOffLineFlag = record.onOffLine;
-			ret = dbi_HcuHumidDataInfo_save(&humidData);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-				HcuErrorPrint("HUMID: Can not save data into database!\n");
-			}
-		}// Period mode OK!
-		// Instance mode, no need store!
-	}
-
-	//差错情形
-	else{
-		HcuErrorPrint("HUMID: Wrong state of CLOUDVELA when data need send out!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-		//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
-		//If this shall work normally, it is too much for each sensor STM process!
-		return FAILURE;
+		//差错情形
+		else{
+			HcuErrorPrint("HUMID: Wrong state of CLOUDVELA when data need send out!\n");
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
+			//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
+			//If this shall work normally, it is too much for each sensor STM process!
+			return FAILURE;
+		}
 	}
 
 	//恢复当前传感器的空闲状态

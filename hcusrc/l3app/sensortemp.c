@@ -10,6 +10,7 @@
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
 #include "../l2frame/cloudvela.h"
+#include "../l2frame/modbus.h"
 
 /*
 ** FSM of the TEMP
@@ -44,6 +45,7 @@ HcuFsmStateItem_t HcuFsmTemp[] =
 	{MSG_ID_CLOUDVELA_TEMP_CTRL_REQ,        FSM_STATE_TEMP_ACTIVED,         	fsm_temp_cloudvela_ctrl_req},
 	{MSG_ID_L3AQYC_EXG_CTRL_REQ,			FSM_STATE_TEMP_ACTIVED,      	  	fsm_temp_l3aqyc_exg_ctrl_req},
 	{MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,			FSM_STATE_TEMP_ACTIVED,      	  	fsm_temp_zhbl3mod_exg_ctrl_req},
+
 
     //Wait for Modbus Feedback
 	{MSG_ID_MODBUS_TEMP_DATA_REPORT, 		FSM_STATE_TEMP_OPT_WFFB,         	fsm_temp_data_report_from_modbus},
@@ -107,6 +109,7 @@ OPSTAT fsm_temp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	//Task global variables init.
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP] = 0;
 	memset(&gTaskTempContext, 0, sizeof(gTaskTempContext_t));
+	gTaskTempContext.tempFlag = FALSE;
 
 	//目前暂时只有一个TEMP传感器，但程序的框架可以支持无数个传感器
 	//未来还需要支持传感器的地址可以被配置，随时被修改，通过后台命令
@@ -207,6 +210,8 @@ OPSTAT fsm_temp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
 		func_temp_time_out_read_data_from_modbus();
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+		func_temp_time_out_read_data_from_modbus();
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_DAYCG21_RASBERRY_ID)
 		func_temp_time_out_read_data_from_modbus();
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
 		func_temp_time_out_read_data_from_spibusaries();
@@ -436,6 +441,14 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		HcuErrorPrint("TEMP: Error stop timer!\n");
 		return FAILURE;
 	}
+
+	//HCU_DEBUG_PRINT_INF("TEMP: temp = %d\n\n\n\n", (rcv.temp.tempValue));
+	gTaskTempContext.tempValue = rcv.temp.tempValue/10;
+	HCU_DEBUG_PRINT_INF("TEMP: temp = %d\n\n", gTaskTempContext.tempValue);
+
+	//if(gTaskTempContext.tempFlag == FALSE)
+	gTaskTempContext.tempFlag = CurrentModusContext.tempFlag;
+
 /*
 	//离线模式
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
@@ -479,94 +492,98 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			}
 	}
 */
-	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+
+	if(zHcuSysEngPar.hwBurnId.hwType != HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
 	{
-		//L2信息
-		msg_struct_temp_cloudvela_data_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_temp_cloudvela_data_resp_t));
-		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
-			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
-		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
-				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
-		snd.comHead.timeStamp = time(0);
-		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-		strcpy(snd.comHead.funcFlag, "0");
+		if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+		{
+			//L2信息
+			msg_struct_temp_cloudvela_data_resp_t snd;
+			memset(&snd, 0, sizeof(msg_struct_temp_cloudvela_data_resp_t));
+			strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+				sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+			strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+					sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+			snd.comHead.timeStamp = time(0);
+			snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+			strcpy(snd.comHead.funcFlag, "0");
 
-		//CONTENT
-		snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
-		snd.usercmdid = rcv.usercmdid;
-		snd.cmdIdBackType = rcv.cmdIdBackType;
-		snd.useroptid = rcv.useroptid;
+			//CONTENT
+			snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
+			snd.usercmdid = rcv.usercmdid;
+			snd.cmdIdBackType = rcv.cmdIdBackType;
+			snd.useroptid = rcv.useroptid;
 
-		snd.temp.equipid = rcv.temp.equipid;
-		snd.temp.timeStamp = rcv.temp.timeStamp;
-		snd.temp.dataFormat = rcv.temp.dataFormat;
-		snd.temp.tempValue = rcv.temp.tempValue;
-		snd.temp.gps.gpsx = rcv.temp.gps.gpsx;
-		snd.temp.gps.gpsy = rcv.temp.gps.gpsy;
-		snd.temp.gps.gpsz = rcv.temp.gps.gpsz;
-		snd.temp.gps.ew = rcv.temp.gps.ew;
-		snd.temp.gps.ns = rcv.temp.gps.ns;
-		snd.temp.nTimes = rcv.temp.nTimes;
-		snd.temp.onOffLineFlag = rcv.temp.onOffLineFlag;
-		snd.length = sizeof(msg_struct_temp_cloudvela_data_resp_t);
+			snd.temp.equipid = rcv.temp.equipid;
+			snd.temp.timeStamp = rcv.temp.timeStamp;
+			snd.temp.dataFormat = rcv.temp.dataFormat;
+			snd.temp.tempValue = rcv.temp.tempValue;
+			snd.temp.gps.gpsx = rcv.temp.gps.gpsx;
+			snd.temp.gps.gpsy = rcv.temp.gps.gpsy;
+			snd.temp.gps.gpsz = rcv.temp.gps.gpsz;
+			snd.temp.gps.ew = rcv.temp.gps.ew;
+			snd.temp.gps.ns = rcv.temp.gps.ns;
+			snd.temp.nTimes = rcv.temp.nTimes;
+			snd.temp.onOffLineFlag = rcv.temp.onOffLineFlag;
+			snd.length = sizeof(msg_struct_temp_cloudvela_data_resp_t);
 
-		//发送后台
-		//if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL) == TRUE){
-		if (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL){
-			ret = hcu_message_send(MSG_ID_TEMP_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_TEMP, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
-				HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_TEMP].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-				return FAILURE;
+			//发送后台
+			//if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL) == TRUE){
+			if (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL){
+				ret = hcu_message_send(MSG_ID_TEMP_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_TEMP, &snd, snd.length);
+				if (ret == FAILURE){
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
+					HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_TEMP].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+					return FAILURE;
+				}
 			}
+
+			//Save to disk as request：在线是为了备份，离线是为了重发给后台
+			//该函数，有待完成
+			if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
+				//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
+				memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
+				record.equipid = rcv.temp.equipid;
+				record.sensortype = L3CI_temp;
+				record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
+				record.timestamp = rcv.temp.timeStamp;
+				record.dataFormat = rcv.temp.dataFormat;
+				record.tempValue = rcv.temp.tempValue;
+				record.gpsx = rcv.temp.gps.gpsx;
+				record.gpsy = rcv.temp.gps.gpsy;
+				record.gpsz = rcv.temp.gps.gpsz;
+				record.ew = rcv.temp.gps.ew;
+				record.ns = rcv.temp.gps.ns;
+				//RECORD还要存入数据库
+				sensor_temp_data_element_t tempData;
+				memset(&tempData, 0, sizeof(sensor_temp_data_element_t));
+				tempData.equipid = record.equipid;
+				tempData.timeStamp = record.timestamp;
+				tempData.dataFormat = record.dataFormat;
+				tempData.tempValue = record.tempValue;
+				tempData.gps.gpsx = record.gpsx;
+				tempData.gps.gpsy = record.gpsy;
+				tempData.gps.gpsz = record.gpsz;
+				tempData.gps.ew = record.ew;
+				tempData.gps.ns = record.ns;
+				tempData.onOffLineFlag = record.onOffLine;
+				ret = dbi_HcuTempDataInfo_save(&tempData);
+				if (ret == FAILURE){
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
+					HcuErrorPrint("TEMP: Can not save data into database!\n");
+				}
+			}// Period mode OK!
+			// Instance mode, no need store!
 		}
 
-		//Save to disk as request：在线是为了备份，离线是为了重发给后台
-		//该函数，有待完成
-		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
-			//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
-			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-			record.equipid = rcv.temp.equipid;
-			record.sensortype = L3CI_temp;
-			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
-			record.timestamp = rcv.temp.timeStamp;
-			record.dataFormat = rcv.temp.dataFormat;
-			record.tempValue = rcv.temp.tempValue;
-			record.gpsx = rcv.temp.gps.gpsx;
-			record.gpsy = rcv.temp.gps.gpsy;
-			record.gpsz = rcv.temp.gps.gpsz;
-			record.ew = rcv.temp.gps.ew;
-			record.ns = rcv.temp.gps.ns;
-			//RECORD还要存入数据库
-			sensor_temp_data_element_t tempData;
-			memset(&tempData, 0, sizeof(sensor_temp_data_element_t));
-			tempData.equipid = record.equipid;
-			tempData.timeStamp = record.timestamp;
-			tempData.dataFormat = record.dataFormat;
-			tempData.tempValue = record.tempValue;
-			tempData.gps.gpsx = record.gpsx;
-			tempData.gps.gpsy = record.gpsy;
-			tempData.gps.gpsz = record.gpsz;
-			tempData.gps.ew = record.ew;
-			tempData.gps.ns = record.ns;
-			tempData.onOffLineFlag = record.onOffLine;
-			ret = dbi_HcuTempDataInfo_save(&tempData);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
-				HcuErrorPrint("TEMP: Can not save data into database!\n");
-			}
-		}// Period mode OK!
-		// Instance mode, no need store!
-	}
-
-	//差错情形
-	else{
-		HcuErrorPrint("TEMP: Wrong state of CLOUDVELA when data need send out!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
-		//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
-		//If this shall work normally, it is too much for each sensor STM process!
-		return FAILURE;
+		//差错情形
+		else{
+			HcuErrorPrint("TEMP: Wrong state of CLOUDVELA when data need send out!\n");
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
+			//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
+			//If this shall work normally, it is too much for each sensor STM process!
+			return FAILURE;
+		}
 	}
 
 	//恢复当前传感器的空闲状态

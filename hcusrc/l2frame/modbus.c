@@ -138,6 +138,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS] = 0;
 
 	memset(&CurrentModusContext, 0, sizeof(gTaskModbusContext_t));
+	CurrentModusContext.tempFlag = FALSE;
 
 	//基本上不设置状态机，所有操作均为同步式，这样就不需要状态机了
 	ret = FsmSetState(TASK_ID_MODBUS, FSM_STATE_MODBUS_ACTIVED);
@@ -1121,6 +1122,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
+	UINT32 t0 = 0;
 
 	//消息参数检查
 	msg_struct_temp_modbus_data_read_t rcv;
@@ -1151,7 +1153,11 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	}
 	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus Temp req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 //
-	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+
+	if(zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
+		ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	else
+		ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
@@ -1173,7 +1179,11 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	//从相应的从设备中读取数据
 
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, 9); //获得的数据存在currentModbusBuf中
+
+	if(zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
+		ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, 9);
+	else
+		ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, 9); //获得的数据存在currentModbusBuf中
 
 	if ((ret <= 0) && (CurrentModusContext.TempHW_AlarmFlag == OFF))
 	{
@@ -1214,6 +1224,13 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	else if ((ret > 0) && (CurrentModusContext.TempHW_AlarmFlag == OFF))
 	{
 	 	currentModbusBuf.curLen =ret;
+
+		t0 = currentModbusBuf.curBuf[3];  //前两个数据是温度，后面的2个数据是湿度
+		t0 = t0 & 0xFF;
+
+		if(t0 == 255)
+	 		CurrentModusContext.tempFlag = TRUE;
+
 	 	HCU_DEBUG_PRINT_INF("MODBUS: Received Temp data length: %d \n ", ret);
 	 	HCU_DEBUG_PRINT_INF("MODBUS: Received Temp data content: %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8]);
 	}
@@ -1375,7 +1392,11 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	}
 	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus Humid req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 //
-	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+
+	if(zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
+		ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	else
+	    ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
@@ -1396,7 +1417,11 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
+
+	if(zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
+		ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, 9);
+	else
+		ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, 9);//获得的数据存在currentModbusBuf中
 
 	if ((ret <= 0) && (CurrentModusContext.HumidHW_AlarmFlag == OFF))
 	{
@@ -1705,10 +1730,10 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	//HCU_DEBUG_PRINT_INF("MODBUS: SPS485 series port sp =%d \n\n\n\n", zHcuVmCtrTab.hwinv.sps485.modbus.fd);
 
 
-	if(zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
-		ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, currentModbusBuf.curLen);
-	else
-		ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	//if(zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
+		//ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	//else
+	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
@@ -1729,10 +1754,10 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 
-	if(zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
-		ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);
-	else
-		ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);
+	//if(zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
+		//ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);
+	//else
+	ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);
 
 	if ((ret <= 0) && (CurrentModusContext.NoiseHW_AlarmFlag == OFF))
 	{
@@ -3157,7 +3182,7 @@ OPSTAT func_modbus_temp_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_temp_mo
 {
 	UINT32 index=0;
 	UINT16 crc16_orin=0, crc16_gen=0;
-	UINT32 len=0, t0=0, t1=0;
+	UINT32 len=0, t0=0, t1=0, t2=0;
 
 	//检查长度
 	if ((buf->curLen<=0) || (buf->curLen>HCU_SYSDIM_MSG_BODY_LEN_MAX)){
@@ -3203,11 +3228,24 @@ OPSTAT func_modbus_temp_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_temp_mo
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
+
 		t0 = buf->curBuf[index++];  //前两个数据是温度，后面的2个数据是湿度
 		t1 = buf->curBuf[index++];
-		t0 = (t0 <<8) & 0xFF00;
-		t1 = t1 & 0xFF;
-		snd->temp.tempValue = t0 + t1;
+
+		t2 = t0 & 0xFF;
+
+		if(t2 == 255)
+		{
+			//t1 = 0xFF-t1;
+			t1 = t1 & 0xFF;
+			snd->temp.tempValue = 255 - t1;
+		}
+		else
+		{
+			t0 = (t0 <<8) & 0xFF00;
+			t1 = t1 & 0xFF;
+			snd->temp.tempValue = t0 + t1;
+		}
 		break;
 
 	case L3PO_temp_set_switch:

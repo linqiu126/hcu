@@ -317,7 +317,7 @@ void func_pm25_time_out_processing_no_rsponse(void)
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
 
 	//State Transfer to FSM_STATE_PM25_ACTIVE
-	HcuDebugPrint("PM25: GET TIME OUT, FSM STATE SET TO %d !\n\n\n\n\n\n\n\n\n\n\n", FSM_STATE_PM25_ACTIVED);
+	HcuDebugPrint("PM25: GET TIME OUT, FSM STATE SET TO %d !\n\n", FSM_STATE_PM25_ACTIVED);
 
 	ret = FsmSetState(TASK_ID_PM25, FSM_STATE_PM25_ACTIVED);
 	if (ret == FAILURE){
@@ -388,7 +388,10 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 
 
 	gTaskPm25Context.PM25Value = (float)rcv.pm25.pm2d5Value;
-	HCU_DEBUG_PRINT_INF("PM25: PM25 = %.1f\n\n\n\n", gTaskPm25Context.PM25Value);
+	HCU_DEBUG_PRINT_INF("PM25: PM2.5 = %.1f\n\n\n\n", gTaskPm25Context.PM25Value);
+
+	gTaskPm25Context.PM10Value = (float)rcv.pm25.pm10Value;
+	HCU_DEBUG_PRINT_INF("PM25: PM10 = %.1f\n\n\n\n", gTaskPm25Context.PM10Value);
 
 
 	if(rcv.pm25.pmTSPValue >= (HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000))
@@ -496,103 +499,107 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			}
 	}
 */
-	//在线模式
-	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+
+	if(zHcuSysEngPar.hwBurnId.hwType != HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
 	{
-		///////////
-		//L2信息
-		msg_struct_pm25_cloudvela_data_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_pm25_cloudvela_data_resp_t));
-		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
-			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
-		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
-				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
-		snd.comHead.timeStamp = time(0);
-		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-		//snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_ID;
-		strcpy(snd.comHead.funcFlag, "0");
+		//在线模式
+		if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+		{
+			///////////
+			//L2信息
+			msg_struct_pm25_cloudvela_data_resp_t snd;
+			memset(&snd, 0, sizeof(msg_struct_pm25_cloudvela_data_resp_t));
+			strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+				sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+			strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+					sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+			snd.comHead.timeStamp = time(0);
+			snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+			//snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_ID;
+			strcpy(snd.comHead.funcFlag, "0");
 
-		//CONTENT
-		snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
-		snd.usercmdid = rcv.usercmdid;
-		snd.cmdIdBackType = rcv.cmdIdBackType;
-		snd.useroptid = rcv.useroptid;
+			//CONTENT
+			snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
+			snd.usercmdid = rcv.usercmdid;
+			snd.cmdIdBackType = rcv.cmdIdBackType;
+			snd.useroptid = rcv.useroptid;
 
-		snd.pm25.equipid = rcv.pm25.equipid;
-		snd.pm25.timeStamp = rcv.pm25.timeStamp;
-		snd.pm25.dataFormat = rcv.pm25.dataFormat;
-		snd.pm25.pmTSPValue = rcv.pm25.pmTSPValue;
-		snd.pm25.pm2d5Value = rcv.pm25.pm2d5Value;
-		snd.pm25.pm10Value = rcv.pm25.pm10Value;
-		snd.pm25.gps.gpsx = rcv.pm25.gps.gpsx;
-		snd.pm25.gps.gpsy = rcv.pm25.gps.gpsy;
-		snd.pm25.gps.gpsz = rcv.pm25.gps.gpsz;
-		snd.pm25.gps.ew = rcv.pm25.gps.ew;
-		snd.pm25.gps.ns = rcv.pm25.gps.ns;
-		snd.pm25.nTimes = rcv.pm25.nTimes;
-		snd.pm25.onOffLineFlag = rcv.pm25.onOffLineFlag;
-		snd.length = sizeof(msg_struct_pm25_cloudvela_data_resp_t);
+			snd.pm25.equipid = rcv.pm25.equipid;
+			snd.pm25.timeStamp = rcv.pm25.timeStamp;
+			snd.pm25.dataFormat = rcv.pm25.dataFormat;
+			snd.pm25.pmTSPValue = rcv.pm25.pmTSPValue;
+			snd.pm25.pm2d5Value = rcv.pm25.pm2d5Value;
+			snd.pm25.pm10Value = rcv.pm25.pm10Value;
+			snd.pm25.gps.gpsx = rcv.pm25.gps.gpsx;
+			snd.pm25.gps.gpsy = rcv.pm25.gps.gpsy;
+			snd.pm25.gps.gpsz = rcv.pm25.gps.gpsz;
+			snd.pm25.gps.ew = rcv.pm25.gps.ew;
+			snd.pm25.gps.ns = rcv.pm25.gps.ns;
+			snd.pm25.nTimes = rcv.pm25.nTimes;
+			snd.pm25.onOffLineFlag = rcv.pm25.onOffLineFlag;
+			snd.length = sizeof(msg_struct_pm25_cloudvela_data_resp_t);
 
-		//发送后台
-		//if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP) == TRUE){
-		if (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL){
-			ret = hcu_message_send(MSG_ID_PM25_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-				HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-				return FAILURE;
+			//发送后台
+			//if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP) == TRUE){
+			if (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL){
+				ret = hcu_message_send(MSG_ID_PM25_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);
+				if (ret == FAILURE){
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+					HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+					return FAILURE;
+				}
 			}
+
+			//Save to disk as request：在线是为了备份，离线是为了重发给后台
+			//该函数，有待完成
+			if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
+				//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
+				memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
+				record.equipid = rcv.pm25.equipid;
+				record.sensortype = L3CI_pm25;
+				record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
+				record.timestamp = rcv.pm25.timeStamp;
+				record.dataFormat = rcv.pm25.dataFormat;
+				record.pmTSPValue = rcv.pm25.pmTSPValue;
+				record.pm2d5Value = rcv.pm25.pm2d5Value;
+				record.pm10Value = rcv.pm25.pm10Value;
+				record.gpsx = rcv.pm25.gps.gpsx;
+				record.gpsy = rcv.pm25.gps.gpsy;
+				record.gpsz = rcv.pm25.gps.gpsz;
+				record.ew = rcv.pm25.gps.ew;
+				record.ns = rcv.pm25.gps.ns;
+				//RECORD还要存入数据库
+				sensor_pm25_data_element_t pm25Data;
+				memset(&pm25Data, 0, sizeof(sensor_pm25_data_element_t));
+				pm25Data.equipid = record.equipid;
+				pm25Data.timeStamp = record.timestamp;
+				pm25Data.dataFormat = record.dataFormat;
+				pm25Data.pmTSPValue = record.pmTSPValue;
+				pm25Data.pm2d5Value = record.pm2d5Value;
+				pm25Data.pm10Value = record.pm10Value;
+				pm25Data.gps.gpsx = record.gpsx;
+				pm25Data.gps.gpsy = record.gpsy;
+				pm25Data.gps.gpsz = record.gpsz;
+				pm25Data.gps.ew = record.ew;
+				pm25Data.gps.ns = record.ns;
+				pm25Data.onOffLineFlag = record.onOffLine;
+				ret = dbi_HcuPm25DataInfo_save(&pm25Data);
+				if (ret == FAILURE){
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+					HcuErrorPrint("PM25: Can not save data into database!\n");
+				}
+			}// Period mode OK!
+			// Instance mode, no need store!
 		}
 
-		//Save to disk as request：在线是为了备份，离线是为了重发给后台
-		//该函数，有待完成
-		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
-			//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
-			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-			record.equipid = rcv.pm25.equipid;
-			record.sensortype = L3CI_pm25;
-			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
-			record.timestamp = rcv.pm25.timeStamp;
-			record.dataFormat = rcv.pm25.dataFormat;
-			record.pmTSPValue = rcv.pm25.pmTSPValue;
-			record.pm2d5Value = rcv.pm25.pm2d5Value;
-			record.pm10Value = rcv.pm25.pm10Value;
-			record.gpsx = rcv.pm25.gps.gpsx;
-			record.gpsy = rcv.pm25.gps.gpsy;
-			record.gpsz = rcv.pm25.gps.gpsz;
-			record.ew = rcv.pm25.gps.ew;
-			record.ns = rcv.pm25.gps.ns;
-			//RECORD还要存入数据库
-			sensor_pm25_data_element_t pm25Data;
-			memset(&pm25Data, 0, sizeof(sensor_pm25_data_element_t));
-			pm25Data.equipid = record.equipid;
-			pm25Data.timeStamp = record.timestamp;
-			pm25Data.dataFormat = record.dataFormat;
-			pm25Data.pmTSPValue = record.pmTSPValue;
-			pm25Data.pm2d5Value = record.pm2d5Value;
-			pm25Data.pm10Value = record.pm10Value;
-			pm25Data.gps.gpsx = record.gpsx;
-			pm25Data.gps.gpsy = record.gpsy;
-			pm25Data.gps.gpsz = record.gpsz;
-			pm25Data.gps.ew = record.ew;
-			pm25Data.gps.ns = record.ns;
-			pm25Data.onOffLineFlag = record.onOffLine;
-			ret = dbi_HcuPm25DataInfo_save(&pm25Data);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-				HcuErrorPrint("PM25: Can not save data into database!\n");
-			}
-		}// Period mode OK!
-		// Instance mode, no need store!
-	}
-
-	//差错情形
-	else{
-		HcuErrorPrint("PM25: Wrong state of CLOUDVELA when data need send out!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-		//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
-		//If this shall work normally, it is too much for each sensor STM process!
-		return FAILURE;
+		//差错情形
+		else{
+			HcuErrorPrint("PM25: Wrong state of CLOUDVELA when data need send out!\n");
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+			//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
+			//If this shall work normally, it is too much for each sensor STM process!
+			return FAILURE;
+		}
 	}
 
 	//恢复当前传感器的空闲状态

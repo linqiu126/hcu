@@ -39,7 +39,10 @@ typedef struct gTaskModbusContext
 	UINT32 HumidHW_AlarmFlag;
 	UINT32 WindDirHW_AlarmFlag;
 	UINT32 WindSpdHW_AlarmFlag;
+	UINT32 tempFlag;
 }gTaskModbusContext_t;
+
+extern gTaskModbusContext_t		 CurrentModusContext;
 
 typedef struct SerialModbusMsgBuf
 {

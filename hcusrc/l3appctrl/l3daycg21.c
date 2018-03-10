@@ -15,6 +15,9 @@
 #include "../l2frame/cloudvela.h"
 #include "../l3app/sensornoise.h"
 #include "../l3app/sensorpm25.h"
+#include "../l3app/sensorhumid.h"
+#include "../l3app/sensortemp.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -141,7 +144,7 @@ OPSTAT func_l3daycg21_int_init(void)
 //暂时啥都不干，定时到达后，还不明确是否需要支持定时工作
 OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret;
+	UINT32 ret;
 
 	//Receive message and copy to local variable
 	msg_struct_com_time_out_t rcv;
@@ -173,41 +176,52 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	{
 		//READ processing func!
 
-		int ret=0;
+		ret=0;
 
 		//对信息进行ZH系列字符控制卡协议的编码
 		memset(&currentLedBuf, 0, sizeof(LedMsgBuf_t));
 
 		//对发送数据进行编码
-//////////////////////////////////////////////////////////
-		wchar_t *chinese_str = L"扬尘监控系统";
-		wchar_t *noise_str = L"噪声: ";
-		unsigned int *p_noise = (wchar_t*)noise_str;
+//////////////////////////////////////////////////////////ssddss
+		wchar_t *chinese_str = L"扬尘监测四川达岸";
+		UINT32 *p_chinese = (wchar_t*)chinese_str;
 
-		wchar_t *noise_unit_str = L" dB";
-		unsigned int *p_noise_unit = (wchar_t*)noise_unit_str;
+		//wchar_t *noise_str = L"噪声:";
+		//UINT32 *p_noise = (wchar_t*)noise_str;
 
-		wchar_t *tsp_str = L"     PM25：";
-		unsigned int *p_tsp = (wchar_t*)tsp_str;
+		//wchar_t *noise_unit_str = L"dB";
+		//UINT32 *p_noise_unit = (wchar_t*)noise_unit_str;
 
-		wchar_t *tsp_unit_str = L" ug/m3                                                                                                                     ";
-		unsigned int *p_tsp_unit = (wchar_t*)tsp_unit_str;
+		wchar_t *pm25_str = L"PM25: ";
+		UINT32 *p_pm25 = (wchar_t*)pm25_str;
+
+		wchar_t *pm10_str = L"PM10: ";
+		UINT32 *p_pm10 = (wchar_t*)pm10_str;
+
+		//wchar_t *pm25_unit_str = L"ug/m3;                                                                                                                     ";
+		//UINT32 *p_pm25_unit = (wchar_t*)pm25_unit_str;
+
+
+		wchar_t *temp0_str = L"温度:-";
+		UINT32 *p_temp0 = (wchar_t*)temp0_str;
+
+		wchar_t *temp_str = L"温度: ";
+		UINT32 *p_temp = (wchar_t*)temp_str;
+
+		//wchar_t *temp_unit_str = L" ℃   ";
+		//UINT32 *p_temp_unit = (wchar_t*)temp_unit_str;
+
+
+		wchar_t *humid_str = L"湿度: ";
+		UINT32 *p_humid = (wchar_t*)humid_str;
+
+		//wchar_t *humid_unit_str = L" RH%                                                                                                                     ";
+		//UINT32 *p_humid_unit = (wchar_t*)humid_unit_str;
+
+		size_t len;
+		char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 
 /*
-		wchar_t *temp_str = L"温度：";
-		unsigned int *p_temp = (wchar_t*)temp_str;
-
-		wchar_t *temp_unit_str = L" ℃   ";
-		unsigned int *p_temp_unit = (wchar_t*)temp_unit_str;
-
-
-		wchar_t *humid_str = L"湿度：";
-		unsigned int *p_humid = (wchar_t*)humid_str;
-
-		wchar_t *humid_unit_str = L" RH%                                                                                                                     ";
-		unsigned int *p_humid_unit = (wchar_t*)humid_unit_str;
-
-
 		wchar_t *windspd_str = L"风速：";
 		unsigned int *p_windspd = (wchar_t*)windspd_str;
 
@@ -218,7 +232,7 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 		wchar_t *winddir_str = L"风向：";
 		unsigned int *p_winddir = (wchar_t*)winddir_str;
-*/
+
 		///////////////////////////////////////////////////
 		if(gTaskNoiseContext.noiseValue == 0 || gTaskNoiseContext.noiseValue >= 80)
 			gTaskNoiseContext.noiseValue = 35;
@@ -239,39 +253,65 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 		unsigned int *p_noise_value = (wchar_t*)noise_value_str;
 		///////////////////////////////////////////////////
-
+*/
 
 		///////////////////////////////////////////////////
-		if(gTaskPm25Context.PM25Value == 0 || gTaskPm25Context.PM25Value >= 80)
-			gTaskPm25Context.PM25Value = 56;
+		if(gTaskPm25Context.PM25Value == 0 || gTaskPm25Context.PM25Value >= 9999)
+			gTaskPm25Context.PM25Value = 99;
 
-		unsigned int tsp = gTaskPm25Context.PM25Value;
+		UINT32 pm25 = gTaskPm25Context.PM25Value;
 
 		//char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 		memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
 
 		//sprintf(CStr,"%.1f",tsp);
-		sprintf(CStr,"%d",tsp);
-		printf("integer = %d CStr = %s\n", tsp,CStr);
+		sprintf(CStr,"%d",pm25);
+		printf("integer = %d CStr = %s\n", pm25,CStr);
 
 	   //把char*转换为wchar_t*
 		len = strlen(CStr) + 1;
-		wchar_t *tsp_value_str;
-		tsp_value_str=(wchar_t*)malloc(len*sizeof(wchar_t));
-		mbstowcs(tsp_value_str,CStr,len);
+		wchar_t *pm25_value_str;
+		pm25_value_str=(wchar_t*)malloc(len*sizeof(wchar_t));
+		mbstowcs(pm25_value_str,CStr,len);
 
-		unsigned int *p_tsp_value = (wchar_t*)tsp_value_str;
+		UINT32 *p_pm25_value = (wchar_t*)pm25_value_str;
 		///////////////////////////////////////////////////
 
-/*
+		///////////////////////////////////////////////////
+		if(gTaskPm25Context.PM10Value == 0 || gTaskPm25Context.PM10Value >= 9999)
+			gTaskPm25Context.PM10Value = 88;
+
+		UINT32 pm10 = gTaskPm25Context.PM10Value;
+
+		//char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
+		memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
+
+		//sprintf(CStr,"%.1f",tsp);
+		sprintf(CStr,"%d",pm10);
+		printf("integer = %d CStr = %s\n", pm10,CStr);
+
+	   //把char*转换为wchar_t*
+		len = strlen(CStr) + 1;
+		wchar_t *pm10_value_str;
+		pm10_value_str=(wchar_t*)malloc(len*sizeof(wchar_t));
+		mbstowcs(pm10_value_str,CStr,len);
+
+		UINT32 *p_pm10_value = (wchar_t*)pm10_value_str;
+		///////////////////////////////////////////////////
+
 		///////////////////////////////////////////////////
 		//float temp = gTaskL3aqycq20Context.staMin.a01001_Avg;
-		float temp = 20;
+		//float temp = 20;
+
+		if(gTaskTempContext.tempValue == 0 || gTaskTempContext.tempValue >= 60)
+			gTaskTempContext.tempValue = 16;
+		UINT32 temp = gTaskTempContext.tempValue;
+
 		//char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 		memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
 		//itoa(number,string,16);
-		sprintf(CStr,"%.1f",temp);
-		printf("integer = %f CStr = %s\n", temp,CStr);
+		sprintf(CStr,"%d",temp);
+		printf("integer = %d CStr = %s\n", temp,CStr);
 
 	   //把char*转换为wchar_t*
 		len = strlen(CStr) + 1;
@@ -279,18 +319,21 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		temp_value_str=(wchar_t*)malloc(len*sizeof(wchar_t));
 		mbstowcs(temp_value_str,CStr,len);
 
-		unsigned int *p_temp_value = (wchar_t*)temp_value_str;
+		UINT32 *p_temp_value = (wchar_t*)temp_value_str;
 		///////////////////////////////////////////////////
-
 
 		///////////////////////////////////////////////////
 		//float humid = gTaskL3aqycq20Context.staMin.a01002_Avg;
-		float humid = 50;
+		//float humid = 50;
+		if(gTaskHumidContext.humidValue == 0 || gTaskHumidContext.humidValue >= 100)
+			gTaskHumidContext.humidValue = 40;
+		UINT32 humid = gTaskHumidContext.humidValue;
+
 		//char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 		memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
 		//itoa(number,string,16);
-		sprintf(CStr,"%.1f",humid);
-		printf("integer = %f CStr = %s\n", humid,CStr);
+		sprintf(CStr,"%d",humid);
+		printf("integer = %d CStr = %s\n", humid,CStr);
 
 	   //把char*转换为wchar_t*
 		len = strlen(CStr) + 1;
@@ -298,9 +341,9 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		humid_value_str=(wchar_t*)malloc(len*sizeof(wchar_t));
 		mbstowcs(humid_value_str,CStr,len);
 
-		unsigned int *p_humid_value = (wchar_t*)humid_value_str;
+		UINT32 *p_humid_value = (wchar_t*)humid_value_str;
 		///////////////////////////////////////////////////
-
+/*
 		///////////////////////////////////////////////////
 		//float windspd = gTaskL3aqycq20Context.staMin.a01007_Avg;
 		float windspd = 100;
@@ -415,10 +458,10 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		printf("\n\n\n\n\n");
 		///////////////////////////////////////////////////
 */
-		unsigned int curLen = 228;
+		UINT32 curLen = 228;
 
-		unsigned char sample1[] = {0x7A,0x01,0x00,0x06,0xFA,0x00,0x01,0x01,0x01,0x0C,0x05,0x03,0x01,0x00,0x3C,0x01,0x01,0x00,0x00,0x7F,0x0A,0x00,0x01,0x00,0x00,0x00,
-				0x00,0x00,0x80,0x00,0x10,0x00,0x02,0x04,0x02,0x09,0xF4,0x01,0x00,0x00,0x05,0x64,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+        UINT8 sample1[] = {0x7A,0x01,0x00,0x06,0xFA,0x00,0x01,0x01,0x01,0x0C,0x05,0x03,0x01,0x00,0x3C,0x01,0x01,0x00,0x00,0x7F,0x0A,0x00,0x01,0x00,0x00,0x00,
+				0x00,0x00,0x40,0x00,0x20,0x00,0x02,0x01,0x02,0x09,0xF4,0xF1,0x10,0x10,0xFE,0x64,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -426,17 +469,26 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x5C,0x5A,0x00,0x5C,0x54,0x01};
 
-		unsigned char  curBuf[HCU_SYSDIM_MSG_BODY_LEN_MAX];
+        UINT8 sample2[] = {0x7A,0x01,0x00,0x06,0xFA,0x00,0x01,0x01,0x01,0x0C,0x05,0x03,0x01,0x00,0x3C,0x01,0x01,0x00,0x00,0x7F,0x0A,0x00,0x01,0x00,0x00,0x00,
+				0x00,0x00,0x40,0x00,0x20,0x00,0x01,0x01,0x02,0x09,0xF4,0xF1,0x10,0x10,0xFE,0x64,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x5C,0x5A,0x00,0x5C,0x54,0x01};
+
+        UINT8  curBuf[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 
 		//send the first frame start
 		memset(&curBuf, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
 		memcpy(curBuf, sample1, curLen);
 
-		unsigned int i = 0;
-		unsigned int j = 0;
-/*
+		UINT32 i = 0;
+		UINT32 j = 0;
+
  	 /////////////////////////////////////////
-			for(i=0;i<wcslen(chinese_str); i++)
+		for(i=0;i<wcslen(chinese_str); i++)
 		{
 			curBuf[curLen+j] = p_chinese[i] >> 8;
 			printf("%02x  ",curBuf[curLen+j]);
@@ -447,12 +499,10 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 		printf("\n");
 		curLen = curLen+2*wcslen(chinese_str);
-
-
-	/////////////////////////////////////////
-*/
 	/////////////////////////////////////////
 
+	/////////////////////////////////////////
+/*
 		for(i=0;i<wcslen(noise_str); i++)
 		{
 			curBuf[curLen+j] = p_noise[i] >> 8;
@@ -496,75 +546,278 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 		//printf("\n");
 		curLen = curLen+2*wcslen(noise_unit_str);
-
-	/////////////////////////////////////////
-		j = 0;
-		for(i=0;i<wcslen(tsp_str); i++)
-		{
-			curBuf[curLen+j] = p_tsp[i] >> 8;
-			//printf("%02x  ",curBuf[curLen+j]);
-			curBuf[curLen+j+1] = p_tsp[i];
-			//printf("%02x  ",curBuf[curLen+j+1]);
-			j=j+2;
-		}
-
-		//printf("\n");
-		curLen = curLen+2*wcslen(tsp_str);
-	/////////////////////////////////////////
-
-	/////////////////////////////////////////
-		j = 0;
-		for(i=0;i<wcslen(tsp_value_str); i++)
-		{
-			curBuf[curLen+j] = p_tsp_value[i] >> 8;
-			//printf("%02x  ",curBuf[curLen+j]);
-			curBuf[curLen+j+1] = p_tsp_value[i];
-			//printf("%02x  ",curBuf[curLen+j+1]);
-			j=j+2;
-		}
-
-		//printf("\n\n\n\n\n\n\n\n\n");
-		curLen = curLen+2*wcslen(tsp_value_str);
-
-
-	/////////////////////////////////////////
-
-	/////////////////////////////////////////
-		j = 0;
-		for(i=0;i<wcslen(tsp_unit_str); i++)
-		{
-			curBuf[curLen+j] = p_tsp_unit[i] >> 8;
-			//printf("%02x  ",curBuf[curLen+j]);
-			curBuf[curLen+j+1] = p_tsp_unit[i];
-			//printf("%02x  ",curBuf[curLen+j+1]);
-			j=j+2;
-		}
-
-		//printf("\n\n\n\n\n\n\n\n\n");
-		curLen = curLen+2*wcslen(tsp_unit_str);
-
-	/////////////////////////////////////////
-
-
-		unsigned char sample3[] = {0x5C,0x00};
+*/
+		UINT8 sample3[] = {0x5C,0x00};
 		memcpy(&curBuf[curLen], sample3, 2);
 
-		unsigned int DataLen = curLen+2-6;
-		HCU_DEBUG_PRINT_INF("Total Length: %d\n",DataLen);
-		HCU_DEBUG_PRINT_INF("Total Length: %02x\n  ",DataLen);
+		UINT32 DataLen = curLen+2-6;
+		printf("Total Length: %d\n",DataLen);
+		printf("Total Length: %02x\n  ",DataLen);
 
 		//第五位需要更新为DataLen的十六进制 unsigned char
 		//memcpy(&curBuf[4], DataLen, 2);
 		//curBuf[4] = DataLen;
 		curBuf[4] = DataLen;
 		curBuf[5] = DataLen >> 8;
+		printf("Total Length: %02x\n  ",curBuf[4]);
+		printf("Total Length: %02x\n  ",curBuf[5]);
+
+		UINT8 checksum = 0;
+		for(i=0;i<(curLen + 2);i++)
+		{
+			checksum = checksum + curBuf[i];
+		}
+
+		printf("checksum: 0x%2x\n  ", checksum);
+
+		curBuf[curLen+2] = checksum;
+		curBuf[curLen+3] = 0x1A;
+
+		for(i=0;i<(curLen+4);i++)
+		{
+			printf("%02x  ",curBuf[i]);
+		}
+		printf("\n");
+
+//////////////////////////////////////////////////////////
+
+		//发送串口指令
+		//ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps485.modbus), currentSpsBuf.curBuf, currentSpsBuf.curLen);
+		ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps232.sp), curBuf, curLen+4);
+
+		memset(&curBuf, 0, HCU_SYSDIM_MSG_BODY_LEN_MAX);
+
+		if (FAILURE == ret)
+		{
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+			HcuErrorPrint("L3DAYCG20: Error send ZH command to serials port!\n");
+			return FAILURE;
+		}
+		else
+		{
+			//HCU_DEBUG_PRINT_INF("L3DAYCG20: Send ZH data succeed %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
+			ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);
+
+			if(ret > 0){
+				HCU_DEBUG_PRINT_INF("L3DAYCG20: Received LCD data length %d\n", ret);
+				HCU_DEBUG_PRINT_INF("L3DAYCG20: Received LCD response data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",curBuf[0],curBuf[1],curBuf[2],curBuf[3],curBuf[4],curBuf[5],curBuf[6],curBuf[7]);
+				HCU_DEBUG_PRINT_INF("L3DAYCG20: First frame send successfully\n\n\n");
+				//return SUCCESS;
+			}
+			else
+				return FAILURE;
+		}
+		//send the first frame end
+
+
+		//send the second frame start
+		hcu_sleep(5);
+
+		curLen = 228;
+		//send the second frame start
+		memset(&curBuf, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
+		memcpy(curBuf, sample1, curLen);
+
+		/////////////////////////////////////////
+			j = 0;
+			for(i=0;i<wcslen(pm25_str); i++)
+			{
+				curBuf[curLen+j] = p_pm25[i] >> 8;
+				curBuf[curLen+j+1] = p_pm25[i];
+				j=j+2;
+			}
+			curLen = curLen+2*wcslen(pm25_str);
+		/////////////////////////////////////////
+
+		/////////////////////////////////////////
+			j = 0;
+			for(i=0;i<wcslen(pm25_value_str); i++)
+			{
+				curBuf[curLen+j] = p_pm25_value[i] >> 8;
+				curBuf[curLen+j+1] = p_pm25_value[i];
+				j=j+2;
+			}
+			curLen = curLen+2*wcslen(pm25_value_str);
+		/////////////////////////////////////////
+
+
+		/////////////////////////////////////////
+			j = 0;
+			for(i=0;i<wcslen(pm10_str); i++)
+			{
+				curBuf[curLen+j] = p_pm10[i] >> 8;
+				curBuf[curLen+j+1] = p_pm10[i];
+				j=j+2;
+			}
+			curLen = curLen+2*wcslen(pm10_str);
+		/////////////////////////////////////////
+
+		/////////////////////////////////////////
+			j = 0;
+			for(i=0;i<wcslen(pm10_value_str); i++)
+			{
+				curBuf[curLen+j] = p_pm10_value[i] >> 8;
+				curBuf[curLen+j+1] = p_pm10_value[i];
+				j=j+2;
+			}
+
+			curLen = curLen+2*wcslen(pm10_value_str);
+		/////////////////////////////////////////
+
+		//unsigned char sample3[] = {0x5C,0x00};
+		memcpy(&curBuf[curLen], sample3, 2);
+
+		DataLen = curLen+2-6;
+		printf("Total Length: %d\n",DataLen);
+		printf("Total Length: %02x\n  ",DataLen);
+
+		//第五位需要更新为DataLen的十六进制 unsigned char
+		curBuf[4] = DataLen;
+		curBuf[5] = DataLen >> 8;
+		printf("Total Length: %02x\n  ",curBuf[4]);
+		printf("Total Length: %02x\n  ",curBuf[5]);
+
+		checksum = 0;
+		for(i=0;i<(curLen + 2);i++)
+		{
+			checksum = checksum + curBuf[i];
+		}
+
+		printf("checksum: 0x%2x\n  ", checksum);
+
+		curBuf[curLen+2] = checksum;
+		curBuf[curLen+3] = 0x1A;
+
+		for(i=0;i<(curLen+4);i++)
+		{
+			printf("%02x  ",curBuf[i]);
+		}
+		printf("\n");
+
+//////////////////////////////////////////////////////////
+
+		//发送串口指令
+		//ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps485.modbus), currentSpsBuf.curBuf, currentSpsBuf.curLen);
+		ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps232.sp), curBuf, curLen+4);
+
+		memset(&curBuf, 0, HCU_SYSDIM_MSG_BODY_LEN_MAX);
+
+		if (FAILURE == ret)
+		{
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+			HcuErrorPrint("L3DAYCG20: Error send ZH command to serials port!\n");
+			return FAILURE;
+		}
+		else
+		{
+			//HCU_DEBUG_PRINT_INF("L3DAYCG20: Send ZH data succeed %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
+			ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);
+
+			if(ret > 0){
+				HCU_DEBUG_PRINT_INF("L3DAYCG20: Received LCD data length %d\n", ret);
+				HCU_DEBUG_PRINT_INF("L3DAYCG20: Received LCD response data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",curBuf[0],curBuf[1],curBuf[2],curBuf[3],curBuf[4],curBuf[5],curBuf[6],curBuf[7]);
+				HCU_DEBUG_PRINT_INF("L3DAYCG20: Second frame send successfully\n\n\n");
+				//return SUCCESS;
+			}
+			else
+				return FAILURE;
+		}
+		//send the second frame end
+
+
+
+		//send the third frame start
+		hcu_sleep(30);
+
+		curLen = 228;
+		//send the second frame start
+		memset(&curBuf, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
+		memcpy(curBuf, sample1, curLen);
+
+		/////////////////////////////////////////
+		j = 0;
+		for(i=0;i<wcslen(humid_str); i++)
+		{
+			curBuf[curLen+j] = p_humid[i] >> 8;
+			curBuf[curLen+j+1] = p_humid[i];
+			j=j+2;
+		}
+
+		//printf("\n");
+		curLen = curLen+2*wcslen(humid_str);
+		/////////////////////////////////////////
+
+		/////////////////////////////////////////
+		j = 0;
+		for(i=0;i<wcslen(humid_value_str); i++)
+		{
+			curBuf[curLen+j] = p_humid_value[i] >> 8;
+			curBuf[curLen+j+1] = p_humid_value[i];
+			j=j+2;
+		}
+		curLen = curLen+2*wcslen(humid_value_str);
+		/////////////////////////////////////////
+
+		if(gTaskTempContext.tempFlag == TRUE)
+		{
+		/////////////////////////////////////////
+			j = 0;
+			for(i=0;i<wcslen(temp0_str); i++)
+			{
+				curBuf[curLen+j] = p_temp0[i] >> 8;
+				curBuf[curLen+j+1] = p_temp0[i];
+				j=j+2;
+			}
+
+			//printf("\n");
+			curLen = curLen+2*wcslen(temp0_str);
+		/////////////////////////////////////////
+		}
+
+		if(gTaskTempContext.tempFlag == FALSE)
+		{
+		/////////////////////////////////////////
+			j = 0;
+			for(i=0;i<wcslen(temp_str); i++)
+			{
+				curBuf[curLen+j] = p_temp[i] >> 8;
+				curBuf[curLen+j+1] = p_temp[i];
+				j=j+2;
+			}
+
+			//printf("\n");
+			curLen = curLen+2*wcslen(temp_str);
+		/////////////////////////////////////////
+		}
+
+		/////////////////////////////////////////
+		j = 0;
+		for(i=0;i<wcslen(temp_value_str); i++)
+		{
+			curBuf[curLen+j] = p_temp_value[i] >> 8;
+			curBuf[curLen+j+1] = p_temp_value[i];
+			j=j+2;
+		}
+
+		curLen = curLen+2*wcslen(temp_value_str);
+		/////////////////////////////////////////
+
+		//unsigned char sample3[] = {0x5C,0x00};
+		memcpy(&curBuf[curLen], sample3, 2);
+
+		DataLen = curLen+2-6;
+		HCU_DEBUG_PRINT_INF("Total Length: %d\n",DataLen);
+		HCU_DEBUG_PRINT_INF("Total Length: %02x\n  ",DataLen);
+
+		//第五位需要更新为DataLen的十六进制 unsigned char
+		curBuf[4] = DataLen;
+		curBuf[5] = DataLen >> 8;
 		HCU_DEBUG_PRINT_INF("Total Length: %02x\n  ",curBuf[4]);
 		HCU_DEBUG_PRINT_INF("Total Length: %02x\n  ",curBuf[5]);
 
-		unsigned char checksum = 0;
+		checksum = 0;
 		for(i=0;i<(curLen + 2);i++)
 		{
-			//printf("%02x  ",curBuf[i]);
 			checksum = checksum + curBuf[i];
 		}
 
@@ -601,15 +854,14 @@ OPSTAT fsm_l3daycg21_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 			if(ret > 0){
 				HCU_DEBUG_PRINT_INF("L3DAYCG20: Received LCD data length %d\n", ret);
 				HCU_DEBUG_PRINT_INF("L3DAYCG20: Received LCD response data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",curBuf[0],curBuf[1],curBuf[2],curBuf[3],curBuf[4],curBuf[5],curBuf[6],curBuf[7]);
+				HCU_DEBUG_PRINT_INF("L3DAYCG20: Third frame send successfully\n\n\n");
 				return SUCCESS;
 			}
 			else
 				return FAILURE;
 		}
+		//send the third frame end
 
-		//等待短时
-		//hcu_usleep(5);
-		//send the first frame end
 	}
 }
 
