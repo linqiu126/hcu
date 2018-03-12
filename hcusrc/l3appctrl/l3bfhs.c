@@ -127,9 +127,6 @@ OPSTAT fsm_l3bfhs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if (HCU_L3BFHS_STA_UNIT_DUR != (10*zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFHS_PERIOD_STA_SCAN].dur))  //静态表是以10ms为单位的
 		HCU_ERROR_PRINT_L3BFHS("L3BFHS: module timer statistic parameter set error!\n");
 
-	//秤盘数据表单控制表初始化
-	memset(&gTaskL3bfhsContext, 0, sizeof(gTaskL3bfhsContext_t));
-
 	//初始化界面交互数据
 	HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_NULL);
 

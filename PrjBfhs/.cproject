@@ -459,7 +459,20 @@
 		<project id="PrjBfhs.null.1567999187" name="PrjBfhs"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="RasberryPi">
+			<resource resourceType="PROJECT" workspacePath="/PrjBfhs"/>
+		</configuration>
+		<configuration configurationName="BfhsTarget">
+			<resource resourceType="PROJECT" workspacePath="/PrjBfhs"/>
+		</configuration>
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/PrjBfhs"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/PrjBfhs"/>
+		</configuration>
+	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
