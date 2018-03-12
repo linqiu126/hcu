@@ -45,7 +45,7 @@ extern OPSTAT fsm_bfhsuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 sr
 extern OPSTAT fsm_bfhsuicomm_huicobus_uir_one_key_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
-OPSTAT  func_bfhsuicomm_read_system_config_into_ctrl_table ();
+OPSTAT  func_bfhsuicomm_read_system_config_into_ctrl_table (void);
 OPSTAT  func_bfhsuicomm_read_product_config_into_ctrl_table(UINT16 config_index);
 OPSTAT  func_bfhsuicomm_time_out_period_read_process(void);
 

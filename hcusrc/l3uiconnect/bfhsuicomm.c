@@ -119,6 +119,9 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		HcuDebugPrint("BFHSUICOMM: Enter FSM_STATE_BFHSUICOMM_ACTIVED status, Keeping refresh here!\n");
 	}
 
+	//秤盘数据表单控制表初始化
+	memset(&gTaskL3bfhsContext, 0, sizeof(gTaskL3bfhsContext_t));
+
 	//延迟并启动系统，进入测试模式
 	//hcu_sleep(2);
 	if(func_bfhsuicomm_read_system_config_into_ctrl_table () == FAILURE)
@@ -482,7 +485,7 @@ OPSTAT func_bfhsuicomm_time_out_period_read_process(void)
 	return SUCCESS;
 }
 
-OPSTAT func_bfhsuicomm_read_system_config_into_ctrl_table ()
+OPSTAT func_bfhsuicomm_read_system_config_into_ctrl_table (void)
 {
 	UINT8 index;
 	UINT32 sysConfigData[HCU_SYSCFG_BFHS_DB_COLUMN_NUM_MAX];
@@ -555,6 +558,10 @@ OPSTAT func_bfhsuicomm_read_product_config_into_ctrl_table (UINT16 configId)
 
 	gTaskL3bfhsContext.configId = configId;
 
+	//Reload system parameters
+	if(func_bfhsuicomm_read_system_config_into_ctrl_table () == FAILURE)
+		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: get DB data and initialize system config failed!\n");
+	//Load product parameters
 	if (dbi_HcuBfhs_productConfigData_read(configId,productConfigData) == FAILURE)
 		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: Get DB product configuration data failed, configId = %d \n", configId);
 

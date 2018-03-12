@@ -668,6 +668,8 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	pMsgProc.arm_control_param.ArmFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmFailureDetectionTimeMs);
 	pMsgProc.arm_control_param.ArmStartActionMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmStartActionMs);
 
+	//printf("CANALPHA: WeightSensorAutoZeroAutotaringTimeMs = %d\n\n",pMsgProc.weight_sensor_param.WeightSensorAutoZeroAutotaringTimeMs);
+
 	//更新传感器状态
 	//gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
 
@@ -720,7 +722,8 @@ OPSTAT fsm_canalpha_l3bfhs_cal_zero_req(UINT32 dest_id, UINT32 src_id, void * pa
 	pMsgProc.weight_sensor_calibration_zero.WeightSensorMeasurementRangeNo = HUITP_ENDIAN_EXG8(rcv.calZeroPar.WeightSensorMeasurementRangeNo);
 	pMsgProc.weight_sensor_calibration_zero.WeightSensorAutoZero = HUITP_ENDIAN_EXG8(rcv.calZeroPar.WeightSensorAutoZero);
 
-	printf("CANALPHA: WeightSensorAutoZeroAutotaringTimeMs = %d\n\n\n", pMsgProc.weight_sensor_calibration_zero.WeightSensorAutoZeroAutotaringTimeMs);
+	//printf("CANALPHA: PreLoadValue = %d, WeightSensorAutoZeroAutotaringTimeMs = %d\n\n\n", rcv.calZeroPar.WeightSensorPreloadComPensationValuePercent, rcv.calZeroPar.WeightSensorAutoZeroAutotaringTimeMs);
+
 	//发送消息
 	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
