@@ -145,7 +145,7 @@ OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if (HCU_L3BFDF_STA_UNIT_DUR != (10*zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN].dur))  //静态表是以10ms为单位的
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: module timer statistic parameter set error!\n");
 
-	//秤盘数据表单控制表初始化
+	//秤盘数据表单控制表初始化：留给BFSDUICOMM初始化，不然LOAD表的时候会出问题
 //	memset(&gTaskL3bfdfContext, 0, sizeof(gTaskL3bfdfContext_t));
 	//第0号板子一定是垃圾桶：跟后面的逻辑是否相配？
 	for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
@@ -555,7 +555,7 @@ OPSTAT fsm_l3bfdf_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_id, voi
 OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	int i = 0;
+	int i = 0, j = 0;
 	int line=0, boardId=0;
 
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_can_l3bfdf_sys_cfg_resp_t);
@@ -620,6 +620,16 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 		hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
 		//设置工作启动时间
 		gTaskL3bfdfContext.startWorkTimeInUnix = time(0);
+
+		//状态修改为业务态
+		for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++)
+		{
+			for (j=1; j<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++)
+			{
+				if (gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus == HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_CMPL)
+					gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID;
+			}
+		}
 	}
 
 	//返回
@@ -1322,14 +1332,14 @@ bool func_l3bfdf_is_there_any_board_not_yet_startup(void)
 	int i = 0, j = 0;
 	for (i = 0; i < HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; i++){
 		for (j = 1; j < HCU_L3BFDF_MAX_IO_BOARD_NBR_ACTUAL; j++){
-			if (gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus < HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP)
+			if (gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus < HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP){
 				return FALSE;
+			}
 		}
 	}
 	//全部启动完成
 	return TRUE;
 }
-
 
 //Special TREATMENT for bitmap of boards
 OPSTAT func_l3bfdf_send_out_suspend_message_to_all(void)
@@ -1983,7 +1993,7 @@ bool func_l3bfdf_group_auto_alloc_init_target_with_uplimit(UINT8 streamId, UINT3
 	for (i=1; i<= gTaskL3bfdfContext.totalGroupNbr[streamId]; i++){
 		gTaskL3bfdfContext.group[streamId][i].targetWeight = targetWgt * (rand()%100+100) / 100.0 / sqrt(1+gTaskL3bfdfContext.totalGroupNbr[streamId]-i);
 		gTaskL3bfdfContext.group[streamId][i].targetUpLimit = targetWgt * ratio;
-		gTaskL3bfdfContext.group[streamId][i].bufWgtTarget = gTaskL3bfdfContext.group[streamId][i].targetWeight/4; //暂时按照25%固定分配，未来待改进
+		gTaskL3bfdfContext.group[streamId][i].bufWgtTarget = gTaskL3bfdfContext.group[streamId][i].targetWeight/2; //暂时按照50%固定分配，未来待改进
 	}
 
 	return TRUE;

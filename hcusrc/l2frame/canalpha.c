@@ -285,30 +285,32 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	//更新传感器状态
 	//gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
 
+	//进入性能仿真测试模式，正式版本中，必须将这个做成DISABLE，不然产品不会真正工作
+#if (HCU_SYSCFG_L3BFDF_PMAS_SET == HCU_L3BFDF_PMAS_ENABLE)
+	//为了测试目的，直接返回
+	msg_struct_can_l3bfdf_sys_cfg_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t));
+	snd.validFlag = TRUE;
+	snd.length = sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t);
+	snd.errCode = 0;
+	for (i = 0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++)
+	{
+		if (rcv.boardBitmap[i] == TRUE)
+		{
+			snd.snrId = i;
+			hcu_usleep(rand()%30);
+			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_SYS_CFG_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
+		}
+	}
+
+	//启动测试定时器
+	hcu_timer_start(TASK_ID_CANALPHA, TIMER_ID_10MS_CANALPHA_SIMULATION_DATA, zHcuSysEngPar.timer.array[TIMER_ID_10MS_CANALPHA_SIMULATION_DATA].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
+	return SUCCESS;
+#endif
+
 	//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
 	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
-
-
-	//为了测试目的，直接返回
-//	msg_struct_can_l3bfdf_sys_cfg_resp_t snd;
-//	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t));
-//	snd.validFlag = TRUE;
-//	snd.length = sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t);
-//	int i=0, j=0;
-//	for (i = 0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++)
-//	{
-//		for (j = 0; j<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++)
-//		{
-//			snd.streamId = i;
-//			snd.boardId = j;
-//			hcu_usleep(rand()%10000);
-//			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_SYS_CFG_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
-//		}
-//	}
-//
-//	//启动测试定时器
-//	hcu_timer_start(TASK_ID_CANALPHA, TIMER_ID_10MS_CANALPHA_SIMULATION_DATA, zHcuSysEngPar.timer.array[TIMER_ID_10MS_CANALPHA_SIMULATION_DATA].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
 
 	//返回
 	return SUCCESS;
@@ -336,19 +338,22 @@ OPSTAT fsm_canalpha_l3bfdf_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * par
 	//更新传感器状态
 	//gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
 
+#if (HCU_SYSCFG_L3BFDF_PMAS_SET == HCU_L3BFDF_PMAS_ENABLE)
+	//测试反馈
+	msg_struct_can_l3bfdf_ws_comb_out_fb_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t));
+	snd.validFlag = TRUE;
+	snd.errCode = 0;
+	snd.snrId = rcv.snrId;
+	snd.hopperId = rcv.hopperId;
+	snd.length = sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
+#endif
+
 	//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
 	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
 
-
-//	//测试反馈
-//	msg_struct_can_l3bfdf_ws_comb_out_fb_t snd;
-//	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t));
-//	snd.validFlag = TRUE;
-//	snd.streamId = rcv.streamId;
-//	snd.hopperId = rcv.hopperId;
-//	snd.length = sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t);
-//	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 	//返回
 	return SUCCESS;
 }
@@ -1101,6 +1106,7 @@ OPSTAT func_canalpha_working_scan_process(void)
 }
 
 //发送测试数据给L3BFDF
+#include "../l3appctrl/l3bfdf.h"
 OPSTAT func_canalpha_bfdf_simulation_data_process(void)
 {
 //	int ret = 0;
@@ -1111,12 +1117,14 @@ OPSTAT func_canalpha_bfdf_simulation_data_process(void)
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_new_ready_event_t));
 	snd.length = sizeof(msg_struct_can_l3bfdf_new_ready_event_t);
 	gTaskCanalphaContext.sensorIdRoundBing++;
-	//gTaskCanalphaContext.sensorIdRoundBing = (gTaskCanalphaContext.sensorIdRoundBing % HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX);
-	//snd.streamId = gTaskCanalphaContext.sensorIdRoundBing;
-	//snd.streamId = rand() % HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX;
+	gTaskCanalphaContext.sensorIdRoundBing = (gTaskCanalphaContext.sensorIdRoundBing % HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL);
 	snd.sensorWsValue = (rand()%900+100)*100;
+	snd.snrId = (gTaskCanalphaContext.sensorIdRoundBing<<3)+1;  //永远从#1-WGT板子发出
 	//HcuDebugPrint("CANALPHA: Value = %d\n", snd.sensorWsValue);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
+
+	//待完善各个料斗IO板子发出的CLEAN_IND报告
+
 	return SUCCESS;
 }
 

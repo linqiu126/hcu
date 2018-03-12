@@ -131,9 +131,6 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		HcuDebugPrint("BFDFUICOMM: Enter FSM_STATE_BFDFUICOMM_ACTIVED status, Keeping refresh here!\n");
 	}
 
-	//延迟并启动系统，进入测试模式
-	//hcu_sleep(2);
-
 	//秤盘数据表单控制表初始化
 	memset(&gTaskL3bfdfContext, 0, sizeof(gTaskL3bfdfContext_t));
 	//初始化系统参数
@@ -142,6 +139,20 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//初始化sessionId
 	gTaskL3bfdfContext.sessionId = dbi_HcuBfdf_CallCellMaxIdGet() + 1;
+
+	//算法性能评估测试模式
+#if (HCU_SYSCFG_L3BFDF_PMAS_SET == HCU_L3BFDF_PMAS_ENABLE)
+	//延迟并启动系统，进入测试模式
+	hcu_sleep(2);
+	func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table();
+
+	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
+	snd.cmdValue = 0;
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
+#endif
 
 	//返回
 	return SUCCESS;
@@ -540,7 +551,7 @@ bool func_bfdfuicomm_hopper_state_set_init(UINT8 streamId)
 	return TRUE;
 }
 
-OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table ()
+OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table(void)
 {
 	UINT8 line, hopper;
 	DbiL3BfdfSystemPara_t sysConfigData;
@@ -593,15 +604,18 @@ OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table ()
 }
 
 //配置系统参数控制表
-OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table (UINT16 configId)
+OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table(UINT16 configId)
 {
 	UINT8 line, index, hopper;
 	UINT8 groupPerLine = 0, groupTotal = 0;
 	DbiL3BfdfProductPara_t productConfigData;
 	DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2];
 
-	/*** Initialize PRODUCT configuration, these parameters are different for each product ***/
+	//重新初始化全局系统参数
+	if (func_bfdfuicomm_read_system_config_into_ctrl_table () == FAILURE)
+		HcuErrorPrint("BFDFUICOMM: read system config into ctrl_table failure!\n");
 
+	/*** Initialize PRODUCT configuration, these parameters are different for each product ***/
 	//Read productPara table
 	if (dbi_HcuBfdf_productConfigData_read(configId, &productConfigData) == FAILURE)
 		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB PRODUCT configuration data failed, configId = %d \n", productConfigData.configId);
@@ -723,5 +737,78 @@ OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table (UINT16 configId)
 
 	return SUCCESS;
 }
+
+
+//算法性能评估所使用的测试模式，装载参数
+OPSTAT func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table(void)
+{
+	UINT8 line, hopper;
+	int i = 0, j = 0;
+	int nbrGroup = 0;
+
+	//每块板子设置为1个IO板
+	gTaskL3bfdfContext.nbrStreamLine = 1;
+	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
+
+	//Hopper初始化
+	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
+		func_bfdfuicomm_hopper_state_set_init(line);
+	}
+	for (line = gTaskL3bfdfContext.nbrStreamLine; line< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; line++){
+		for (hopper=0; hopper<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; hopper++){
+			gTaskL3bfdfContext.hopper[line][hopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_OFFLINE;
+		}
+	}
+
+	//第0#流水线，分配组别
+	nbrGroup = rand()%3+1;
+	nbrGroup = 1;
+	//For test purpose, fix to be 1 group
+	nbrGroup = 1;
+	func_l3bfdf_group_allocation(0, nbrGroup);
+	func_l3bfdf_hopper_add_by_grp_in_average_distribution(0, nbrGroup);
+	//设置小组重量范围：数据均为NF2进行设置
+	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 10000, 100000);
+	//设置重量目标
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 1000000, 0.0001);
+
+	//第1#流水线，分配组别
+	if (gTaskL3bfdfContext.nbrIoBoardPerLine >= 2){
+		nbrGroup = rand()%3+1;
+		nbrGroup = 1;
+		func_l3bfdf_group_allocation(1, nbrGroup);
+		func_l3bfdf_hopper_add_by_grp_in_average_distribution(1, nbrGroup);
+		func_l3bfdf_group_auto_alloc_init_range_in_average(1, nbrGroup, 20000, 200000);
+		func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 1000000, 0.2);
+	}
+
+	//打印
+	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
+		func_l3bfdf_print_all_hopper_status_by_id(line);
+	}
+
+	//手工浏览一遍双链表
+	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
+		func_l3bfdf_print_all_hopper_status_by_chain(line);
+	}
+
+	//自动Audit过程
+	int res = func_l3bfdf_hopper_dual_chain_audit();
+	if (res < 0) HCU_ERROR_PRINT_BFDFUICOMM("BSDFUICOMM: Audit error, errCode = %d\n", res);
+
+	//批次数据更新
+	//读取数据库，更新批次数据
+	gTaskL3bfdfContext.sessionId = 1;
+
+	//设置各个板子启动的情况，模拟STARTUP收到
+	for (i = 0; i < HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; i++){
+		for (j = 1; j < HCU_L3BFDF_MAX_IO_BOARD_NBR_ACTUAL; j++){
+			gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+		}
+	}
+
+	return SUCCESS;
+}
+
 
 

@@ -8,6 +8,12 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+
+//= ZJL, 2018 Mar.12 CURRENT_SW_DELIVERY 313=>BFDF项目
+= 算法评估，出现的问题
+  1) 状态36
+  2) 篮筐满，不再进buffer
+
 //= ZJL, 2018 Feb.8 CURRENT_SW_DELIVERY 312=>BFDF项目
 = Fix algorithms
 = BFSC支持分堆功能
