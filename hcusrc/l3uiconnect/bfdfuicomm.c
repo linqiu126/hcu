@@ -154,6 +154,9 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 #endif
 
+	//检查参数设置情况
+	func_bfdfuicomm_algo_parameter_set_check();
+
 	//返回
 	return SUCCESS;
 }
@@ -385,14 +388,22 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_i
 {
 	UINT16 configId = 0;
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_start_resume_req_t);
+
 	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
 	snd.cmdValue = rcv.cmdValue;
 	configId = rcv.cmdValue;
-	if(func_bfdfuicomm_read_product_config_into_ctrl_table(configId) == SUCCESS)
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
+
+	if(func_bfdfuicomm_read_product_config_into_ctrl_table(configId) == FAILURE)
+		HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Load global context table failure!\n");
+
+	//检查参数设置情况
+	func_bfdfuicomm_algo_parameter_set_check();
+
+	//TRIGGER L3BFDF
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
 	return SUCCESS;
 }
@@ -564,9 +575,13 @@ OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table(void)
 		return FALSE;
 	}
 	gTaskL3bfdfContext.engModeSwitch = sysConfigData.engModeSwitch;
+
 	//配置系统的DIMENSIONING
 	gTaskL3bfdfContext.nbrStreamLine = sysConfigData.lineNum;
 	gTaskL3bfdfContext.nbrIoBoardPerLine = sysConfigData.boardNumPerLine;
+
+	//如果系统配置了该全局算法参数，则可以调整该参数，可以更大程度的由人工来调优
+	gTaskL3bfdfContext.combAlgoSpaceCtrlRatio = HCU_SYSCFG_ALGO_SPACE_CTRL_RATIO_DEFAULT;
 
 	//Hopper初始化
 	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
@@ -747,8 +762,8 @@ OPSTAT func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table(void)
 	int nbrGroup = 0;
 
 	//每块板子设置为1个IO板
-	gTaskL3bfdfContext.nbrStreamLine = 1;
-	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
+	gTaskL3bfdfContext.nbrStreamLine = 2;
+	gTaskL3bfdfContext.nbrIoBoardPerLine = 4;
 
 	//Hopper初始化
 	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
@@ -762,24 +777,43 @@ OPSTAT func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table(void)
 
 	//第0#流水线，分配组别
 	nbrGroup = rand()%3+1;
-	nbrGroup = 1;
 	//For test purpose, fix to be 1 group
-	nbrGroup = 1;
+	//nbrGroup = 1;
 	func_l3bfdf_group_allocation(0, nbrGroup);
 	func_l3bfdf_hopper_add_by_grp_in_average_distribution(0, nbrGroup);
 	//设置小组重量范围：数据均为NF2进行设置
 	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 10000, 100000);
 	//设置重量目标
-	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 1000000, 0.0001);
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 1000000, 0.01);
 
 	//第1#流水线，分配组别
 	if (gTaskL3bfdfContext.nbrIoBoardPerLine >= 2){
-		nbrGroup = rand()%3+1;
+		nbrGroup = rand()%10+1;
 		nbrGroup = 1;
 		func_l3bfdf_group_allocation(1, nbrGroup);
 		func_l3bfdf_hopper_add_by_grp_in_average_distribution(1, nbrGroup);
 		func_l3bfdf_group_auto_alloc_init_range_in_average(1, nbrGroup, 20000, 200000);
 		func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 1000000, 0.2);
+	}
+
+	//第2#流水线，分配组别
+	if (gTaskL3bfdfContext.nbrIoBoardPerLine >= 3)
+	{
+		nbrGroup = rand()%10+1;
+		func_l3bfdf_group_allocation(2, nbrGroup);
+		func_l3bfdf_hopper_add_by_grp_in_average_distribution(2, nbrGroup);
+		func_l3bfdf_group_auto_alloc_init_range_in_average(2, nbrGroup, 20000, 200000);
+		func_l3bfdf_group_auto_alloc_init_target_with_uplimit(2, 1000000, 0.2);
+	}
+
+	//第3#流水线，分配组别
+	if (gTaskL3bfdfContext.nbrIoBoardPerLine >= 4)
+	{
+		nbrGroup = rand()%10+1;
+		func_l3bfdf_group_allocation(3, nbrGroup);
+		func_l3bfdf_hopper_add_by_grp_in_average_distribution(3, nbrGroup);
+		func_l3bfdf_group_auto_alloc_init_range_in_average(3, nbrGroup, 20000, 200000);
+		func_l3bfdf_group_auto_alloc_init_target_with_uplimit(3, 1000000, 0.2);
 	}
 
 	//打印
@@ -808,6 +842,27 @@ OPSTAT func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table(void)
 	}
 
 	return SUCCESS;
+}
+
+//配置参数检查
+void func_bfdfuicomm_algo_parameter_set_check(void)
+{
+	int lineId = 0, gId = 0;
+	int maxGroup;
+	double gRange = 0, tRange = 0, ratio;
+
+	for (lineId = 0; lineId < HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; lineId++)
+	{
+		maxGroup = gTaskL3bfdfContext.totalGroupNbr[lineId];
+		for (gId = 1; gId <= maxGroup; gId++)
+		{
+			gRange = (double)(gTaskL3bfdfContext.group[lineId][gId].rangeHigh - gTaskL3bfdfContext.group[lineId][gId].rangeLow);
+			tRange = (double)gTaskL3bfdfContext.group[lineId][gId].targetUpLimit;
+			ratio = tRange / gRange;
+			if (ratio < HCU_SYSCFG_UPLIMIT_VS_GRP_DISTR_RATIO_MAX)
+				HcuErrorPrint("BFDFUICOMM: Parameter set Grp range or Uplimit range too small, potential risk to high rejection rate. Ratio/Line/Gid=%6.2f%/%d/%d\n", ratio*100, lineId, gId);
+		}
+	}
 }
 
 

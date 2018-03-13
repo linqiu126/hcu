@@ -1121,7 +1121,7 @@ OPSTAT func_canalpha_bfdf_simulation_data_process(void)
 	snd.length = sizeof(msg_struct_can_l3bfdf_new_ready_event_t);
 	gTaskCanalphaContext.sensorIdRoundBing++;
 	gTaskCanalphaContext.sensorIdRoundBing = (gTaskCanalphaContext.sensorIdRoundBing % HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL);
-	snd.sensorWsValue = (rand()%900+100)*100;
+	snd.sensorWsValue = 10000 + rand()%90000;
 	snd.snrId = (gTaskCanalphaContext.sensorIdRoundBing<<3)+1;  //永远从#1-WGT板子发出
 	//HcuDebugPrint("CANALPHA: Value = %d\n", snd.sensorWsValue);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANALPHA);

@@ -52,10 +52,13 @@ OPSTAT  func_bfdfuicomm_time_out_period_read_process(void);
 OPSTAT  func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table (void);
 bool 	func_bfdfuicomm_hopper_bitmap_validate(UINT32 hopperBitmap, UINT8 hopperNum, UINT8 hopperArr[HCU_SYSMSG_SUI_SENSOR_NBR]);
 bool 	func_bfdfuicomm_hopper_state_set_init(UINT8 streamId);
+void    func_bfdfuicomm_algo_parameter_set_check(void);
 
 //External APIs
 extern OPSTAT dbi_HcuBfdf_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);
 extern UINT32 dbi_HcuBfdf_CallCellMaxIdGet(void);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(INT32 cmdValue, StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t *buf);
+
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_BFDFUICOMM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFDFUICOMM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

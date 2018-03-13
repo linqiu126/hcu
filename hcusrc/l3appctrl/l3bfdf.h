@@ -259,8 +259,12 @@ typedef struct gTaskL3bfdfContext
 	char    configName[HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX];
 	UINT8   nbrStreamLine;			//缺省为2，最大不能超过4
 	UINT8   nbrIoBoardPerLine;		//缺省为4，最大不能超过4
+	float   combAlgoSpaceCtrlRatio;  //解空间控制系数，降低算法的敏感度
 
 	//nodeDyn的编制原则是：0一定表达WGT板子，1-HCU_L3BFDF_NODE_BOARD_NBR_MAX表达一条流水先上的总共的板子数量
+	//Line从0开始，正常0-1
+	//GroupId从1开始
+	//HopperId从1-32，只有本地意义。0表示垃圾桶
 	L3BfdfNodeBoardInfo_t  	nodeDyn[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX];
 	UINT16					totalGroupNbr[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX]; //分成多少个组，这个数据不包括第一组，特别注意！
 	L3BfdfGroupInfo_t		group[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
