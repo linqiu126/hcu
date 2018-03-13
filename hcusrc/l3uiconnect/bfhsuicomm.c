@@ -516,6 +516,8 @@ OPSTAT func_bfhsuicomm_read_system_config_into_ctrl_table (void)
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams = sysConfigData[index++];
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = sysConfigData[index++];
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs = sysConfigData[index++];
+	gTaskL3bfhsContext.motoCtrlPar.MotorDirection = sysConfigData[index++];
+	gTaskL3bfhsContext.motoCtrlPar.MotorSpeed = sysConfigData[index++];
 	gTaskL3bfhsContext.engModeSwitch = sysConfigData[index++];
 //	gTaskL3bfhsContext.wgtSnrPar.snrAlgoAutoZeroSignal = 10000;
 //	gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight = 1050;
