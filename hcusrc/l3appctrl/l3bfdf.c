@@ -2242,7 +2242,8 @@ UINT16 func_l3bfdf_new_ws_search_hopper_buffer_lack_one(UINT8 streamId, UINT16 g
 
 	cnt = 0;
 	nextHopper = gTaskL3bfdfContext.hopper[streamId][fHopper].nextHopperId;
-	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper) && (gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL))
+	//while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper) && (gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL))
+	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper))
 	{
 		cnt++;
 		if (((gTaskL3bfdfContext.hopper[streamId][nextHopper].buferValue + weight) <= gTaskL3bfdfContext.group[streamId][gid].bufWgtTarget) && \
@@ -2264,6 +2265,8 @@ UINT16 func_l3bfdf_new_ws_search_hopper_buffer_normal(UINT8 streamId, UINT16 gid
 	int cnt=0;
 	UINT16 fHopper=0, nextHopper=0, tmpHopper=0;
 
+	//printf("test1! streamId/Gid/Weight=%d/%d/%d\n", streamId, gid, weight);
+
 	//入参检查：注意起点和终点
 	if (streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) return 0;
 	if ((gid <=0) || (gid > gTaskL3bfdfContext.totalGroupNbr[streamId])) return 0;
@@ -2280,10 +2283,13 @@ UINT16 func_l3bfdf_new_ws_search_hopper_buffer_normal(UINT8 streamId, UINT16 gid
 
 	cnt = 0;
 	nextHopper = gTaskL3bfdfContext.hopper[streamId][fHopper].nextHopperId;
-	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper) && \
-			(gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL))
+	//printf("Test3.2, NextHooperId=%d, fHopper=%d, HopStatus=%d\n", nextHopper, fHopper, gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus);
+
+	//while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper) && (gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL))
+	while ((cnt < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) && (nextHopper != fHopper))
 	{
 		cnt++;
+		//printf("test3.5, bufferValue/Weight/BufTarget=%d/%d/%d, HopStatus=%d\n", gTaskL3bfdfContext.hopper[streamId][nextHopper].buferValue, weight, gTaskL3bfdfContext.group[streamId][gid].bufWgtTarget, gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus);
 		if (((gTaskL3bfdfContext.hopper[streamId][nextHopper].buferValue + weight) <= gTaskL3bfdfContext.group[streamId][gid].bufWgtTarget) && \
 				(gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) && \
 				(gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperStatus < HCU_L3BFDF_HOPPER_STATUS_BUF_FULL) && \
@@ -2428,7 +2434,7 @@ bool func_l3bfdf_hopper_judge_cur_mat_is_in_right_space(UINT8 streamId, UINT16 h
 	umin = (UINT32)min;
 
 	//不相等的情况下，是否覆盖整数
-#if 0
+#if 1
 	HCU_DEBUG_PRINT_FAT("L3BFDF: Judge mat in basket space: max/min/targetWgtH/L = %6.2f/%6.2f/%6.2f/%6.2f, weight/RangeL/H/Cur/Target/Up=%d/%d/%d/%d/%d/%d\n", \
 			max, min, targetWgtH, targetWgtL, \
 			weight, gTaskL3bfdfContext.group[streamId][gid].rangeLow, gTaskL3bfdfContext.group[streamId][gid].rangeHigh, \
@@ -2456,6 +2462,7 @@ bool func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(UINT8 streamId, UINT16 
 	UINT16 umin=0, umax=0;
 	//UINT16 index = 0;
 
+	//printf("BUFFER ENTER, LineId/Hid/Weight=%d/%d/%d\n\n", streamId, hid, weight);
 	//入参检查
 	if ((streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) || (hid==0) || (hid >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
 		return FALSE;
@@ -2480,7 +2487,7 @@ bool func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(UINT8 streamId, UINT16 
 	umin = (UINT32)min;
 
 	//不相等的情况下，是否覆盖整数
-#if 0
+#if 1
 	HCU_DEBUG_PRINT_FAT("L3BFDF: Judge cur mat in buffer space: max/min/targetWgtH/L = %6.2f/%6.2f/%6.2f/%6.2f, weight/RangeL/H/Cur/Target/Up=%d/%d/%d/%d/%d/%d\n", \
 			max, min, targetWgtH, targetWgtL,\
 			weight, gTaskL3bfdfContext.group[streamId][gid].rangeLow, gTaskL3bfdfContext.group[streamId][gid].rangeHigh, \
