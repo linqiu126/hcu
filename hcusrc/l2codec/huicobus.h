@@ -509,7 +509,7 @@ typedef struct StrHlcIe_cui_hcu2uir_statistic_bfdf_report
 	UINT32	upLimitWeight;  //in NF2
 	UINT32	throughputPerMin;
 	UINT32	totalReject;
-	UINT32	totalWeight;
+	UINT64	totalWeight;
 	UINT32	totalPackage;
 }StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t;
 //cmdValue = configID;

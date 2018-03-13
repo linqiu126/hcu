@@ -141,7 +141,7 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	gTaskL3bfdfContext.sessionId = dbi_HcuBfdf_CallCellMaxIdGet() + 1;
 
 	//算法性能评估测试模式
-#if (HCU_SYSCFG_L3BFDF_PMAS_SET == HCU_L3BFDF_PMAS_ENABLE)
+#if (HCU_SYSCFG_L3BFDF_PMAS_SET == HCU_SYSCFG_L3BFDF_PMAS_ENABLE)
 	//延迟并启动系统，进入测试模式
 	hcu_sleep(2);
 	func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table();
@@ -396,11 +396,13 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_i
 	snd.cmdValue = rcv.cmdValue;
 	configId = rcv.cmdValue;
 
-	if(func_bfdfuicomm_read_product_config_into_ctrl_table(configId) == FAILURE)
-		HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Load global context table failure!\n");
-
-	//检查参数设置情况
-	func_bfdfuicomm_algo_parameter_set_check();
+	//是否认为START还是RESUME的命令
+	if (configId != gTaskL3bfdfContext.configId){
+		if(func_bfdfuicomm_read_product_config_into_ctrl_table(configId) == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Load global context table failure!\n");
+		//检查参数设置情况
+		func_bfdfuicomm_algo_parameter_set_check();
+	}
 
 	//TRIGGER L3BFDF
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
@@ -762,8 +764,8 @@ OPSTAT func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table(void)
 	int nbrGroup = 0;
 
 	//每块板子设置为1个IO板
-	gTaskL3bfdfContext.nbrStreamLine = 2;
-	gTaskL3bfdfContext.nbrIoBoardPerLine = 4;
+	gTaskL3bfdfContext.nbrStreamLine = 1;
+	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
 
 	//Hopper初始化
 	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
@@ -778,13 +780,13 @@ OPSTAT func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table(void)
 	//第0#流水线，分配组别
 	nbrGroup = rand()%3+1;
 	//For test purpose, fix to be 1 group
-	//nbrGroup = 1;
+	nbrGroup = 1;
 	func_l3bfdf_group_allocation(0, nbrGroup);
 	func_l3bfdf_hopper_add_by_grp_in_average_distribution(0, nbrGroup);
 	//设置小组重量范围：数据均为NF2进行设置
 	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 10000, 100000);
 	//设置重量目标
-	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 1000000, 0.01);
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 1000000, 0.001);
 
 	//第1#流水线，分配组别
 	if (gTaskL3bfdfContext.nbrIoBoardPerLine >= 2){
@@ -858,6 +860,7 @@ void func_bfdfuicomm_algo_parameter_set_check(void)
 		{
 			gRange = (double)(gTaskL3bfdfContext.group[lineId][gId].rangeHigh - gTaskL3bfdfContext.group[lineId][gId].rangeLow);
 			tRange = (double)gTaskL3bfdfContext.group[lineId][gId].targetUpLimit;
+			gRange = ((gRange==0)?0.01:gRange);
 			ratio = tRange / gRange;
 			if (ratio < HCU_SYSCFG_UPLIMIT_VS_GRP_DISTR_RATIO_MAX)
 				HcuErrorPrint("BFDFUICOMM: Parameter set Grp range or Uplimit range too small, potential risk to high rejection rate. Ratio/Line/Gid=%6.2f%/%d/%d\n", ratio*100, lineId, gId);

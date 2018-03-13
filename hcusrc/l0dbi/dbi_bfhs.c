@@ -111,7 +111,7 @@ OPSTAT dbi_HcuBfhs_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
 
 	//REPLACE新的数据
     sprintf(strsql, "REPLACE INTO `hcubfhsstadatainfo` (statype, configid, timestamp, wsincmatwgt, wsincmatcnt, wsnormalcnt, wsnormalwgt, wsovercnt, wsoverwgt, wsundertotalcnt, wsundertotalwgt, wsundertu1cnt, wsundertu1wgt, wsundertu2cnt, wsundertu2wgt, wsunspecificcnt, wsunspecificwgt) VALUES \
-    		('%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')", s, configId, tmp, StaDatainfo->wsIncMatWgt, StaDatainfo->wsIncMatCnt,\
+    		('%s', '%d', '%d', '%lu', '%d', '%d', '%lu', '%d', '%lu', '%d', '%lu', '%d', '%lu', '%d', '%lu', '%d', '%lu')", s, configId, tmp, StaDatainfo->wsIncMatWgt, StaDatainfo->wsIncMatCnt,\
 			StaDatainfo->wsNormalCnt, StaDatainfo->wsNormalWgt, StaDatainfo->wsOverCnt, StaDatainfo->wsOverWgt, StaDatainfo->wsUnderTotalCnt, StaDatainfo->wsUnderTotalWgt,\
 			StaDatainfo->wsUnderTu1Cnt, StaDatainfo->wsUnderTu1Wgt, StaDatainfo->wsUnderTu2Cnt, StaDatainfo->wsUnderTu2Wgt, StaDatainfo->wsUnspecificCnt, StaDatainfo->wsUnspecificWgt);
 	result = mysql_query(sqlHandler, strsql);

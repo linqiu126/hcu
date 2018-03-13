@@ -2422,8 +2422,8 @@ bool func_l3bfdf_hopper_judge_cur_mat_is_in_right_space(UINT8 streamId, UINT16 h
 	targetWgtH = targetWgtL + gTaskL3bfdfContext.group[streamId][gid].targetUpLimit;
 
 	//求最大最小范围
-	max = targetWgtH/(double)gTaskL3bfdfContext.group[streamId][gid].rangeLow;
-	min = targetWgtL/(double)gTaskL3bfdfContext.group[streamId][gid].rangeHigh;
+	max = targetWgtH/(double)((gTaskL3bfdfContext.group[streamId][gid].rangeLow==0)?0.01:gTaskL3bfdfContext.group[streamId][gid].rangeLow);
+	min = targetWgtL/(double)((gTaskL3bfdfContext.group[streamId][gid].rangeHigh==0)?0.01:gTaskL3bfdfContext.group[streamId][gid].rangeHigh);
 	umax = (UINT32)max;
 	umin = (UINT32)min;
 
@@ -2474,8 +2474,8 @@ bool func_l3bfdf_hopper_judge_cur_mat_is_in_buffer_space(UINT8 streamId, UINT16 
 	targetWgtH = targetWgtL + gTaskL3bfdfContext.group[streamId][gid].targetUpLimit;
 
 	//求最大最小范围
-	max = targetWgtH/(double)gTaskL3bfdfContext.group[streamId][gid].rangeLow;
-	min = targetWgtL/(double)gTaskL3bfdfContext.group[streamId][gid].rangeHigh;
+	max = targetWgtH/(double)((gTaskL3bfdfContext.group[streamId][gid].rangeLow==0)?0.01:gTaskL3bfdfContext.group[streamId][gid].rangeLow);
+	min = targetWgtL/(double)((gTaskL3bfdfContext.group[streamId][gid].rangeHigh==0)?0.01:gTaskL3bfdfContext.group[streamId][gid].rangeHigh);
 	umax = (UINT32)max;
 	umin = (UINT32)min;
 
@@ -2548,9 +2548,8 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(UINT8 streamId, UINT
 
 	//先检查hopper状态
 	if ((gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_VALID) &&\
-			(gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT))
-	{
-		HCU_DEBUG_PRINT_IPT("L3BFDF: Hopper status error, Line/HopId=%d/%d, Status=%d\n", streamId, hopperId, gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus);
+			(gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus != HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT)){
+		HCU_DEBUG_PRINT_FAT("L3BFDF: Hopper status error, Line/HopId=%d/%d, Status=%d\n", streamId, hopperId, gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus);
 		return FALSE;
 	}
 
@@ -2561,7 +2560,7 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message_by_pullin(UINT8 streamId, UINT
 	snd.hopperId = hopperId;
 	snd.basketFullStatus = FALSE;
 	snd.bufferFullStatus = FALSE;
-	snd.snrId = ((streamId<<3) + ((2 + hopperId/HCU_SYSCFG_BFDF_HOPPER_NBR_MAX)&0x07));
+	snd.snrId = ((streamId<<3) + ((2 + (hopperId-1)/HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD)&0x07));
 	snd.length = sizeof(msg_struct_l3bfdf_can_ws_comb_out_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_CAN_WS_COMB_OUT, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
 
@@ -2668,14 +2667,14 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 	gTaskL3bfdfContext.curAge.wsTgvMatWgtMid = gTaskL3bfdfContext.curAge.wsTgvMatWgtMid*(float)HCU_L3BFDF_STA_AGEING_COEF + (float)HCU_L3BFDF_STA_AGEING_COEF_ALPHA*gTaskL3bfdfContext.cur.wsTgvMatWgt;
 	//再输出结果
 	gTaskL3bfdfContext.staLocalUi.wsIncMatCnt = (UINT32)(gTaskL3bfdfContext.curAge.wsIncMatCntMid + 0.5);
-	gTaskL3bfdfContext.staLocalUi.wsIncMatWgt = (UINT32)(gTaskL3bfdfContext.curAge.wsIncMatWgtMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsIncMatWgt = (UINT64)(gTaskL3bfdfContext.curAge.wsIncMatWgtMid + 0.5);
 	gTaskL3bfdfContext.staLocalUi.wsCombTimes = (UINT32)(gTaskL3bfdfContext.curAge.wsCombTimesMid + 0.5);
 	gTaskL3bfdfContext.staLocalUi.wsTttTimes  = (UINT32)(gTaskL3bfdfContext.curAge.wsTttTimesMid + 0.5);
 	gTaskL3bfdfContext.staLocalUi.wsTgvTimes  = (UINT32)(gTaskL3bfdfContext.curAge.wsTgvTimesMid + 0.5);
 	gTaskL3bfdfContext.staLocalUi.wsTttMatCnt = (UINT32)(gTaskL3bfdfContext.curAge.wsTttMatCntMid + 0.5);
 	gTaskL3bfdfContext.staLocalUi.wsTgvMatCnt = (UINT32)(gTaskL3bfdfContext.curAge.wsTgvMatCntMid + 0.5);
-	gTaskL3bfdfContext.staLocalUi.wsTttMatWgt = (UINT32)(gTaskL3bfdfContext.curAge.wsTttMatWgtMid + 0.5);
-	gTaskL3bfdfContext.staLocalUi.wsTgvMatWgt = (UINT32)(gTaskL3bfdfContext.curAge.wsTgvMatWgtMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsTttMatWgt = (UINT64)(gTaskL3bfdfContext.curAge.wsTttMatWgtMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsTgvMatWgt = (UINT64)(gTaskL3bfdfContext.curAge.wsTgvMatWgtMid + 0.5);
 	gTaskL3bfdfContext.staLocalUi.wsCallCellTimes = (UINT32)(gTaskL3bfdfContext.curAge.wsCallCellTimesMid + 0.5);
 	gTaskL3bfdfContext.staLocalUi.wsAvgTttTimes = gTaskL3bfdfContext.staLocalUi.wsTttTimes;
 	gTaskL3bfdfContext.staLocalUi.wsAvgTttMatCnt = gTaskL3bfdfContext.staLocalUi.wsTttMatCnt;
@@ -2839,7 +2838,7 @@ OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
 
 	//重要的统计功能挂载
 	if ((gTaskL3bfdfContext.elipseCnt%HCU_L3BFDF_STATISTIC_PRINT_FREQUENCY) == 0){
-		HCU_DEBUG_PRINT_FAT("L3BFDF: Control statistics, Total Up2Now Inc/Comb/TTT/TGV/CallCell-Cnt = [%d/%d/%d/%d/%d], TotalWgt=%d, Comb/TTT/TGV Rate = [%5.2f%%/%5.2f%%/%5.2f%%], Local UI Shows AvgSpeed of [TTT Times/MatCnt/MatWgt] = %d/%d/%5.2f.\n",\
+		HCU_DEBUG_PRINT_FAT("L3BFDF: Control statistics, Total Up2Now Inc/Comb/TTT/TGV/CallCell-Cnt = [%d/%d/%d/%d/%d], TotalWgt=%lu, Comb/TTT/TGV Rate = [%5.2f%%/%5.2f%%/%5.2f%%], Local UI Shows AvgSpeed of [TTT Times/MatCnt/MatWgt] = %d/%d/%lu.\n",\
 				gTaskL3bfdfContext.staUp2Now.wsIncMatCnt, \
 				gTaskL3bfdfContext.staUp2Now.wsCombTimes, \
 				gTaskL3bfdfContext.staUp2Now.wsTttTimes, \

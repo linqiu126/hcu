@@ -286,7 +286,7 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	//gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
 
 	//进入性能仿真测试模式，正式版本中，必须将这个做成DISABLE，不然产品不会真正工作
-#if (HCU_SYSCFG_L3BFDF_PMAS_SET == HCU_L3BFDF_PMAS_ENABLE)
+#if (HCU_SYSCFG_L3BFDF_PMAS_SET == HCU_SYSCFG_L3BFDF_PMAS_ENABLE)
 	//为了测试目的，直接返回
 	msg_struct_can_l3bfdf_sys_cfg_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t));
@@ -338,7 +338,7 @@ OPSTAT fsm_canalpha_l3bfdf_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * par
 	//更新传感器状态
 	//gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
 
-#if (HCU_SYSCFG_L3BFDF_PMAS_SET == HCU_L3BFDF_PMAS_ENABLE)
+#if (HCU_SYSCFG_L3BFDF_PMAS_SET == HCU_SYSCFG_L3BFDF_PMAS_ENABLE)
 	//测试反馈
 	msg_struct_can_l3bfdf_ws_comb_out_fb_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t));
@@ -1108,6 +1108,7 @@ OPSTAT func_canalpha_working_scan_process(void)
 	return SUCCESS;
 }
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 //发送测试数据给L3BFDF
 #include "../l3appctrl/l3bfdf.h"
 OPSTAT func_canalpha_bfdf_simulation_data_process(void)
@@ -1127,9 +1128,27 @@ OPSTAT func_canalpha_bfdf_simulation_data_process(void)
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 
 	//待完善各个料斗IO板子发出的CLEAN_IND报告
+	int i = 0, j=0;
+	for (i=0; i<HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; i++){
+		for (j = 1; j<HCU_L3BFDF_MAX_HOOPER_PER_LINE_ACTUAL; j++){
+			msg_struct_can_l3bfdf_basket_clean_ind_t snd1;
+			memset(&snd1, 0, sizeof(msg_struct_can_l3bfdf_basket_clean_ind_t));
+			snd1.length = sizeof(msg_struct_can_l3bfdf_basket_clean_ind_t);
+			snd1.hopperId = j;
+			snd1.snrId = ((i<<3)+(j-1)/8+2)&0x1F;
+			if (gTaskL3bfdfContext.hopper[i][j].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_BUF_FULL)
+			//if ((gTaskL3bfdfContext.hopper[i][j].hopperStatus >= HCU_L3BFDF_HOPPER_STATUS_BASKET_FULL) && (gTaskL3bfdfContext.hopper[i][j].hopperStatus <= HCU_L3BFDF_HOPPER_STATUS_BUF_FULL))
+			{
+				hcu_message_send(MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd1, snd1.length);
+				//HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
+				return SUCCESS;
+			}
+		}
+	}
 
 	return SUCCESS;
 }
+#endif
 
 OPSTAT func_canalpha_l2frame_msg_bfdf_set_config_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t *rcv, UINT8 nodeId)
 {

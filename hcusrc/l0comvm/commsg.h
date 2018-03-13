@@ -1020,7 +1020,7 @@ typedef struct msgie_struct_bfdf_scale_weight_sta_element
 	UINT32 tttMatNbr;		//组合出料的物料数量
 	UINT32 tgvMatNbr;		//组合放弃的物料数量
 	UINT32 combAvgSpeed;	//组合平均速度
-	UINT32 totalWeight;		//总共处理的物料总重量
+	UINT64 totalWeight;		//总共处理的物料总重量
 	UINT32 totalMatNbr;  	//总共处理的物料总数量
 	UINT32 totalWorkMin;	//连续工作的总分钟数
 	UINT32 timeInUnix;  	//报告生成的unix时间，网络可能报告滞留
@@ -1029,19 +1029,19 @@ typedef struct msgie_struct_bfdf_scale_weight_sta_element
 typedef struct msgie_struct_bfhs_scale_weight_sta_element
 {
 	UINT32	wsIncMatCnt;  		//物料数量
-	UINT32	wsIncMatWgt;  		//物料重量
+	UINT64	wsIncMatWgt;  		//物料重量
 	UINT32  wsNormalCnt;		//正常
-	UINT32  wsNormalWgt;		//正常
+	UINT64  wsNormalWgt;		//正常
 	UINT32  wsOverCnt;			//超重
-	UINT32  wsOverWgt;			//超重
+	UINT64  wsOverWgt;			//超重
 	UINT32  wsUnderTotalCnt;	//欠重
-	UINT32	wsUnderTotalWgt;	//欠重
+	UINT64	wsUnderTotalWgt;	//欠重
 	UINT32  wsUnderTu1Cnt;		//欠重TU1
-	UINT32	wsUnderTu1Wgt;		//欠重TU1
+	UINT64	wsUnderTu1Wgt;		//欠重TU1
 	UINT32  wsUnderTu2Cnt;		//欠重TU2
-	UINT32	wsUnderTu2Wgt;		//欠重TU2
+	UINT64	wsUnderTu2Wgt;		//欠重TU2
 	UINT32  wsUnspecificCnt;	//非特定
-	UINT32	wsUnspecificWgt;	//非特定
+	UINT64	wsUnspecificWgt;	//非特定
 	UINT32  wsAvgMatTimes;		//平均进料次数
 	UINT32  wsAvgTttTimes;		//平均成功次数
 	UINT32  wsAvgTgvTimes;		//平均失败次数
@@ -4867,36 +4867,36 @@ typedef struct HcuSysMsgIeL3bfscContextStaElement
 typedef struct HcuSysMsgIeL3bfdfContextStaElement
 {
 	UINT32	wsIncMatCnt;  			//物料数量
-	UINT32	wsIncMatWgt;  			//物料重量
+	UINT64	wsIncMatWgt;  			//物料重量
 	UINT32	wsCombTimes;  			//总共成功素搜到目标的次数
 	UINT32	wsTttTimes;  			//TTT次数
 	UINT32	wsTgvTimes;  			//TGV次数
 	UINT32	wsTttMatCnt;			//TTT物料数量
 	UINT32	wsTgvMatCnt;			//TGV物料数量
-	UINT32	wsTttMatWgt;			//TTT物料重量
-	UINT32	wsTgvMatWgt;			//TGV物料重量
+	UINT64	wsTttMatWgt;			//TTT物料重量
+	UINT64	wsTgvMatWgt;			//TGV物料重量
 	UINT32  wsCallCellTimes;		//成功出料到外部的次数
 	UINT32	wsAvgTttTimes;			//TTT平均次数
 	UINT32	wsAvgTttMatCnt;			//TTT平均物料数
-	UINT32	wsAvgTttMatWgt;			//TTT平均重量
+	UINT64	wsAvgTttMatWgt;			//TTT平均重量
 }HcuSysMsgIeL3bfdfContextStaElement_t;
 
 typedef struct HcuSysMsgIeL3bfhsContextStaElement
 {
 	UINT32	wsIncMatCnt;  		//物料数量
-	UINT32	wsIncMatWgt;  		//物料重量
+	UINT64	wsIncMatWgt;  		//物料重量
 	UINT32  wsNormalCnt;		//正常
-	UINT32  wsNormalWgt;		//正常
+	UINT64  wsNormalWgt;		//正常
 	UINT32  wsOverCnt;			//超重
-	UINT32  wsOverWgt;			//超重
+	UINT64  wsOverWgt;			//超重
 	UINT32  wsUnderTotalCnt;	//欠重
-	UINT32	wsUnderTotalWgt;	//欠重
+	UINT64	wsUnderTotalWgt;	//欠重
 	UINT32  wsUnderTu1Cnt;		//欠重TU1
-	UINT32	wsUnderTu1Wgt;		//欠重TU1
+	UINT64	wsUnderTu1Wgt;		//欠重TU1
 	UINT32  wsUnderTu2Cnt;		//欠重TU2
-	UINT32	wsUnderTu2Wgt;		//欠重TU2
+	UINT64	wsUnderTu2Wgt;		//欠重TU2
 	UINT32  wsUnspecificCnt;	//非特定
-	UINT32	wsUnspecificWgt;	//非特定
+	UINT64	wsUnspecificWgt;	//非特定
 	UINT32  wsAvgMatTimes;		//平均进料次数
 	UINT32  wsAvgTttTimes;		//平均成功次数
 	UINT32  wsAvgTgvTimes;		//平均失败次数

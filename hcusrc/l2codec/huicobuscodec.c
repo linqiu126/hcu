@@ -763,7 +763,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report(INT32 cmdValu
     json_object_object_add(jsonobj, "upLimitWeight", json_object_new_int(buf->upLimitWeight));
     json_object_object_add(jsonobj, "throughputPerMin", json_object_new_int(buf->throughputPerMin));
     json_object_object_add(jsonobj, "totalReject", json_object_new_int(buf->totalReject));
-    json_object_object_add(jsonobj, "totalWeight", json_object_new_int(buf->totalWeight));
+    json_object_object_add(jsonobj, "totalWeight", json_object_new_int64(buf->totalWeight));
     json_object_object_add(jsonobj, "totalPackage", json_object_new_int(buf->totalPackage));
 
     sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
