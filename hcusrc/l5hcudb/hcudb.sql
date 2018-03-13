@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 10, 2018 at 02:33 PM
+-- Generation Time: Mar 13, 2018 at 01:37 PM
 -- Server version: 5.7.20-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -269,17 +269,17 @@ CREATE TABLE `hcubfdfstadatainfo` (
   `configid` int(4) DEFAULT NULL,
   `timestamp` int(4) DEFAULT NULL,
   `wsincmatcnt` int(4) DEFAULT NULL,
-  `wsincmatwgt` double(18,2) DEFAULT NULL,
+  `wsincmatwgt` int(8) DEFAULT NULL,
   `wscombtimes` int(4) DEFAULT NULL,
   `wsttttimes` int(4) DEFAULT NULL,
   `wstgvtimes` int(4) DEFAULT NULL,
   `wstttmatcnt` int(4) DEFAULT NULL,
   `wstgvmatcnt` int(4) DEFAULT NULL,
-  `wstttmatwgt` double(18,2) DEFAULT NULL,
-  `wstgvmatwgt` double(18,2) DEFAULT NULL,
+  `wstttmatwgt` int(8) DEFAULT NULL,
+  `wstgvmatwgt` int(8) DEFAULT NULL,
   `wsavgttttimes` int(4) DEFAULT NULL,
   `wsavgtttmatcnt` int(4) DEFAULT NULL,
-  `wsavgtttmatwgt` double(18,2) DEFAULT NULL
+  `wsavgtttmatwgt` int(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -287,12 +287,12 @@ CREATE TABLE `hcubfdfstadatainfo` (
 --
 
 INSERT INTO `hcubfdfstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `wsincmatcnt`, `wsincmatwgt`, `wscombtimes`, `wsttttimes`, `wstgvtimes`, `wstttmatcnt`, `wstgvmatcnt`, `wstttmatwgt`, `wstgvmatwgt`, `wsavgttttimes`, `wsavgtttmatcnt`, `wsavgtttmatwgt`) VALUES
-(1, 'BFDF_STA_24_HOUR', 1, 1501126545, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(2, 'BFDF_STA_LOCAL_UI', 0, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(3, 'BFDF_STA_LOCAL_UI', 1, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(4, 'BFDF_STA_UP_2_NOW', 1, 1501641451, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(1127, 'BFDF_STA_60_MIN', 16, 1520592244, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(1267, 'BFDF_STA_24_HOUR', 16, 1520601687, 301, 7622032.00, 300, 300, 0, 300, 0, 7585629.00, 0.00, 86400, 86400, -2110306048.00);
+(1, 'BFDF_STA_24_HOUR', 1, 1501126545, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(2, 'BFDF_STA_LOCAL_UI', 0, 1501641455, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(3, 'BFDF_STA_LOCAL_UI', 1, 1501641455, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(4, 'BFDF_STA_UP_2_NOW', 1, 1501641451, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1127, 'BFDF_STA_60_MIN', 16, 1520592244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1267, 'BFDF_STA_24_HOUR', 16, 1520601687, 301, 7622032, 300, 300, 0, 300, 0, 7585629, 0, 86400, 86400, -2110306048);
 
 -- --------------------------------------------------------
 
@@ -413,7 +413,7 @@ CREATE TABLE `hcubfhsproductpara` (
 
 INSERT INTO `hcubfhsproductpara` (`configid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `targetweight`, `targetspeed`, `productlength`, `upperlimit`, `algorithmoption`, `rejectoroption`, `targetthroughput`, `tareweight`, `tu1limit`, `maxtu1`, `tu2limit`, `readstarttime`, `readstoptime`, `armfailtime`, `armfailvaration`, `armrollinginterval`, `armrollingstart`, `armrollingstop`, `armstartaction`, `motordirection`, `motorspeed`) VALUES
 (16, 'apple', 'N', 'Y', 'System', 'apple54.svg', 'Apple base configuratuion', 1000, 1000, 100, 1000, 1, 3, 0, 0, 995, 250, 990, 300, 380, 100, 1, 100, 1, 1, 2000, 0, 750),
-(24, 'fish', 'N', 'N', 'System', 'fish13.svg', 'Fish configuratuion', 1000, 1000, 100, 1000, 1, 3, 0, 0, 995, 250, 990, 300, 380, 2, 2, 500, 2, 2, 2, 1, 2),
+(24, 'fish', 'N', 'N', 'System', 'fish13.svg', 'Fish configuratuion', 1000, 1000, 100, 1000, 1, 3, 0, 0, 995, 250, 990, 300, 380, 100, 2, 500, 2, 2, 2000, 1, 750),
 (25, 'Banana', 'N', 'N', 'System', 'banana3.svg', 'Banana configuratuion', 1000, 1000, 100, 1000, 1, 3, 0, 0, 995, 250, 990, 300, 380, 100, 1, 100, 1, 1, 2000, 1, 750);
 
 -- --------------------------------------------------------
@@ -427,20 +427,20 @@ CREATE TABLE `hcubfhsstadatainfo` (
   `statype` char(20) DEFAULT NULL,
   `configid` int(4) DEFAULT NULL,
   `timestamp` int(4) DEFAULT NULL,
-  `wsincmatwgt` int(4) DEFAULT NULL,
+  `wsincmatwgt` int(8) DEFAULT NULL,
   `wsincmatcnt` int(4) DEFAULT NULL,
   `wsnormalcnt` int(4) DEFAULT NULL,
-  `wsnormalwgt` int(4) DEFAULT NULL,
+  `wsnormalwgt` int(8) DEFAULT NULL,
   `wsovercnt` int(4) DEFAULT NULL,
-  `wsoverwgt` int(4) DEFAULT NULL,
+  `wsoverwgt` int(8) DEFAULT NULL,
   `wsundertotalcnt` int(4) DEFAULT NULL,
-  `wsundertotalwgt` int(4) DEFAULT NULL,
+  `wsundertotalwgt` int(8) DEFAULT NULL,
   `wsundertu1cnt` int(4) DEFAULT NULL,
-  `wsundertu1wgt` int(4) DEFAULT NULL,
+  `wsundertu1wgt` int(8) DEFAULT NULL,
   `wsundertu2cnt` int(4) DEFAULT NULL,
-  `wsundertu2wgt` int(4) DEFAULT NULL,
+  `wsundertu2wgt` int(8) DEFAULT NULL,
   `wsunspecificcnt` int(4) DEFAULT NULL,
-  `wsunspecificwgt` int(4) DEFAULT NULL
+  `wsunspecificwgt` int(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1005,17 +1005,17 @@ CREATE TABLE `hcubfscstadatainfo` (
   `configid` int(4) DEFAULT NULL,
   `timestamp` int(4) DEFAULT NULL,
   `wsincmatcnt` int(4) DEFAULT NULL,
-  `wsincmatwgt` double(18,2) DEFAULT NULL,
+  `wsincmatwgt` int(8) DEFAULT NULL,
   `wscombtimes` int(4) DEFAULT NULL,
   `wsttttimes` int(4) DEFAULT NULL,
   `wstgvtimes` int(4) DEFAULT NULL,
   `wstttmatcnt` int(4) DEFAULT NULL,
   `wstgvmatcnt` int(4) DEFAULT NULL,
-  `wstttmatwgt` double(18,2) DEFAULT NULL,
-  `wstgvmatwgt` double(18,2) DEFAULT NULL,
+  `wstttmatwgt` int(8) DEFAULT NULL,
+  `wstgvmatwgt` int(8) DEFAULT NULL,
   `wsavgttttimes` int(4) DEFAULT NULL,
   `wsavgtttmatcnt` int(4) DEFAULT NULL,
-  `wsavgtttmatwgt` double(18,2) DEFAULT NULL
+  `wsavgtttmatwgt` int(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1023,14 +1023,14 @@ CREATE TABLE `hcubfscstadatainfo` (
 --
 
 INSERT INTO `hcubfscstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `wsincmatcnt`, `wsincmatwgt`, `wscombtimes`, `wsttttimes`, `wstgvtimes`, `wstttmatcnt`, `wstgvmatcnt`, `wstttmatwgt`, `wstgvmatwgt`, `wsavgttttimes`, `wsavgtttmatcnt`, `wsavgtttmatwgt`) VALUES
-(1, 'BFSC_STA_24_HOUR', 1, 1501126545, 22, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(3, 'BFSC_STA_LOCAL_UI', 1, 1502874213, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(4, 'BFSC_STA_UP_2_NOW', 1, 1501641451, 22, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(21, 'BFSC_STA_LOCAL_UI', 0, 1503199385, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(11897, 'BFSC_STA_60_MIN', 4, 1508402309, 1276, 1790622.00, 2, 2, 0, 2, 0, 45254.00, 0.00, 2, 2, 45254.00),
-(24843, 'BFSC_STA_24_HOUR', 4, 1508486339, 8, 11636.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(24854, 'BFSC_STA_LOCAL_UI', 4, 1508486344, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(24855, 'BFSC_STA_UP_2_NOW', 4, 1508486344, 8, 11636.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
+(1, 'BFSC_STA_24_HOUR', 1, 1501126545, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(3, 'BFSC_STA_LOCAL_UI', 1, 1502874213, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(4, 'BFSC_STA_UP_2_NOW', 1, 1501641451, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(21, 'BFSC_STA_LOCAL_UI', 0, 1503199385, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(11897, 'BFSC_STA_60_MIN', 4, 1508402309, 1276, 1790622, 2, 2, 0, 2, 0, 45254, 0, 2, 2, 45254),
+(24843, 'BFSC_STA_24_HOUR', 4, 1508486339, 8, 11636, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(24854, 'BFSC_STA_LOCAL_UI', 4, 1508486344, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(24855, 'BFSC_STA_UP_2_NOW', 4, 1508486344, 8, 11636, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
