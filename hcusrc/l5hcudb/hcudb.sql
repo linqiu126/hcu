@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 13, 2018 at 09:08 PM
+-- Generation Time: Mar 15, 2018 at 09:40 AM
 -- Server version: 5.7.20-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -133,29 +133,29 @@ INSERT INTO `hcubfdfcallcell` (`sid`, `configid`, `timestamp`, `operator`, `grou
 (4, 16, 1520599319, 'apple', 1, 40000, 10000, 990000, 1000000, 1006336, 0, 3),
 (5, 16, 1520599390, 'apple', 1, 40000, 10000, 990000, 1000000, 997824, 0, 4),
 (6, 16, 1520583608, 'apple', 1, 40000, 10000, 100000, 110000, 101615, 0, 5),
-(7, 16, 1520583610, 'apple', 1, 40000, 10000, 100000, 110000, 127702, 0, 6),
-(8, 16, 1520583613, 'apple', 1, 40000, 10000, 100000, 110000, 106470, 0, 8),
-(9, 16, 1520583693, 'apple', 1, 40000, 10000, 100000, 110000, 129753, 0, 7),
-(10, 16, 1520583713, 'apple', 1, 40000, 10000, 100000, 110000, 122580, 0, 1),
-(11, 16, 1520583715, 'apple', 1, 40000, 10000, 100000, 110000, 108588, 0, 2),
-(12, 16, 1520583717, 'apple', 1, 40000, 10000, 100000, 110000, 127039, 0, 3),
-(13, 16, 1520583719, 'apple', 1, 40000, 10000, 100000, 110000, 109557, 0, 4),
-(14, 16, 1520583720, 'apple', 1, 40000, 10000, 100000, 110000, 113492, 0, 5),
+(7, 16, 1520952050, 'apple', 1, 80000, 10000, 1000000, 1100000, 1128195, 0, 1),
+(8, 16, 1520952052, 'apple', 1, 80000, 10000, 1000000, 1100000, 1116604, 0, 2),
+(9, 16, 1520952053, 'apple', 1, 80000, 10000, 1000000, 1100000, 1137164, 0, 3),
+(10, 16, 1520952054, 'apple', 1, 80000, 10000, 1000000, 1100000, 1097711, 0, 4),
+(11, 16, 1520952055, 'apple', 1, 80000, 10000, 1000000, 1100000, 1177520, 0, 5),
+(12, 16, 1520952056, 'apple', 1, 80000, 10000, 1000000, 1100000, 1144028, 0, 6),
+(13, 16, 1520952057, 'apple', 1, 80000, 10000, 1000000, 1100000, 1141798, 0, 7),
+(14, 16, 1520952058, 'apple', 1, 80000, 10000, 1000000, 1100000, 1090702, 0, 8),
 (15, 16, 1520583723, 'apple', 1, 40000, 10000, 100000, 110000, 118964, 0, 7),
 (16, 16, 1520583724, 'apple', 1, 40000, 10000, 100000, 110000, 112017, 0, 8),
 (17, 16, 1520583726, 'apple', 1, 40000, 10000, 100000, 110000, 105356, 0, 1),
 (18, 16, 1520583729, 'apple', 1, 40000, 10000, 100000, 110000, 106592, 0, 3),
-(19, 16, 1520583737, 'apple', 1, 40000, 10000, 100000, 110000, 100085, 0, 7),
-(20, 16, 1520583744, 'apple', 1, 40000, 10000, 100000, 110000, 107844, 0, 1),
-(21, 16, 1520583745, 'apple', 1, 40000, 10000, 100000, 110000, 127244, 0, 2),
-(22, 16, 1520583746, 'apple', 1, 40000, 10000, 100000, 110000, 109276, 0, 3),
-(23, 16, 1520583747, 'apple', 1, 40000, 10000, 100000, 110000, 113338, 0, 4),
-(24, 16, 1520583749, 'apple', 1, 40000, 10000, 100000, 110000, 126083, 0, 5),
-(25, 16, 1520583750, 'apple', 1, 40000, 10000, 100000, 110000, 113469, 0, 8),
-(26, 16, 1520583803, 'apple', 1, 40000, 10000, 100000, 110000, 106125, 0, 6),
+(19, 16, 1520953431, 'apple', 1, 80000, 10000, 1000000, 1100000, 1128955, 0, 1),
+(20, 16, 1520953432, 'apple', 1, 80000, 10000, 1000000, 1100000, 1076503, 0, 2),
+(21, 16, 1520953434, 'apple', 1, 80000, 10000, 1000000, 1100000, 1133336, 0, 3),
+(22, 16, 1520953434, 'apple', 1, 80000, 10000, 1000000, 1100000, 1103000, 0, 4),
+(23, 16, 1520953435, 'apple', 1, 80000, 10000, 1000000, 1100000, 1131518, 0, 5),
+(24, 16, 1520953436, 'apple', 1, 80000, 10000, 1000000, 1100000, 1117140, 0, 6),
+(25, 16, 1520953437, 'apple', 1, 80000, 10000, 1000000, 1100000, 1150163, 0, 7),
+(26, 16, 1520953438, 'apple', 1, 80000, 10000, 1000000, 1100000, 1117937, 0, 8),
 (27, 16, 1520583809, 'apple', 1, 40000, 10000, 100000, 110000, 115432, 0, 2),
-(28, 16, 1520583859, 'apple', 1, 40000, 10000, 100000, 110000, 109478, 0, 1),
-(29, 16, 1520583860, 'apple', 1, 40000, 10000, 100000, 110000, 113988, 0, 2),
+(28, 16, 1520953681, 'apple', 1, 80000, 10000, 1000000, 1100000, 1009727, 0, 1),
+(29, 16, 1520953684, 'apple', 1, 80000, 10000, 1000000, 1100000, 1009530, 0, 5),
 (30, 16, 1520583861, 'apple', 1, 40000, 10000, 100000, 110000, 128303, 0, 3),
 (31, 16, 1520583863, 'apple', 1, 40000, 10000, 100000, 110000, 100652, 0, 4),
 (32, 16, 1520583864, 'apple', 1, 40000, 10000, 100000, 110000, 123808, 0, 5),
@@ -228,8 +228,7 @@ INSERT INTO `hcubfdfgrouppara` (`sid`, `groupid`, `lineid`, `configid`, `hoppern
 (26, 1, 0, 19, 4, 15, 25000, 200, 10000, 400, 500),
 (27, 2, 0, 19, 4, 240, 10000, 100, 5000, 200, 300),
 (28, 1, 1, 19, 4, 15, 25000, 200, 10000, 400, 500),
-(29, 2, 1, 19, 4, 240, 10000, 100, 5000, 200, 300),
-(30, 1, 1, 16, 8, 255, 1000000, 1100000, 500000, 10000, 80000);
+(29, 2, 1, 19, 4, 240, 10000, 100, 5000, 200, 300);
 
 -- --------------------------------------------------------
 
@@ -291,8 +290,8 @@ INSERT INTO `hcubfdfstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `ws
 (2, 'BFDF_STA_LOCAL_UI', 0, 1501641455, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (3, 'BFDF_STA_LOCAL_UI', 1, 1501641455, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (4, 'BFDF_STA_UP_2_NOW', 1, 1501641451, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(1127, 'BFDF_STA_60_MIN', 16, 1520592244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(1267, 'BFDF_STA_24_HOUR', 16, 1520601687, 301, 7622032, 300, 300, 0, 300, 0, 7585629, 0, 86400, 86400, -2110306048);
+(2078, 'BFDF_STA_60_MIN', 16, 1521026865, 253, 6538396, 253, 253, 0, 253, 0, 6538396, 0, 253, 253, 6538396),
+(2136, 'BFDF_STA_24_HOUR', 16, 1521030285, 253, 6538396, 253, 253, 0, 253, 0, 6538396, 0, 3113, 3113, 80472568);
 
 -- --------------------------------------------------------
 
@@ -343,7 +342,7 @@ CREATE TABLE `hcubfdfsystempara` (
 --
 
 INSERT INTO `hcubfdfsystempara` (`sid`, `linenum`, `boardnumperline`, `mainmotspeed`, `mainmotdirection`, `mainmotfailvaration`, `mainmotfailtime`, `secmotspeed`, `secmotdirection`, `secmotfailvaration`, `secmotfailtime`, `tweightind`, `t0bis`, `ta0`, `tactcmd`, `tarmstart`, `tarmstop`, `tdoorcloselight`, `tapintervalmin`, `tapinterval`, `tlocalap`, `delaynode1tox`, `delayuphcualgo`, `zerocaliteration`, `fullcaliteration`, `fullweight`, `adcsamplefreq`, `adcgain`, `nffilterfactor`, `maxallowedwgt`, `tailorvalue`, `engswitch`, `sysstatus`, `hcusw`, `ihusw`) VALUES
-(1, 2, 1, 200, 0, 1, 1, 300, 0, 1, 1, 40, 10, 120, 1, 20, 50, 70, 20, 45, 1, 5, 1, 8, 4, 20000, 3, 6, 20, 1000000, 100000, 1, 0, 'HCU', 'IHU');
+(1, 1, 1, 200, 0, 1, 1, 300, 0, 1, 1, 60, 10, 110, 1, 20, 50, 70, 20, 45, 1, 5, 1, 8, 4, 20000, 3, 6, 20, 1000000, 100000, 1, 0, 'HCU', 'IHU');
 
 -- --------------------------------------------------------
 
@@ -664,7 +663,7 @@ CREATE TABLE `hcubfsccurrentinfo` (
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`, `hcusw`, `ihusw`) VALUES
-(1520391983, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0, 'NOW: Inventory Req HCU-SW-R3.V265.DB201.STABLE!', 'NOW: Inventory Req IHU-SW-R0.V0.DB0.STABLE!');
+(1521076867, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0, 'NOW: Inventory Req HCU-SW-R3.V265.DB201.PATCH!', 'NOW: Inventory Req IHU-SW-R0.V0.DB0.PATCH!');
 
 -- --------------------------------------------------------
 
@@ -972,7 +971,11 @@ INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japan
 (234, 'ArmFailVaration', NULL, NULL, NULL, NULL, NULL, NULL),
 (235, 'ArmRollingInterval', NULL, NULL, NULL, NULL, NULL, NULL),
 (236, 'ArmrollingStart', NULL, NULL, NULL, NULL, NULL, NULL),
-(237, 'ArmStartAction', NULL, NULL, NULL, NULL, NULL, NULL);
+(237, 'ArmStartAction', NULL, NULL, NULL, NULL, NULL, NULL),
+(238, 'Calibration Full(0.01g)', NULL, NULL, NULL, NULL, NULL, NULL),
+(239, 'Full Weight(0.01g)', NULL, NULL, NULL, NULL, NULL, NULL),
+(240, 'Max Allowed Weight(0.01g)', NULL, NULL, NULL, NULL, NULL, NULL),
+(241, 'Weight Sensor Tailor Value(0.01g)', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1629,7 +1632,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (1, 'TID_1S_MIN', 1, 0),
 (2, 'TID_1S_SVRCON_INIT_FB', 1, 10),
 (3, 'TID_1S_LED_GALOWAG_SCAN', 1, 1),
-(4, 'TID_1S_EMC_PERIOD_READ', 1, 600),
+(4, 'TID_1S_EMC_PERIOD_READ', 1, 100),
 (5, 'TID_1S_EMC_MODBUS_FB', 1, 10),
 (6, 'TID_1S_PM25_PERIOD_READ', 1, 600),
 (7, 'TID_1S_PM25_MODBUS_FB', 1, 10),
@@ -1647,7 +1650,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (19, 'TID_1S_HSMMP_PERIOD_AVORION_READ', 1, 600),
 (20, 'TID_1S_HSMMP_AVORION_FB', 1, 10),
 (21, 'TID_ID_1S_HSMMP_PERIOD_CURL_PICTURE', 1, 3600),
-(22, 'TID_1S_CLOUDVELA_PERIOD_LINK_HBT', 1, 3600),
+(22, 'TID_1S_CLOUDVELA_PERIOD_LINK_HBT', 1, 10),
 (23, 'TID_1S_NBIOTCJ188_PERIOD_LINK_HBT', 1, 600),
 (24, 'TID_1S_NBIOTCJ188_SEND_DATA_BACK', 1, 10),
 (25, 'TID_1S_NBIOTQG376_PERIOD_LINK_HBT', 1, 600),
@@ -1664,60 +1667,55 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (36, 'TID_1S_IHM_PERIOD_READ', 1, 600),
 (37, 'TID_1S_IGM_PERIOD_READ', 1, 600),
 (38, 'TID_1S_IPM_PERIOD_READ', 1, 600),
-(39, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 36000),
-(40, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 90000),
+(39, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 311),
+(40, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 900),
 (41, 'TID_1S_SYSSWM_SEG_DL_WAIT', 1, 3),
 (42, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
-(43, 'TID_1S_CANALPHA_WORKING_SCAN', 1, 10),
-(44, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
-(45, 'TID_1S_L3BFSC_SYS_START_WAIT_FB', 1, 15),
-(46, 'TID_1S_L3BFSC_SYS_STOP_WAIT_FB', 1, 15),
-(47, 'TID_1S_L3BFSC_TTT_WAIT_FB', 1, 15),
-(48, 'TID_1S_L3BFSC_TGU_WAIT_FB', 1, 15),
-(49, 'TID_1S_L3BFSC_ERROR_INQ', 1, 60),
-(50, 'TID_1S_BFSCUICOMM_PERIOD_READ', 1, 600),
-(51, 'TID_1S_L3BFDF_CFG_START_WAIT_FB', 1, 15),
-(52, 'TID_1S_L3BFDF_SUSPEND_WAIT_FB', 1, 15),
-(53, 'TID_1S_L3BFDF_RESUME_WAIT_FB', 1, 15),
-(54, 'TID_1S_L3BFDF_TTT_WAIT_FB', 1, 3),
-(55, 'TID_1S_BFDFUICOMM_PERIOD_READ', 1, 600),
-(56, 'TID_1S_L3BFHS_CFG_START_WAIT_FB', 1, 5),
-(57, 'TID_1S_L3BFHS_SUSPEND_WAIT_FB', 1, 5),
-(58, 'TID_1S_L3BFHS_RESUME_WAIT_FB', 1, 5),
-(59, 'TID_1S_L3BFHS_CAL_ZERO_WAIT_FB', 1, 5),
-(60, 'TID_1S_L3BFHS_CAL_FULL_WAIT_FB', 1, 5),
-(61, 'TID_1S_BFHSUICOMM_PERIOD_READ', 1, 600),
-(62, 'TID_1S_L3AQYCG10_PERIOD_READ', 1, 600),
-(63, 'TID_1S_L3AQYCG20_PERIOD_READ', 1, 600),
-(64, 'TID_1S_L3AQYCG20_PERIOD_STA_SCAN', 1, 30),
-(65, 'TID_1S_L3AQYCG20_START_MIN_REPORT', 1, 60),
-(66, 'TID_1S_L3AQYCG20_STOP_MIN_REPORT', 1, 60),
-(67, 'TID_1S_L3AQYCG20_START_HOUR_REPORT', 1, 60),
-(68, 'TID_1S_L3AQYCG20_STOP_HOUR_REPORT', 1, 60),
-(69, 'TID_1S_L3AQYCG20_START_DAY_REPORT', 1, 60),
-(70, 'TID_1S_L3AQYCG20_STOP_DAY_REPORT', 1, 60),
-(71, 'TID_1S_L3DAYCG21_PERIOD_READ', 1, 60),
-(72, 'TID_1S_L3TBSWRG30_PERIOD_READ', 1, 600),
-(73, 'TID_1S_L3GQYBG40_PERIOD_READ', 1, 600),
-(74, 'TID_1S_L3CXGLACM_PERIOD_READ', 1, 600),
-(75, 'TID_1S_L3CXILC_PERIOD_READ', 1, 600),
-(76, 'TID_1S_L3NBHPM_PERIOD_READ', 1, 600),
-(77, 'TID_1S_L3NBLPM_PERIOD_READ', 1, 600),
-(78, 'TID_1S_L3OPWLOTDR_PERIOD_READ', 1, 600),
-(79, 'TID_1S_L3HATE_WORK_CTRL_FB', 1, 5),
-(80, 'TID_1S_MAX', 1, 0),
-(81, 'TID_10MS_MIN', 2, 0),
-(82, 'TID_10MS_SVRCON_TEST', 2, 10000),
-(83, 'TID_10MS_L3BFSC_PERIOD_STA_SCAN', 2, 50),
-(84, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 20),
-(85, 'TID_10MS_CANALPHA_SIMULATION_DATA', 2, 5),
-(86, 'TID_10MS_L3BFDF_PERIOD_STA_SCAN', 2, 50),
-(87, 'TID_10MS_L3BFHS_PERIOD_STA_SCAN', 2, 50),
-(88, 'TID_10MS_MAX', 2, 0),
-(89, 'TID_1MS_MIN', 3, 0),
-(90, 'TID_1MS_SVRCON_TEST', 3, 100),
-(91, 'TID_1MS_MAX', 3, 0),
-(92, 'TID_MAX', 1, 0);
+(43, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
+(44, 'TID_1S_L3BFSC_SYS_START_WAIT_FB', 1, 15),
+(45, 'TID_1S_L3BFSC_SYS_STOP_WAIT_FB', 1, 15),
+(46, 'TID_1S_L3BFSC_TTT_WAIT_FB', 1, 60),
+(47, 'TID_1S_L3BFSC_TGU_WAIT_FB', 1, 60),
+(48, 'TID_1S_L3BFSC_ERROR_INQ', 1, 15),
+(49, 'TID_1S_BFSCUICOMM_PERIOD_READ', 1, 5),
+(50, 'TID_1S_L3BFDF_CFG_START_WAIT_FB', 1, 15),
+(51, 'TID_1S_L3BFDF_SUSPEND_WAIT_FB', 1, 15),
+(52, 'TID_1S_L3BFDF_RESUME_WAIT_FB', 1, 15),
+(53, 'TID_1S_L3BFDF_TTT_WAIT_FB', 1, 3),
+(54, 'TID_1S_BFDFUICOMM_PERIOD_READ', 1, 600),
+(55, 'TID_1S_L3BFHS_CFG_START_WAIT_FB', 1, 5),
+(56, 'TID_1S_L3BFHS_SUSPEND_WAIT_FB', 1, 5),
+(57, 'TID_1S_L3BFHS_RESUME_WAIT_FB', 1, 5),
+(58, 'TID_1S_BFHSUICOMM_PERIOD_READ', 1, 600),
+(59, 'TID_1S_L3AQYCG10_PERIOD_READ', 1, 600),
+(60, 'TID_1S_L3AQYCG20_PERIOD_READ', 1, 600),
+(61, 'TID_1S_L3AQYCG20_PERIOD_STA_SCAN', 1, 30),
+(62, 'TID_1S_L3AQYCG20_START_MIN_REPORT', 1, 60),
+(63, 'TID_1S_L3AQYCG20_STOP_MIN_REPORT', 1, 60),
+(64, 'TID_1S_L3AQYCG20_START_HOUR_REPORT', 1, 60),
+(65, 'TID_1S_L3AQYCG20_STOP_HOUR_REPORT', 1, 60),
+(66, 'TID_1S_L3AQYCG20_START_DAY_REPORT', 1, 60),
+(67, 'TID_1S_L3AQYCG20_STOP_DAY_REPORT', 1, 60),
+(68, 'TID_1S_L3TBSWRG30_PERIOD_READ', 1, 600),
+(69, 'TID_1S_L3GQYBG40_PERIOD_READ', 1, 600),
+(70, 'TID_1S_L3CXGLACM_PERIOD_READ', 1, 600),
+(71, 'TID_1S_L3CXILC_PERIOD_READ', 1, 600),
+(72, 'TID_1S_L3NBHPM_PERIOD_READ', 1, 600),
+(73, 'TID_1S_L3NBLPM_PERIOD_READ', 1, 600),
+(74, 'TID_1S_L3OPWLOTDR_PERIOD_READ', 1, 600),
+(75, 'TID_1S_L3HATE_WORK_CTRL_FB', 1, 5),
+(76, 'TID_1S_MAX', 1, 0),
+(77, 'TID_10MS_MIN', 2, 0),
+(78, 'TID_10MS_SVRCON_TEST', 2, 10000),
+(79, 'TID_10MS_L3BFSC_PERIOD_STA_SCAN', 2, 50),
+(80, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 40),
+(81, 'TID_10MS_L3BFDF_PERIOD_STA_SCAN', 2, 50),
+(82, 'TID_10MS_L3BFHS_PERIOD_STA_SCAN', 2, 50),
+(83, 'TID_10MS_MAX', 2, 0),
+(84, 'TID_1MS_MIN', 3, 0),
+(85, 'TID_1MS_SVRCON_TEST', 3, 100),
+(86, 'TID_1MS_MAX', 3, 0),
+(87, 'TID_MAX', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1793,7 +1791,27 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 (1545, 0, 1443, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 13, 36, 27, 1520564627),
 (1546, 0, 723, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 13, 36, 27, 1520572970),
 (1547, 0, 723, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 11, 36, 27, 1520588651),
-(1548, 0, 1443, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 1, 12, 36, 27, 1520592251);
+(1548, 0, 1443, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 1, 12, 36, 27, 1520592251),
+(1549, 0, 723, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 23, 12, 59, 27, 1520957312),
+(1550, 0, 1443, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 19, 12, 59, 27, 1520960911),
+(1551, 0, 2163, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 23, 12, 59, 27, 1520964511),
+(1552, 0, 2880, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 19, 12, 59, 27, 1520968111),
+(1553, 0, 3600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 4, 18, 12, 59, 27, 1520971711),
+(1554, 0, 4320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 4, 21, 12, 59, 27, 1520975311),
+(1555, 0, 5040, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 17, 12, 59, 27, 1520978911),
+(1556, 0, 5760, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 7, 22, 12, 59, 27, 1520982511),
+(1557, 0, 6480, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 7, 23, 13, 59, 27, 1520986111),
+(1558, 0, 7200, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 7, 1, 13, 59, 27, 1520989711),
+(1559, 0, 723, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 5, 0, 10, 60, 27, 1521000573),
+(1560, 0, 1443, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 10, 0, 10, 60, 27, 1521004173),
+(1561, 0, 2163, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 15, 0, 10, 60, 27, 1521007773),
+(1562, 0, 2880, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 23, 0, 10, 60, 27, 1521011373),
+(1563, 0, 3600, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 31, 0, 11, 60, 27, 1521014973),
+(1564, 0, 4320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 36, 0, 11, 60, 27, 1521018573),
+(1565, 0, 723, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 5, 9, 10, 60, 27, 1521026845),
+(1566, 0, 63, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80, 0, 32, 0, 0, 0, 0, 13, 60, 27, 1521077189),
+(1567, 0, 126, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 158, 0, 63, 0, 0, 0, 0, 13, 60, 27, 1521077500),
+(1568, 0, 189, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 236, 0, 94, 0, 0, 0, 0, 13, 60, 27, 1521077811);
 
 -- --------------------------------------------------------
 
@@ -1845,6 +1863,15 @@ CREATE TABLE `hcusysswm_swpkg` (
   `currentactive` char(10) NOT NULL,
   `updatetime` int(4) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcusysswm_swpkg`
+--
+
+INSERT INTO `hcusysswm_swpkg` (`sid`, `equentry`, `hwtype`, `hwpem`, `swrel`, `swver`, `dbver`, `upgradeflag`, `swtotallen`, `swchecksum`, `dbtotallen`, `dbchecksum`, `filename`, `dbname`, `currentactive`, `updatetime`) VALUES
+(2, 1, 8001, 3, 3, 265, 200, 4, 1138284, 23327, 363, 36199, 'HCU_HPT8001_PEM3_REL3_VER265_PATCH.HEX', 'HCU_HPT8001_PEM3_REL3_VER200_MYSQL.SQL', 'COMPLETE', 1520995922),
+(4, 3, 8001, 3, 3, 185, 0, 2, 131956, 52219, 0, 0, 'IHU_HPT8001_PEM3_REL3_VER185_STABLE.BIN', '', 'COMPLETE', 1520995934),
+(6, 3, 8001, 3, 3, 180, 0, 3, 123448, 35465, 0, 0, 'IHU_HPT8001_PEM11_REL3_VER180_TRAIL.BIN', '', 'COMPLETE', 1520995949);
 
 -- --------------------------------------------------------
 
@@ -2047,50 +2074,47 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 (39, 'NBIOTCJ188', 1, 1, 1, 1, 1),
 (40, 'NBIOTQG376', 1, 1, 1, 1, 1),
 (41, 'LLCZHB', 1, 1, 1, 1, 1),
-(42, 'HUICOBUSCODEC', 1, 1, 1, 1, 1),
-(43, 'HSMMP', 1, 1, 1, 1, 1),
-(44, 'EMC', 1, 1, 1, 1, 1),
-(45, 'HUMID', 1, 1, 1, 1, 1),
-(46, 'PM25', 1, 1, 1, 1, 1),
-(47, 'TEMP', 1, 1, 1, 1, 1),
-(48, 'WINDDIR', 1, 1, 1, 1, 1),
-(49, 'WINDSPD', 1, 1, 1, 1, 1),
-(50, 'NOISE', 1, 1, 1, 1, 1),
-(51, 'AIRPRS', 1, 1, 1, 1, 1),
-(52, 'CO1', 1, 1, 1, 1, 1),
-(53, 'LIGHTSTR', 1, 1, 1, 1, 1),
-(54, 'ALCOHOL', 1, 1, 1, 1, 1),
-(55, 'HCHO', 1, 1, 1, 1, 1),
-(56, 'TOXICGAS', 1, 1, 1, 1, 1),
-(57, 'IWM', 1, 1, 1, 1, 1),
-(58, 'IHM', 1, 1, 1, 1, 1),
-(59, 'IGM', 1, 1, 1, 1, 1),
-(60, 'IPM', 1, 1, 1, 1, 1),
-(61, 'SVRCON', 1, 1, 1, 1, 1),
-(62, 'SYSPM', 1, 1, 1, 1, 1),
-(63, 'SYSSWM', 1, 1, 1, 1, 1),
-(64, 'PM25SHARP', 1, 1, 1, 1, 1),
-(65, 'CANITFLEO', 1, 1, 1, 1, 1),
-(66, 'CANALPHA', 1, 1, 1, 1, 1),
-(67, 'L3AQYCG10', 1, 1, 1, 1, 1),
-(68, 'L3AQYCG20', 1, 1, 1, 1, 1),
-(69, 'L3DAYCG21', 1, 1, 1, 1, 1),
-(70, 'L3TBSWRG30', 1, 1, 1, 1, 1),
-(71, 'L3GQYBG40', 1, 1, 1, 1, 1),
-(72, 'L3CXILC', 1, 1, 1, 1, 1),
-(73, 'L3CXGLACM', 1, 1, 1, 1, 1),
-(74, 'L3NBLPM', 1, 1, 1, 1, 1),
-(75, 'L3NBHPM', 1, 1, 1, 1, 1),
-(76, 'L3BFSC', 1, 1, 1, 1, 1),
-(77, 'BFSCUICOMM', 1, 1, 1, 1, 1),
-(78, 'JSONINOTIFY', 1, 1, 1, 1, 1),
-(79, 'BFDFUICOMM', 1, 1, 1, 1, 1),
-(80, 'BFHSUICOMM', 1, 1, 1, 1, 1),
-(81, 'L3OPWLOTDR', 1, 1, 1, 1, 1),
-(82, 'L3BFDF', 1, 1, 1, 1, 1),
-(83, 'L3BFHS', 1, 1, 1, 1, 1),
-(84, 'L3HATE', 1, 1, 1, 1, 1),
-(85, 'TASKMAX', 1, 1, 1, 1, 1);
+(42, 'HSMMP', 1, 1, 1, 1, 1),
+(43, 'EMC', 1, 1, 1, 1, 1),
+(44, 'HUMID', 1, 1, 1, 1, 1),
+(45, 'PM25', 1, 1, 1, 1, 1),
+(46, 'TEMP', 1, 1, 1, 1, 1),
+(47, 'WINDDIR', 1, 1, 1, 1, 1),
+(48, 'WINDSPD', 1, 1, 1, 1, 1),
+(49, 'NOISE', 1, 1, 1, 1, 1),
+(50, 'AIRPRS', 1, 1, 1, 1, 1),
+(51, 'CO1', 1, 1, 1, 1, 1),
+(52, 'LIGHTSTR', 1, 1, 1, 1, 1),
+(53, 'ALCOHOL', 1, 1, 1, 1, 1),
+(54, 'HCHO', 1, 1, 1, 1, 1),
+(55, 'TOXICGAS', 1, 1, 1, 1, 1),
+(56, 'IWM', 1, 1, 1, 1, 1),
+(57, 'IHM', 1, 1, 1, 1, 1),
+(58, 'IGM', 1, 1, 1, 1, 1),
+(59, 'IPM', 1, 1, 1, 1, 1),
+(60, 'SVRCON', 1, 1, 1, 1, 1),
+(61, 'SYSPM', 1, 1, 1, 1, 1),
+(62, 'SYSSWM', 1, 1, 1, 1, 1),
+(63, 'PM25SHARP', 1, 1, 1, 1, 1),
+(64, 'CANITFLEO', 1, 1, 1, 1, 1),
+(65, 'L3AQYCG10', 1, 1, 1, 1, 1),
+(66, 'L3AQYCG20', 1, 1, 1, 1, 1),
+(67, 'L3TBSWRG30', 1, 1, 1, 1, 1),
+(68, 'L3GQYBG40', 1, 1, 1, 1, 1),
+(69, 'L3CXILC', 1, 1, 1, 1, 1),
+(70, 'L3CXGLACM', 1, 1, 1, 1, 1),
+(71, 'L3NBLPM', 1, 1, 1, 1, 1),
+(72, 'L3NBHPM', 1, 1, 1, 1, 1),
+(73, 'L3BFSC', 1, 1, 1, 1, 1),
+(74, 'BFSCUICOMM', 1, 1, 1, 1, 1),
+(75, 'JSONINOTIFY', 1, 1, 1, 1, 1),
+(76, 'BFDFUICOMM', 1, 1, 1, 1, 1),
+(77, 'BFHSUICOMM', 1, 1, 1, 1, 1),
+(78, 'L3OPWLOTDR', 1, 1, 1, 1, 1),
+(79, 'L3BFDF', 1, 1, 1, 1, 1),
+(80, 'L3BFHS', 1, 1, 1, 1, 1),
+(81, 'L3HATE', 1, 1, 1, 1, 1),
+(82, 'TASKMAX', 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2305,11 +2329,11 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (191, 'MSG_ID_TOXICGAS_CLOUDVELA_DATA_RESP', 1, 1, 1),
 (192, 'MSG_ID_TOXICGAS_CLOUDVELA_DATA_REPORT', 1, 1, 1),
 (193, 'MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM', 1, 1, 1),
-(194, 'MSG_ID_CANITF_DATA_REPORT', 1, 1, 1),
-(195, 'MSG_ID_CANITF_SYSSWM_INVENTORY_REPORT', 1, 1, 1),
-(196, 'MSG_ID_SYSSWM_CANITF_INVENTORY_CONFIRM', 1, 1, 1),
-(197, 'MSG_ID_CANITF_SYSSWM_SW_PACKAGE_REPORT', 1, 1, 1),
-(198, 'MSG_ID_SYSSWM_CANITF_SW_PACKAGE_CONFIRM', 1, 1, 1),
+(194, 'MSG_ID_CANITFLEO_DATA_REPORT', 1, 1, 1),
+(195, 'MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT', 1, 1, 1),
+(196, 'MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM', 1, 1, 1),
+(197, 'MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT', 1, 1, 1),
+(198, 'MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM', 1, 1, 1),
 (199, 'MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ', 1, 1, 1),
 (200, 'MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP', 1, 1, 1),
 (201, 'MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT', 1, 1, 1),
@@ -2356,22 +2380,22 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (242, 'MSG_ID_USBCAN_L2FRAME_RCV', 1, 1, 1),
 (243, 'MSG_ID_L3BFDF_CAN_SYS_CFG_REQ', 1, 1, 1),
 (244, 'MSG_ID_CAN_L3BFDF_SYS_CFG_RESP', 1, 1, 1),
-(245, 'MSG_ID_L3BFDF_CAN_DYN_CAL_REQ', 1, 1, 1),
-(246, 'MSG_ID_CAN_L3BFDF_DYN_CAL_RESP', 1, 1, 1),
-(247, 'MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT', 1, 1, 1),
-(248, 'MSG_ID_L3BFDF_CAN_WS_COMB_OUT', 1, 1, 1),
-(249, 'MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB', 1, 1, 1),
-(250, 'MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND', 1, 1, 1),
-(251, 'MSG_ID_L3BFHS_CAN_SYS_CFG_REQ', 1, 1, 1),
-(252, 'MSG_ID_CAN_L3BFHS_SYS_CFG_RESP', 1, 1, 1),
-(253, 'MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ', 1, 1, 1),
-(254, 'MSG_ID_CAN_L3BFHS_CAL_ZERO_RESP', 1, 1, 1),
-(255, 'MSG_ID_L3BFHS_CAN_CAL_FULL_REQ', 1, 1, 1),
-(256, 'MSG_ID_CAN_L3BFHS_CAL_FULL_RESP', 1, 1, 1),
-(257, 'MSG_ID_L3BFHS_CAN_DYN_ZERO_REQ', 1, 1, 1),
-(258, 'MSG_ID_CAN_L3BFHS_DYN_ZERO_RESP', 1, 1, 1),
-(259, 'MSG_ID_L3BFHS_CAN_DYN_FULL_REQ', 1, 1, 1),
-(260, 'MSG_ID_CAN_L3BFHS_DYN_FULL_RESP', 1, 1, 1),
+(245, 'MSG_ID_L3BFDF_CAN_SYS_SUSPEND_REQ', 1, 1, 1),
+(246, 'MSG_ID_CAN_L3BFDF_SYS_SUSPEND_RESP', 1, 1, 1),
+(247, 'MSG_ID_L3BFDF_CAN_SYS_RESUME_REQ', 1, 1, 1),
+(248, 'MSG_ID_CAN_L3BFDF_SYS_RESUME_RESP', 1, 1, 1),
+(249, 'MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT', 1, 1, 1),
+(250, 'MSG_ID_L3BFDF_CAN_SNC_PULLIN_REQ', 1, 1, 1),
+(251, 'MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP', 1, 1, 1),
+(252, 'MSG_ID_L3BFDF_CAN_WS_COMB_OUT', 1, 1, 1),
+(253, 'MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB', 1, 1, 1),
+(254, 'MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND', 1, 1, 1),
+(255, 'MSG_ID_L3BFHS_CAN_SYS_CFG_REQ', 1, 1, 1),
+(256, 'MSG_ID_CAN_L3BFHS_SYS_CFG_RESP', 1, 1, 1),
+(257, 'MSG_ID_L3BFHS_CAN_SYS_SUSPEND_REQ', 1, 1, 1),
+(258, 'MSG_ID_CAN_L3BFHS_SYS_SUSPEND_RESP', 1, 1, 1),
+(259, 'MSG_ID_L3BFHS_CAN_SYS_RESUME_REQ', 1, 1, 1),
+(260, 'MSG_ID_CAN_L3BFHS_SYS_RESUME_RESP', 1, 1, 1),
 (261, 'MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT', 1, 1, 1),
 (262, 'MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND', 1, 1, 1),
 (263, 'MSG_ID_UICOMM_L3BFSC_CMD_REQ', 1, 1, 1),
@@ -2382,42 +2406,25 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (268, 'MSG_ID_CAN_UICOMM_TEST_CMD_RESP', 1, 1, 1),
 (269, 'MSG_ID_UICOMM_L3BFDF_CMD_REQ', 1, 1, 1),
 (270, 'MSG_ID_L3BFDF_UICOMM_CMD_RESP', 1, 1, 1),
-(271, 'MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ', 1, 1, 1),
-(272, 'MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP', 1, 1, 1),
-(273, 'MSG_ID_SUI_TEST_CMD_REQ', 1, 1, 1),
-(274, 'MSG_ID_SUI_TEST_CMD_RESP', 1, 1, 1),
-(275, 'MSG_ID_SUI_STARTUP_IND', 1, 1, 1),
-(276, 'MSG_ID_SUI_FAULT_IND', 1, 1, 1),
-(277, 'MSG_ID_SUI_SUSPEND_REQ', 1, 1, 1),
-(278, 'MSG_ID_SUI_SUSPEND_RESP', 1, 1, 1),
-(279, 'MSG_ID_SUI_RESUME_REQ', 1, 1, 1),
-(280, 'MSG_ID_SUI_RESUME_RESP', 1, 1, 1),
-(281, 'MSG_ID_SUI_HEART_BEAT_REPORT', 1, 1, 1),
-(282, 'MSG_ID_SUI_HEART_BEAT_CONFIRM', 1, 1, 1),
-(283, 'MSG_ID_HUICOBUS_UIR_INIT_REQ', 1, 1, 1),
-(284, 'MSG_ID_HUICOBUS_UIR_START_RESUME_REQ', 1, 1, 1),
-(285, 'MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ', 1, 1, 1),
-(286, 'MSG_ID_HUICOBUS_UIR_STATIC_CALI_REQ', 1, 1, 1),
-(287, 'MSG_ID_HUICOBUS_UIR_DYNAMIC_CALI_REQ', 1, 1, 1),
-(288, 'MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ', 1, 1, 1),
-(289, 'MSG_ID_HUICOBUS_UIR_ONE_KEY_ZERO_REQ', 1, 1, 1),
-(290, 'MSG_ID_L3AQYC_EXG_CTRL_REQ', 1, 1, 1),
-(291, 'MSG_ID_L3AQYC_EXG_CTRL_RESP', 1, 1, 1),
-(292, 'MSG_ID_L3AQYC_EXG_DATA_REPORT', 1, 1, 1),
-(293, 'MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ', 1, 1, 1),
-(294, 'MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP', 1, 1, 1),
-(295, 'MSG_ID_LLCZHB_L3MOD_CTRL_REQ', 1, 1, 1),
-(296, 'MSG_ID_L3MOD_LLCZHB_CTRL_RESP', 1, 1, 1),
-(297, 'MSG_ID_L3MOD_LLCZHB_DATA_REPORT', 1, 1, 1),
-(298, 'MSG_ID_ZHBL3MOD_EXG_CTRL_REQ', 1, 1, 1),
-(299, 'MSG_ID_ZHBL3MOD_EXG_CTRL_RESP', 1, 1, 1),
-(300, 'MSG_ID_ZHBL3MOD_EXG_DATA_REPORT', 1, 1, 1),
-(301, 'MSG_ID_L3HATE_TC_START', 1, 1, 1),
-(302, 'MSG_ID_ETH_L3HATE_FRAME_RCV', 1, 1, 1),
-(303, 'MSG_ID_SPS_L3HATE_FRAME_RCV', 1, 1, 1),
-(304, 'MSG_ID_CAN_L3HATE_FRAME_RCV', 1, 1, 1),
-(305, 'MSG_ID_MQTT_L3HATE_FRAME_RCV', 1, 1, 1),
-(306, 'MSG_ID_COM_MAX', 0, 0, 0);
+(271, 'MSG_ID_UICOMM_L3BFHS_CMD_REQ', 1, 1, 1),
+(272, 'MSG_ID_L3BFHS_UICOMM_CMD_RESP', 1, 1, 1),
+(273, 'MSG_ID_L3AQYC_EXG_CTRL_REQ', 1, 1, 1),
+(274, 'MSG_ID_L3AQYC_EXG_CTRL_RESP', 1, 1, 1),
+(275, 'MSG_ID_L3AQYC_EXG_DATA_REPORT', 1, 1, 1),
+(276, 'MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ', 1, 1, 1),
+(277, 'MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP', 1, 1, 1),
+(278, 'MSG_ID_LLCZHB_L3MOD_CTRL_REQ', 1, 1, 1),
+(279, 'MSG_ID_L3MOD_LLCZHB_CTRL_RESP', 1, 1, 1),
+(280, 'MSG_ID_L3MOD_LLCZHB_DATA_REPORT', 1, 1, 1),
+(281, 'MSG_ID_ZHBL3MOD_EXG_CTRL_REQ', 1, 1, 1),
+(282, 'MSG_ID_ZHBL3MOD_EXG_CTRL_RESP', 1, 1, 1),
+(283, 'MSG_ID_ZHBL3MOD_EXG_DATA_REPORT', 1, 1, 1),
+(284, 'MSG_ID_L3HATE_TC_START', 1, 1, 1),
+(285, 'MSG_ID_ETH_L3HATE_FRAME_RCV', 1, 1, 1),
+(286, 'MSG_ID_SPS_L3HATE_FRAME_RCV', 1, 1, 1),
+(287, 'MSG_ID_CAN_L3HATE_FRAME_RCV', 1, 1, 1),
+(288, 'MSG_ID_MQTT_L3HATE_FRAME_RCV', 1, 1, 1),
+(289, 'MSG_ID_COM_MAX', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -2884,7 +2891,7 @@ ALTER TABLE `hcubfdfcallcell`
 -- AUTO_INCREMENT for table `hcubfdfgrouppara`
 --
 ALTER TABLE `hcubfdfgrouppara`
-  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT for table `hcubfdfproductpara`
 --
@@ -2894,7 +2901,7 @@ ALTER TABLE `hcubfdfproductpara`
 -- AUTO_INCREMENT for table `hcubfdfstadatainfo`
 --
 ALTER TABLE `hcubfdfstadatainfo`
-  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1268;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2137;
 --
 -- AUTO_INCREMENT for table `hcubfdfsystempara`
 --
@@ -2944,7 +2951,7 @@ ALTER TABLE `hcubfscflowsheet`
 -- AUTO_INCREMENT for table `hcubfsclanguagedict`
 --
 ALTER TABLE `hcubfsclanguagedict`
-  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=238;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=242;
 --
 -- AUTO_INCREMENT for table `hcubfscstadatainfo`
 --
@@ -3069,7 +3076,7 @@ ALTER TABLE `hcusysalarminfo`
 -- AUTO_INCREMENT for table `hcusyspmglobaldatainfo`
 --
 ALTER TABLE `hcusyspmglobaldatainfo`
-  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1549;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1569;
 --
 -- AUTO_INCREMENT for table `hcusysswm_swdl`
 --
@@ -3079,7 +3086,7 @@ ALTER TABLE `hcusysswm_swdl`
 -- AUTO_INCREMENT for table `hcusysswm_swpkg`
 --
 ALTER TABLE `hcusysswm_swpkg`
-  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `hcutempbmp180datainfo`
 --
