@@ -233,6 +233,7 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			status.validFlag = rcv.validFlag;
 			status.errCode = rcv.errCode;
 			status.weight = 0;
+			printf("Receive STATIC_CALI_ZERO resp,rcv.cmdValue = %d \n\n",rcv.cmdValue);
 		}
 		else if (rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL){
 			status.engModeSwitch = gTaskL3bfhsContext.engModeSwitch;
@@ -240,8 +241,8 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			status.errCode = rcv.errCode;
 			status.weight = rcv.calFullRespPar.Weight;
 			sprintf(debugInfo, "cutoffFreq='%d'; curZeroPoint=%d; refZeroPoint=%d; negZeroRange=%d; posZeroRange=%d; measRange=%d; scaleInterval=%d; calValue=%d; autoZeroRange=%d; \
-					adjustWgt=%d; adjustFactor=%d; adjustTolerance=%d; standstillRange=%d; tempInSystem=%d; tempAtMeas=%d; sampleFreq=%d; ringBufTime=%d; autoZeroTime=%d; \
-					preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime=%d; measRange=%d; placesDecimal=%d; aotoZero=%d; cellAddr=%d; timeGrid=%d)",\
+adjustWgt=%d; adjustFactor=%d; adjustTolerance=%d; standstillRange=%d; tempInSystem=%d; tempAtMeas=%d; sampleFreq=%d; ringBufTime=%d; autoZeroTime=%d; \
+preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime=%d; measRange=%d; placesDecimal=%d; aotoZero=%d; cellAddr=%d; timeGrid=%d)",\
 					rcv.calFullRespPar.WeightSensorFilterCutOffFreqHz, rcv.calFullRespPar.WeightSensorCurrentZeroPointGrams, rcv.calFullRespPar.WeightSensorReferenceZeroPointGrams,\
 					rcv.calFullRespPar.WeightSensorNegativeZeroSettingRangeGrams, rcv.calFullRespPar.WeightSensorPositiveZeroSettingRangeGrams, rcv.calFullRespPar.WeightSensorMeasurementRange,\
 					rcv.calFullRespPar.WeightSensorScaleIntervalValue, rcv.calFullRespPar.WeightSensorCalibrationValue, rcv.calFullRespPar.WeightSensorAutoZeroCaptureRangeGrams,\
@@ -253,7 +254,7 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 					rcv.calFullRespPar.WeightSensorCellAddress, rcv.calFullRespPar.WeightSensorTimeGrid);
 			strncpy(status.debugInfo, debugInfo, HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX);
 
-			printf("Receive STATIC_CALI_FULL resp, validFlag = %d; debugInfo = %s \n",rcv.validFlag,status.debugInfo);
+			printf("Receive STATIC_CALI_FULL resp, validFlag = %d; debugInfo = %s \n\n",rcv.validFlag,status.debugInfo);
 		}
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp(rcv.cmdValue, &status);

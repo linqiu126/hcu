@@ -316,7 +316,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp(INT32 cmdValue, St
 
     json_object_object_add(jsonobj, "validFlag", json_object_new_int(buf->validFlag));
     json_object_object_add(jsonobj, "errCode", json_object_new_int(buf->errCode));
-    json_object_object_add(jsonobj, "weight", json_object_new_int(buf->weight));
+    json_object_object_add(jsonobj, "weight", json_object_new_int64(buf->weight));
     json_object_object_add(jsonobj, "engSwitch", json_object_new_int(buf->engModeSwitch));
     json_object_object_add(jsonobj, "debugInfo", json_object_new_string(buf->debugInfo));
     sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
@@ -343,7 +343,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(INT32 cmdValue, S
 
     json_object_object_add(jsonobj, "validFlag", json_object_new_int(buf->validFlag));
     json_object_object_add(jsonobj, "errCode", json_object_new_int(buf->errCode));
-    json_object_object_add(jsonobj, "weight", json_object_new_int(buf->weight));
+    json_object_object_add(jsonobj, "weight", json_object_new_int64(buf->weight));
     json_object_object_add(jsonobj, "engSwitch", json_object_new_int(buf->engModeSwitch));
     json_object_object_add(jsonobj, "iteration", json_object_new_int(buf->iteration));
     json_object_object_add(jsonobj, "debugInfo", json_object_new_string(buf->debugInfo));
@@ -686,12 +686,12 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(INT32 cmdValue
     json_object_object_add(jsonobj, "tu1Limit", json_object_new_int(buf->tu1Limit));
     json_object_object_add(jsonobj, "tu2Limit", json_object_new_int(buf->tu2Limit));
     json_object_object_add(jsonobj, "upperLimit", json_object_new_int(buf->upperLimit));
-    json_object_object_add(jsonobj, "totalWeight", json_object_new_int(buf->totalWeight));
+    json_object_object_add(jsonobj, "totalWeight", json_object_new_int64(buf->totalWeight));
     json_object_object_add(jsonobj, "totalPackage", json_object_new_int(buf->totalPackage));
     json_object_object_add(jsonobj, "throughput", json_object_new_int(buf->throughput));
     json_object_object_add(jsonobj, "goodPackage", json_object_new_int(buf->goodPackage));
-    json_object_object_add(jsonobj, "overWeight", json_object_new_int(buf->overWeight));
-    json_object_object_add(jsonobj, "underWeight", json_object_new_int(buf->underWeight));
+    json_object_object_add(jsonobj, "overWeight", json_object_new_int64(buf->overWeight));
+    json_object_object_add(jsonobj, "underWeight", json_object_new_int64(buf->underWeight));
 
     sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
     json_object_put(jsonobj);//free
@@ -792,7 +792,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report(INT32 cmdValu
     json_object_object_add(jsonobj, "tu1Limit", json_object_new_int(buf->tu1LimitWeight));
     json_object_object_add(jsonobj, "tu2Limit", json_object_new_int(buf->tu2LimitWeight));
     json_object_object_add(jsonobj, "upperLimit", json_object_new_int(buf->upLimitWeight));
-    json_object_object_add(jsonobj, "totalWeight", json_object_new_int(buf->totalWeight));
+    json_object_object_add(jsonobj, "totalWeight", json_object_new_int64(buf->totalWeight));
     json_object_object_add(jsonobj, "totalPackage", json_object_new_int(buf->totalPackage));
     json_object_object_add(jsonobj, "throughput", json_object_new_int(buf->throughputPerMin));
     json_object_object_add(jsonobj, "goodPackage", json_object_new_int(buf->totalGoodPackage));

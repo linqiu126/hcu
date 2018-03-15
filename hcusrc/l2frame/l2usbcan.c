@@ -498,8 +498,11 @@ void *func_usbcan_rx_thread(void *data)
         	/* as standard frame reserved for CANopen between MWC and MOTOR/SENSOR */
         	if(TRUE == husbcan->can_rx_data[i].ExternFlag)
         	{
-            	wmc_id = func_usbcan_WmcCanIdMapToWmcId(husbcan->can_rx_data[i].ID);
-            	func_usbcan_RxCpltCallback(husbcan, &husbcan->can_rx_data[i], wmc_id);
+            	if(husbcan->can_rx_data[i].ID == 0x200000) /* ONLY RECEIVE UL LINK MESSAGE */
+            	{
+        		    wmc_id = func_usbcan_WmcCanIdMapToWmcId(husbcan->can_rx_data[i].ID);
+            	    func_usbcan_RxCpltCallback(husbcan, &husbcan->can_rx_data[i], wmc_id);
+            	}
         	}
 
 //        	HCU_DEBUG_PRINT_INF("USBCAN_DH: CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], total_frame = %d\n", husbcan->can_channel_id,

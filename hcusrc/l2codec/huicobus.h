@@ -476,12 +476,12 @@ typedef struct StrHlcIe_cui_hcu2uir_callcell_bfhs_report
 	UINT32   tu1Limit;
 	UINT32   tu2Limit;
 	UINT32   upperLimit;
-	UINT32   totalWeight;
+	UINT64   totalWeight;
 	UINT32   totalPackage;
 	UINT32   throughput;
 	UINT32   goodPackage;
-	UINT32   overWeight;
-	UINT32   underWeight;
+	UINT64   overWeight;
+	UINT64   underWeight;
 }StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t;
 //cmdValue = configID;
 
@@ -521,7 +521,7 @@ typedef struct StrHlcIe_cui_hcu2uir_statistic_bfhs_report
 	UINT32	tu1LimitWeight;
 	UINT32	tu2LimitWeight;
 	UINT32	upLimitWeight;  //in NF2
-	UINT32	totalWeight;  //in NF2
+	UINT64	totalWeight;  //in NF2
 	UINT32	totalPackage;
 	UINT32	totalGoodPackage;
 	UINT32	totalOverReject;
