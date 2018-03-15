@@ -498,7 +498,7 @@ void *func_usbcan_rx_thread(void *data)
         	/* as standard frame reserved for CANopen between MWC and MOTOR/SENSOR */
         	if(TRUE == husbcan->can_rx_data[i].ExternFlag)
         	{
-            	if(husbcan->can_rx_data[i].ID == 0x200000) /* ONLY RECEIVE UL LINK MESSAGE */
+            	if(husbcan->can_rx_data[i].ID & WMC_TO_AWS_CAN_ID_PREFIX) /* ONLY RECEIVE UL LINK MESSAGE */
             	{
         		    wmc_id = func_usbcan_WmcCanIdMapToWmcId(husbcan->can_rx_data[i].ID);
             	    func_usbcan_RxCpltCallback(husbcan, &husbcan->can_rx_data[i], wmc_id);
