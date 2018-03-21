@@ -50,7 +50,7 @@ OPSTAT  func_bfdfuicomm_read_system_config_into_ctrl_table ();
 OPSTAT 	func_bfdfuicomm_read_product_config_into_ctrl_table (UINT16 configId);
 OPSTAT  func_bfdfuicomm_time_out_period_read_process(void);
 OPSTAT  func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table (void);
-bool 	func_bfdfuicomm_hopper_bitmap_validate(UINT32 hopperBitmap, UINT8 hopperNum, UINT8 hopperArr[HCU_SYSMSG_SUI_SENSOR_NBR]);
+bool 	func_bfdfuicomm_hopper_bitmap_validate(UINT64 hopperBitmap, UINT8 hopperNum, UINT8 hopperArr[HCU_SYSMSG_SUI_SENSOR_NBR]);
 bool 	func_bfdfuicomm_hopper_state_set_init(UINT8 streamId);
 void    func_bfdfuicomm_algo_parameter_set_check(void);
 
