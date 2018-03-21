@@ -513,7 +513,7 @@ OPSTAT func_bfdfuicomm_time_out_period_read_process(void)
 	return SUCCESS;
 }
 
-bool func_bfdfuicomm_hopper_bitmap_validate(UINT32 hopperBitmap, UINT8 hopperNum, UINT8 hopperArr[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX])
+bool func_bfdfuicomm_hopper_bitmap_validate(UINT64 hopperBitmap, UINT8 hopperNum, UINT8 hopperArr[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX])
 {
 	int i, j=0;
 	memset(hopperArr, 0, HCU_SYSCFG_BFDF_HOPPER_NBR_MAX);
@@ -654,7 +654,7 @@ OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table(UINT16 configId)
 	UINT16 groupId = 0;
 	UINT16 lineId = 0;
 	UINT8 groupHooperNum;
-	UINT32 groupHopperBitmap;
+	UINT64 groupHopperBitmap;
 	UINT8 hopperArr[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
 	for(index = 1; index <= groupTotal; index++){
 		groupId = groupConfigData[index].groupId;

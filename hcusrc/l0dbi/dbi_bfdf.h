@@ -29,7 +29,7 @@ typedef struct DbiL3BfdfGroupPara
 	UINT8   lineId;
 	UINT16	configId;
 	UINT16	hopperNum;
-	UINT16	hopperBitmap;
+	UINT64	hopperBitmap;
 	UINT32	targetWeight;	//目标重量
 	UINT32	targetUpLimit;	//上限比例部分，小数，不是最大值，所以这里定义的并不是目标最大值，而是最大值与目标之间的差值
 	UINT32	bufWgtTarget;	//篮筐之外的缓冲区

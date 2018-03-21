@@ -420,7 +420,7 @@ OPSTAT dbi_HcuBfdf_groupConfigData_read(UINT16 configId, UINT8 groupTotal, DbiL3
 			if (sqlRow[index]) groupConfigData[group].lineId = (UINT8)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].configId = (UINT16)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].hopperNum = (UINT16)atol(sqlRow[index++]);
-			if (sqlRow[index]) groupConfigData[group].hopperBitmap = (UINT32)atol(sqlRow[index++]);
+			if (sqlRow[index]) groupConfigData[group].hopperBitmap = (UINT64)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].targetWeight = (UINT32)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].targetUpLimit = (UINT32)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].bufWgtTarget = (UINT32)atol(sqlRow[index++]);
