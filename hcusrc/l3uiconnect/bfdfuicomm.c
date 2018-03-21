@@ -45,7 +45,7 @@ HcuFsmStateItem_t HcuFsmBfdfuicomm[] =
 
     //Normal working status
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_BFDFUICOMM_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP,    FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_l3bfdf_cmd_resp},	//人工控制反馈
+	{MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP,    FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp},	//人工控制反馈
 	{MSG_ID_SUI_TEST_CMD_RESP,      		FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_sui_test_cmd_resp},  //测试命令反馈
 
 	//UIR2HCU MSG RCV
@@ -131,13 +131,31 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		HcuDebugPrint("BFDFUICOMM: Enter FSM_STATE_BFDFUICOMM_ACTIVED status, Keeping refresh here!\n");
 	}
 
-	//延迟并启动系统，进入测试模式
-	hcu_sleep(2);
-	//设置configIndex=2
-	func_bfdfuicomm_read_cfg_file_into_ctrl_table(2);
+	//秤盘数据表单控制表初始化
+	memset(&gTaskL3bfdfContext, 0, sizeof(gTaskL3bfdfContext_t));
+	//初始化系统参数
+	if (func_bfdfuicomm_read_system_config_into_ctrl_table () == FAILURE)
+		HcuErrorPrint("BFDFUICOMM: read system config into ctrl_table failure!\n");
 
 	//初始化sessionId
 	gTaskL3bfdfContext.sessionId = dbi_HcuBfdf_CallCellMaxIdGet() + 1;
+
+	//算法性能评估测试模式
+#if (HCU_SYSCFG_L3BFDF_PMAS_SET == HCU_SYSCFG_L3BFDF_PMAS_ENABLE)
+	//延迟并启动系统，进入测试模式
+	hcu_sleep(2);
+	func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table();
+
+	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
+	snd.cmdValue = 0;
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
+#endif
+
+	//检查参数设置情况
+	func_bfdfuicomm_algo_parameter_set_check();
 
 	//返回
 	return SUCCESS;
@@ -194,43 +212,102 @@ OPSTAT fsm_bfdfuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	return SUCCESS;
 }
 
-//启动停止反馈
-OPSTAT fsm_bfdfuicomm_l3bfdf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+//控制命令的反馈
+OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-//	int ret=0;
-	UINT8	validFlag = 0;
-	UINT8	cmdid = 0;
-
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
 
-	validFlag = rcv.validFlag;
-	cmdid = rcv.cmdid;
-	//测试用的打印命令
-	HCU_DEBUG_PRINT_INF("BFDFUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag, cmdid);
+	if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START){
+		//通知界面
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		if(rcv.validFlag == TRUE)
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR;
+		else
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_OK;
 
-/*
-	//存入数据库表单，通知界面新的状态信息
-	if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_START)){
-		//do nothing
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
-	else if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP)){
-		//do nothing
+	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP){
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STOP;
+		//通知界面
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
-	else if((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND)){
-		ret = dbi_HcuBfdf_WmcStatusForceSuspend();
-		if (ret == FAILURE) {
-			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Save data error!\n");
+	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND){
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_SUSPEND;
+		//通知界面
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+	}
+	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME){
+		StrHlcIe_cui_hcu2uir_status_report_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_RESUME;
+		//通知界面
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+	}
+	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI){
+		UINT32 cmdValue = 0;
+		char debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];
+		StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t status;
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t));
+		if (rcv.dynCalResp.calibration_zero_or_full == 1){        /* 1 for ZERO, 2 for FULL */
+			if (rcv.sensorid == 1)
+				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO_LINE0;
+			else if (rcv.sensorid == 9)
+				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO_LINE1;
+			else{
+				HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid sensorId of dynamic calibration zero response, sensorId = %d!\n", rcv.sensorid);
+				return FAILURE;
+			}
+
+			status.weight = 0;
+		}
+		else if (rcv.dynCalResp.calibration_zero_or_full == 2){
+			if (rcv.sensorid == 1)
+				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL_LINE0;
+			else if (rcv.sensorid == 9)
+				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL_LINE1;
+			else{
+				HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid sensorId of dynamic calibration full response, sensorId = %d!\n", rcv.sensorid);
+				return FAILURE;
+			}
+			status.weight = rcv.dynCalResp.full_weight;
+		}
+		else{
+			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid parameter of dynamic calibration response!\n");
 			return FAILURE;
 		}
+		status.engModeSwitch = gTaskL3bfdfContext.engModeSwitch;
+		status.iteration = rcv.dynCalResp.calibration_cur_iteration;
+		status.validFlag = rcv.validFlag;
+		status.errCode = rcv.errCode;
+		sprintf(debugInfo, "cali_cur_itera=%d; cali_result=%d; nf_period_10ms=%d; nf_period_10ms_max=%d; wgt_offset_wrt_infra=%d; \
+nf_sd_mean=%d; nf_sd_max=%d; nf_sd_min=%d; nf_sd_sd=%d; nf_mean_mean=%d; nf_mean_max=%d; nf_mean_min=%d; nf_mean_sd=%d; offset_peak_wrt_infra[0]=%d; \
+offset_peak_wrt_infra[1]=%d; offset_peak_wrt_infra[2]=%d; offset_peak_wrt_infra[3]=%d; full_coeff_average=%d; estimate_err_itera[0]=%d; \
+estimate_err_itera[1]=%d; estimate_err_itera[2]=%d; estimate_err_itera[3]=%d; estimate_err_max_possible=%d; estimate_err_average=%d",\
+				rcv.dynCalResp.calibration_cur_iteration, rcv.dynCalResp.calibration_result, rcv.dynCalResp.noise_floor_period_10ms, rcv.dynCalResp.noise_floor_period_10ms_max, \
+				rcv.dynCalResp.weight_report_offset_wrt_infra, rcv.dynCalResp.noise_floor_sd_mean, rcv.dynCalResp.noise_floor_sd_max, rcv.dynCalResp.noise_floor_sd_min, rcv.dynCalResp.noise_floor_sd_sd, \
+				rcv.dynCalResp.noise_floor_mean_mean, rcv.dynCalResp.noise_floor_mean_max, rcv.dynCalResp.noise_floor_mean_min, rcv.dynCalResp.noise_floor_mean_sd, \
+				rcv.dynCalResp.full_offset_peak_wrt_infra[0], rcv.dynCalResp.full_offset_peak_wrt_infra[1], rcv.dynCalResp.full_offset_peak_wrt_infra[2], rcv.dynCalResp.full_offset_peak_wrt_infra[3], \
+				rcv.dynCalResp.full_coefficiency_average, rcv.dynCalResp.estimated_error_iteration[0], rcv.dynCalResp.estimated_error_iteration[1], rcv.dynCalResp.estimated_error_iteration[2], \
+				rcv.dynCalResp.estimated_error_iteration[3], rcv.dynCalResp.estimated_error_max_possible, rcv.dynCalResp.estimated_error_average);
+		strncpy(status.debugInfo, debugInfo, sizeof(debugInfo)<HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX?sizeof(debugInfo):HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX);
+
+		//通知界面
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(cmdValue, &status);
 	}
-	else if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME)){
-		//do nothing
+	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_ONE_KEY_ZERO){
+		//TBD
+		printf ("fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp: rcv.cmdid = %d\n", rcv.cmdid);
 	}
 	else{
 		HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid command response!\n");
 		return FAILURE;
 	}
-*/
 
 	//返回
 	return SUCCESS;
@@ -311,14 +388,24 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_i
 {
 	UINT16 configId = 0;
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_start_resume_req_t);
+
 	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
 	snd.cmdValue = rcv.cmdValue;
 	configId = rcv.cmdValue;
-	if(func_bfdfuicomm_read_cfg_file_into_ctrl_table(configId) == SUCCESS)
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
+
+	//是否认为START还是RESUME的命令
+	if (configId != gTaskL3bfdfContext.configId){
+		if(func_bfdfuicomm_read_product_config_into_ctrl_table(configId) == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Load global context table failure!\n");
+		//检查参数设置情况
+		func_bfdfuicomm_algo_parameter_set_check();
+	}
+
+	//TRIGGER L3BFDF
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
 	return SUCCESS;
 }
@@ -343,12 +430,7 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_static_cali_req(UINT32 dest_id, UINT32 src_id
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_STATIC_CALI;
-	if(rcv.cmdValue == HUICOBUS_CMDVALUE_static_cali_zero)
-		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_STATIC_CALI_ZERO;
-	else if (rcv.cmdValue == HUICOBUS_CMDVALUE_static_cali_full)
-		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_STATIC_CALI_FULL;
-	else
-		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_INVALID;
+	snd.cmdValue = rcv.cmdValue;
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
@@ -362,12 +444,7 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_dynamic_cali_req(UINT32 dest_id, UINT32 src_i
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI;
-	if(rcv.cmdValue == HUICOBUS_CMDVALUE_dynamic_cali_zero)
-		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO;
-	else if (rcv.cmdValue == HUICOBUS_CMDVALUE_dynamic_cali_full)
-		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL;
-	else
-		snd.cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_INVALID;
+	snd.cmdValue = rcv.cmdValue;
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
@@ -413,7 +490,7 @@ OPSTAT func_bfdfuicomm_time_out_period_read_process(void)
 //	if ((state == FSM_STATE_L3BFDF_ACTIVED) || (state == FSM_STATE_L3BFDF_OPR_CFG)) {
 //		//启动完成以后，等待一小会儿，然后将缺省的参数读入到系统内存，并发送CFG_REQ给L3BFDF
 //		//如果缺省参数读取不成功，等待人工干预并读取，然后再发送给L3BFDF
-//		if (func_bfdfuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
+//		if (func_bfdfuicomm_read_product_config_into_ctrl_table() == SUCCESS){
 //			msg_struct_uicomm_l3bfdf_cfg_req_t snd;
 //			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_cfg_req_t));
 //			snd.length = sizeof(msg_struct_uicomm_l3bfdf_cfg_req_t);
@@ -436,7 +513,7 @@ OPSTAT func_bfdfuicomm_time_out_period_read_process(void)
 	return SUCCESS;
 }
 
-bool func_bfdfuicomm_hopper_bitmap_validate(UINT32 hopperBitmap, UINT8 hopperNum, UINT8 hopperArr[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX])
+bool func_bfdfuicomm_hopper_bitmap_validate(UINT64 hopperBitmap, UINT8 hopperNum, UINT8 hopperArr[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX])
 {
 	int i, j=0;
 	memset(hopperArr, 0, HCU_SYSCFG_BFDF_HOPPER_NBR_MAX);
@@ -487,53 +564,44 @@ bool func_bfdfuicomm_hopper_state_set_init(UINT8 streamId)
 	return TRUE;
 }
 
-//扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
-OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
+OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table(void)
 {
-	UINT8 index;
-	UINT8 line, group, hopper;
-	UINT8 groupPerLine = 0, groupTotal = 0;
-	UINT32 sysConfigData[HCU_SYSCFG_BFDF_DB_COLUMN_NUM_MAX];
-	DbiL3BfdfProductPara_t productConfigData;
-	DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2];
+	UINT8 line, hopper;
+	DbiL3BfdfSystemPara_t sysConfigData;
+	DbiL3BfdfCalibrationPara_t calConfigData;
 
 	/*** Initialize SYSTEM configuration, these parameters are common for all products ***/
 
-	if (dbi_HcuBfdf_sysConfigData_read(sysConfigData) == FAILURE)
-		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB SYSTEM configuration data failed \n");
+	if (dbi_HcuBfdf_sysConfigData_read(&sysConfigData, &calConfigData) == FAILURE){
+		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB System and Calibration configuration data failed \n");
+		return FALSE;
+	}
+	gTaskL3bfdfContext.engModeSwitch = sysConfigData.engModeSwitch;
 
-	index = 1; //First collumn is sid
 	//配置系统的DIMENSIONING
-	gTaskL3bfdfContext.nbrStreamLine = sysConfigData[index++];
-	gTaskL3bfdfContext.nbrIoBoardPerLine = sysConfigData[index++];
-//	gTaskL3bfdfContext.nbrStreamLine = 1;
-//	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
+	gTaskL3bfdfContext.nbrStreamLine = sysConfigData.lineNum;
+	gTaskL3bfdfContext.nbrIoBoardPerLine = sysConfigData.boardNumPerLine;
+
+	//如果系统配置了该全局算法参数，则可以调整该参数，可以更大程度的由人工来调优
+	gTaskL3bfdfContext.combAlgoSpaceCtrlRatio = HCU_SYSCFG_ALGO_SPACE_CTRL_RATIO_DEFAULT;
+
 	//Hopper初始化
 	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
 		func_bfdfuicomm_hopper_state_set_init(line);
 	}
 	for (line = gTaskL3bfdfContext.nbrStreamLine; line< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; line++){
 		for (hopper=0; hopper<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; hopper++){
-			gTaskL3bfdfContext.hopper[hopper][hopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_OFFLINE;
+			gTaskL3bfdfContext.hopper[line][hopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_OFFLINE;
 		}
 	}
 
 	//查询系统配置参数
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadThread = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyThread = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.StardardReadyTimeMs = sysConfigData[index++];
-
-	gTaskL3bfdfContext.wgtSnrPar.MaxAllowedWeight = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorStaticZeroValue = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorTailorValue = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = sysConfigData[index++];
-
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupThread = sysConfigData[index++];
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs = sysConfigData[index++];
-
+	memcpy(&gTaskL3bfdfContext.motMainPar, &sysConfigData.motMainPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
+	memcpy(&gTaskL3bfdfContext.motSecondPar, &sysConfigData.motSecondPar, sizeof(gTaskL3bfdfContextMotorControlParamaters_t));
+	memcpy(&gTaskL3bfdfContext.actionCtrlPar, &sysConfigData.armCtrlPar, sizeof(gTaskL3bfdfContextActionControlParamaters_t));
+	memcpy(&gTaskL3bfdfContext.dynCalPar, &calConfigData, sizeof(DbiL3BfdfCalibrationPara_t));
+//	gTaskL3bfdfContext.nbrStreamLine = 1;
+//	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
 //	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  1;
 //	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadThread = 1;
 //	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = 1;
@@ -549,9 +617,22 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 //	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupThread = 300;
 //	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs = 500;
 
+	return SUCCESS;
+}
+
+//配置系统参数控制表
+OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table(UINT16 configId)
+{
+	UINT8 line, index, hopper;
+	UINT8 groupPerLine = 0, groupTotal = 0;
+	DbiL3BfdfProductPara_t productConfigData;
+	DbiL3BfdfGroupPara_t groupConfigData[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX*2];
+
+	//重新初始化全局系统参数
+	if (func_bfdfuicomm_read_system_config_into_ctrl_table () == FAILURE)
+		HcuErrorPrint("BFDFUICOMM: read system config into ctrl_table failure!\n");
 
 	/*** Initialize PRODUCT configuration, these parameters are different for each product ***/
-
 	//Read productPara table
 	if (dbi_HcuBfdf_productConfigData_read(configId, &productConfigData) == FAILURE)
 		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB PRODUCT configuration data failed, configId = %d \n", productConfigData.configId);
@@ -573,23 +654,23 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 	UINT16 groupId = 0;
 	UINT16 lineId = 0;
 	UINT8 groupHooperNum;
-	UINT32 groupHopperBitmap;
+	UINT64 groupHopperBitmap;
 	UINT8 hopperArr[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
-	for(group = 1; group <= groupTotal; group++){
-		groupId = groupConfigData[group].groupId;
-		lineId = groupConfigData[group].lineId;
-		if (configId != groupConfigData[group].configId)
+	for(index = 1; index <= groupTotal; index++){
+		groupId = groupConfigData[index].groupId;
+		lineId = groupConfigData[index].lineId;
+		if (configId != groupConfigData[index].configId)
 			HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: hcubfdfgrouppara DB data error, configId[=%d] groupId[=%d] mismatch!\n", configId, groupId);
 
-		groupHooperNum = groupConfigData[group].hopperNum;
-		groupHopperBitmap = groupConfigData[group].hopperBitmap;
-		gTaskL3bfdfContext.group[lineId][groupId].targetWeight = groupConfigData[group].targetWeight;
-		gTaskL3bfdfContext.group[lineId][groupId].targetUpLimit = groupConfigData[group].targetUpLimit;
-		gTaskL3bfdfContext.group[lineId][groupId].bufWgtTarget = groupConfigData[group].bufWgtTarget;
-		gTaskL3bfdfContext.group[lineId][groupId].rangeLow = groupConfigData[group].rangeLow;
-		gTaskL3bfdfContext.group[lineId][groupId].rangeHigh = groupConfigData[group].rangeHigh;
-		gTaskL3bfdfContext.group[lineId][groupId].rangeAvg = (gTaskL3bfdfContext.group[lineId][group].rangeLow + gTaskL3bfdfContext.group[lineId][group].rangeHigh)/2;
-		gTaskL3bfdfContext.group[lineId][groupId].rangeSigma = (gTaskL3bfdfContext.group[lineId][group].rangeHigh - gTaskL3bfdfContext.group[lineId][group].rangeLow)/2;
+		groupHooperNum = groupConfigData[index].hopperNum;
+		groupHopperBitmap = groupConfigData[index].hopperBitmap;
+		gTaskL3bfdfContext.group[lineId][groupId].targetWeight = groupConfigData[index].targetWeight;
+		gTaskL3bfdfContext.group[lineId][groupId].targetUpLimit = groupConfigData[index].targetUpLimit;
+		gTaskL3bfdfContext.group[lineId][groupId].bufWgtTarget = groupConfigData[index].bufWgtTarget;
+		gTaskL3bfdfContext.group[lineId][groupId].rangeLow = groupConfigData[index].rangeLow;
+		gTaskL3bfdfContext.group[lineId][groupId].rangeHigh = groupConfigData[index].rangeHigh;
+		gTaskL3bfdfContext.group[lineId][groupId].rangeAvg = (gTaskL3bfdfContext.group[lineId][groupId].rangeLow + gTaskL3bfdfContext.group[lineId][groupId].rangeHigh)/2;
+		gTaskL3bfdfContext.group[lineId][groupId].rangeSigma = (gTaskL3bfdfContext.group[lineId][groupId].rangeHigh - gTaskL3bfdfContext.group[lineId][groupId].rangeLow)/2;
 		gTaskL3bfdfContext.group[lineId][groupId].groupId = groupId;
 		gTaskL3bfdfContext.group[lineId][groupId].groupStatus = HCU_L3BFDF_GROUP_STATUS_ACTIVE;
 		gTaskL3bfdfContext.group[lineId][groupId].totalHopperNbr = groupHooperNum;
@@ -625,6 +706,8 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 			}
 		}
 	}
+
+	//printf("BFDFUI: MotorSpeed = %d, WeightSensorTailorValue = %d\n", gTaskL3bfdfContext.motMainPar.MotorSpeed, gTaskL3bfdfContext.dynCalPar.WeightSensorTailorValue);
 
 //	//Hopper初始化
 //	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
@@ -671,5 +754,119 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId)
 
 	return SUCCESS;
 }
+
+
+//算法性能评估所使用的测试模式，装载参数
+OPSTAT func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table(void)
+{
+	UINT8 line, hopper;
+	int i = 0, j = 0;
+	int nbrGroup = 0;
+
+	//每块板子设置为1个IO板
+	gTaskL3bfdfContext.nbrStreamLine = 1;
+	gTaskL3bfdfContext.nbrIoBoardPerLine = 1;
+
+	//Hopper初始化
+	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
+		func_bfdfuicomm_hopper_state_set_init(line);
+	}
+	for (line = gTaskL3bfdfContext.nbrStreamLine; line< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; line++){
+		for (hopper=0; hopper<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; hopper++){
+			gTaskL3bfdfContext.hopper[line][hopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_OFFLINE;
+		}
+	}
+
+	//第0#流水线，分配组别
+	nbrGroup = rand()%3+1;
+	//For test purpose, fix to be 1 group
+	nbrGroup = 1;
+	func_l3bfdf_group_allocation(0, nbrGroup);
+	func_l3bfdf_hopper_add_by_grp_in_average_distribution(0, nbrGroup);
+	//设置小组重量范围：数据均为NF2进行设置
+	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 10000, 100000);
+	//设置重量目标
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 1000000, 0.01);
+
+	//第1#流水线，分配组别
+	if (gTaskL3bfdfContext.nbrIoBoardPerLine >= 2){
+		nbrGroup = rand()%10+1;
+		nbrGroup = 1;
+		func_l3bfdf_group_allocation(1, nbrGroup);
+		func_l3bfdf_hopper_add_by_grp_in_average_distribution(1, nbrGroup);
+		func_l3bfdf_group_auto_alloc_init_range_in_average(1, nbrGroup, 20000, 200000);
+		func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 1000000, 0.2);
+	}
+
+	//第2#流水线，分配组别
+	if (gTaskL3bfdfContext.nbrIoBoardPerLine >= 3)
+	{
+		nbrGroup = rand()%10+1;
+		func_l3bfdf_group_allocation(2, nbrGroup);
+		func_l3bfdf_hopper_add_by_grp_in_average_distribution(2, nbrGroup);
+		func_l3bfdf_group_auto_alloc_init_range_in_average(2, nbrGroup, 20000, 200000);
+		func_l3bfdf_group_auto_alloc_init_target_with_uplimit(2, 1000000, 0.2);
+	}
+
+	//第3#流水线，分配组别
+	if (gTaskL3bfdfContext.nbrIoBoardPerLine >= 4)
+	{
+		nbrGroup = rand()%10+1;
+		func_l3bfdf_group_allocation(3, nbrGroup);
+		func_l3bfdf_hopper_add_by_grp_in_average_distribution(3, nbrGroup);
+		func_l3bfdf_group_auto_alloc_init_range_in_average(3, nbrGroup, 20000, 200000);
+		func_l3bfdf_group_auto_alloc_init_target_with_uplimit(3, 1000000, 0.2);
+	}
+
+	//打印
+	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
+		func_l3bfdf_print_all_hopper_status_by_id(line);
+	}
+
+	//手工浏览一遍双链表
+	for (line = 0; line< gTaskL3bfdfContext.nbrStreamLine; line++){
+		func_l3bfdf_print_all_hopper_status_by_chain(line);
+	}
+
+	//自动Audit过程
+	int res = func_l3bfdf_hopper_dual_chain_audit();
+	if (res < 0) HCU_ERROR_PRINT_BFDFUICOMM("BSDFUICOMM: Audit error, errCode = %d\n", res);
+
+	//批次数据更新
+	//读取数据库，更新批次数据
+	gTaskL3bfdfContext.sessionId = 1;
+
+	//设置各个板子启动的情况，模拟STARTUP收到
+	for (i = 0; i < HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; i++){
+		for (j = 1; j < HCU_L3BFDF_MAX_IO_BOARD_NBR_ACTUAL; j++){
+			gTaskL3bfdfContext.nodeDyn[i][j].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+		}
+	}
+
+	return SUCCESS;
+}
+
+//配置参数检查
+void func_bfdfuicomm_algo_parameter_set_check(void)
+{
+	int lineId = 0, gId = 0;
+	int maxGroup;
+	double gRange = 0, tRange = 0, ratio;
+
+	for (lineId = 0; lineId < HCU_L3BFDF_MAX_STREAM_LINE_ACTUAL; lineId++)
+	{
+		maxGroup = gTaskL3bfdfContext.totalGroupNbr[lineId];
+		for (gId = 1; gId <= maxGroup; gId++)
+		{
+			gRange = (double)(gTaskL3bfdfContext.group[lineId][gId].rangeHigh - gTaskL3bfdfContext.group[lineId][gId].rangeLow);
+			tRange = (double)gTaskL3bfdfContext.group[lineId][gId].targetUpLimit;
+			gRange = ((gRange==0)?0.01:gRange);
+			ratio = tRange / gRange;
+			if (ratio < HCU_SYSCFG_UPLIMIT_VS_GRP_DISTR_RATIO_MAX)
+				HcuErrorPrint("BFDFUICOMM: Parameter set Grp range or Uplimit range too small, potential risk to high rejection rate. Ratio/Line/Gid=%6.2f%/%d/%d\n", ratio*100, lineId, gId);
+		}
+	}
+}
+
 
 

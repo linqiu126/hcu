@@ -8,6 +8,15 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+
+//= ZJL, 2018 Mar.12 CURRENT_SW_DELIVERY 313=>BFDF项目
+= 算法评估，出现的问题
+  1) 状态36: 未出现，按道理不应该再出现
+  2) 篮筐满，不再进buffer：完善算法，解决
+  3) COMMAND需要修改为START/RESUME分离：寻找到了WORK-AROUND
+  4) 总重量超限，修改为U64，并且需要修改数据库表单：TBD
+  5) 往后台发送的统计报告，还未更新到最新状态 => 注意U32/U64等数值空间
+  
 //= ZJL, 2018 Feb.8 CURRENT_SW_DELIVERY 312=>BFDF项目
 = Fix algorithms
 = BFSC支持分堆功能

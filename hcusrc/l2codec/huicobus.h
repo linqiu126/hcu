@@ -164,10 +164,14 @@ typedef enum HuicobusCmdvalueCuiDefination
 	HUICOBUS_CMDVALUE_cui_null                  	  		= 0x0000,
 
 	//校准命令参数
-	HUICOBUS_CMDVALUE_static_cali_zero	         	  		= 0x0001,
-	HUICOBUS_CMDVALUE_static_cali_full	        	  		= 0x0002,
-	HUICOBUS_CMDVALUE_dynamic_cali_zero		      	  		= 0x0003,
-	HUICOBUS_CMDVALUE_dynamic_cali_full		      	  		= 0x0004,
+	HUICOBUS_CMDVALUE_static_cali_zero_line0	         	  		= 0x0001,
+	HUICOBUS_CMDVALUE_static_cali_full_line0	        	  		= 0x0002,
+	HUICOBUS_CMDVALUE_dynamic_cali_zero_line0		      	  		= 0x0003,
+	HUICOBUS_CMDVALUE_dynamic_cali_full_line0		      	  		= 0x0004,
+	HUICOBUS_CMDVALUE_static_cali_zero_line1	         	  		= 0x0005,
+	HUICOBUS_CMDVALUE_static_cali_full_line1	        	  		= 0x0006,
+	HUICOBUS_CMDVALUE_dynamic_cali_zero_line1		      	  		= 0x0007,
+	HUICOBUS_CMDVALUE_dynamic_cali_full_line1		      	  		= 0x0008,
 
 	HUICOBUS_CMDVALUE_cui_invalid                  	  		= 0xFFFF, //无效
 }HuicobusCuiCmdvalueDefination_t;
@@ -324,20 +328,26 @@ typedef struct StrHlcIe_cui_hcu2uir_stop_suspend_resp
 //cmdValue = NULL
 
 //HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp     		= 0x0183,
+#define HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX  700
 typedef struct StrHlcIe_cui_hcu2uir_static_cali_resp
 {
+	UINT8   engModeSwitch;  //Engineering mode switch
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
 	UINT32  weight;
+	char    debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];
 }StrHlcIe_cui_hcu2uir_static_cali_resp_t;
 //cmdValue = adcValue
 
 //HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp     		= 0x0184,
 typedef struct StrHlcIe_cui_hcu2uir_dynamic_cali_resp
 {
-	UINT8   validFlag;  //是否执行成功
+	UINT8   engModeSwitch;  //Engineering mode switch
+	UINT8	iteration;
+	UINT8   validFlag;  	//是否执行成功
 	UINT16  errCode;
 	UINT32  weight;
+	char    debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];
 }StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t;
 //cmdValue = adcValue
 
@@ -448,10 +458,14 @@ typedef struct StrHlcIe_cui_hcu2uir_callcell_bfsc_report
 //HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report     = 0x0194,
 typedef struct StrHlcIe_cui_hcu2uir_callcell_bfdf_report
 {
+	UINT8   lineId;  //line id
 	UINT8   hopperId;  //1-32, 33-64
-	UINT32  targetWeight;
-	UINT32	upLimitWeight;  //in NF2
-	UINT32	combWeight;  //in NF2
+	UINT8   groupId;
+	UINT8   validFlag;
+	UINT32  curWgt; //in NF2
+	UINT32  bufWgt; // in NF2
+	UINT8  curRatio; //in INT
+	UINT8  bufRatio; //in INT
 }StrHlcIe_cui_hcu2uir_callcell_bfdf_report_t;
 //cmdValue = configID;
 
@@ -462,12 +476,12 @@ typedef struct StrHlcIe_cui_hcu2uir_callcell_bfhs_report
 	UINT32   tu1Limit;
 	UINT32   tu2Limit;
 	UINT32   upperLimit;
-	UINT32   totalWeight;
+	UINT64   totalWeight;
 	UINT32   totalPackage;
 	UINT32   throughput;
 	UINT32   goodPackage;
-	UINT32   overWeight;
-	UINT32   underWeight;
+	UINT64   overWeight;
+	UINT64   underWeight;
 }StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t;
 //cmdValue = configID;
 
@@ -495,7 +509,7 @@ typedef struct StrHlcIe_cui_hcu2uir_statistic_bfdf_report
 	UINT32	upLimitWeight;  //in NF2
 	UINT32	throughputPerMin;
 	UINT32	totalReject;
-	UINT32	totalWeight;
+	UINT64	totalWeight;
 	UINT32	totalPackage;
 }StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t;
 //cmdValue = configID;
@@ -504,10 +518,14 @@ typedef struct StrHlcIe_cui_hcu2uir_statistic_bfdf_report
 typedef struct StrHlcIe_cui_hcu2uir_statistic_bfhs_report
 {
 	UINT32	targetWeight;  //in NF2
+	UINT32	tu1LimitWeight;
+	UINT32	tu2LimitWeight;
 	UINT32	upLimitWeight;  //in NF2
-	UINT32	totalWeight;  //in NF2
+	UINT64	totalWeight;  //in NF2
 	UINT32	totalPackage;
-	UINT32	totalReject;
+	UINT32	totalGoodPackage;
+	UINT32	totalOverReject;
+	UINT32	totalUnderReject;
 	UINT32	throughputPerMin;
 }StrHlcIe_cui_hcu2uir_statistic_bfhs_report_t;
 //cmdValue = configID;
@@ -831,7 +849,7 @@ typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp
 	StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_hcu2uir_cali_full_resp_t;
 
-//HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp      		= 0x0187,
+//HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp      		= 0x0185,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;

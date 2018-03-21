@@ -35,8 +35,8 @@ extern OPSTAT fsm_bfdfuicomm_task_entry(UINT32 dest_id, UINT32 src_id, void * pa
 extern OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfdfuicomm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfdfuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_bfdfuicomm_l3bfdf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfdfuicomm_sui_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfdfuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfdfuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfdfuicomm_huicobus_uir_stop_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -46,14 +46,19 @@ extern OPSTAT fsm_bfdfuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 sr
 extern OPSTAT fsm_bfdfuicomm_huicobus_uir_one_key_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
-OPSTAT 	func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 configId);
+OPSTAT  func_bfdfuicomm_read_system_config_into_ctrl_table ();
+OPSTAT 	func_bfdfuicomm_read_product_config_into_ctrl_table (UINT16 configId);
 OPSTAT  func_bfdfuicomm_time_out_period_read_process(void);
-bool 	func_bfdfuicomm_hopper_bitmap_validate(UINT32 hopperBitmap, UINT8 hopperNum, UINT8 hopperArr[HCU_SYSMSG_SUI_SENSOR_NBR]);
+OPSTAT  func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table (void);
+bool 	func_bfdfuicomm_hopper_bitmap_validate(UINT64 hopperBitmap, UINT8 hopperNum, UINT8 hopperArr[HCU_SYSMSG_SUI_SENSOR_NBR]);
 bool 	func_bfdfuicomm_hopper_state_set_init(UINT8 streamId);
+void    func_bfdfuicomm_algo_parameter_set_check(void);
 
 //External APIs
 extern OPSTAT dbi_HcuBfdf_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);
 extern UINT32 dbi_HcuBfdf_CallCellMaxIdGet(void);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(INT32 cmdValue, StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t *buf);
+
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_BFDFUICOMM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFDFUICOMM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

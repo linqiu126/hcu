@@ -132,6 +132,7 @@ typedef struct gTaskL3bfhsContextWgtSnrParamaters
 	UINT32  snrTareWeight;			//Tare weight of each material
 	UINT32  snrTargetThroughput;	//Selection stop as given 'this para' pcs good material
 	UINT32  snrAlgoAutoZeroSignal; //If autozero cannot be done during 'this para' pcs input, there will be a warning for operator
+	UINT32  snrUpperLimit;
 	UINT32	snrAlgoTu1Limit;
 	UINT32	snrAlgoTu2Limit;
 	UINT32	snrAlgoMaxTu1Ratio;  	//NF2, for example, 250 means 2.5%
@@ -241,6 +242,7 @@ typedef struct gTaskL3bfhsContext
 	UINT32  sessionId;					//批次数据
 	char    operatorName[HCU_L3BFHS_CONTEXT_OPERATOR_NAME_LEN_MAX];
 	UINT16	configId;  					//用来标识系统工作在哪一套配置参数中
+	UINT8   engModeSwitch;              //Engineering mode switch
 	char    configName[HCU_L3BFHS_CONTEXT_CONFIG_NAME_LEN_MAX];
 	UINT32  startWorkTimeInUnix;		//表示该系统开始工作的时间日程点
 	UINT32  elipseCnt;					//所有的统计结果和数据，均以这个为时间统计尺度，时间颗粒度另外定义，假设是500ms为统计周期

@@ -86,7 +86,7 @@ OPSTAT dbi_HcuBfhs_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
 
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
     if (configId == 0){
-    	HcuErrorPrint("DBIBFHS: Function dbi_HcuBfsc_StaDatainfo_save() ConfigId=0, no processing!\n");
+    	HcuErrorPrint("DBIBFHS: Function dbi_HcuBfhs_StaDatainfo_save() ConfigId=0, no processing!\n");
     	return SUCCESS;
     }
 
@@ -111,7 +111,7 @@ OPSTAT dbi_HcuBfhs_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
 
 	//REPLACE新的数据
     sprintf(strsql, "REPLACE INTO `hcubfhsstadatainfo` (statype, configid, timestamp, wsincmatwgt, wsincmatcnt, wsnormalcnt, wsnormalwgt, wsovercnt, wsoverwgt, wsundertotalcnt, wsundertotalwgt, wsundertu1cnt, wsundertu1wgt, wsundertu2cnt, wsundertu2wgt, wsunspecificcnt, wsunspecificwgt) VALUES \
-    		('%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')", s, configId, tmp, StaDatainfo->wsIncMatWgt, StaDatainfo->wsIncMatCnt,\
+    		('%s', '%d', '%d', '%lu', '%d', '%d', '%lu', '%d', '%lu', '%d', '%lu', '%d', '%lu', '%d', '%lu', '%d', '%lu')", s, configId, tmp, StaDatainfo->wsIncMatWgt, StaDatainfo->wsIncMatCnt,\
 			StaDatainfo->wsNormalCnt, StaDatainfo->wsNormalWgt, StaDatainfo->wsOverCnt, StaDatainfo->wsOverWgt, StaDatainfo->wsUnderTotalCnt, StaDatainfo->wsUnderTotalWgt,\
 			StaDatainfo->wsUnderTu1Cnt, StaDatainfo->wsUnderTu1Wgt, StaDatainfo->wsUnderTu2Cnt, StaDatainfo->wsUnderTu2Wgt, StaDatainfo->wsUnspecificCnt, StaDatainfo->wsUnspecificWgt);
 	result = mysql_query(sqlHandler, strsql);
@@ -272,7 +272,7 @@ OPSTAT dbi_HcuBfhs_sysConfigData_read(UINT32 sysConfigData[HCU_SYSCFG_BFHS_DB_CO
 		if ((sqlRow = mysql_fetch_row(resPtr)) == NULL){
 			mysql_free_result(resPtr);
 			mysql_close(sqlHandler);
-			HcuErrorPrint("DBIBFDF: mysql_fetch_row NULL error! strsql = %s\n", strsql);
+			HcuErrorPrint("DBIBFHS: mysql_fetch_row NULL error! strsql = %s\n", strsql);
 			return FAILURE;
 		}
 		else{
@@ -300,7 +300,7 @@ OPSTAT dbi_HcuBfhs_productConfigData_read(UINT16 configId, UINT32 productConfigD
 	    HCU_L0DBICOM_INIT_DB_CONN();
 
 		//获取数据
-	    sprintf(strsql, "SELECT * FROM `hcubfhsproductpara` WHERE (`currentconf` = 'Y' && `configid` = '%d')" , configId);
+	    sprintf(strsql, "SELECT * FROM `hcubfhsproductpara` WHERE (`configid` = '%d')" , configId);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){  //成功返回0
 	    	mysql_close(sqlHandler);
@@ -318,7 +318,7 @@ OPSTAT dbi_HcuBfhs_productConfigData_read(UINT16 configId, UINT32 productConfigD
 		if ((sqlRow = mysql_fetch_row(resPtr)) == NULL){
 			mysql_free_result(resPtr);
 			mysql_close(sqlHandler);
-			HcuErrorPrint("DBIBFDF: mysql_fetch_row NULL error! strsql = %s\n", strsql);
+			HcuErrorPrint("DBIBFHS: mysql_fetch_row NULL error! strsql = %s\n", strsql);
 			return FAILURE;
 		}
 		else{
@@ -333,5 +333,36 @@ OPSTAT dbi_HcuBfhs_productConfigData_read(UINT16 configId, UINT32 productConfigD
 	    mysql_close(sqlHandler);
 	    return SUCCESS;
 	}
+
+OPSTAT dbi_HcuBfhs_calData_save(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t *input)
+{
+	MYSQL *sqlHandler;
+	    int result = 0;
+	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+		//MYSQL_RES *resPtr;
+		//MYSQL_ROW sqlRow;
+
+	    //建立数据库连接
+	    HCU_L0DBICOM_INIT_DB_CONN();
+
+		//UPDATE新的数据
+	    sprintf(strsql, "UPDATE `hcubfhssystempara` SET snrtimegrid='%d', autozeroswitch='%d', snrautotaringtime ='%d', snrautozerorange ='%d', snrfiltercutoffreq ='%d',snrmeasrangeno='%d', snrpreloadvalueformat='%d', snrpreloadvalue='%d', snrringbuftime ='%d', snrstandstilltime='%d', snrstandstilltimeout='%d', snrstandstillrange='%d' WHERE (1)", \
+				input->WeightSensorTimeGrid, input->WeightSensorAutoZero, input->WeightSensorAutoZeroAutotaringTimeMs,input->WeightSensorAutoZeroCaptureRangeGrams,input->WeightSensorFilterCutOffFreqHz,\
+				input->WeightSensorMeasurementRangeNo, input->WeightSensorPreloadComPensationPlacesAfterDecimalPoint, input->WeightSensorPreloadComPensationValuePercent, input->WeightSensorRingBufTimeMs,\
+				input->WeightSensorStandstillTime,input->WeightSensorStandstillTimeoutMs,input->WeightSensorStandstillRangeGrams);
+
+	    printf ("BFHS_DBI: calData_save strsql = %s\n\n", strsql);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFHS: UPDATE data error, err cause = %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+
+		//释放记录集
+	    //mysql_free_result(resPtr);
+	    mysql_close(sqlHandler);
+	    return SUCCESS;
+}
 
 

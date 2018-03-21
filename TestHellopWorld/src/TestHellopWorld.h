@@ -8,6 +8,143 @@
 #ifndef TESTHELLOPWORLD_H_
 #define TESTHELLOPWORLD_H_
 
+
+#define DLK_TICK			(1000) //1ms  =>400ms, 1H=3600/0.4 = 9000pcs/H. Target>=2000pcs/H
+#define DLK_MAIN_BUF 		(200)
+#define DLK_LIFE_CYCLE_MAX 	(DLK_MAIN_BUF)
+#define DLK_INPUT_PIPE_MAX	(4)  //一定只能等于4个，修改为其他数据，会导致错误
+#define DLK_INP_IND_MAX		5  //0-4 多少个物料小型号
+#define DLK_OUTPUT_PIPE_MAX	6  //0-3 多少个输出源
+#define DLK_TARGET_WO_MAX	(2000) //总共需要采用的包数
+#define DLK_TARGET_PRI_LEN  (20) //输出优先级采用了游程长度随机分布，自动增长模型
+#define DLK_INPUT_DIS_LEN   2 //输入游程长度分布模型
+#define DLK_SEARCH_LEN_MAX  (DLK_MAIN_BUF-2) //算法搜索的最长长度，这是为了简化设置，并防止算法变得病态
+#define DLK_INPUT_PKG_MAX	(unsigned int)(DLK_TARGET_WO_MAX*9/2) //2*DLK_TARGET_WO_MAX //入包数量，假设剔除损耗的条件下。未来考虑损耗回收，这部分应该跟DLK_TARGET_WO_MAX相等
+
+//物料标识
+typedef struct StrMatInd
+{
+	unsigned int productCat; //DLK_INPUT_PIPE_MAX=>0-3
+	unsigned int productInd; //DLK_INP_IND_MAX
+}StrMatInd_t;
+
+//转动的方格
+typedef struct StrHopperElement
+{
+	unsigned int index;
+	//unsigned int preInd;
+	//unsigned int postInd;
+	unsigned int state;
+	unsigned int woNbr;  //工单号
+	unsigned int outputPort;
+	unsigned int lifeRemain;
+	StrMatInd_t  mat;
+}StrHopperElement_t;
+#define DLK_STATE_EMPTY 	0
+#define DLK_STATE_OCCPUY 	1
+#define DLK_STATE_ALLOC 	2
+
+//全局表
+typedef struct StrCtrlContext
+{
+	//料斗信息
+	StrHopperElement_t hop[DLK_MAIN_BUF];  //各个料斗状态信息
+	//入料管道
+	unsigned int inputPort[DLK_INPUT_PIPE_MAX];   //入料操作口所处于的位置
+	double  inputDis[DLK_INPUT_PIPE_MAX][DLK_INP_IND_MAX];
+	double  inputDisRange[DLK_INPUT_PIPE_MAX][DLK_INP_IND_MAX];
+	unsigned int inputFlCur[DLK_INPUT_PIPE_MAX];   //输入物料当前处于的物料进料号
+	unsigned int inputCtrlCnt[DLK_INPUT_PIPE_MAX];  //用这个来控制各个物料具有相同的数量
+	//出料管道
+	unsigned int outputPort[DLK_OUTPUT_PIPE_MAX];   //出料操作口所处于的位置
+	unsigned int rubbishPort;  //垃圾桶挂载
+	unsigned int woRecGlobalIndex[DLK_OUTPUT_PIPE_MAX];
+	unsigned int woExeGlobalIndex;  //工作的WO指示
+	//统计信息
+	unsigned int staMatInc;
+	unsigned int staMatTtt;
+	unsigned int staMatTgv;
+	unsigned int staCombPkgTimes;
+	//unsigned int woOutputLocalIndex[DLK_OUTPUT_PIPE_MAX];  //工单出料执行，本地编号
+	//unsigned int woAlgoScanLocalIndex[DLK_OUTPUT_PIPE_MAX];  //工单算法搜索执行，本地编号
+}StrCtrlContext_t;
+
+
+
+//出包
+typedef struct StrOutputPkg
+{
+	StrMatInd_t matEle[DLK_INPUT_PIPE_MAX];
+	unsigned int pri; //优先级
+}StrOutputPkg_t;
+
+//输出工单包-动态生成
+typedef struct StrWorkOrder
+{
+	StrOutputPkg_t wo[DLK_TARGET_WO_MAX];  //工单信息
+	unsigned int  inputPkgNbrSta[DLK_INPUT_PIPE_MAX][DLK_INP_IND_MAX]; //这个数据将成为输入物料的参照数据，也是计算结果的统计数据，不用于控制进度。这里是用来统计各种小型号有多少个，用户概率分布控制。
+	unsigned int  priMax;  //最多优先级数量
+	unsigned int  priLenTable[DLK_TARGET_WO_MAX];  //每一个优先级的游程长度信息
+	unsigned int  oPkgEleProgCtrl[DLK_OUTPUT_PIPE_MAX]; //一个完整的包，包含有4个物料，这里指进展到第几步
+	unsigned int  woOutHopRemSteps[DLK_OUTPUT_PIPE_MAX][DLK_INPUT_PIPE_MAX]; //这是用来指示还差多少步，物料将到达出料箱子。因为不容易互斥，只是一个指示器，而不用来具体标识HOP物料的出料
+}StrWorkOrder_t;
+
+
+
+//输入数据包-动态生成
+typedef struct StrIntputFlow
+{
+	unsigned int  fl[DLK_INPUT_PIPE_MAX][DLK_INPUT_PKG_MAX];  //每一个输入物料的具体型号，第一个参量是固定的，后面的第二维表示的是物料序号，从0-3999，相比目标大一倍。取值就是[0-4]，物料小型号范围
+	unsigned int  chgMax[DLK_INPUT_PIPE_MAX];  //每一个输入管道中，不同物料变更次数
+	unsigned int  chgLenTable[DLK_INPUT_PIPE_MAX][DLK_INPUT_PKG_MAX];  //每一个输入管道中，不同物料的游程长度信息
+}StrIntputFlow_t;
+
+
+
+
+
+
+
+//T除信息BUFFER存储 =? TBD
+
+
+
+
+
+
+
+
+
+
+
+void global_init_coef(void);
+void global_move_input_output_port(void);
+void global_mat_outflow(void);
+void global_mat_inflow(void);
+void global_algo_search(void);
+void global_state_update(void);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
  * can.h - routine for can driver test.
  *

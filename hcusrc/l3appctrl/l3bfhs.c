@@ -127,9 +127,6 @@ OPSTAT fsm_l3bfhs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if (HCU_L3BFHS_STA_UNIT_DUR != (10*zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFHS_PERIOD_STA_SCAN].dur))  //静态表是以10ms为单位的
 		HCU_ERROR_PRINT_L3BFHS("L3BFHS: module timer statistic parameter set error!\n");
 
-	//秤盘数据表单控制表初始化
-	memset(&gTaskL3bfhsContext, 0, sizeof(gTaskL3bfhsContext_t));
-
 	//初始化界面交互数据
 	HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_NULL);
 
@@ -436,10 +433,14 @@ OPSTAT fsm_l3bfhs_canitf_cal_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 	else{
 		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
+		snd.validFlag = TRUE;
+		snd.errCode = rcv.errCode;
 		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
 		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL;
-		snd.validFlag = TRUE;
 		memcpy(&snd.calFullRespPar, &rcv.calFullRespPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t));
+		//Save calibration response parameters into DB
+		if (dbi_HcuBfhs_calData_save(&rcv.calFullRespPar) == FAILURE)
+			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Save calibration data into DB error!\n");
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
 		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB, TIMER_RESOLUTION_1S);
@@ -463,7 +464,6 @@ OPSTAT fsm_l3bfhs_canitf_dyn_zero_resp(UINT32 dest_id, UINT32 src_id, void * par
 		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO;
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
-		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB, TIMER_RESOLUTION_1S);
 	}
 
 	//收到正确的反馈
@@ -475,7 +475,6 @@ OPSTAT fsm_l3bfhs_canitf_dyn_zero_resp(UINT32 dest_id, UINT32 src_id, void * par
 		snd.validFlag = TRUE;
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
-		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB, TIMER_RESOLUTION_1S);
 	}
 
 	//返回
@@ -495,7 +494,6 @@ OPSTAT fsm_l3bfhs_canitf_dyn_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 		snd.errCode = rcv.errCode;
 		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI;
 		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL;
-		memcpy(&snd.calFullRespPar, &rcv.dynFullRespPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t));
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
 		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB, TIMER_RESOLUTION_1S);
@@ -508,7 +506,6 @@ OPSTAT fsm_l3bfhs_canitf_dyn_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI;
 		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL;
 		snd.validFlag = TRUE;
-		memcpy(&snd.calFullRespPar, &rcv.dynFullRespPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t));
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
 		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB, TIMER_RESOLUTION_1S);
@@ -799,6 +796,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		if(rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO){
 			msg_struct_l3bfhs_can_cal_zero_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_cal_zero_req_t));
+			snd.boardBitmap[1] = 1;
 			snd.calZeroPar.WeightSensorAutoZero = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch;
 			snd.calZeroPar.WeightSensorAutoZeroAutotaringTimeMs = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs;
 			snd.calZeroPar.WeightSensorAutoZeroCaptureRangeGrams = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams;
@@ -814,15 +812,20 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 			snd.calZeroPar.spare2 = 0;
 			snd.length = sizeof(msg_struct_l3bfhs_can_cal_zero_req_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+
+			printf("L3BFHS: STATIC_CALI_ZERO, WeightSensorAutoZeroAutotaringTimeMs = %d\n\n", snd.calZeroPar.WeightSensorAutoZeroAutotaringTimeMs );
 			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		}
 		else if(rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL){
 			msg_struct_l3bfhs_can_cal_full_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_cal_full_req_t));
+			snd.boardBitmap[1] = 1;
 			snd.calFullPar.WeightSensorAdjustingTolerancePercent = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingTolerancePercent;
 			snd.calFullPar.WeightSensorAdjustingWeightGrams = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams;
 			snd.length = sizeof(msg_struct_l3bfhs_can_cal_full_req_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_CAL_FULL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+
+			printf("L3BFHS: STATIC_CALI_FULL, AdjustingWeight = %d\n\n", snd.calFullPar.WeightSensorAdjustingWeightGrams);
 			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		}
 		else
@@ -833,36 +836,21 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		if(rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO){
 			msg_struct_l3bfhs_can_dyn_zero_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_dyn_zero_req_t));
-			//配置称重传感器参数
-			snd.dynZeroPar.WeightSensorAutoZero = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroSwitch;
-			snd.dynZeroPar.WeightSensorAutoZeroAutotaringTimeMs = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroAutotaringTimeMs;
-			snd.dynZeroPar.WeightSensorAutoZeroCaptureRangeGrams = gTaskL3bfhsContext.wgtSnrPar.snrAutoZeroCaptureRangeGrams;
-			snd.dynZeroPar.WeightSensorFilterCutOffFreqHz = gTaskL3bfhsContext.wgtSnrPar.snrFilterCutOffFreqHz;
-			snd.dynZeroPar.WeightSensorMeasurementRangeNo = gTaskL3bfhsContext.wgtSnrPar.snrMeasurementRangeNo;
-			snd.dynZeroPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationDataFormat;
-			snd.dynZeroPar.WeightSensorPreloadComPensationValuePercent = gTaskL3bfhsContext.wgtSnrPar.snrPreloadCompensationValue;
-			snd.dynZeroPar.WeightSensorRingBufTimeMs = gTaskL3bfhsContext.wgtSnrPar.snrRingBufTimeMs;
-			snd.dynZeroPar.WeightSensorStandstillRangeGrams = gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams;
-			snd.dynZeroPar.WeightSensorStandstillTime = gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime;
-			snd.dynZeroPar.WeightSensorStandstillTimeoutMs = gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs;
-			snd.dynZeroPar.spare1 = 0;
-			snd.dynZeroPar.spare2 = 0;
-			//配置马达参数
-			snd.dynMotoPar.MotorDirection = gTaskL3bfhsContext.motoCtrlPar.MotorDirection;
-			snd.dynMotoPar.MotorSpeed = gTaskL3bfhsContext.motoCtrlPar.MotorSpeed;
+			snd.boardBitmap[1] = 1;
 			snd.length = sizeof(msg_struct_l3bfhs_can_dyn_zero_req_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_DYN_ZERO_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
-			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+			//动态校准可以重复进行，一次request后用户重复放置砝码会有多次response返回
 		}
 		else if(rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL){
 			msg_struct_l3bfhs_can_dyn_full_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_dyn_full_req_t));
-			snd.dynFullPar.WeightSensorAdjustingTolerancePercent = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingTolerancePercent;
-			snd.dynFullPar.WeightSensorAdjustingWeightGrams = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams;
+			snd.boardBitmap[1] = 1;
+			snd.adjustingWeight = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams;
+			snd.motorSpeed = gTaskL3bfhsContext.motoCtrlPar.MotorSpeed;
+			snd.motorDirection = gTaskL3bfhsContext.motoCtrlPar.MotorDirection;
 			snd.length = sizeof(msg_struct_l3bfhs_can_dyn_full_req_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_DYN_FULL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
 			//动态校准可以重复进行，一次request后用户重复放置砝码会有多次response返回
-			//hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		}
 		else
 			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Receive cmdValue error for CMDID_DYNAMIC_CALI!\n");
@@ -1034,11 +1022,15 @@ OPSTAT func_l3bfhs_time_out_statistic_scan_process(void)
 	//5s的LocalUI数据进行更新
 	if ((gTaskL3bfhsContext.elipseCnt % HCU_L3BFHS_STA_5S_CYCLE) == 0){
 		StrHlcIe_cui_hcu2uir_statistic_bfhs_report_t buf;
-		memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t));
+		memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_statistic_bfhs_report_t));
 		buf.targetWeight = gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight;
+		buf.tu1LimitWeight = gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu1Limit;
+		buf.tu2LimitWeight = gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu2Limit;
 		buf.upLimitWeight = gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight;
 		buf.totalPackage = gTaskL3bfhsContext.staUp2Now.wsIncMatCnt;
-		buf.totalReject = gTaskL3bfhsContext.staUp2Now.wsOverCnt+gTaskL3bfhsContext.staUp2Now.wsUnderTotalCnt;
+		buf.totalGoodPackage = gTaskL3bfhsContext.staUp2Now.wsNormalCnt;
+		buf.totalOverReject = gTaskL3bfhsContext.staUp2Now.wsOverCnt;
+		buf.totalUnderReject = gTaskL3bfhsContext.staUp2Now.wsUnderTotalCnt;
 		buf.totalWeight = gTaskL3bfhsContext.staUp2Now.wsIncMatWgt;
 		buf.throughputPerMin = gTaskL3bfhsContext.staLocalUi.wsAvgTttTimes;
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report(gTaskL3bfhsContext.configId, &buf);

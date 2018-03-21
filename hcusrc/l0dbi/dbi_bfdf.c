@@ -90,7 +90,7 @@ OPSTAT dbi_HcuBfdf_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
 
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
     if (configId == 0){
-    	HcuErrorPrint("DBIBFDF: Function dbi_HcuBfsc_StaDatainfo_save() ConfigId=0, no processing!\n");
+    	HcuErrorPrint("DBIBFDF: Function dbi_HcuBfdf_StaDatainfo_save() ConfigId=0, no processing!\n");
     	return SUCCESS;
     }
 
@@ -114,7 +114,7 @@ OPSTAT dbi_HcuBfdf_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
 
 	//REPLACE新的数据
     sprintf(strsql, "REPLACE INTO `hcubfdfstadatainfo` (statype, configid, timestamp, wsincmatcnt, wsincmatwgt, wscombtimes, wsttttimes, wstgvtimes, wstttmatcnt, wstgvmatcnt, wstttmatwgt, wstgvmatwgt, wsavgttttimes, wsavgtttmatcnt, wsavgtttmatwgt) VALUES \
-    		('%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')", s, configId, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
+    		('%s', '%d', '%d', '%d', '%lu', '%d', '%d', '%d', '%d', '%d', '%lu', '%lu', '%d', '%d', '%lu')", s, configId, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
 			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
 			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
 	result = mysql_query(sqlHandler, strsql);
@@ -246,7 +246,7 @@ OPSTAT dbi_HcuBfdf_callcell_delete_3monold(UINT32 days)
 }
 
 //Read system configuration parameter into gTaskL3bfdfContext
-OPSTAT dbi_HcuBfdf_sysConfigData_read(UINT32  sysConfigData[HCU_SYSCFG_BFDF_DB_COLUMN_NUM_MAX])
+OPSTAT dbi_HcuBfdf_sysConfigData_read(DbiL3BfdfSystemPara_t *sysPara, DbiL3BfdfCalibrationPara_t *dynCalPar)
 	{
 		MYSQL *sqlHandler;
 		MYSQL_RES *resPtr;
@@ -280,10 +280,57 @@ OPSTAT dbi_HcuBfdf_sysConfigData_read(UINT32  sysConfigData[HCU_SYSCFG_BFDF_DB_C
 			return FAILURE;
 		}
 		else{
-			UINT8  index;
-			for (index =0; index < resPtr->field_count; index++){
-				if (sqlRow[index] && index<HCU_SYSCFG_BFDF_DB_COLUMN_NUM_MAX)  sysConfigData[index] = (UINT32)atol(sqlRow[index]);
+			UINT8 i = 0;
+			UINT16 temp = 0;
+			UINT8  index = 1; // First field is SID
+
+			if (sqlRow[index])  sysPara->lineNum = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+			if (sqlRow[index])  sysPara->boardNumPerLine = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+			//main motor parameters
+			if (sqlRow[index])  sysPara->motMainPar.MotorSpeed = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motMainPar.MotorDirection = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motMainPar.MotorFailureDetectionVaration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motMainPar.MotorFailureDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+
+			//secondary motor parameters
+			if (sqlRow[index])  sysPara->motSecondPar.MotorSpeed = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motSecondPar.MotorDirection = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motSecondPar.MotorFailureDetectionVaration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  sysPara->motSecondPar.MotorFailureDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+
+			//Arm control parameters
+			if (sqlRow[index])  sysPara->armCtrlPar.TWeightInd = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.T0bis = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TA0 = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TActCmd = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TArmStart = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TArmStop = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TDoorCloseLightOn = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.TApIntervalMin = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  temp = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			for (i=0; i<HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX; i++){
+				sysPara->armCtrlPar.TApInterval[i] = temp;
 			}
+			if (sqlRow[index])  temp = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			for (i=0; i<HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX; i++){
+				sysPara->armCtrlPar.TLocalAp[i] = temp;
+			}
+			if (sqlRow[index])  sysPara->armCtrlPar.DelayNode1ToX = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if (sqlRow[index])  sysPara->armCtrlPar.DelayUpHcuAlgoDl = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+
+			//calibration parameters
+			if (sqlRow[index])  dynCalPar->zero_cal_iteration = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+			if (sqlRow[index])  dynCalPar->full_cal_iteration = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+			if (sqlRow[index])  dynCalPar->full_weight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->adc_sample_freq = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->adc_gain = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->noise_floor_filter_factor = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->max_allowed_weight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->WeightSensorTailorValue = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+			if (sqlRow[index])  dynCalPar->TWeightInd = sysPara->armCtrlPar.TWeightInd;
+			if (sqlRow[index])  dynCalPar->motor_speed = sysPara->motMainPar.MotorSpeed; //same as main motor speed
+
+			if (sqlRow[index])  sysPara->engModeSwitch = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		}
 
 		//释放记录集
@@ -373,7 +420,7 @@ OPSTAT dbi_HcuBfdf_groupConfigData_read(UINT16 configId, UINT8 groupTotal, DbiL3
 			if (sqlRow[index]) groupConfigData[group].lineId = (UINT8)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].configId = (UINT16)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].hopperNum = (UINT16)atol(sqlRow[index++]);
-			if (sqlRow[index]) groupConfigData[group].hopperBitmap = (UINT32)atol(sqlRow[index++]);
+			if (sqlRow[index]) groupConfigData[group].hopperBitmap = (UINT64)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].targetWeight = (UINT32)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].targetUpLimit = (UINT32)atol(sqlRow[index++]);
 			if (sqlRow[index]) groupConfigData[group].bufWgtTarget = (UINT32)atol(sqlRow[index++]);

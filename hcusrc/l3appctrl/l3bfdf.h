@@ -58,10 +58,7 @@ extern HcuFsmStateItem_t HcuFsmL3bfdf[];
 	 ＝＞由于HUITP.H中以及使用了1-32/33-64的分类，这里就按照这个方式进行编码
 	AP/HOOPERID:
 			0: =>固定垃圾桶
-			1-32: 	=>第1条流水线
-			33-64: 	=>第2条流水线
-			65-96: 	=>第3条流水线
-			97-128: =>第4条流水线
+			1-32: 	=>fix for all lines
 */
 //统一下位机板子的控制信息
 typedef struct L3BfdfNodeBoardInfo
@@ -154,7 +151,7 @@ typedef struct gTaskL3bfdfContextWeightSensorParamaters
 	UINT32	WeightSensorPickupThread;						// NOT for GUI
 	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
 	UINT32	StardardReadyTimeMs;								//???
-	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+	UINT32	MaxAllowedWeight;										//BFDF: 如果发现超过这个最大值，说明Sensor出错
 	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
 	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
 	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
@@ -187,6 +184,19 @@ typedef struct gTaskL3bfdfContextActionControlParamaters
 	UINT16  DelayNode1ToX;
 	UINT16  DelayUpHcuAlgoDl;
 }gTaskL3bfdfContextActionControlParamaters_t;
+typedef struct gTaskL3bfdfContextDynCalibrationParamaters
+{
+    UINT8            zero_cal_iteration;    /* 8 for ZERO, 4 for FULL */
+    UINT8            full_cal_iteration;
+    UINT16           TWeightInd;
+    UINT32           full_weight; /* in 0.01g */
+    UINT32           motor_speed;
+    UINT32           adc_sample_freq;
+    UINT32           adc_gain;
+    UINT32           noise_floor_filter_factor;   /* 0 - 100: 0.00 to 1.00, y = factor * x(n) + (1-factor) * x(n-1), 0 means disable */
+    UINT32           max_allowed_weight; /* in 0.01g */
+    UINT32           WeightSensorTailorValue;
+}gTaskL3bfdfContextDynCalibrationParamaters_t;
 
 //统计信息：为了提高本地计算的精度
 typedef struct gTaskL3bfdfContextStaEleMid
@@ -238,17 +248,23 @@ typedef struct gTaskL3bfdfContext
 	gTaskL3bfdfContextMotorControlParamaters_t			motMainPar;
 	gTaskL3bfdfContextMotorControlParamaters_t			motSecondPar;
 	gTaskL3bfdfContextActionControlParamaters_t			actionCtrlPar;
+	gTaskL3bfdfContextDynCalibrationParamaters_t		dynCalPar;
 	UINT32  start24hStaTimeInUnix;						//系统配置的参数，表示24小时统计的日历起点
 
 	//动态部分
 	UINT32  sessionId;								//批次数据
 	char    operatorName[HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX];
 	UINT16	configId;  								//用来标识系统工作在哪一套配置参数中
+	UINT8   engModeSwitch;  //Engineering mode switch
 	char    configName[HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX];
 	UINT8   nbrStreamLine;			//缺省为2，最大不能超过4
 	UINT8   nbrIoBoardPerLine;		//缺省为4，最大不能超过4
+	float   combAlgoSpaceCtrlRatio;  //解空间控制系数，降低算法的敏感度
 
 	//nodeDyn的编制原则是：0一定表达WGT板子，1-HCU_L3BFDF_NODE_BOARD_NBR_MAX表达一条流水先上的总共的板子数量
+	//Line从0开始，正常0-1
+	//GroupId从1开始
+	//HopperId从1-32，只有本地意义。0表示垃圾桶
 	L3BfdfNodeBoardInfo_t  	nodeDyn[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX];
 	UINT16					totalGroupNbr[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX]; //分成多少个组，这个数据不包括第一组，特别注意！
 	L3BfdfGroupInfo_t		group[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
@@ -289,6 +305,7 @@ extern OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void
 extern OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfdf_canitf_dyn_cal_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -408,6 +425,17 @@ extern OPSTAT dbi_HcuBfdf_callcell_save(HcuSysMsgIeL3bfdfCallcellElement_t *inpu
 			}\
 		}\
 	}while(0)
+
+//FIll bitmap for for calibration request message send
+#define HCU_L3BFDF_FILL_WGT_BOARD_BITMAP() \
+	do{\
+		int j=0, boardId=0;\
+		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){\
+			boardId = (j<<3)+1;\
+			snd.boardBitmap[boardId] = TRUE;\
+		}\
+	}while(0)
+
 
 //填入各个bitmap后，为了打印的方便，制作宏
 #define HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP() \

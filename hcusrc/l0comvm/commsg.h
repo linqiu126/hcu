@@ -546,6 +546,8 @@ enum HCU_INTER_TASK_MSG_ID
 	//BFDF
 	MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,
 	MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,
+	MSG_ID_L3BFDF_CAN_DYN_CAL_REQ,
+	MSG_ID_CAN_L3BFDF_DYN_CAL_RESP,
 	MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,
 	MSG_ID_L3BFDF_CAN_WS_COMB_OUT,
 	MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,
@@ -1018,7 +1020,7 @@ typedef struct msgie_struct_bfdf_scale_weight_sta_element
 	UINT32 tttMatNbr;		//组合出料的物料数量
 	UINT32 tgvMatNbr;		//组合放弃的物料数量
 	UINT32 combAvgSpeed;	//组合平均速度
-	UINT32 totalWeight;		//总共处理的物料总重量
+	UINT64 totalWeight;		//总共处理的物料总重量
 	UINT32 totalMatNbr;  	//总共处理的物料总数量
 	UINT32 totalWorkMin;	//连续工作的总分钟数
 	UINT32 timeInUnix;  	//报告生成的unix时间，网络可能报告滞留
@@ -1027,19 +1029,19 @@ typedef struct msgie_struct_bfdf_scale_weight_sta_element
 typedef struct msgie_struct_bfhs_scale_weight_sta_element
 {
 	UINT32	wsIncMatCnt;  		//物料数量
-	UINT32	wsIncMatWgt;  		//物料重量
+	UINT64	wsIncMatWgt;  		//物料重量
 	UINT32  wsNormalCnt;		//正常
-	UINT32  wsNormalWgt;		//正常
+	UINT64  wsNormalWgt;		//正常
 	UINT32  wsOverCnt;			//超重
-	UINT32  wsOverWgt;			//超重
+	UINT64  wsOverWgt;			//超重
 	UINT32  wsUnderTotalCnt;	//欠重
-	UINT32	wsUnderTotalWgt;	//欠重
+	UINT64	wsUnderTotalWgt;	//欠重
 	UINT32  wsUnderTu1Cnt;		//欠重TU1
-	UINT32	wsUnderTu1Wgt;		//欠重TU1
+	UINT64	wsUnderTu1Wgt;		//欠重TU1
 	UINT32  wsUnderTu2Cnt;		//欠重TU2
-	UINT32	wsUnderTu2Wgt;		//欠重TU2
+	UINT64	wsUnderTu2Wgt;		//欠重TU2
 	UINT32  wsUnspecificCnt;	//非特定
-	UINT32	wsUnspecificWgt;	//非特定
+	UINT64	wsUnspecificWgt;	//非特定
 	UINT32  wsAvgMatTimes;		//平均进料次数
 	UINT32  wsAvgTttTimes;		//平均成功次数
 	UINT32  wsAvgTgvTimes;		//平均失败次数
@@ -1159,7 +1161,7 @@ typedef struct msg_struct_com_pm_report
 }msg_struct_com_pm_report_t;
 
 //MSG_ID_COM_MQTT_SEND,
-#define HCU_SYSMSG_MQTT_DESC_MAX_LEN  300
+#define HCU_SYSMSG_MQTT_DESC_MAX_LEN  800
 typedef struct msg_struct_com_mqtt_send
 {
 	UINT16 srcNode;
@@ -2920,45 +2922,7 @@ typedef struct msg_struct_can_uicomm_test_cmd_resp
 }msg_struct_can_uicomm_test_cmd_resp_t;
 
 
-//BFDF
-//MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ,
-#define HCU_SYSMSG_BFDF_UICOMM_CMDID_INVALL  			0
-#define HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START  		1
-#define HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP  				2
-#define HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND  			3
-#define HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME  			4
-#define HCU_SYSMSG_BFDF_UICOMM_CMDID_STATIC_CALI		5
-#define HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI		6
-#define HCU_SYSMSG_BFDF_UICOMM_CMDID_ONE_KEY_ZERO		7
-#define HCU_SYSMSG_BFDF_UICOMM_CMDID_TEST				8
-#define HCU_SYSMSG_BFDF_UICOMM_CMDID_NULL  				255
-
-//BFDF CMD_VALUE
-#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_NULL  							0
-#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_STATIC_CALI_ZERO  				1
-#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_STATIC_CALI_FULL  				2
-#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO		  		3
-#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL		  		4
-#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_INVALID							0xFF
-
-typedef struct msg_struct_uicomm_l3bfdf_ctrl_cmd_req
-{
-	UINT8  cmdid;
-	UINT32 length;
-	UINT32 cmdValue;
-}msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t;
-
-//MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP,
-typedef struct msg_struct_l3bfdf_uicomm_ctrl_cmd_resp
-{
-	UINT8   cmdid;
-	UINT8   validFlag;  //是否执行成功
-	UINT16  errCode;
-	UINT8	sensorid;
-	UINT32  length;
-}msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t;
-
-//BFHS
+/*****************************BFHS*********************************/
 //MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ,
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_NULL  				0
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START  		1
@@ -3071,117 +3035,10 @@ typedef struct msg_struct_l3bfhs_uicomm_ctrl_cmd_resp
 	UINT16  cmdValue;
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
-	//这些参数，是否需要都显示到界面上？待完善定义
 	StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t calFullRespPar;
 	UINT32  length;
 }msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t;
 
-//BFDF项目
-//MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,
-#define HCU_SYSMSG_BFDF_ERR_CODE_INVALIID	  	0
-#define HCU_SYSMSG_BFDF_ERR_CODE_UNSPECIFIC  	1
-#define HCU_SYSMSG_BFDF_ERR_CODE_TIME_OUT  		2
-#define HCU_SYSMSG_BFDF_ERR_CODE_NULL  		0xFFFF
-typedef struct strMsgIe_l3bfdf_WeightSensorParamaters
-{
-	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
-	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
-	UINT32	WeightSensorEmptyThread;
-	UINT32	WeightSensorEmptyDetectionTimeMs;
-	UINT32	WeightSensorPickupThread;						// NOT for GUI
-	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
-	UINT32	StardardReadyTimeMs;								//???
-	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
-	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
-	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
-	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
-	UINT32	WeightSensorCalibrationFullWeight;
-	UINT32	WeightSensorStaticZeroValue;
-	UINT32	WeightSensorTailorValue;
-	UINT32	WeightSensorDynamicZeroThreadValue;
-	UINT32	WeightSensorDynamicZeroHysteresisMs;
-	UINT32  WeightSensorMovingEverageSample;
-}strMsgIe_l3bfdf_WeightSensorParamaters_t;
-typedef struct strMsgIe_l3bfdf_MotorControlParamaters
-{
-	UINT32	MotorSpeed;
-	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
-	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
-	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
-}strMsgIe_l3bfdf_MotorControlParamaters_t;
-#define	HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX			33
-#define	HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX	8
-typedef struct strMsgIe_l3bfdf_ActionControlParamaters
-{
-	UINT16  TWeightInd;                     /* After INFRA INT, Wait for how long to send WEIGHT_IND, unit is 10ms Tick */
-	UINT16  T0bis;                          /* After INFRA INT, INFRA INT sent to Node 2 to 5, unit is 10ms Tick */
-	UINT16  TA0;                            /* After INFRA INT, Deay to AP01 */
-	UINT16  TActCmd;
-	UINT16  TArmStart;
-	UINT16  TArmStop;
-	UINT16  TDoorCloseLightOn;
-	UINT16  TApIntervalMin;
-	UINT16  TApInterval[HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX];
-	UINT16  TLocalAp[HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX];
-	UINT16  DelayNode1ToX;
-	UINT16  DelayUpHcuAlgoDl;
-}strMsgIe_l3bfdf_ActionControlParamaters_t;
-typedef struct msg_struct_l3bfdf_can_sys_cfg_req
-{
-	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-	strMsgIe_l3bfdf_WeightSensorParamaters_t			wgtSnrPar;
-	strMsgIe_l3bfdf_MotorControlParamaters_t			motMainPar;
-	strMsgIe_l3bfdf_MotorControlParamaters_t			motSecondPar;
-	strMsgIe_l3bfdf_ActionControlParamaters_t			actionCtrlPar;
-	UINT32 length;
-}msg_struct_l3bfdf_can_sys_cfg_req_t;
-
-//MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,
-typedef struct msg_struct_can_l3bfdf_sys_cfg_resp
-{
-	UINT8  snrId;
-	UINT8  validFlag;  //是否执行成功
-	UINT16 errCode;
-	UINT32 length;
-}msg_struct_can_l3bfdf_sys_cfg_resp_t;
-
-//MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,  	//传感器新数据事件
-typedef struct msg_struct_can_l3bfdf_new_ready_event
-{
-	UINT8  snrId;
-	UINT32 sensorWsValue;
-	UINT32 length;
-}msg_struct_can_l3bfdf_new_ready_event_t;
-
-//MSG_ID_L3BFDF_CAN_WS_COMB_OUT,  		//出料
-typedef struct msg_struct_l3bfdf_can_ws_comb_out
-{
-	UINT8  snrId;
-	UINT16 hopperId;
-	UINT8   basketFullStatus;    //0-FALSE, 1-TRUE
-	UINT8   bufferFullStatus;	   //0-FALSE, 1-TRUE
-	UINT32 length;
-}msg_struct_l3bfdf_can_ws_comb_out_t;
-
-//MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,  		//出料确认
-typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
-{
-	UINT8  snrId;
-	UINT16 hopperId;
-	UINT16 errCode;
-	UINT8  validFlag; //是否执行成功
-	UINT32 length;
-}msg_struct_can_l3bfdf_ws_comb_out_fb_t;
-
-//MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,
-typedef struct msg_struct_can_l3bfdf_basket_clean_ind
-{
-	UINT8  snrId;
-	UINT16 hopperId;
-	UINT32 length;
-}msg_struct_can_l3bfdf_basket_clean_ind_t;
-
-//BFHS项目
 //MSG_ID_L3BFHS_CAN_SYS_CFG_REQ,
 //#define HCU_SYSMSG_L3BFHS_MAX_SNC_BOARD_NBR		8
 #define HCU_SYSMSG_BFHS_ERR_CODE_INVALIID	  	0
@@ -3213,6 +3070,7 @@ typedef struct strMsgIe_bfhs_WgtSnrParamaters
 	UINT32  WeightSensorTareWeight;			//Tare weight of each material
 	UINT32  WeightSensorTargetThroughput;	//Selection stop as given 'this para' pcs good material
 	UINT32  WeightSensorAlgoAutoZeroSignal; //If autozero cannot be done during 'this para' pcs input, there will be a warning for operator
+	UINT32	WeightSensorUpperLimit;
 	UINT32	WeightSensorAlgoTu1Limit;
 	UINT32	WeightSensorAlgoTu2Limit;
 	UINT32	WeightSensorAlgoMaxTu1Ratio;  	//NF2, for example, 250 means 2.5%
@@ -3283,8 +3141,6 @@ typedef struct msg_struct_can_l3bfhs_cal_full_resp
 typedef struct msg_struct_l3bfhs_can_dyn_zero_req
 {
 	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-	StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters_t dynZeroPar;
-	strMsgIe_bfhs_MotoCtrlParamaters_t dynMotoPar;
 	UINT32 length;
 }msg_struct_l3bfhs_can_dyn_zero_req_t;
 
@@ -3300,7 +3156,9 @@ typedef struct msg_struct_can_l3bfhs_dyn_zero_resp
 typedef struct msg_struct_l3bfhs_can_dyn_full_req
 {
 	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-	StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t dynFullPar;
+    UINT32 adjustingWeight;
+	UINT32 motorSpeed;
+	UINT32 motorDirection;
 	UINT32 length;
 }msg_struct_l3bfhs_can_dyn_full_req_t;
 
@@ -3309,7 +3167,6 @@ typedef struct msg_struct_can_l3bfhs_dyn_full_resp
 {
 	UINT8  validFlag;  //是否执行成功
 	UINT16 errCode;
-	StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t dynFullRespPar;
 	UINT32 length;
 }msg_struct_can_l3bfhs_dyn_full_resp_t;
 
@@ -3321,6 +3178,206 @@ typedef struct msg_struct_can_l3bfhs_new_ready_event
 	UINT32 length;
 }msg_struct_can_l3bfhs_new_ready_event_t;
 
+
+/*****************************BFDF项目*********************************/
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_INVALL  			0
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START  		1
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP  				2
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND  			3
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME  			4
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_STATIC_CALI		5
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI		6
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_ONE_KEY_ZERO		7
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_TEST				8
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_NULL  				255
+
+//BFDF CMD_VALUE
+#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_NULL  							0
+#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_STATIC_CALI_ZERO  				1
+#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_STATIC_CALI_FULL  				2
+#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO_LINE0		  	3
+#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL_LINE0	  		4
+#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO_LINE1		 	7
+#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL_LINE1	  		8
+#define HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_INVALID							0xFF
+
+//MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ,
+typedef struct msg_struct_uicomm_l3bfdf_ctrl_cmd_req
+{
+	UINT8  cmdid;
+	UINT32 length;
+	UINT32 cmdValue;
+}msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t;
+
+//MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP,
+typedef struct strMsgIe_bfdf_calibration_resp
+{
+    UINT16  errCode;
+    UINT8   calibration_zero_or_full;
+    UINT8   calibration_cur_iteration;
+    UINT8   calibration_result;
+    UINT8   spare2;
+    UINT32  full_weight; /* in 0.01g */
+    UINT32  noise_floor_period_10ms;
+    UINT32  noise_floor_period_10ms_max;
+    UINT32  weight_report_offset_wrt_infra;
+    UINT32  noise_floor_sd_mean;
+    UINT32  noise_floor_sd_max;
+    UINT32  noise_floor_sd_min;
+    UINT32  noise_floor_sd_sd;
+    UINT32  noise_floor_mean_mean;
+    UINT32  noise_floor_mean_max;
+    UINT32  noise_floor_mean_min;
+    UINT32  noise_floor_mean_sd;
+    UINT32  full_offset_peak_wrt_infra[4];
+    UINT32  full_coefficiency_average;            /* in 0.0001, MIN: 0.0001, MAX: 429496.7295 */
+    UINT32  estimated_error_iteration[4];
+    UINT32  estimated_error_max_possible;
+    UINT32  estimated_error_average;
+}strMsgIe_bfdf_calibration_resp_t;
+typedef struct msg_struct_l3bfdf_uicomm_ctrl_cmd_resp
+{
+	UINT8   cmdid;
+	UINT8   validFlag;  //是否执行成功
+	UINT16  errCode;
+	UINT8	sensorid;
+	strMsgIe_bfdf_calibration_resp_t dynCalResp;
+	UINT32  length;
+}msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t;
+
+//MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,
+#define HCU_SYSMSG_BFDF_ERR_CODE_INVALIID	  	0
+#define HCU_SYSMSG_BFDF_ERR_CODE_UNSPECIFIC  	1
+#define HCU_SYSMSG_BFDF_ERR_CODE_TIME_OUT  		2
+#define HCU_SYSMSG_BFDF_ERR_CODE_NULL  		0xFFFF
+typedef struct strMsgIe_l3bfdf_WeightSensorParamaters
+{
+	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
+	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
+	UINT32	WeightSensorEmptyThread;
+	UINT32	WeightSensorEmptyDetectionTimeMs;
+	UINT32	WeightSensorPickupThread;						// NOT for GUI
+	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
+	UINT32	StardardReadyTimeMs;								//???
+	UINT32	MaxAllowedWeight;										//BFDF: 如果发现超过这个最大值，说明Sensor出错
+	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullWeight;
+	UINT32	WeightSensorStaticZeroValue;
+	UINT32	WeightSensorTailorValue;
+	UINT32	WeightSensorDynamicZeroThreadValue;
+	UINT32	WeightSensorDynamicZeroHysteresisMs;
+	UINT32  WeightSensorMovingEverageSample;
+}strMsgIe_l3bfdf_WeightSensorParamaters_t;
+typedef struct strMsgIe_l3bfdf_MotorControlParamaters
+{
+	UINT32	MotorSpeed;
+	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
+	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
+	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
+}strMsgIe_l3bfdf_MotorControlParamaters_t;
+#define	HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX			33
+#define	HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX	8
+typedef struct strMsgIe_l3bfdf_ActionControlParamaters
+{
+	UINT16  TWeightInd;                     /* After INFRA INT, Wait for how long to send WEIGHT_IND, unit is 10ms Tick */
+	UINT16  T0bis;                          /* After INFRA INT, INFRA INT sent to Node 2 to 5, unit is 10ms Tick */
+	UINT16  TA0;                            /* After INFRA INT, Deay to AP01 */
+	UINT16  TActCmd;
+	UINT16  TArmStart;
+	UINT16  TArmStop;
+	UINT16  TDoorCloseLightOn;
+	UINT16  TApIntervalMin;
+	UINT16  TApInterval[HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX];
+	UINT16  TLocalAp[HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX];
+	UINT16  DelayNode1ToX;
+	UINT16  DelayUpHcuAlgoDl;
+}strMsgIe_l3bfdf_ActionControlParamaters_t;
+typedef struct msg_struct_l3bfdf_can_sys_cfg_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	strMsgIe_l3bfdf_WeightSensorParamaters_t			wgtSnrPar;
+	strMsgIe_l3bfdf_MotorControlParamaters_t			motMainPar;
+	strMsgIe_l3bfdf_MotorControlParamaters_t			motSecondPar;
+	strMsgIe_l3bfdf_ActionControlParamaters_t			actionCtrlPar;
+	UINT32 length;
+}msg_struct_l3bfdf_can_sys_cfg_req_t;
+
+//MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,
+typedef struct msg_struct_can_l3bfdf_sys_cfg_resp
+{
+	UINT8  snrId;
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	UINT32 length;
+}msg_struct_can_l3bfdf_sys_cfg_resp_t;
+
+//MSG_ID_L3BFDF_CAN_DYN_CAL_REQ
+typedef struct strMsgIe_bfdf_calibration_req
+{
+    UINT8            calibration_zero_or_full; /* 1 for ZERO, 2 for FULL */
+    UINT8            calibration_iteration;    /* 8 for ZERO, 4 for FULL */
+    UINT16           TWeightInd;
+    UINT32           full_weight; /* in 0.01g */
+    UINT32           motor_speed;
+    UINT32           adc_sample_freq;
+    UINT32           adc_gain;
+    UINT32           noise_floor_filter_factor;   /* 0 - 100: 0.00 to 1.00, y = factor * x(n) + (1-factor) * x(n-1), 0 means disable */
+    UINT32           max_allowed_weight; /* in 0.01g */
+    UINT32           WeightSensorTailorValue;
+}strMsgIe_bfdf_calibration_req_t;
+
+typedef struct msg_struct_l3bfdf_can_dyn_cal_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	strMsgIe_bfdf_calibration_req_t dynCalReq;
+	UINT32 length;
+}msg_struct_l3bfdf_can_dyn_cal_req_t;
+
+//MSG_ID_CAN_L3BFDF_DYN_CAL_RESP
+typedef struct msg_struct_can_l3bfdf_dyn_cal_resp
+{
+	UINT8  snrId;
+	strMsgIe_bfdf_calibration_resp_t dynCalResp;
+	UINT32 length;
+}msg_struct_can_l3bfdf_dyn_cal_resp_t;
+
+//MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,  	//传感器新数据事件
+typedef struct msg_struct_can_l3bfdf_new_ready_event
+{
+	UINT8  snrId;
+	UINT32 sensorWsValue;
+	UINT32 length;
+}msg_struct_can_l3bfdf_new_ready_event_t;
+
+//MSG_ID_L3BFDF_CAN_WS_COMB_OUT,  		//出料
+typedef struct msg_struct_l3bfdf_can_ws_comb_out
+{
+	UINT8  snrId;
+	UINT8  hopperId;
+	UINT8   basketFullStatus;    //0-FALSE, 1-TRUE
+	UINT8   bufferFullStatus;	   //0-FALSE, 1-TRUE
+	UINT32 length;
+}msg_struct_l3bfdf_can_ws_comb_out_t;
+
+//MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,  		//出料确认
+typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
+{
+	UINT8  snrId;
+	UINT8  hopperId;
+	UINT16 errCode;
+	UINT8  validFlag; //是否执行成功
+	UINT32 length;
+}msg_struct_can_l3bfdf_ws_comb_out_fb_t;
+
+//MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,
+typedef struct msg_struct_can_l3bfdf_basket_clean_ind
+{
+	UINT8  snrId;
+	UINT8 hopperId;
+	UINT32 length;
+}msg_struct_can_l3bfdf_basket_clean_ind_t;
 
 //SUI接口公共消息
 //MSG_ID_SUI_TEST_CMD_REQ,  				//测试命令
@@ -4810,36 +4867,36 @@ typedef struct HcuSysMsgIeL3bfscContextStaElement
 typedef struct HcuSysMsgIeL3bfdfContextStaElement
 {
 	UINT32	wsIncMatCnt;  			//物料数量
-	UINT32	wsIncMatWgt;  			//物料重量
+	UINT64	wsIncMatWgt;  			//物料重量
 	UINT32	wsCombTimes;  			//总共成功素搜到目标的次数
 	UINT32	wsTttTimes;  			//TTT次数
 	UINT32	wsTgvTimes;  			//TGV次数
 	UINT32	wsTttMatCnt;			//TTT物料数量
 	UINT32	wsTgvMatCnt;			//TGV物料数量
-	UINT32	wsTttMatWgt;			//TTT物料重量
-	UINT32	wsTgvMatWgt;			//TGV物料重量
+	UINT64	wsTttMatWgt;			//TTT物料重量
+	UINT64	wsTgvMatWgt;			//TGV物料重量
 	UINT32  wsCallCellTimes;		//成功出料到外部的次数
 	UINT32	wsAvgTttTimes;			//TTT平均次数
 	UINT32	wsAvgTttMatCnt;			//TTT平均物料数
-	UINT32	wsAvgTttMatWgt;			//TTT平均重量
+	UINT64	wsAvgTttMatWgt;			//TTT平均重量
 }HcuSysMsgIeL3bfdfContextStaElement_t;
 
 typedef struct HcuSysMsgIeL3bfhsContextStaElement
 {
 	UINT32	wsIncMatCnt;  		//物料数量
-	UINT32	wsIncMatWgt;  		//物料重量
+	UINT64	wsIncMatWgt;  		//物料重量
 	UINT32  wsNormalCnt;		//正常
-	UINT32  wsNormalWgt;		//正常
+	UINT64  wsNormalWgt;		//正常
 	UINT32  wsOverCnt;			//超重
-	UINT32  wsOverWgt;			//超重
+	UINT64  wsOverWgt;			//超重
 	UINT32  wsUnderTotalCnt;	//欠重
-	UINT32	wsUnderTotalWgt;	//欠重
+	UINT64	wsUnderTotalWgt;	//欠重
 	UINT32  wsUnderTu1Cnt;		//欠重TU1
-	UINT32	wsUnderTu1Wgt;		//欠重TU1
+	UINT64	wsUnderTu1Wgt;		//欠重TU1
 	UINT32  wsUnderTu2Cnt;		//欠重TU2
-	UINT32	wsUnderTu2Wgt;		//欠重TU2
+	UINT64	wsUnderTu2Wgt;		//欠重TU2
 	UINT32  wsUnspecificCnt;	//非特定
-	UINT32	wsUnspecificWgt;	//非特定
+	UINT64	wsUnspecificWgt;	//非特定
 	UINT32  wsAvgMatTimes;		//平均进料次数
 	UINT32  wsAvgTttTimes;		//平均成功次数
 	UINT32  wsAvgTgvTimes;		//平均失败次数
