@@ -9,16 +9,17 @@
 #define TESTHELLOPWORLD_H_
 
 
-#define DLK_TICK			1000 //1ms  =>400ms, 1H=3600/0.4 = 9000pcs/H. Target>=2000pcs/H
-#define DLK_MAIN_BUF 		200
-#define DLK_LIFE_CYCLE_MAX 	DLK_MAIN_BUF
-#define DLK_INPUT_PIPE_MAX	4  //一定只能等于4个，修改为其他数据，会导致错误
-#define DLK_INP_IND_MAX		4  //0-4 多少个物料小型号
-#define DLK_OUTPUT_PIPE_MAX	20  //0-3 多少个输出源
-#define DLK_TARGET_WO_MAX	2000 //总共需要采用的包数
-#define DLK_TARGET_PRI_LEN  20 //输出优先级采用了游程长度随机分布，自动增长模型
+#define DLK_TICK			(1000) //1ms  =>400ms, 1H=3600/0.4 = 9000pcs/H. Target>=2000pcs/H
+#define DLK_MAIN_BUF 		(200)
+#define DLK_LIFE_CYCLE_MAX 	(DLK_MAIN_BUF)
+#define DLK_INPUT_PIPE_MAX	(4)  //一定只能等于4个，修改为其他数据，会导致错误
+#define DLK_INP_IND_MAX		5  //0-4 多少个物料小型号
+#define DLK_OUTPUT_PIPE_MAX	6  //0-3 多少个输出源
+#define DLK_TARGET_WO_MAX	(2000) //总共需要采用的包数
+#define DLK_TARGET_PRI_LEN  (20) //输出优先级采用了游程长度随机分布，自动增长模型
 #define DLK_INPUT_DIS_LEN   2 //输入游程长度分布模型
-#define DLK_SEARCH_LEN_MAX  50 //算法搜索的最长长度，这是为了简化设置，并防止算法变得病态
+#define DLK_SEARCH_LEN_MAX  (DLK_MAIN_BUF-2) //算法搜索的最长长度，这是为了简化设置，并防止算法变得病态
+#define DLK_INPUT_PKG_MAX	(unsigned int)(DLK_TARGET_WO_MAX*9/2) //2*DLK_TARGET_WO_MAX //入包数量，假设剔除损耗的条件下。未来考虑损耗回收，这部分应该跟DLK_TARGET_WO_MAX相等
 
 //物料标识
 typedef struct StrMatInd
@@ -91,7 +92,6 @@ typedef struct StrWorkOrder
 
 
 //输入数据包-动态生成
-#define DLK_INPUT_PKG_MAX	(unsigned int)(DLK_TARGET_WO_MAX*9/2) //2*DLK_TARGET_WO_MAX //入包数量，假设剔除损耗的条件下。未来考虑损耗回收，这部分应该跟DLK_TARGET_WO_MAX相等
 typedef struct StrIntputFlow
 {
 	unsigned int  fl[DLK_INPUT_PIPE_MAX][DLK_INPUT_PKG_MAX];  //每一个输入物料的具体型号，第一个参量是固定的，后面的第二维表示的是物料序号，从0-3999，相比目标大一倍。取值就是[0-4]，物料小型号范围

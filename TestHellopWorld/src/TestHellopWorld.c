@@ -270,7 +270,7 @@ void global_mat_inflow(void)
 	}
 	distance = zCtrlContext.inputCtrlCnt[0] - distance/3;
 	//printf("Distance=%d\n", distance);
-	if ((tmp>10) && (distance < 5))
+	if ((tmp>5) && (distance < 20))
 	{
 		if(zCtrlContext.hop[zCtrlContext.inputPort[0]].state == DLK_STATE_EMPTY)
 		{
@@ -289,7 +289,7 @@ void global_mat_inflow(void)
 		tmp = rand()%100;
 		distance = zCtrlContext.inputCtrlCnt[iPipId] - zCtrlContext.inputCtrlCnt[0];
 		//if ((tmp>25) && (distance<3))
-		if ((distance<3))
+		if ((distance < 20))
 		{
 			if(zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].state == DLK_STATE_EMPTY)
 			{
@@ -441,8 +441,8 @@ void global_algo_search(void)
 			//工单往下执行
 			zCtrlContext.woExeGlobalIndex++;
 			zCtrlContext.staMatTtt += DLK_INPUT_PIPE_MAX;
-			printf("One package searched! Progress = %d, OutputPipId=%d, WoIndex = %d, Steps remaining=%d/%d/%d/%d\n", zDlkTickCnt, oPipId, zCtrlContext.woExeGlobalIndex-1,\
-					result[0], result[1], result[2], result[3]);
+			printf("One package searched! Progress = %d, OutputPipId=%d, WoIndex = %d, Steps remaining=%d/%d/%d/%d, Current outputPort=%d\n", zDlkTickCnt, oPipId, zCtrlContext.woExeGlobalIndex-1,\
+					result[0], result[1], result[2], result[3], zCtrlContext.outputPort[oPipId]);
 		}
 	}//所有的输出通道均搜索一遍
 }
@@ -469,6 +469,7 @@ void global_state_update(void)
 
 	//打印各个输出料斗的PkgNbr情况
 	printf("PROG4: WO PkgCtrl Remaining = %d/%d/%d/%d/%d/%d\n", zWorkOrder.oPkgEleProgCtrl[0], zWorkOrder.oPkgEleProgCtrl[1], zWorkOrder.oPkgEleProgCtrl[2], zWorkOrder.oPkgEleProgCtrl[3], zWorkOrder.oPkgEleProgCtrl[4], zWorkOrder.oPkgEleProgCtrl[6]);
+#endif
 
 	//打印物料指示器
 	printf("PROG5: Output Remaining steps control, O0[%d/%d/%d/%d-%d-%d-%d], O1[%d/%d/%d/%d-%d-%d-%d], O2[%d/%d/%d/%d-%d-%d-%d], O3[%d/%d/%d/%d-%d-%d-%d], O4[%d/%d/%d/%d-%d-%d-%d], O5[%d/%d/%d/%d-%d-%d-%d]\n", \
@@ -479,7 +480,7 @@ void global_state_update(void)
 		zWorkOrder.woOutHopRemSteps[4][0], zWorkOrder.woOutHopRemSteps[4][1], zWorkOrder.woOutHopRemSteps[4][2], zWorkOrder.woOutHopRemSteps[4][3], zWorkOrder.oPkgEleProgCtrl[4], zCtrlContext.outputPort[4], zCtrlContext.woRecGlobalIndex[4], \
 		zWorkOrder.woOutHopRemSteps[5][0], zWorkOrder.woOutHopRemSteps[5][1], zWorkOrder.woOutHopRemSteps[5][2], zWorkOrder.woOutHopRemSteps[5][3], zWorkOrder.oPkgEleProgCtrl[5], zCtrlContext.outputPort[5], zCtrlContext.woRecGlobalIndex[5]\
 		);
-
+#if 0
 	//打印物料状态
 	char stmp[40], sOutput[1000];
 	memset(sOutput, 0, sizeof(sOutput));
@@ -498,7 +499,7 @@ void global_state_update(void)
 #endif
 
 	//打印统计信息
-	printf("PROG7: Sta MatIncoming=%d, Ttt=%d, Tgv=%d, CombPkgTimes=%d\n", zCtrlContext.staMatInc, zCtrlContext.staMatTtt, zCtrlContext.staMatTgv, zCtrlContext.staCombPkgTimes);
+	printf("PROG7: Tick=%d, Sta MatIncoming=%d, Ttt=%d, Tgv=%d, CombPkgTimes=%d\n", zDlkTickCnt, zCtrlContext.staMatInc, zCtrlContext.staMatTtt, zCtrlContext.staMatTgv, zCtrlContext.staCombPkgTimes);
 
 	//BUF满率
 	tmp=0;
