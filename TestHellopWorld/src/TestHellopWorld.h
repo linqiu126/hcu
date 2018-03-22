@@ -15,11 +15,20 @@
 #define DLK_INPUT_PIPE_MAX	(4)  //一定只能等于4个，修改为其他数据，会导致错误
 #define DLK_INP_IND_MAX		5  //0-4 多少个物料小型号
 #define DLK_OUTPUT_PIPE_MAX	6  //0-3 多少个输出源
-#define DLK_TARGET_WO_MAX	(2000) //总共需要采用的包数
+#define DLK_TARGET_WO_CTRL	(2000) //总共需要采用的包数
+#define DLK_TARGET_WO_MAX	(3000) //总共需要采用的包数
 #define DLK_TARGET_PRI_LEN  (20) //输出优先级采用了游程长度随机分布，自动增长模型
 #define DLK_INPUT_DIS_LEN   2 //输入游程长度分布模型
-#define DLK_SEARCH_LEN_MAX  (DLK_MAIN_BUF-2) //算法搜索的最长长度，这是为了简化设置，并防止算法变得病态
+#define DLK_SEARCH_WINDOW_MAX  4//(DLK_MAIN_BUF-2) //算法搜索的最长长度，这是为了简化设置，并防止算法变得病态
 #define DLK_INPUT_PKG_MAX	(unsigned int)(DLK_TARGET_WO_MAX*9/2) //2*DLK_TARGET_WO_MAX //入包数量，假设剔除损耗的条件下。未来考虑损耗回收，这部分应该跟DLK_TARGET_WO_MAX相等
+
+//算法部分控制参数
+#define DLK_ALGO_SEG_DEEP           200
+#define DLK_ALGO_SEG_PD_TYPE	    (int)(DLK_ALGO_SEG_DEEP/DLK_INPUT_PIPE_MAX)
+#define DLK_ALGO_HOP_EMPTY_RATIO    0.3
+#define DLK_ALGO_EMPTY_HOP_TARGET   (unsigned int)(DLK_MAIN_BUF*DLK_ALGO_HOP_EMPTY_RATIO)  //最终缓冲区中有多少料斗空着
+#define DLK_ALGO_OCCPUY_HOP_TARGET  (unsigned int)(DLK_MAIN_BUF*(1-DLK_ALGO_HOP_EMPTY_RATIO))  //最终缓冲区中有多少料斗被占用
+
 
 //物料标识
 typedef struct StrMatInd
@@ -65,8 +74,12 @@ typedef struct StrCtrlContext
 	unsigned int staMatTtt;
 	unsigned int staMatTgv;
 	unsigned int staCombPkgTimes;
+	unsigned int staMbEmpty;
 	//unsigned int woOutputLocalIndex[DLK_OUTPUT_PIPE_MAX];  //工单出料执行，本地编号
 	//unsigned int woAlgoScanLocalIndex[DLK_OUTPUT_PIPE_MAX];  //工单算法搜索执行，本地编号
+	//算法参数
+	unsigned int lackMat[DLK_INPUT_PIPE_MAX][DLK_INP_IND_MAX]; //刷新分段缺料的局部信息
+	unsigned int lackFullMatCtrlProg;
 }StrCtrlContext_t;
 
 
@@ -123,7 +136,7 @@ void global_mat_outflow(void);
 void global_mat_inflow(void);
 void global_algo_search(void);
 void global_state_update(void);
-
+void global_mat_lack_refresh(void);
 
 
 

@@ -49,9 +49,16 @@ void global_init_coef(void)
 
 	//挂载输入端口
 	tmp = (int)(DLK_MAIN_BUF/(DLK_INPUT_PIPE_MAX + DLK_OUTPUT_PIPE_MAX + 1));
-	for(i=0; i<DLK_INPUT_PIPE_MAX; i++){
-		zCtrlContext.inputPort[i] = tmp*i + (rand()%tmp);  //前半段
+	//动态输入料斗方式：各个之间差距tmp=1/(4+5+1)=1/10
+//	for(i=0; i<DLK_INPUT_PIPE_MAX; i++){
+//		zCtrlContext.inputPort[i] = tmp*i + (rand()%tmp);  //前半段
+//	}
+	//静态输入料斗方式：各个之间差距1
+	zCtrlContext.inputPort[0] = (rand()%tmp);
+	for(i=1; i<DLK_INPUT_PIPE_MAX; i++){
+		zCtrlContext.inputPort[i] = zCtrlContext.inputPort[0]+i;  //前半段
 	}
+
 	for(i=1; i<DLK_INPUT_PIPE_MAX; i++){
 		for(j=0; j<i; j++){
 			if(zCtrlContext.inputPort[i] == zCtrlContext.inputPort[j]){
@@ -256,54 +263,176 @@ void global_move_input_output_port(void)
 
 }
 
+//刷新缺料状态，为入料做准备
+void global_mat_lack_refresh(void)
+{
+	int prdCatIndex=0, prdTypeIndex=0;
+	int i=0, j=0;
+	int tmp=0;
+
+	memset(zCtrlContext.lackMat, 0, sizeof(unsigned int)*DLK_INPUT_PIPE_MAX*DLK_INP_IND_MAX);
+
+	//统计Main Buffer中的空斗
+	tmp=0;
+	for (i=0; i<DLK_MAIN_BUF; i++){
+		if (zCtrlContext.hop[i].state == DLK_STATE_EMPTY) tmp++;
+	}
+	zCtrlContext.staMbEmpty = tmp;
+
+	//扫描需求量：一包4料，所以WO深度=200/4=50个包，但存入时需要做N次
+	for (i=zCtrlContext.woExeGlobalIndex; i<(zCtrlContext.woExeGlobalIndex + DLK_ALGO_SEG_PD_TYPE); i++)
+	{
+		//j就是物料类型
+		for (j=0; j<DLK_INPUT_PIPE_MAX; j++){
+			prdTypeIndex = zWorkOrder.wo[i].matEle[j].productInd;
+			zCtrlContext.lackMat[j][prdTypeIndex]++;
+		}
+	}
+
+	//主BUF中有的，降低需求量
+	for (i=0; i<DLK_MAIN_BUF; i++){
+		if (zCtrlContext.hop[i].state == DLK_STATE_OCCPUY){
+			prdCatIndex = zCtrlContext.hop[i].mat.productCat;
+			prdTypeIndex = zCtrlContext.hop[i].mat.productInd;
+			if (zCtrlContext.lackMat[prdCatIndex][prdTypeIndex] > 0)
+				zCtrlContext.lackMat[prdCatIndex][prdTypeIndex]--;
+		}
+	}
+}
+
 //入料
+//方式一：入料改造为100%匹配
+//方式二：入料增加BUF，然后在BUF中搜索，BUF深度可控。有料时直接送入，无料时按照概率往MAIN_BUF中放料
 void global_mat_inflow(void)
 {
 	int iPipId=0;
 	int tmp=0;
 	int distance=0;
+	float emptyRatio = 0;
+	int inPort;
 
-	//第A个输入
-	tmp = rand()%100;
-	for(iPipId=1; iPipId<DLK_INPUT_PIPE_MAX; iPipId++){
-		distance += zCtrlContext.inputCtrlCnt[iPipId];
-	}
-	distance = zCtrlContext.inputCtrlCnt[0] - distance/3;
-	//printf("Distance=%d\n", distance);
-	if ((tmp>5) && (distance < 20))
+	/*
+	 *
+	 * [SOLUTION 3]
+	 *
+	 */
+	//先使用全匹配方案，使用精确过程，而且输入物料之间的料斗间距必须为1，不然没法使用
+	if (zCtrlContext.lackFullMatCtrlProg >=DLK_TARGET_WO_MAX)
+		return;
+	for (iPipId=0; iPipId<DLK_INPUT_PIPE_MAX; iPipId++)
 	{
-		if(zCtrlContext.hop[zCtrlContext.inputPort[0]].state == DLK_STATE_EMPTY)
-		{
-			zCtrlContext.hop[zCtrlContext.inputPort[0]].state = DLK_STATE_OCCPUY;
-			zCtrlContext.hop[zCtrlContext.inputPort[0]].lifeRemain = DLK_LIFE_CYCLE_MAX;
-			zCtrlContext.hop[zCtrlContext.inputPort[0]].mat.productCat = 0;
-			zCtrlContext.hop[zCtrlContext.inputPort[0]].mat.productInd = zInputFlow.fl[0][zCtrlContext.inputFlCur[0]];
-			zCtrlContext.inputFlCur[0]++;
-			zCtrlContext.staMatInc++;
-			zCtrlContext.inputCtrlCnt[0]++;
-		}
+		inPort = zCtrlContext.inputPort[iPipId];
+		if (zCtrlContext.hop[inPort].state != DLK_STATE_EMPTY)
+			return;
 	}
 
-	//后续几个
-	for(iPipId=1; iPipId<DLK_INPUT_PIPE_MAX; iPipId++){
-		tmp = rand()%100;
-		distance = zCtrlContext.inputCtrlCnt[iPipId] - zCtrlContext.inputCtrlCnt[0];
-		//if ((tmp>25) && (distance<3))
-		if ((distance < 20))
-		{
-			if(zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].state == DLK_STATE_EMPTY)
-			{
-				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].state = DLK_STATE_OCCPUY;
-				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].lifeRemain = DLK_LIFE_CYCLE_MAX;
-				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].mat.productCat = iPipId;
-				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].mat.productInd = zInputFlow.fl[iPipId][zCtrlContext.inputFlCur[iPipId]];
-				zCtrlContext.inputFlCur[iPipId]++;
-				zCtrlContext.staMatInc++;
-				zCtrlContext.inputCtrlCnt[iPipId]++;
-			}
-		}
+	for (iPipId=0; iPipId<DLK_INPUT_PIPE_MAX; iPipId++)
+	{
+		inPort = zCtrlContext.inputPort[iPipId];
+		zCtrlContext.hop[inPort].state = DLK_STATE_OCCPUY;
+		zCtrlContext.hop[inPort].lifeRemain = DLK_LIFE_CYCLE_MAX;
+		zCtrlContext.hop[inPort].mat.productCat = iPipId;
+		zCtrlContext.hop[inPort].mat.productInd = zWorkOrder.wo[zCtrlContext.lackFullMatCtrlProg].matEle[iPipId].productInd;
+		zCtrlContext.inputFlCur[iPipId]++;
+		zCtrlContext.staMatInc++;
+		zCtrlContext.inputCtrlCnt[iPipId]++;
+		//printf("TEST, Input mat progress = %d!\n", zCtrlContext.lackFullMatCtrlProg);
 	}
-	printf("Inflow MAT index: Inflow=%d/%d/%d/%d\n", zCtrlContext.inputFlCur[0], zCtrlContext.inputFlCur[1], zCtrlContext.inputFlCur[2], zCtrlContext.inputFlCur[3]);
+	zCtrlContext.lackFullMatCtrlProg++;
+
+
+
+
+	/*
+	 *
+	 * [SOLUTION 2]
+	 *
+	 */
+	//先使用全匹配方案，使用统计方式
+//	for(iPipId=1; iPipId<DLK_INPUT_PIPE_MAX; iPipId++){
+//		distance += zCtrlContext.inputCtrlCnt[iPipId];
+//	}
+//	emptyRatio = (float)zCtrlContext.staMbEmpty / (float)DLK_MAIN_BUF;
+//	distance = zCtrlContext.inputCtrlCnt[0] - distance/3;
+//	//控制4个输入线相互之间的差距不能太大
+//	if ((distance < 5) && (emptyRatio > DLK_ALGO_HOP_EMPTY_RATIO)){
+//		if(zCtrlContext.hop[zCtrlContext.inputPort[0]].state == DLK_STATE_EMPTY)
+//		{
+//			zCtrlContext.hop[zCtrlContext.inputPort[0]].state = DLK_STATE_OCCPUY;
+//			zCtrlContext.hop[zCtrlContext.inputPort[0]].lifeRemain = DLK_LIFE_CYCLE_MAX;
+//			zCtrlContext.hop[zCtrlContext.inputPort[0]].mat.productCat = 0;
+//			zCtrlContext.hop[zCtrlContext.inputPort[0]].mat.productInd = zWorkOrder.wo[zCtrlContext.inputFlCur[0]].matEle[0].productInd;
+//			zCtrlContext.inputFlCur[0]++;
+//			zCtrlContext.staMatInc++;
+//			zCtrlContext.inputCtrlCnt[0]++;
+//		}
+//	}
+//	for(iPipId=1; iPipId<DLK_INPUT_PIPE_MAX; iPipId++){
+//		distance = zCtrlContext.inputCtrlCnt[iPipId] - zCtrlContext.inputCtrlCnt[0];
+//		if ((distance < 5))
+//		{
+//			if(zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].state == DLK_STATE_EMPTY)
+//			{
+//				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].state = DLK_STATE_OCCPUY;
+//				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].lifeRemain = DLK_LIFE_CYCLE_MAX;
+//				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].mat.productCat = iPipId;
+//				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].mat.productInd = zWorkOrder.wo[zCtrlContext.inputFlCur[iPipId]].matEle[iPipId].productInd;
+//				zCtrlContext.inputFlCur[iPipId]++;
+//				zCtrlContext.staMatInc++;
+//				zCtrlContext.inputCtrlCnt[iPipId]++;
+//			}
+//		}
+//	}
+
+
+
+	/*
+	 *
+	 * [SOLUTION 1]
+	 *
+	 */
+	//完全随机输入算法
+	//第A个输入
+//	tmp = rand()%100;
+//	for(iPipId=1; iPipId<DLK_INPUT_PIPE_MAX; iPipId++){
+//		distance += zCtrlContext.inputCtrlCnt[iPipId];
+//	}
+//	distance = zCtrlContext.inputCtrlCnt[0] - distance/3;
+//	//printf("Distance=%d\n", distance);
+//	if ((tmp>5) && (distance < 20))
+//	{
+//		if(zCtrlContext.hop[zCtrlContext.inputPort[0]].state == DLK_STATE_EMPTY)
+//		{
+//			zCtrlContext.hop[zCtrlContext.inputPort[0]].state = DLK_STATE_OCCPUY;
+//			zCtrlContext.hop[zCtrlContext.inputPort[0]].lifeRemain = DLK_LIFE_CYCLE_MAX;
+//			zCtrlContext.hop[zCtrlContext.inputPort[0]].mat.productCat = 0;
+//			zCtrlContext.hop[zCtrlContext.inputPort[0]].mat.productInd = zInputFlow.fl[0][zCtrlContext.inputFlCur[0]];
+//			zCtrlContext.inputFlCur[0]++;
+//			zCtrlContext.staMatInc++;
+//			zCtrlContext.inputCtrlCnt[0]++;
+//		}
+//	}
+//
+//	//后续几个
+//	for(iPipId=1; iPipId<DLK_INPUT_PIPE_MAX; iPipId++){
+//		tmp = rand()%100;
+//		distance = zCtrlContext.inputCtrlCnt[iPipId] - zCtrlContext.inputCtrlCnt[0];
+//		//if ((tmp>25) && (distance<3))
+//		if ((distance < 20))
+//		{
+//			if(zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].state == DLK_STATE_EMPTY)
+//			{
+//				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].state = DLK_STATE_OCCPUY;
+//				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].lifeRemain = DLK_LIFE_CYCLE_MAX;
+//				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].mat.productCat = iPipId;
+//				zCtrlContext.hop[zCtrlContext.inputPort[iPipId]].mat.productInd = zInputFlow.fl[iPipId][zCtrlContext.inputFlCur[iPipId]];
+//				zCtrlContext.inputFlCur[iPipId]++;
+//				zCtrlContext.staMatInc++;
+//				zCtrlContext.inputCtrlCnt[iPipId]++;
+//			}
+//		}
+//	}
+	//printf("Inflow MAT index: Inflow=%d/%d/%d/%d\n", zCtrlContext.inputFlCur[0], zCtrlContext.inputFlCur[1], zCtrlContext.inputFlCur[2], zCtrlContext.inputFlCur[3]);
 }
 
 //出料
@@ -347,8 +476,23 @@ void global_mat_outflow(void)
 
 			//完成一次完整的PKG出料，更新WO存储状态
 			if (zWorkOrder.oPkgEleProgCtrl[oPipId] == 0){
-				zCtrlContext.woRecGlobalIndex[oPipId] = 0xFFFFFFFF;
 				zCtrlContext.staCombPkgTimes++;
+				tmp = zCtrlContext.outputPort[oPipId];
+				printf("OUTPUT Pkg Finished: WoExeRec=%d, oPipeId=%d, outputId=%d, Next 4 materials status: Hid/Cat/Type=[%d/%d/%d][%d/%d/%d][%d/%d/%d][%d/%d/%d]\n", \
+						zCtrlContext.woRecGlobalIndex[oPipId], oPipId, tmp,\
+						(tmp+1)%DLK_MAIN_BUF, zCtrlContext.hop[(tmp+1)%DLK_MAIN_BUF].mat.productCat, zCtrlContext.hop[(tmp+1)%DLK_MAIN_BUF].mat.productInd, \
+						(tmp+2)%DLK_MAIN_BUF, zCtrlContext.hop[(tmp+2)%DLK_MAIN_BUF].mat.productCat, zCtrlContext.hop[(tmp+2)%DLK_MAIN_BUF].mat.productInd, \
+						(tmp+3)%DLK_MAIN_BUF, zCtrlContext.hop[(tmp+3)%DLK_MAIN_BUF].mat.productCat, zCtrlContext.hop[(tmp+3)%DLK_MAIN_BUF].mat.productInd, \
+						(tmp+4)%DLK_MAIN_BUF, zCtrlContext.hop[(tmp+4)%DLK_MAIN_BUF].mat.productCat, zCtrlContext.hop[(tmp+4)%DLK_MAIN_BUF].mat.productInd\
+						);
+				tmp = zCtrlContext.woExeGlobalIndex;
+				printf("OUTPUT WO next Snapshot request: woExe=%d, Request Cat/Type=[0/%d][1/%d][2/%d][3/%d]\n", tmp, zWorkOrder.wo[tmp].matEle[0].productInd, zWorkOrder.wo[tmp].matEle[1].productInd, zWorkOrder.wo[tmp].matEle[2].productInd, zWorkOrder.wo[tmp].matEle[3].productInd);
+				//任务目标终结
+				if (zCtrlContext.woRecGlobalIndex[oPipId] == DLK_TARGET_WO_CTRL){
+					printf("Target accomplished!\n");
+					exit(1);
+				}
+				zCtrlContext.woRecGlobalIndex[oPipId] = 0xFFFFFFFF;
 			}
 		}
 
@@ -393,15 +537,23 @@ void global_algo_search(void)
 			result[iFlIndex] = 0;
 		}
 
-		//开始搜索
+		//往前看4个物料状态
+		tmp = zCtrlContext.outputPort[oPipId];
+		printf("ALGO Previous 4 materials snapshot: oPipeId=%d, woExe=%d, HopId=%d, Hid/State/Cat/Type=[%d/%d/%d/%d][%d/%d/%d/%d][%d/%d/%d/%d][%d/%d/%d/%d]\n", oPipId, zCtrlContext.woExeGlobalIndex, tmp,\
+				(tmp+1)%DLK_MAIN_BUF, zCtrlContext.hop[(tmp+1)%DLK_MAIN_BUF].state, zCtrlContext.hop[(tmp+1)%DLK_MAIN_BUF].mat.productCat, zCtrlContext.hop[(tmp+1)%DLK_MAIN_BUF].mat.productInd, \
+				(tmp+2)%DLK_MAIN_BUF, zCtrlContext.hop[(tmp+2)%DLK_MAIN_BUF].state, zCtrlContext.hop[(tmp+2)%DLK_MAIN_BUF].mat.productCat, zCtrlContext.hop[(tmp+2)%DLK_MAIN_BUF].mat.productInd, \
+				(tmp+3)%DLK_MAIN_BUF, zCtrlContext.hop[(tmp+3)%DLK_MAIN_BUF].state, zCtrlContext.hop[(tmp+3)%DLK_MAIN_BUF].mat.productCat, zCtrlContext.hop[(tmp+3)%DLK_MAIN_BUF].mat.productInd, \
+				(tmp+4)%DLK_MAIN_BUF, zCtrlContext.hop[(tmp+4)%DLK_MAIN_BUF].state, zCtrlContext.hop[(tmp+4)%DLK_MAIN_BUF].mat.productCat, zCtrlContext.hop[(tmp+4)%DLK_MAIN_BUF].mat.productInd\
+				);
+
+		//开始搜索：从之前单个搜索，改为连续搜索
 		resOk=0;
 		for (iFlIndex=0; iFlIndex<DLK_INPUT_PIPE_MAX; iFlIndex++){
 			//4种物料必须全部找到，才能成功
 			searchIndex = 0;
 			findFlag = 0;
-			while ((searchIndex < DLK_SEARCH_LEN_MAX) && (findFlag == 0))
+			while ((searchIndex < DLK_SEARCH_WINDOW_MAX) && (findFlag == 0))
 			{
-				searchIndex++;
 				//往左边搜索！
 				tmp = (startSearch + searchIndex)%DLK_MAIN_BUF;
 				if ((zCtrlContext.hop[tmp].state == DLK_STATE_OCCPUY) && (zCtrlContext.hop[tmp].mat.productCat == iFlIndex) && \
@@ -412,6 +564,7 @@ void global_algo_search(void)
 					findFlag = 1;
 					//printf("TEMP Search: oPipId = %d, resOk=%d, sStart=%d, sInd=%d, sTmp=%d, State=%d, pdCat=%d\n", oPipId, resOk, startSearch, searchIndex, tmp, zCtrlContext.hop[tmp].state, zCtrlContext.hop[tmp].mat.productCat);
 				}
+				searchIndex++;
 			}
 			//如果上面没有被找到，直接退出
 			if (findFlag == 0)
@@ -425,8 +578,8 @@ void global_algo_search(void)
 			{
 				zWorkOrder.woOutHopRemSteps[oPipId][iFlIndex] = (result[iFlIndex]  + DLK_MAIN_BUF - zCtrlContext.outputPort[oPipId])%DLK_MAIN_BUF;
 			}
-			printf("Searched Result Steps: %d/%d/%d/%d\n", result[0], result[1], result[2], result[3]);
-			printf("Searched Result Wo Info: %d/%d/%d/%d\n", zWorkOrder.wo[woIndex].matEle[0].productInd, zWorkOrder.wo[woIndex].matEle[1].productInd, zWorkOrder.wo[woIndex].matEle[2].productInd, zWorkOrder.wo[woIndex].matEle[3].productInd);
+			//printf("Searched Result Steps: %d/%d/%d/%d\n", result[0], result[1], result[2], result[3]);
+			//printf("Searched Result Wo Info: %d/%d/%d/%d\n", zWorkOrder.wo[woIndex].matEle[0].productInd, zWorkOrder.wo[woIndex].matEle[1].productInd, zWorkOrder.wo[woIndex].matEle[2].productInd, zWorkOrder.wo[woIndex].matEle[3].productInd);
 			//更新HOP状态
 			for(iFlIndex=0; iFlIndex<DLK_INPUT_PIPE_MAX; iFlIndex++)
 			{
@@ -441,7 +594,7 @@ void global_algo_search(void)
 			//工单往下执行
 			zCtrlContext.woExeGlobalIndex++;
 			zCtrlContext.staMatTtt += DLK_INPUT_PIPE_MAX;
-			printf("One package searched! Progress = %d, OutputPipId=%d, WoIndex = %d, Steps remaining=%d/%d/%d/%d, Current outputPort=%d\n", zDlkTickCnt, oPipId, zCtrlContext.woExeGlobalIndex-1,\
+			printf("ALGO One package searched! Progress = %d, OutputPipId=%d, WoIndex = %d, Steps remaining=%d/%d/%d/%d, Current outputPort=%d\n", zDlkTickCnt, oPipId, zCtrlContext.woExeGlobalIndex-1,\
 					result[0], result[1], result[2], result[3], zCtrlContext.outputPort[oPipId]);
 		}
 	}//所有的输出通道均搜索一遍
@@ -451,6 +604,8 @@ void global_algo_search(void)
 void global_state_update(void)
 {
 	int i=0, tmp=0;
+
+	printf("-------------------------------\n");
 
 #if 0
 	//打印各物料的最新进料状态
@@ -472,7 +627,8 @@ void global_state_update(void)
 #endif
 
 	//打印物料指示器
-	printf("PROG5: Output Remaining steps control, O0[%d/%d/%d/%d-%d-%d-%d], O1[%d/%d/%d/%d-%d-%d-%d], O2[%d/%d/%d/%d-%d-%d-%d], O3[%d/%d/%d/%d-%d-%d-%d], O4[%d/%d/%d/%d-%d-%d-%d], O5[%d/%d/%d/%d-%d-%d-%d]\n", \
+	printf("PROG5: Output Remaining steps control, woOutExcuting=[%d/%d/%d/%d/%d/%d], O0[%d/%d/%d/%d-%d-%d-%d], O1[%d/%d/%d/%d-%d-%d-%d], O2[%d/%d/%d/%d-%d-%d-%d], O3[%d/%d/%d/%d-%d-%d-%d], O4[%d/%d/%d/%d-%d-%d-%d], O5[%d/%d/%d/%d-%d-%d-%d]\n", \
+		zCtrlContext.woRecGlobalIndex[0], zCtrlContext.woRecGlobalIndex[1], zCtrlContext.woRecGlobalIndex[2], zCtrlContext.woRecGlobalIndex[3], zCtrlContext.woRecGlobalIndex[4], zCtrlContext.woRecGlobalIndex[5],\
 		zWorkOrder.woOutHopRemSteps[0][0], zWorkOrder.woOutHopRemSteps[0][1], zWorkOrder.woOutHopRemSteps[0][2], zWorkOrder.woOutHopRemSteps[0][3], zWorkOrder.oPkgEleProgCtrl[0], zCtrlContext.outputPort[0], zCtrlContext.woRecGlobalIndex[0], \
 		zWorkOrder.woOutHopRemSteps[1][0], zWorkOrder.woOutHopRemSteps[1][1], zWorkOrder.woOutHopRemSteps[1][2], zWorkOrder.woOutHopRemSteps[1][3], zWorkOrder.oPkgEleProgCtrl[1], zCtrlContext.outputPort[1], zCtrlContext.woRecGlobalIndex[1], \
 		zWorkOrder.woOutHopRemSteps[2][0], zWorkOrder.woOutHopRemSteps[2][1], zWorkOrder.woOutHopRemSteps[2][2], zWorkOrder.woOutHopRemSteps[2][3], zWorkOrder.oPkgEleProgCtrl[2], zCtrlContext.outputPort[2], zCtrlContext.woRecGlobalIndex[2], \
@@ -498,15 +654,19 @@ void global_state_update(void)
 	printf("%s", sOutput);
 #endif
 
-	//打印统计信息
-	printf("PROG7: Tick=%d, Sta MatIncoming=%d, Ttt=%d, Tgv=%d, CombPkgTimes=%d\n", zDlkTickCnt, zCtrlContext.staMatInc, zCtrlContext.staMatTtt, zCtrlContext.staMatTgv, zCtrlContext.staCombPkgTimes);
+	//打印统计信息，包括BUF满率
+	printf("PROG7: Tick=%d, Sta MatIncoming=%d, Ttt=%d, Tgv=%d, CombPkgTimes=%d, Main Buffer Empty ratio = %6.2f%%\n", \
+			zDlkTickCnt, zCtrlContext.staMatInc, zCtrlContext.staMatTtt, zCtrlContext.staMatTgv, zCtrlContext.staCombPkgTimes, ((float)zCtrlContext.staMbEmpty*100/200.0));
 
-	//BUF满率
-	tmp=0;
-	for (i=0; i<DLK_MAIN_BUF; i++){
-		if (zCtrlContext.hop[i].state == DLK_STATE_EMPTY) tmp++;
-	}
-	printf("PROG8: Main Buffer Empty ratio = %6.2f%%\n", ((float)tmp*100/200.0));
+	//缺料信息
+#if 0
+	printf("PROG8: Lacking Mat status, prdCat/prdType= I0[%d/%d/%d/%d/%d] I1[%d/%d/%d/%d/%d] I2[%d/%d/%d/%d/%d] I3[%d/%d/%d/%d/%d].\n", \
+		zCtrlContext.lackMat[0][0], zCtrlContext.lackMat[0][1], zCtrlContext.lackMat[0][2], zCtrlContext.lackMat[0][3], zCtrlContext.lackMat[0][4], \
+		zCtrlContext.lackMat[1][0], zCtrlContext.lackMat[1][1], zCtrlContext.lackMat[1][2], zCtrlContext.lackMat[1][3], zCtrlContext.lackMat[1][4], \
+		zCtrlContext.lackMat[2][0], zCtrlContext.lackMat[2][1], zCtrlContext.lackMat[2][2], zCtrlContext.lackMat[2][3], zCtrlContext.lackMat[2][4], \
+		zCtrlContext.lackMat[3][0], zCtrlContext.lackMat[3][1], zCtrlContext.lackMat[3][2], zCtrlContext.lackMat[3][3], zCtrlContext.lackMat[3][4]\
+		);
+#endif
 
 	//EXIT CONTROL
 	if (zDlkTickCnt >= DLK_INPUT_PKG_MAX)
@@ -532,6 +692,8 @@ int main(int argc, char* argv[])
 		global_move_input_output_port();
 		//出料
 		global_mat_outflow();
+		//缺料状态刷新
+		global_mat_lack_refresh();
 		//进料
 		global_mat_inflow();
 		//算法更新
