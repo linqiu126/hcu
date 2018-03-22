@@ -3035,6 +3035,8 @@ typedef struct msg_struct_l3bfhs_uicomm_ctrl_cmd_resp
 	UINT16  cmdValue;
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
+	UINT8   iteration;
+	UINT32  dynCaliCoeff; //NF5 format
 	StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t calFullRespPar;
 	UINT32  length;
 }msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t;
@@ -3067,6 +3069,7 @@ typedef struct strMsgIe_bfhs_WgtSnrParamaters
 	UINT8   WeightSensorAlgoSelect;  //weight algorithm select
 	UINT32  WeightSensorReadStartMs;  //Weight sensor start sampling after infrared detector trigger
 	UINT32  WeightSensorReadStopMs;   //Weight sensor stop sampling after infrared detector trigger
+	UINT32  WeightSensorDynCaliCoeff; //NF5 format
 	UINT32  WeightSensorTareWeight;			//Tare weight of each material
 	UINT32  WeightSensorTargetThroughput;	//Selection stop as given 'this para' pcs good material
 	UINT32  WeightSensorAlgoAutoZeroSignal; //If autozero cannot be done during 'this para' pcs input, there will be a warning for operator
@@ -3166,8 +3169,10 @@ typedef struct msg_struct_l3bfhs_can_dyn_full_req
 typedef struct msg_struct_can_l3bfhs_dyn_full_resp
 {
 	UINT8  validFlag;  //是否执行成功
+	UINT8  iteration;
 	UINT16 errCode;
 	UINT32 length;
+	UINT32 dynCaliCoeff; //NF5 format
 }msg_struct_can_l3bfhs_dyn_full_resp_t;
 
 //MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,  	//传感器新数据事件

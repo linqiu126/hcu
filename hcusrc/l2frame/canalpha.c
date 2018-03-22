@@ -654,6 +654,7 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	pMsgProc.weight_sensor_param.WeightSensorAlgoSelect = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorAlgoSelect);
 	pMsgProc.weight_sensor_param.WeightSensorReadStartMs = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorReadStartMs);
 	pMsgProc.weight_sensor_param.WeightSensorReadStopMs = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorReadStopMs);
+	pMsgProc.weight_sensor_param.WeightSensorDynCaliCoeff = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorDynCaliCoeff);
 	pMsgProc.weight_sensor_param.WeightSensorTareWeight = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorTareWeight);
 	pMsgProc.weight_sensor_param.WeightSensorTargetThroughput = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorTargetThroughput);
 	pMsgProc.weight_sensor_param.WeightSensorAlgoAutoZeroSignal = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAlgoAutoZeroSignal);
@@ -1363,7 +1364,9 @@ OPSTAT func_canalpha_l2frame_msg_bfhs_dyn_calibration_full_resp_received_handle(
 	msg_struct_can_l3bfhs_dyn_full_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_dyn_full_resp_t));
 	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	snd.iteration = HUITP_ENDIAN_EXG8(rcv->iteration);
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.dynCaliCoeff = HUITP_ENDIAN_EXG32(rcv->DynCaliCoeff);
 	snd.length = sizeof(msg_struct_can_l3bfhs_dyn_full_resp_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_DYN_FULL_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 
