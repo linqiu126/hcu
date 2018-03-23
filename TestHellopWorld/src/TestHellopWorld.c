@@ -674,10 +674,44 @@ void global_state_update(void)
 }
 
 
+//int ML=16;
+//int SN=16;
+//int NBR=10;
+//void global_search_max_split_len(void)
+//{
+//	int i=0, j=0, k=0, l=0;
+//	unsigned char S[ML][ML];
+//	unsigned char search[NBR][SN];
+//
+//	memset(search, 0, sizeof(unsigned char)*NBR*SN);
+//
+//	for (i=0; i<ML; i++){
+//		for (j=0; j<ML; j++){
+//			S[i] =
+//		}
+//	}
+//	printf("Test: %x/%x/%x\n", S[0], S[11], S[33]);
+//
+//	//搜索长度N=12的方案
+//	for (i=0; i<NBR; i++){
+//		for (j=0; j<SN; j++){
+//
+//		}
+//	}
+//
+//
+//}
+
+
+
 
 //主函数
 int main(int argc, char* argv[])
 {
+	//搜索4x4x4x2的全排列，最长段数量
+	//global_search_max_split_len();
+
+
 	//第一步：初始化所有的参数和全局表
 	global_init_coef();
 	printf("START to run!\n");

@@ -137,7 +137,7 @@ void global_mat_inflow(void);
 void global_algo_search(void);
 void global_state_update(void);
 void global_mat_lack_refresh(void);
-
+void global_search_max_split_len(void);
 
 
 
