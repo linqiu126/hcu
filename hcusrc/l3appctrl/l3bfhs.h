@@ -129,6 +129,7 @@ typedef struct gTaskL3bfhsContextWgtSnrParamaters
 	UINT8   snrAlgoSelect;  //weight algorithm select
 	UINT32  snrReadStartMs;  //Weight sensor start sampling after infrared detector trigger
 	UINT32  snrReadStopMs;   //Weight sensor stop sampling after infrared detector trigger
+	UINT32  snrDynCaliCoeff; //NF5 format
 	UINT32  snrTareWeight;			//Tare weight of each material
 	UINT32  snrTargetThroughput;	//Selection stop as given 'this para' pcs good material
 	UINT32  snrAlgoAutoZeroSignal; //If autozero cannot be done during 'this para' pcs input, there will be a warning for operator

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 15, 2018 at 09:40 AM
+-- Generation Time: Mar 22, 2018 at 06:12 PM
 -- Server version: 5.7.20-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -205,7 +205,7 @@ CREATE TABLE `hcubfdfgrouppara` (
   `lineid` int(1) NOT NULL,
   `configid` int(4) NOT NULL,
   `hoppernum` int(1) NOT NULL,
-  `hopperbitmap` int(4) NOT NULL,
+  `hopperbitmap` bigint(6) NOT NULL,
   `targetweight` int(4) NOT NULL,
   `targetuplimit` int(4) NOT NULL,
   `bufwgttarget` int(4) NOT NULL,
@@ -274,11 +274,11 @@ CREATE TABLE `hcubfdfstadatainfo` (
   `wstgvtimes` int(4) DEFAULT NULL,
   `wstttmatcnt` int(4) DEFAULT NULL,
   `wstgvmatcnt` int(4) DEFAULT NULL,
-  `wstttmatwgt` int(8) DEFAULT NULL,
-  `wstgvmatwgt` int(8) DEFAULT NULL,
+  `wstttmatwgt` bigint(8) DEFAULT NULL,
+  `wstgvmatwgt` bigint(8) DEFAULT NULL,
   `wsavgttttimes` int(4) DEFAULT NULL,
   `wsavgtttmatcnt` int(4) DEFAULT NULL,
-  `wsavgtttmatwgt` int(8) DEFAULT NULL
+  `wsavgtttmatwgt` bigint(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -426,20 +426,20 @@ CREATE TABLE `hcubfhsstadatainfo` (
   `statype` char(20) DEFAULT NULL,
   `configid` int(4) DEFAULT NULL,
   `timestamp` int(4) DEFAULT NULL,
-  `wsincmatwgt` int(8) DEFAULT NULL,
+  `wsincmatwgt` bigint(8) DEFAULT NULL,
   `wsincmatcnt` int(4) DEFAULT NULL,
   `wsnormalcnt` int(4) DEFAULT NULL,
-  `wsnormalwgt` int(8) DEFAULT NULL,
+  `wsnormalwgt` bigint(8) DEFAULT NULL,
   `wsovercnt` int(4) DEFAULT NULL,
-  `wsoverwgt` int(8) DEFAULT NULL,
+  `wsoverwgt` bigint(8) DEFAULT NULL,
   `wsundertotalcnt` int(4) DEFAULT NULL,
-  `wsundertotalwgt` int(8) DEFAULT NULL,
+  `wsundertotalwgt` bigint(8) DEFAULT NULL,
   `wsundertu1cnt` int(4) DEFAULT NULL,
-  `wsundertu1wgt` int(8) DEFAULT NULL,
+  `wsundertu1wgt` bigint(8) DEFAULT NULL,
   `wsundertu2cnt` int(4) DEFAULT NULL,
-  `wsundertu2wgt` int(8) DEFAULT NULL,
+  `wsundertu2wgt` bigint(8) DEFAULT NULL,
   `wsunspecificcnt` int(4) DEFAULT NULL,
-  `wsunspecificwgt` int(8) DEFAULT NULL
+  `wsunspecificwgt` bigint(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -477,6 +477,7 @@ CREATE TABLE `hcubfhssystempara` (
   `snrstandstillrange` int(4) NOT NULL,
   `snrstandstilltime` int(2) NOT NULL,
   `snrstandstilltimeout` int(2) NOT NULL,
+  `snrdyncalicoeff` int(4) NOT NULL,
   `motordirection` int(4) NOT NULL,
   `motorspeed` int(4) NOT NULL,
   `engswitch` int(1) NOT NULL DEFAULT '0',
@@ -489,8 +490,8 @@ CREATE TABLE `hcubfhssystempara` (
 -- Dumping data for table `hcubfhssystempara`
 --
 
-INSERT INTO `hcubfhssystempara` (`sid`, `weighterlength`, `rejectorposition`, `statisticsswitch`, `counterwgttolerance`, `counterweight`, `autozerosignal`, `maxallowedweight`, `minallowedweight`, `snrtimegrid`, `autozeroswitch`, `snrautotaringtime`, `snrautozerorange`, `snrfiltercutoffreq`, `snrmeasrangeno`, `snrpreloadvalueformat`, `snrpreloadvalue`, `snrringbuftime`, `snrstandstillrange`, `snrstandstilltime`, `snrstandstilltimeout`, `motordirection`, `motorspeed`, `engswitch`, `sysstatus`, `hcusw`, `ihusw`) VALUES
-(1, 400, 500, 0, 3000, 20000, 50000, 50000, 500, 10, 1, 100, 500, 1000, 1, 2, 625, 100, 500, 100, 10000, 0, 750, 1, 0, 'HCU', 'IHU');
+INSERT INTO `hcubfhssystempara` (`sid`, `weighterlength`, `rejectorposition`, `statisticsswitch`, `counterwgttolerance`, `counterweight`, `autozerosignal`, `maxallowedweight`, `minallowedweight`, `snrtimegrid`, `autozeroswitch`, `snrautotaringtime`, `snrautozerorange`, `snrfiltercutoffreq`, `snrmeasrangeno`, `snrpreloadvalueformat`, `snrpreloadvalue`, `snrringbuftime`, `snrstandstillrange`, `snrstandstilltime`, `snrstandstilltimeout`, `snrdyncalicoeff`, `motordirection`, `motorspeed`, `engswitch`, `sysstatus`, `hcusw`, `ihusw`) VALUES
+(1, 400, 500, 0, 3000, 20000, 50000, 50000, 500, 10, 1, 100, 500, 1000, 1, 2, 625, 100, 500, 100, 10000, 0, 0, 750, 1, 0, 'HCU', 'IHU');
 
 -- --------------------------------------------------------
 

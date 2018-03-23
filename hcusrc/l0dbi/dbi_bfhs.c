@@ -334,7 +334,7 @@ OPSTAT dbi_HcuBfhs_productConfigData_read(UINT16 configId, UINT32 productConfigD
 	    return SUCCESS;
 	}
 
-OPSTAT dbi_HcuBfhs_calData_save(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t *input)
+OPSTAT dbi_HcuBfhs_staticCaliData_save(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t *input)
 {
 	MYSQL *sqlHandler;
 	    int result = 0;
@@ -351,7 +351,7 @@ OPSTAT dbi_HcuBfhs_calData_save(StrMsgIe_WeightSensorBfhsCalibrationFullRespPara
 				input->WeightSensorMeasurementRangeNo, input->WeightSensorPreloadComPensationPlacesAfterDecimalPoint, input->WeightSensorPreloadComPensationValuePercent, input->WeightSensorRingBufTimeMs,\
 				input->WeightSensorStandstillTime,input->WeightSensorStandstillTimeoutMs,input->WeightSensorStandstillRangeGrams);
 
-	    printf ("BFHS_DBI: calData_save strsql = %s\n\n", strsql);
+	    printf ("BFHS_DBI: staticCaliData_save strsql = %s\n\n", strsql);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 	    	mysql_close(sqlHandler);
@@ -365,4 +365,31 @@ OPSTAT dbi_HcuBfhs_calData_save(StrMsgIe_WeightSensorBfhsCalibrationFullRespPara
 	    return SUCCESS;
 }
 
+OPSTAT dbi_HcuBfhs_dynCaliData_save(UINT32 dynCaliCoeff)
+{
+	MYSQL *sqlHandler;
+	    int result = 0;
+	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+		//MYSQL_RES *resPtr;
+		//MYSQL_ROW sqlRow;
+
+	    //建立数据库连接
+	    HCU_L0DBICOM_INIT_DB_CONN();
+
+		//UPDATE新的数据
+	    sprintf(strsql, "UPDATE `hcubfhssystempara` SET snrdyncalicoeff='%d' WHERE (1)", dynCaliCoeff);
+
+	    printf ("BFHS_DBI: dynCaliData_save strsql = %s\n\n", strsql);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFHS: UPDATE data error, err cause = %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+
+		//释放记录集
+	    //mysql_free_result(resPtr);
+	    mysql_close(sqlHandler);
+	    return SUCCESS;
+}
 

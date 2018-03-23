@@ -190,6 +190,7 @@ OPSTAT fsm_bfhsuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 //控制命令反馈
 OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	char debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 
 	if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START){
@@ -224,7 +225,6 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI){
-		char debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];
 		StrHlcIe_cui_hcu2uir_static_cali_resp_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_static_cali_resp_t));
 
@@ -242,7 +242,7 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			status.weight = rcv.calFullRespPar.Weight;
 			sprintf(debugInfo, "cutoffFreq='%d'; curZeroPoint=%d; refZeroPoint=%d; negZeroRange=%d; posZeroRange=%d; measRange=%d; scaleInterval=%d; calValue=%d; autoZeroRange=%d; \
 adjustWgt=%d; adjustFactor=%d; adjustTolerance=%d; standstillRange=%d; tempInSystem=%d; tempAtMeas=%d; sampleFreq=%d; ringBufTime=%d; autoZeroTime=%d; \
-preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime=%d; measRange=%d; placesDecimal=%d; aotoZero=%d; cellAddr=%d; timeGrid=%d)",\
+preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime=%d; measRange=%d; placesDecimal=%d; aotoZero=%d; cellAddr=%d; timeGrid=%d",\
 					rcv.calFullRespPar.WeightSensorFilterCutOffFreqHz, rcv.calFullRespPar.WeightSensorCurrentZeroPointGrams, rcv.calFullRespPar.WeightSensorReferenceZeroPointGrams,\
 					rcv.calFullRespPar.WeightSensorNegativeZeroSettingRangeGrams, rcv.calFullRespPar.WeightSensorPositiveZeroSettingRangeGrams, rcv.calFullRespPar.WeightSensorMeasurementRange,\
 					rcv.calFullRespPar.WeightSensorScaleIntervalValue, rcv.calFullRespPar.WeightSensorCalibrationValue, rcv.calFullRespPar.WeightSensorAutoZeroCaptureRangeGrams,\
@@ -274,11 +274,13 @@ preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime
 			status.engModeSwitch = gTaskL3bfhsContext.engModeSwitch;
 			status.validFlag = rcv.validFlag;
 			status.errCode = rcv.errCode;
-			status.weight = rcv.calFullRespPar.Weight;
+			status.weight = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams;
+			status.iteration = rcv.iteration;
+			sprintf(debugInfo, "dynCaliCoeff = '%d'", rcv.dynCaliCoeff);
 			printf("Receive DYNAMIC_CALI_FULL resp, validFlag = %d; errCode = %d \n",rcv.validFlag,rcv.errCode);
 		}
 		//通知界面
-		//hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(rcv.cmdValue, &status);
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(rcv.cmdValue, &status);
 	}
 	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_ONE_KEY_ZERO){
 		//TBD
@@ -517,6 +519,7 @@ OPSTAT func_bfhsuicomm_read_system_config_into_ctrl_table (void)
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillRangeGrams = sysConfigData[index++];
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTime = sysConfigData[index++];
 	gTaskL3bfhsContext.wgtSnrPar.snrStandstillTimeoutMs = sysConfigData[index++];
+	gTaskL3bfhsContext.wgtSnrPar.snrDynCaliCoeff = sysConfigData[index++];
 	gTaskL3bfhsContext.motoCtrlPar.MotorDirection = sysConfigData[index++];
 	gTaskL3bfhsContext.motoCtrlPar.MotorSpeed = sysConfigData[index++];
 	gTaskL3bfhsContext.engModeSwitch = sysConfigData[index++];

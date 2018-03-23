@@ -6200,6 +6200,7 @@ typedef struct StrHuiIe_WeightSensorBfhsParamaters
 	UINT8   WeightSensorAlgoSelect;  //weight algorithm select
 	UINT32  WeightSensorReadStartMs;  //Weight sensor start sampling after infrared detector trigger
 	UINT32  WeightSensorReadStopMs;   //Weight sensor stop sampling after infrared detector trigger
+	UINT32  WeightSensorDynCaliCoeff; //NF5 format
 	UINT32  WeightSensorTareWeight;			//NEW	
 	UINT32  WeightSensorTargetThroughput;	//NEW	
 	UINT32  WeightSensorAlgoAutoZeroSignal; //NEW
@@ -6306,8 +6307,9 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp
 	UINT16  msgid;
 	UINT16  length;
 	UINT8   validFlag;  //是否执行成功
-	UINT8   spare1;
+	UINT8   iteration;
 	UINT16  errCode;
+	UINT32  DynCaliCoeff; //NF5 format
 }StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t;
 
 
