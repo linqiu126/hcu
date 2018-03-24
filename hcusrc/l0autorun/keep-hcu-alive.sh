@@ -1,7 +1,6 @@
 #!/bin/bash -x
 PATH="/bin:/usr/bin:/usr/sbin:/sbin"
 status=`sudo systemctl status hcu | grep Active: | awk '{ print $3}'`
-sudo cd /var/hcu
 if [ $status == "(running)" ]
 	then
 #	echo $(date +%Y-%m-%d_%H:%M:%S)" hcu is running." >> /var/hcu/hcu-abnormal-status.log
