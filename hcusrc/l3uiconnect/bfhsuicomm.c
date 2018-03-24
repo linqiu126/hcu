@@ -240,7 +240,7 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			status.validFlag = rcv.validFlag;
 			status.errCode = rcv.errCode;
 			status.weight = rcv.calFullRespPar.Weight;
-			sprintf(debugInfo, "cutoffFreq='%d'; curZeroPoint=%d; refZeroPoint=%d; negZeroRange=%d; posZeroRange=%d; measRange=%d; scaleInterval=%d; calValue=%d; autoZeroRange=%d; \
+			sprintf(debugInfo, "cutoffFreq=%d; curZeroPoint=%d; refZeroPoint=%d; negZeroRange=%d; posZeroRange=%d; measRange=%d; scaleInterval=%d; calValue=%d; autoZeroRange=%d; \
 adjustWgt=%d; adjustFactor=%d; adjustTolerance=%d; standstillRange=%d; tempInSystem=%d; tempAtMeas=%d; sampleFreq=%d; ringBufTime=%d; autoZeroTime=%d; \
 preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime=%d; measRange=%d; placesDecimal=%d; aotoZero=%d; cellAddr=%d; timeGrid=%d",\
 					rcv.calFullRespPar.WeightSensorFilterCutOffFreqHz, rcv.calFullRespPar.WeightSensorCurrentZeroPointGrams, rcv.calFullRespPar.WeightSensorReferenceZeroPointGrams,\
@@ -254,7 +254,7 @@ preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime
 					rcv.calFullRespPar.WeightSensorCellAddress, rcv.calFullRespPar.WeightSensorTimeGrid);
 			strncpy(status.debugInfo, debugInfo, HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX);
 
-			printf("Receive STATIC_CALI_FULL resp, validFlag = %d; debugInfo = %s \n\n",rcv.validFlag,status.debugInfo);
+			printf("L3BFHSUICOMM: STATIC_CALI_FULL resp, validFlag=%d; engModeSwitch=%d; debugInfo: %s \n\n",rcv.validFlag,gTaskL3bfhsContext.engModeSwitch,status.debugInfo);
 		}
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp(rcv.cmdValue, &status);
@@ -268,7 +268,7 @@ preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime
 			status.validFlag = rcv.validFlag;
 			status.errCode = rcv.errCode;
 			status.weight = 0;
-			printf("Receive DYNAMIC_CALI_ZERO resp, validFlag = %d; errCode = %d \n",rcv.validFlag,rcv.errCode);
+			printf("L3BFHSUICOMM: Receive DYNAMIC_CALI_ZERO resp, validFlag = %d; errCode = %d \n",rcv.validFlag,rcv.errCode);
 		}
 		else if (rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL){
 			status.engModeSwitch = gTaskL3bfhsContext.engModeSwitch;
@@ -276,8 +276,8 @@ preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime
 			status.errCode = rcv.errCode;
 			status.weight = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams;
 			status.iteration = rcv.iteration;
-			sprintf(debugInfo, "dynCaliCoeff = '%d'", rcv.dynCaliCoeff);
-			printf("Receive DYNAMIC_CALI_FULL resp, validFlag = %d; errCode = %d \n",rcv.validFlag,rcv.errCode);
+			sprintf(debugInfo, "dynCaliCoeff = %d", rcv.dynCaliCoeff);
+			printf("L3BFHSUICOMM: Receive DYNAMIC_CALI_FULL resp, validFlag = %d; iteration = %d;  dynCaliCoeff = %d\n\n",rcv.validFlag,rcv.iteration,rcv.dynCaliCoeff);
 		}
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(rcv.cmdValue, &status);

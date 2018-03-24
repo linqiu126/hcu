@@ -438,9 +438,11 @@ OPSTAT fsm_l3bfhs_canitf_cal_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
 		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL;
 		memcpy(&snd.calFullRespPar, &rcv.calFullRespPar, sizeof(StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t));
+
+		printf("L3BFHS: STATIC_CALI_FULL resp, WeightSensorStandstillRangeGrams = %d \n\n",rcv.calFullRespPar.WeightSensorStandstillRangeGrams);
 		//Save calibration response parameters into DB
-		if (dbi_HcuBfhs_staticCaliData_save(&rcv.calFullRespPar) == FAILURE)
-			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Save static calibration data into DB error!\n");
+//		if (dbi_HcuBfhs_staticCaliData_save(&rcv.calFullRespPar) == FAILURE)
+//			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Save static calibration data into DB error!\n");
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
 		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB, TIMER_RESOLUTION_1S);
@@ -818,7 +820,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 			snd.length = sizeof(msg_struct_l3bfhs_can_cal_zero_req_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
 
-			printf("L3BFHS: STATIC_CALI_ZERO, WeightSensorAutoZeroAutotaringTimeMs = %d\n\n", snd.calZeroPar.WeightSensorAutoZeroAutotaringTimeMs );
+			printf("L3BFHS: STATIC_CALI_ZERO Req, WeightSensorAutoZeroAutotaringTimeMs = %d\n\n", snd.calZeroPar.WeightSensorAutoZeroAutotaringTimeMs );
 			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		}
 		else if(rcv.cmdValue == HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_FULL){
@@ -830,7 +832,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 			snd.length = sizeof(msg_struct_l3bfhs_can_cal_full_req_t);
 			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_CAN_CAL_FULL_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
 
-			printf("L3BFHS: STATIC_CALI_FULL, AdjustingWeight = %d\n\n", snd.calFullPar.WeightSensorAdjustingWeightGrams);
+			printf("L3BFHS: STATIC_CALI_FULL Req, AdjustingWeight = %d\n\n", snd.calFullPar.WeightSensorAdjustingWeightGrams);
 			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		}
 		else
