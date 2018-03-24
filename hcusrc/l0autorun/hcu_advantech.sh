@@ -7,13 +7,23 @@
 # Default-Stop:      0 1 6
 # X-Interactive:     true
 # Short-Description: Start/stop hcu
+# 本文件hcu执行程序放置位置: /var/hcu/hcu
+#                    必须配合/var/www, /var/hcu/cfg等一系列目录结构和文件．相应的文件创建，应该由系统安装脚步自动创建完成．如果是手动模式，请参考VOB SDDE/XhScipts/安装文档.xls
 # Description:       
 #                    ZJL: 2018/3/24 Add Node-JS scripts auto starting method
 #                    Target is to merge all scripts into one combined file
 #                    Raspy scripts not yet re-use the same one.
-# 存放方式:           
-#                    将该文件改名为hcu.sh，放置替换到/etc/init.d/hcu.sh
-# CRON设置方式：
+# 存放方式:           将该文件改名为hcu.sh，放置替换到/etc/init.d/hcu.sh
+# 启动停止方式:        systemctl start hcu.sh, systemctl stop hcu.sh, systemctl restart hcu.sh
+#                    这个方式暂时有问题，待明确
+# CRON设置方式：       crontab -e  */5 * * * * /var/hcu/keep-hcu-alive.sh
+# Chrome启动方法:      
+#					rm /home/bofeng/.config/chromium -R
+#					search for "start"
+#					run "startup applications" 
+#					add Chromium, with following command
+#					/usr/bin/chromium-browser --password-store=basic --app=http://localhost/localui/login.html --start-fullscreen
+#
 #  
 ### END INIT INFO
 
@@ -96,17 +106,20 @@ do_start()
 		#启动MQTT服务
 		sudo cd /var/www/html/localui
 		sleep 1
-		node mqttserver.js &
+		sudo node mqttserver.js &
 		sleep 1
-		node client_uirouter.js &
+		sudo node client_uirouter.js &
+		#MQTT启动的比较慢，等待一会儿再启动hcu
+		sleep 3
 	
 		#密码
 		#echo 123456 | sudo -S /var/hcu/hcu > /var/hcu/hcu.log &
 		#echo 123456 | sudo -S /var/hcu/hcu &
 		
 		#正式启动hcu进程
+		sudo cd /
 		sudo -S /var/hcu/hcu &
-		#sleep 5
+		sleep 1
 		
 		#自动启动界面：这里启动没成功，换做浏览器自动启动方式
     	#chromium-browser --app=http://localhost/bfscui --start-fullscreen --no-sandbox &
