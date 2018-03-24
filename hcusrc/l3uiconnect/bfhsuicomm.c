@@ -411,6 +411,9 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_static_cali_req(UINT32 dest_id, UINT32 src_id
 	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
 	snd.cmdValue = rcv.cmdValue;
 
+	if(func_bfhsuicomm_read_system_config_into_ctrl_table () == FAILURE)
+		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: get DB data and initialize system config failed!\n");
+
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
 }
@@ -423,6 +426,9 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_dynamic_cali_req(UINT32 dest_id, UINT32 src_i
 	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
 	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_DYNAMIC_CALI;
 	snd.cmdValue = rcv.cmdValue;
+
+	if(func_bfhsuicomm_read_system_config_into_ctrl_table () == FAILURE)
+		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: get DB data and initialize system config failed!\n");
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;

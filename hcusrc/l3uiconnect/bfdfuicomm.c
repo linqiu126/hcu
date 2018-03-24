@@ -432,8 +432,11 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_static_cali_req(UINT32 dest_id, UINT32 src_id
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_STATIC_CALI;
 	snd.cmdValue = rcv.cmdValue;
 
-	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
+	//重新初始化全局系统参数
+	if (func_bfdfuicomm_read_system_config_into_ctrl_table () == FAILURE)
+		HcuErrorPrint("BFDFUICOMM: read system config into ctrl_table failure!\n");
 
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 	return SUCCESS;
 }
 
@@ -446,8 +449,11 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_dynamic_cali_req(UINT32 dest_id, UINT32 src_i
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI;
 	snd.cmdValue = rcv.cmdValue;
 
-	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
+	//重新初始化全局系统参数
+	if (func_bfdfuicomm_read_system_config_into_ctrl_table () == FAILURE)
+		HcuErrorPrint("BFDFUICOMM: read system config into ctrl_table failure!\n");
 
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 	return SUCCESS;
 }
 
