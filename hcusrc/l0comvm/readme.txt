@@ -7,6 +7,9 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+//= ZSC, 2018 Mar.24 CURRENT_SW_DELIVERY 314=>DAYC项目
+= Update for SiChuan DA deployment(noise=>temparature & humility)
+= LED display format change for DA customer requirment
 
 
 //= ZJL, 2018 Mar.12 CURRENT_SW_DELIVERY 313=>BFDF项目
