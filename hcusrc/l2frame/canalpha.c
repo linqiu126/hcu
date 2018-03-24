@@ -1368,6 +1368,8 @@ OPSTAT func_canalpha_l2frame_msg_bfhs_dyn_calibration_full_resp_received_handle(
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 	snd.dynCaliCoeff = HUITP_ENDIAN_EXG32(rcv->DynCaliCoeff);
 	snd.length = sizeof(msg_struct_can_l3bfhs_dyn_full_resp_t);
+
+	printf("CANALPHA: l3bfhs_dyn_full_resp, iteration=%d,dynCaliCoeff=%d \n\n", snd.iteration, snd.dynCaliCoeff);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_DYN_FULL_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 
 	return SUCCESS;

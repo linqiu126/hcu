@@ -511,6 +511,8 @@ OPSTAT fsm_l3bfhs_canitf_dyn_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 		snd.validFlag = TRUE;
 		snd.iteration = rcv.iteration;
 		snd.dynCaliCoeff = rcv.dynCaliCoeff;
+
+		printf("L3BFHS: l3bfhs_dyn_full_resp, iteration=%d,dynCaliCoeff=%d \n\n", snd.iteration, snd.dynCaliCoeff);
 		if (dbi_HcuBfhs_dynCaliData_save(rcv.dynCaliCoeff) == FAILURE)
 			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Save dynamic calibration data into DB error!\n");
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
@@ -694,6 +696,7 @@ OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_new_ready_event_t);
 
+	//通知界面
 	StrHlcIe_cui_hcu2uir_inswgt_bfhs_report_t buf;
 	memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_inswgt_bfhs_report_t));
 	buf.weight = rcv.snrWsValue;
@@ -742,17 +745,16 @@ OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	//通知界面
 	StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t status;
 	memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t));
-	status.goodPackage = gTaskL3bfhsContext.staUp2Now.wsNormalCnt;
-	status.overWeight = gTaskL3bfhsContext.staUp2Now.wsOverWgt;
-	status.targetWeight = rcv.snrWsValue;
-	status.throughput = gTaskL3bfhsContext.staOneMin.wsAvgMatTimes;
+	status.targetWeight = gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight;
+	status.tu1Limit = gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu1Limit;
+	status.tu2Limit = gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu2Limit;
+	status.upperLimit = gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight;
 	status.totalPackage = gTaskL3bfhsContext.staUp2Now.wsIncMatCnt;
+	status.goodPackage = gTaskL3bfhsContext.staUp2Now.wsNormalCnt;
+	status.overWeight = gTaskL3bfhsContext.staUp2Now.wsOverCnt;
+	status.underWeight = gTaskL3bfhsContext.staUp2Now.wsUnderTotalCnt;
 	status.totalWeight = gTaskL3bfhsContext.staUp2Now.wsIncMatWgt;
-	status.tu1Limit = gTaskL3bfhsContext.staUp2Now.wsUnderTu1Cnt;
-	status.tu2Limit = gTaskL3bfhsContext.staUp2Now.wsUnderTu2Cnt;
-	status.underWeight = gTaskL3bfhsContext.staUp2Now.wsUnderTotalWgt;
-	status.upperLimit = gTaskL3bfhsContext.staUp2Now.wsUnspecificCnt;
-
+	status.throughput = gTaskL3bfhsContext.staOneMin.wsAvgTttTimes;
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(0, &status);
 
 	//返回

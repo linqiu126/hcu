@@ -277,7 +277,7 @@ preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime
 			status.weight = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams;
 			status.iteration = rcv.iteration;
 			sprintf(debugInfo, "dynCaliCoeff = %d", rcv.dynCaliCoeff);
-			printf("L3BFHSUICOMM: Receive DYNAMIC_CALI_FULL resp, validFlag = %d; iteration = %d;  dynCaliCoeff = %d\n\n",rcv.validFlag,rcv.iteration,rcv.dynCaliCoeff);
+			printf("L3BFHSUICOMM: DYNAMIC_CALI_FULL resp, validFlag = %d; iteration = %d;  dynCaliCoeff = %d\n\n",rcv.validFlag,rcv.iteration,rcv.dynCaliCoeff);
 		}
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(rcv.cmdValue, &status);
