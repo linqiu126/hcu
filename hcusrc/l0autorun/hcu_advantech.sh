@@ -29,6 +29,16 @@
 
 set -x
 
+#定义全局目录和文件
+hcuDir="/var/hcu/"
+hcuCfgDir="/var/hcu/cfg"
+hcuFile="/var/hcu/hcu"
+
+mqttDir="/var/www/html/localui/"
+mqttSrvFile="/var/www/html/localui/mqttserver.js"
+mqttCltFile="/var/www/html/localui/client_uirouter.js"
+
+
 #export PATH=$PATH:/var/hcu
 #export PATH=/home/forlinx:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/lib
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib/x86_64-linux-gnu:/home/test/ffmpeg_build/lib
@@ -104,13 +114,13 @@ do_start()
 		fi
 		
 		#启动MQTT服务
-		sudo cd /var/www/html/localui
-		sleep 1
-		sudo node mqttserver.js &
-		sleep 1
-		sudo node client_uirouter.js &
-		#MQTT启动的比较慢，等待一会儿再启动hcu
-		sleep 3
+		if [-f "$mqttSrvFile"] && [-f "$mqttCltFile"]; then
+			sudo -s node "$mqttSrvFile" &
+			sleep 1
+			sudo -s node "$mqttCltFile" &
+			#MQTT启动的比较慢，等待一会儿再启动hcu
+			sleep 3
+        fi
 	
 		#密码
 		#echo 123456 | sudo -S /var/hcu/hcu > /var/hcu/hcu.log &
