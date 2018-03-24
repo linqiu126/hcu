@@ -4,28 +4,28 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbi_sysswm.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiairprs.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbialcohol.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbico1.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbicom.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiemc.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihcho.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihsmmp.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihumid.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiigm.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiihm.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiipm.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiiwm.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbilightstr.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinbiot.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinoise.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbipm25.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbisysperfm.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitemp.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitoxicgas.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwinddir.c \
-/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwindspd.c 
+/home/sourai/hcu/hcusrc/l0dbi/dbi_sysswm.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbiairprs.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbialcohol.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbico1.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbicom.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbiemc.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbihcho.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbihsmmp.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbihumid.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbiigm.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbiihm.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbiipm.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbiiwm.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbilightstr.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbinbiot.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbinoise.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbipm25.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbisysperfm.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbitemp.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbitoxicgas.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbiwinddir.c \
+/home/sourai/hcu/hcusrc/l0dbi/dbiwindspd.c 
 
 OBJS += \
 ./src/l0dbi/dbi_sysswm.o \
@@ -77,154 +77,154 @@ C_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-src/l0dbi/dbi_sysswm.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbi_sysswm.c
+src/l0dbi/dbi_sysswm.o: /home/sourai/hcu/hcusrc/l0dbi/dbi_sysswm.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbiairprs.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiairprs.c
+src/l0dbi/dbiairprs.o: /home/sourai/hcu/hcusrc/l0dbi/dbiairprs.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbialcohol.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbialcohol.c
+src/l0dbi/dbialcohol.o: /home/sourai/hcu/hcusrc/l0dbi/dbialcohol.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbico1.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbico1.c
+src/l0dbi/dbico1.o: /home/sourai/hcu/hcusrc/l0dbi/dbico1.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbicom.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbicom.c
+src/l0dbi/dbicom.o: /home/sourai/hcu/hcusrc/l0dbi/dbicom.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbiemc.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiemc.c
+src/l0dbi/dbiemc.o: /home/sourai/hcu/hcusrc/l0dbi/dbiemc.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbihcho.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihcho.c
+src/l0dbi/dbihcho.o: /home/sourai/hcu/hcusrc/l0dbi/dbihcho.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbihsmmp.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihsmmp.c
+src/l0dbi/dbihsmmp.o: /home/sourai/hcu/hcusrc/l0dbi/dbihsmmp.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbihumid.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihumid.c
+src/l0dbi/dbihumid.o: /home/sourai/hcu/hcusrc/l0dbi/dbihumid.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbiigm.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiigm.c
+src/l0dbi/dbiigm.o: /home/sourai/hcu/hcusrc/l0dbi/dbiigm.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbiihm.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiihm.c
+src/l0dbi/dbiihm.o: /home/sourai/hcu/hcusrc/l0dbi/dbiihm.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbiipm.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiipm.c
+src/l0dbi/dbiipm.o: /home/sourai/hcu/hcusrc/l0dbi/dbiipm.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbiiwm.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiiwm.c
+src/l0dbi/dbiiwm.o: /home/sourai/hcu/hcusrc/l0dbi/dbiiwm.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbilightstr.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbilightstr.c
+src/l0dbi/dbilightstr.o: /home/sourai/hcu/hcusrc/l0dbi/dbilightstr.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbinbiot.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinbiot.c
+src/l0dbi/dbinbiot.o: /home/sourai/hcu/hcusrc/l0dbi/dbinbiot.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbinoise.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinoise.c
+src/l0dbi/dbinoise.o: /home/sourai/hcu/hcusrc/l0dbi/dbinoise.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbipm25.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbipm25.c
+src/l0dbi/dbipm25.o: /home/sourai/hcu/hcusrc/l0dbi/dbipm25.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbisysperfm.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbisysperfm.c
+src/l0dbi/dbisysperfm.o: /home/sourai/hcu/hcusrc/l0dbi/dbisysperfm.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbitemp.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitemp.c
+src/l0dbi/dbitemp.o: /home/sourai/hcu/hcusrc/l0dbi/dbitemp.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbitoxicgas.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitoxicgas.c
+src/l0dbi/dbitoxicgas.o: /home/sourai/hcu/hcusrc/l0dbi/dbitoxicgas.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbiwinddir.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwinddir.c
+src/l0dbi/dbiwinddir.o: /home/sourai/hcu/hcusrc/l0dbi/dbiwinddir.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l0dbi/dbiwindspd.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwindspd.c
+src/l0dbi/dbiwindspd.o: /home/sourai/hcu/hcusrc/l0dbi/dbiwindspd.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"

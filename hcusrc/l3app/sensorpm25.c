@@ -263,7 +263,7 @@ void func_pm25_time_out_read_data_from_modbus(void)
 		}
 
 		//启动一次性定时器
-		//HcuDebugPrint("PM25: PM25 MODBUS FB TIMER VALUE = %d !\n\n\n\n\n\n\n\n\n\n\n", zHcuSysEngPar.timer.array[TIMER_ID_1S_PM25_MODBUS_FB].dur);
+		//HcuDebugPrint("PM25: PM25 MODBUS FB TIMER VALUE = %d !\n", zHcuSysEngPar.timer.array[TIMER_ID_1S_PM25_MODBUS_FB].dur);
 		ret = hcu_timer_start(TASK_ID_PM25, TIMER_ID_1S_PM25_MODBUS_FB, \
 				zHcuSysEngPar.timer.array[TIMER_ID_1S_PM25_MODBUS_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
@@ -317,7 +317,7 @@ void func_pm25_time_out_processing_no_rsponse(void)
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
 
 	//State Transfer to FSM_STATE_PM25_ACTIVE
-	HcuDebugPrint("PM25: GET TIME OUT, FSM STATE SET TO %d !\n\n", FSM_STATE_PM25_ACTIVED);
+	HcuDebugPrint("PM25: GET TIME OUT, FSM STATE SET TO %d !\n", FSM_STATE_PM25_ACTIVED);
 
 	ret = FsmSetState(TASK_ID_PM25, FSM_STATE_PM25_ACTIVED);
 	if (ret == FAILURE){
@@ -384,14 +384,14 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	//rcv.pm25.pmTSPValue = 30001;
 
 	gTaskPm25Context.TSP = (float)rcv.pm25.pmTSPValue;
-	HCU_DEBUG_PRINT_INF("PM25: TSP = %.1f\n\n\n\n", gTaskPm25Context.TSP);
+	HCU_DEBUG_PRINT_INF("PM25: TSP = %.1f\n\n", gTaskPm25Context.TSP);
 
 
 	gTaskPm25Context.PM25Value = (float)rcv.pm25.pm2d5Value;
-	HCU_DEBUG_PRINT_INF("PM25: PM2.5 = %.1f\n\n\n\n", gTaskPm25Context.PM25Value);
+	HCU_DEBUG_PRINT_INF("PM25: PM2.5 = %.1f\n\n", gTaskPm25Context.PM25Value);
 
 	gTaskPm25Context.PM10Value = (float)rcv.pm25.pm10Value;
-	HCU_DEBUG_PRINT_INF("PM25: PM10 = %.1f\n\n\n\n", gTaskPm25Context.PM10Value);
+	HCU_DEBUG_PRINT_INF("PM25: PM10 = %.1f\n\n", gTaskPm25Context.PM10Value);
 
 
 	if(rcv.pm25.pmTSPValue >= (HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000))
