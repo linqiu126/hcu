@@ -441,8 +441,8 @@ OPSTAT fsm_l3bfhs_canitf_cal_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 
 		printf("L3BFHS: STATIC_CALI_FULL resp, WeightSensorStandstillRangeGrams = %d \n\n",rcv.calFullRespPar.WeightSensorStandstillRangeGrams);
 		//Save calibration response parameters into DB
-//		if (dbi_HcuBfhs_staticCaliData_save(&rcv.calFullRespPar) == FAILURE)
-//			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Save static calibration data into DB error!\n");
+		if (dbi_HcuBfhs_staticCaliData_save(&rcv.calFullRespPar) == FAILURE)
+			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Save static calibration data into DB error!\n");
 		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
 		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_FULL_WAIT_FB, TIMER_RESOLUTION_1S);
@@ -694,14 +694,6 @@ OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_new_ready_event_t);
 
-	//通知界面
-	StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t status;
-	memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t));
-	status.totalWeight = rcv.snrWsValue;
-	status.upperLimit = rcv.snrState;
-	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(0, &status);
-
-	//PURE TEST, to be removed!
 	StrHlcIe_cui_hcu2uir_inswgt_bfhs_report_t buf;
 	memset(&buf, 0, sizeof(StrHlcIe_cui_hcu2uir_inswgt_bfhs_report_t));
 	buf.weight = rcv.snrWsValue;
@@ -746,6 +738,22 @@ OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	callcell.tu2 = 0;  //TBD
 	if (dbi_HcuBfhs_callcell_save(&callcell) == FAILURE)
 		HCU_ERROR_PRINT_L3BFHS("L3BFHS: Save data into db error!\n");
+
+	//通知界面
+	StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t status;
+	memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t));
+	status.goodPackage = gTaskL3bfhsContext.staUp2Now.wsNormalCnt;
+	status.overWeight = gTaskL3bfhsContext.staUp2Now.wsOverWgt;
+	status.targetWeight = rcv.snrWsValue;
+	status.throughput = gTaskL3bfhsContext.staOneMin.wsAvgMatTimes;
+	status.totalPackage = gTaskL3bfhsContext.staUp2Now.wsIncMatCnt;
+	status.totalWeight = gTaskL3bfhsContext.staUp2Now.wsIncMatWgt;
+	status.tu1Limit = gTaskL3bfhsContext.staUp2Now.wsUnderTu1Cnt;
+	status.tu2Limit = gTaskL3bfhsContext.staUp2Now.wsUnderTu2Cnt;
+	status.underWeight = gTaskL3bfhsContext.staUp2Now.wsUnderTotalWgt;
+	status.upperLimit = gTaskL3bfhsContext.staUp2Now.wsUnspecificCnt;
+
+	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(0, &status);
 
 	//返回
 	return SUCCESS;
