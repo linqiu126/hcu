@@ -114,15 +114,22 @@ do_start()
 		fi
 		
 		#启动MQTT服务
-		if [-f "$mqttSrvFile"] && [-f "$mqttCltFile"]; then
-			sudo -s node "$mqttSrvFile" &
-			sleep 1
-			sudo -s node "$mqttCltFile" &
-			#MQTT启动的比较慢，等待一会儿再启动hcu
-			sleep 3
-        fi
+		sudo cd /var/www/html/localui/
+		node "$mqttSrvFile" &
+		node "$mqttCltFile" &
+		sleep 3
+		
+		#以下启动方法，会遇到node启动不了的问题，不知道为啥
+		#if [-f "$mqttSrvFile"]; then
+		#	node "$mqttSrvFile" &
+		#	sleep 3
+        #fi
+		#if [-f "$mqttCltFile"]; then
+		#	node "$mqttCltFile" &
+		#	sleep 3
+        #fi
 	
-		#密码
+		#密码启动
 		#echo 123456 | sudo -S /var/hcu/hcu > /var/hcu/hcu.log &
 		#echo 123456 | sudo -S /var/hcu/hcu &
 		
