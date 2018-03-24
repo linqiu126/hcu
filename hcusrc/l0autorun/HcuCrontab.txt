@@ -1,0 +1,14 @@
+Local Client HCU:
+
+=> 列出任务
+crontab -l
+
+*/1 * * * * /var/hcu/keep-hcu-alive.sh >> /var/hcu/keep-hcu-alive.log
+
+=> 增加任务
+crontab -e
+
+ */1 * * * * /var/hcu/keep-hcu-alive.sh
+
+
+

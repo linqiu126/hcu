@@ -13,10 +13,9 @@
 #                    ZJL: 2018/3/24 Add Node-JS scripts auto starting method
 #                    Target is to merge all scripts into one combined file
 #                    Raspy scripts not yet re-use the same one.
-# 存放方式:           将该文件改名为hcu.sh，放置替换到/etc/init.d/hcu.sh
-# 启动停止方式:        systemctl start hcu.sh, systemctl stop hcu.sh, systemctl restart hcu.sh
-#                    这个方式暂时有问题，待明确
-# CRON设置方式：       crontab -e  */5 * * * * /var/hcu/keep-hcu-alive.sh
+# 存放方式:          将该文件改名为hcu.sh，放置替换到/etc/init.d/hcu.sh
+# 启动停止方式:      systemctl start hcu, systemctl stop hcu, systemctl restart hcu
+# CRON设置方式：     crontab -e  */1 * * * * /var/hcu/keep-hcu-alive.sh
 # Chrome启动方法:      
 #					rm /home/bofeng/.config/chromium -R
 #					search for "start"
