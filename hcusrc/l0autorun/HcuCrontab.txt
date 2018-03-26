@@ -1,5 +1,7 @@
 Local Client HCU:
 
+=> Crontab必须加到root账户下，不然脚本会执行不成功！
+
 => List Crontab
 crontab -l
 
