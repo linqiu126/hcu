@@ -1,14 +1,14 @@
 #!/bin/bash -x
 PATH="/bin:/usr/bin:/usr/sbin:/sbin"
-status=`echo 123456 | sudo -S systemctl status hcu | grep /var/hcu/hcu | awk '{ print $4}'`
+status=`systemctl status hcu | grep /var/hcu/hcu | awk '{ print $4}'`
 if [ $status == "/var/hcu/hcu" ]
 	then
 	echo $(date +%Y-%m-%d_%H:%M:%S)" hcu is running." >> /dev/null
 	#exit
 else
         echo $(date +%Y-%m-%d_%H:%M:%S)" hcu is neither running, nor exited." >> /var/hcu/hcu-abnormal-status.log
-        echo 123456 | sudo -S systemctl stop hcu
-        echo 123456 | sudo -S systemctl start hcu
+        systemctl stop hcu
+        systemctl start hcu
 	echo $(date +%Y-%m-%d_%H:%M:%S)" hcu is restored from neither running nor exited." >> /var/hcu/hcu-abnormal-status.log
 fi
 
