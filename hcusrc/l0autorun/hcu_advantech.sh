@@ -13,9 +13,10 @@
 #                    ZJL: 2018/3/24 Add Node-JS scripts auto starting method
 #                    Target is to merge all scripts into one combined file
 #                    Raspy scripts not yet re-use the same one.
-# 存放方式:          将该文件改名为hcu.sh，放置替换到/etc/init.d/hcu.sh
-# 启动停止方式:      systemctl start hcu, systemctl stop hcu, systemctl restart hcu
-# CRON设置方式：     crontab -e  */1 * * * * /var/hcu/keep-hcu-alive.sh
+# 存放方式:           将该文件改名为hcu.sh，放置替换到/etc/init.d/hcu.sh
+# 启动停止方式:        systemctl start hcu.sh, systemctl stop hcu.sh, systemctl restart hcu.sh
+#                    这个方式暂时有问题，待明确
+# CRON设置方式：       crontab -e  */5 * * * * /var/hcu/keep-hcu-alive.sh
 # Chrome启动方法:      
 #					rm /home/bofeng/.config/chromium -R
 #					search for "start"
@@ -113,9 +114,16 @@ do_start()
 		fi
 		
 		#启动MQTT服务
-		sudo cd /var/www/html/localui/
-		node "$mqttSrvFile" &
-		node "$mqttCltFile" &
+		if ((pgrep -f "node /var/www/html/localui/mqttserver.js") > 0); then
+			echo "Server is running!"
+		else
+			node "$mqttSrvFile" >> /dev/null &
+		fi
+		if ((pgrep -f "node /var/www/html/localui/client_uirouter.js") > 0); then
+			echo "Client is running!"
+		else
+			node "$mqttCltFile" >> /dev/null &
+		fi
 		sleep 3
 		
 		#以下启动方法，会遇到node启动不了的问题，不知道为啥
