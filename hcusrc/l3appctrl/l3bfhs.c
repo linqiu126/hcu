@@ -1049,7 +1049,7 @@ OPSTAT func_l3bfhs_time_out_statistic_scan_process(void)
 		buf.totalOverReject = gTaskL3bfhsContext.staUp2Now.wsOverCnt;
 		buf.totalUnderReject = gTaskL3bfhsContext.staUp2Now.wsUnderTotalCnt;
 		buf.totalWeight = gTaskL3bfhsContext.staUp2Now.wsIncMatWgt;
-		buf.throughputPerMin = gTaskL3bfhsContext.staLocalUi.wsAvgTttTimes;
+		buf.throughputPerMin = gTaskL3bfhsContext.staOneMin.wsAvgTttTimes;
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report(gTaskL3bfhsContext.configId, &buf);
 	}
 
