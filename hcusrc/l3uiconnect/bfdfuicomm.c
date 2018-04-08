@@ -46,16 +46,16 @@ HcuFsmStateItem_t HcuFsmBfdfuicomm[] =
     //Normal working status
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_BFDFUICOMM_ACTIVED,            	fsm_com_do_nothing},
 	{MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP,    FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp},	//人工控制反馈
-	{MSG_ID_SUI_TEST_CMD_RESP,      		FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_sui_test_cmd_resp},  //测试命令反馈
+	{MSG_ID_SUI_TEST_CMD_RESP,      		FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_sui_test_cmd_resp},      //测试命令反馈
 
 	//UIR2HCU MSG RCV
 	{MSG_ID_HUICOBUS_UIR_INIT_REQ,      		FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_init_req},
-	{MSG_ID_HUICOBUS_UIR_START_RESUME_REQ, 		FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_start_resume_req},
-	{MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ, 		FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_stop_suspend_req},
-	{MSG_ID_HUICOBUS_UIR_STATIC_CALI_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_static_cali_req},
+	{MSG_ID_HUICOBUS_UIR_START_REQ, 			FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_start_req},
+	{MSG_ID_HUICOBUS_UIR_STOP_REQ, 				FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_stop_req},
+	{MSG_ID_HUICOBUS_UIR_RESUME_REQ, 			FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_resume_req},
+	{MSG_ID_HUICOBUS_UIR_SUSPEND_REQ, 			FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_suspend_req},
 	{MSG_ID_HUICOBUS_UIR_DYNAMIC_CALI_REQ,     	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_dynamic_cali_req},
 	{MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_test_cmd_req},
-	{MSG_ID_HUICOBUS_UIR_ONE_KEY_ZERO_REQ, 		FSM_STATE_BFDFUICOMM_ACTIVED,         	fsm_bfdfuicomm_huicobus_uir_one_key_zero_req},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -380,14 +380,13 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void 
 
 	//假设状态正常
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_init_resp(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_OFFLINE);
-
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfdfuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfdfuicomm_huicobus_uir_start_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	UINT16 configId = 0;
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_start_resume_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_start_req_t);
 
 	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
@@ -396,7 +395,6 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_i
 	snd.cmdValue = rcv.cmdValue;
 	configId = rcv.cmdValue;
 
-	//是否认为START还是RESUME的命令
 	if (configId != gTaskL3bfdfContext.configId){
 		if(func_bfdfuicomm_read_product_config_into_ctrl_table(configId) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Load global context table failure!\n");
@@ -404,37 +402,48 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_i
 		func_bfdfuicomm_algo_parameter_set_check();
 	}
 
-	//TRIGGER L3BFDF
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
-
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfdfuicomm_huicobus_uir_stop_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfdfuicomm_huicobus_uir_stop_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_stop_suspend_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_stop_req_t);
+
 	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP;
 	snd.cmdValue = rcv.cmdValue;
-	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfdfuicomm_huicobus_uir_static_cali_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+
+OPSTAT fsm_bfdfuicomm_huicobus_uir_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_static_cali_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_resume_req_t);
+
 	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
-	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_STATIC_CALI;
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME;
 	snd.cmdValue = rcv.cmdValue;
 
-	//重新初始化全局系统参数
-	if (func_bfdfuicomm_read_system_config_into_ctrl_table () == FAILURE)
-		HcuErrorPrint("BFDFUICOMM: read system config into ctrl_table failure!\n");
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfdfuicomm_huicobus_uir_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_suspend_req_t);
+
+	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND;
+	snd.cmdValue = rcv.cmdValue;
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 	return SUCCESS;
@@ -443,6 +452,7 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_static_cali_req(UINT32 dest_id, UINT32 src_id
 OPSTAT fsm_bfdfuicomm_huicobus_uir_dynamic_cali_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_dynamic_cali_req_t);
+
 	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
@@ -475,21 +485,7 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 src_id, v
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfdfuicomm_huicobus_uir_one_key_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_one_key_clean_zero_req_t);
-	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
-	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
-	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_ONE_KEY_ZERO;
-
-	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
-
-	return SUCCESS;
-}
-
-
-OPSTAT func_bfdfuicomm_time_out_period_read_process(void)
+UINT32 func_bfdfuicomm_time_out_period_read_process(void)
 {
 //	UINT8 state = FsmGetState(TASK_ID_L3BFDF);
 
@@ -570,7 +566,7 @@ bool func_bfdfuicomm_hopper_state_set_init(UINT8 streamId)
 	return TRUE;
 }
 
-OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table(void)
+UINT32 func_bfdfuicomm_read_system_config_into_ctrl_table(void)
 {
 	UINT8 line, hopper;
 	DbiL3BfdfSystemPara_t sysConfigData;
@@ -627,7 +623,7 @@ OPSTAT func_bfdfuicomm_read_system_config_into_ctrl_table(void)
 }
 
 //配置系统参数控制表
-OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table(UINT16 configId)
+UINT32 func_bfdfuicomm_read_product_config_into_ctrl_table(UINT16 configId)
 {
 	UINT8 line, index, hopper;
 	UINT8 groupPerLine = 0, groupTotal = 0;
@@ -636,7 +632,7 @@ OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table(UINT16 configId)
 
 	//重新初始化全局系统参数
 	if (func_bfdfuicomm_read_system_config_into_ctrl_table () == FAILURE)
-		HcuErrorPrint("BFDFUICOMM: read system config into ctrl_table failure!\n");
+		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: read system config into ctrl_table failure!\n");
 
 	/*** Initialize PRODUCT configuration, these parameters are different for each product ***/
 	//Read productPara table
@@ -763,7 +759,7 @@ OPSTAT func_bfdfuicomm_read_product_config_into_ctrl_table(UINT16 configId)
 
 
 //算法性能评估所使用的测试模式，装载参数
-OPSTAT func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table(void)
+UINT32 func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table(void)
 {
 	UINT8 line, hopper;
 	int i = 0, j = 0;
@@ -849,7 +845,7 @@ OPSTAT func_bfdfuicomm_algo_pmas_load_config_into_ctrl_table(void)
 		}
 	}
 
-	return SUCCESS;
+	return TRUE;
 }
 
 //配置参数检查
@@ -868,8 +864,9 @@ void func_bfdfuicomm_algo_parameter_set_check(void)
 			tRange = (double)gTaskL3bfdfContext.group[lineId][gId].targetUpLimit;
 			gRange = ((gRange==0)?0.01:gRange);
 			ratio = tRange / gRange;
-			if (ratio < HCU_SYSCFG_UPLIMIT_VS_GRP_DISTR_RATIO_MAX)
+			if (ratio < HCU_SYSCFG_UPLIMIT_VS_GRP_DISTR_RATIO_MAX){
 				HcuErrorPrint("BFDFUICOMM: Parameter set Grp range or Uplimit range too small, potential risk to high rejection rate. Ratio/Line/Gid=%6.2f%/%d/%d\n", ratio*100, lineId, gId);
+			}
 		}
 	}
 }

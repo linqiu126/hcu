@@ -49,8 +49,10 @@ extern OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * p
 
 //发送API函数
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_init_resp(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_start_resume_resp(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_stop_suspend_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_start_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_stop_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_resume_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_suspend_resp(INT32 cmdValue);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_zero_resp(INT32 cmdValue);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_full_resp(INT32 cmdValue);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_study_start_resp(INT32 cmdValue);

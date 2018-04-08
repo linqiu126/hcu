@@ -52,19 +52,21 @@ typedef enum HuicobusCmdidCuiDefination
 	//UIR2HCU频道
 	HUICOBUS_CMDID_cui_uir2hcu_min                		= 0x0100,
 	HUICOBUS_CMDID_cui_uir2hcu_init_req           		= 0x0100,
-	HUICOBUS_CMDID_cui_uir2hcu_start_resume_req   		= 0x0101,
-	HUICOBUS_CMDID_cui_uir2hcu_stop_suspend_req   		= 0x0102,
+	HUICOBUS_CMDID_cui_uir2hcu_start_req				= 0x0101,
+	HUICOBUS_CMDID_cui_uir2hcu_stop_req   				= 0x0102,
 	HUICOBUS_CMDID_cui_uir2hcu_static_cali_req			= 0x0103,
 	HUICOBUS_CMDID_cui_uir2hcu_dynamic_cali_req			= 0x0104,
 	HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req       		= 0x0105,
 	HUICOBUS_CMDID_cui_uir2hcu_one_key_zero_req   		= 0x0106,
+	HUICOBUS_CMDID_cui_uir2hcu_resume_req				= 0x0107,
+	HUICOBUS_CMDID_cui_uir2hcu_suspend_req   			= 0x0108,
 	HUICOBUS_CMDID_cui_uir2hcu_max,
 
 	//HCU2UIR频道
 	HUICOBUS_CMDID_cui_hcu2uir_min                		= 0x0180,
 	HUICOBUS_CMDID_cui_hcu2uir_init_resp          		= 0x0180,
-	HUICOBUS_CMDID_cui_hcu2uir_start_resume_resp  		= 0x0181,
-	HUICOBUS_CMDID_cui_hcu2uir_stop_suspend_resp  		= 0x0182,
+	HUICOBUS_CMDID_cui_hcu2uir_start_resp  				= 0x0181,
+	HUICOBUS_CMDID_cui_hcu2uir_stop_resp  				= 0x0182,
 	HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp  		= 0x0183,
 	HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp  		= 0x0184,
 	HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp      		= 0x0185,
@@ -85,6 +87,8 @@ typedef enum HuicobusCmdidCuiDefination
 	HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report    = 0x0198,
 	HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report    = 0x0199,
 	HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm         	= 0x019A,
+	HUICOBUS_CMDID_cui_hcu2uir_resume_resp  			= 0x019B,
+	HUICOBUS_CMDID_cui_hcu2uir_suspend_resp  			= 0x019C,
 	HUICOBUS_CMDID_cui_hcu2uir_max,
 
 	//UIR2UIP频道
@@ -233,8 +237,8 @@ typedef struct StrMsg_HUICOBUS_CMDID_cui_general_message
 //
 //  HUICOBUS消息中HLC部分：High Layer Content
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////
-//HUICOBUS_CMDID_cui_null                  	  		= 0x0000,
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//HUICOBUS_CMDID_cui_null                  	  			= 0x0000,
 
 //UIR2HCU频道
 //HUICOBUS_CMDID_cui_uir2hcu_min                		= 0x0100,
@@ -244,19 +248,19 @@ typedef struct StrHlcIe_cui_uir2hcu_init_req
 }StrHlcIe_cui_uir2hcu_init_req_t;
 //cmdValue = NULL
 
-//HUICOBUS_CMDID_cui_uir2hcu_start_resume_req   		= 0x0101,
-typedef struct StrHlcIe_cui_uir2hcu_start_resume_req
+//HUICOBUS_CMDID_cui_uir2hcu_start_req					= 0x0101,
+typedef struct StrHlcIe_cui_uir2hcu_start_req
 {
-}StrHlcIe_cui_uir2hcu_start_resume_req_t;
+}StrHlcIe_cui_uir2hcu_start_req_t;
 //cmdValue = NULL
 
-//HUICOBUS_CMDID_cui_uir2hcu_stop_suspend_req   		= 0x0102,
-typedef struct StrHlcIe_cui_uir2hcu_stop_suspend_req
+//HUICOBUS_CMDID_cui_uir2hcu_stop_req   				= 0x0102,
+typedef struct StrHlcIe_cui_uir2hcu_stop_req
 {
-}StrHlcIe_cui_uir2hcu_stop_suspend_req_t;
+}StrHlcIe_cui_uir2hcu_stop_req_t;
 //cmdValue = NULL
 
-//HUICOBUS_CMDID_cui_uir2hcu_static_cali_req      		= 0x0103,
+//HUICOBUS_CMDID_cui_uir2hcu_static_cali_req			= 0x0103,
 typedef struct StrHlcIe_cui_uir2hcu_static_cali_req
 {
 }StrHlcIe_cui_uir2hcu_static_cali_req_t;
@@ -283,10 +287,16 @@ typedef struct StrHlcIe_uir2hcu_test_cmd_req
 //cmdValue = TestCmdId
 //HLC表达
 
-//HUICOBUS_CMDID_cui_uir2hcu_one_key_zero_req   = 0x0116,
-typedef struct StrHlcIe_uir2hcu_one_key_zero_req
+//HUICOBUS_CMDID_cui_uir2hcu_resume_req					= 0x0107,
+typedef struct StrHlcIe_cui_uir2hcu_resume_req
 {
-}StrHlcIe_cui_uir2hcu_one_key_zero_req_t;
+}StrHlcIe_cui_uir2hcu_resume_req_t;
+//cmdValue = NULL
+
+//HUICOBUS_CMDID_cui_uir2hcu_suspend_req   				= 0x0108,
+typedef struct StrHlcIe_cui_uir2hcu_suspend_req
+{
+}StrHlcIe_cui_uir2hcu_suspend_req_t;
 //cmdValue = NULL
 
 //HUICOBUS_CMDID_cui_uir2hcu_max,
@@ -315,16 +325,16 @@ typedef struct StrHlcIe_cui_hcu2uir_init_resp
 }StrHlcIe_cui_hcu2uir_init_resp_t;
 //cmdValue = NULL
 
-//HUICOBUS_CMDID_cui_hcu2uir_start_resume_resp  		= 0x0181,
-typedef struct StrHlcIe_cui_hcu2uir_start_resume_resp
+//HUICOBUS_CMDID_cui_hcu2uir_start_resp  				= 0x0181,
+typedef struct StrHlcIe_cui_hcu2uir_start_resp
 {
-}StrHlcIe_cui_hcu2uir_start_resume_resp_t;
+}StrHlcIe_cui_hcu2uir_start_resp_t;
 //cmdValue = NULL
 
-//HUICOBUS_CMDID_cui_hcu2uir_stop_suspend_resp  		= 0x0182,
-typedef struct StrHlcIe_cui_hcu2uir_stop_suspend_resp
+//HUICOBUS_CMDID_cui_hcu2uir_stop_resp  				= 0x0182,
+typedef struct StrHlcIe_cui_hcu2uir_stop_resp
 {
-}StrHlcIe_cui_hcu2uir_stop_suspend_resp_t;
+}StrHlcIe_cui_hcu2uir_stop_resp_t;
 //cmdValue = NULL
 
 //HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp     		= 0x0183,
@@ -543,6 +553,18 @@ typedef struct StrHlcIe_cui_hcu2uir_pullin_confirm
 	UINT8   bufRatio;	//In INT0
 }StrHlcIe_cui_hcu2uir_pullin_confirm_t;
 //cmdValue = configID;
+
+//HUICOBUS_CMDID_cui_hcu2uir_resume_resp  				= 0x019B,
+typedef struct StrHlcIe_cui_hcu2uir_resume_resp
+{
+}StrHlcIe_cui_hcu2uir_resume_resp_t;
+//cmdValue = NULL
+
+//HUICOBUS_CMDID_cui_hcu2uir_suspend_resp  				= 0x019C,
+typedef struct StrHlcIe_cui_hcu2uir_suspend_resp
+{
+}StrHlcIe_cui_hcu2uir_suspend_resp_t;
+//cmdValue = NULL
 
 //HUICOBUS_CMDID_cui_hcu2uir_max,
 
@@ -763,10 +785,10 @@ typedef struct StrHlcIe_cui_hcu2opn_data_report
 //
 //  HUICOBUS消息
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
 //HUICOBUS_CMDID_cui_null                  	  		= 0x0000,
 
-//UIR2HCU频道
+/**************************UIR2HCU频道**************************/
 //HUICOBUS_CMDID_cui_uir2hcu_min                		= 0x0100,
 //HUICOBUS_CMDID_cui_uir2hcu_init_req           		= 0x0100,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_uir2hcu_init_req
@@ -775,19 +797,19 @@ typedef struct StrMsg_HUICOBUS_CMDID_cui_uir2hcu_init_req
 	StrHlcIe_cui_uir2hcu_init_req_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_uir2hcu_init_req_t;
 
-//HUICOBUS_CMDID_cui_uir2hcu_start_resume_req   		= 0x0101,
-typedef struct StrMsg_HUICOBUS_CMDID_cui_uir2hcu_start_resume_req
+//HUICOBUS_CMDID_cui_uir2hcu_start_req					= 0x0101,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_uir2hcu_start_req
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
-	StrHlcIe_cui_uir2hcu_start_resume_req_t hlc;
-}StrMsg_HUICOBUS_CMDID_cui_uir2hcu_start_resume_req_t;
+	StrHlcIe_cui_uir2hcu_start_req_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_uir2hcu_start_req_t;
 
-//HUICOBUS_CMDID_cui_uir2hcu_stop_suspend_req   		= 0x0102,
-typedef struct StrMsg_HUICOBUS_CMDID_cui_uir2hcu_stop_suspend_req
+//HUICOBUS_CMDID_cui_uir2hcu_stop_req   				= 0x0102,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_uir2hcu_stop_req
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
-	StrHlcIe_cui_uir2hcu_stop_suspend_req_t hlc;
-}StrMsg_HUICOBUS_CMDID_cui_uir2hcu_stop_suspend_req_t;
+	StrHlcIe_cui_uir2hcu_stop_req_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_uir2hcu_stop_req_t;
 
 //HUICOBUS_CMDID_cui_uir2hcu_static_cali_req      		= 0x0103,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_uir2hcu_static_cali_req
@@ -810,9 +832,25 @@ typedef struct StrMsg_HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req
 	StrHlcIe_cui_uir2hcu_test_cmd_req_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req_t;
 
+//HUICOBUS_CMDID_cui_uir2hcu_resume_req					= 0x0107,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_uir2hcu_resume_req
+{
+	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
+	StrHlcIe_cui_uir2hcu_resume_req_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_uir2hcu_resume_req_t;
+
+//HUICOBUS_CMDID_cui_uir2hcu_suspend_req   				= 0x0108,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_uir2hcu_suspend_req
+{
+	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
+	StrHlcIe_cui_uir2hcu_suspend_req_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_uir2hcu_suspend_req_t;
+
 //HUICOBUS_CMDID_cui_uir2hcu_max,
 
-//HCU2UIR频道
+
+/**************************HCU2UIR频道**************************/
+
 //HUICOBUS_CMDID_cui_hcu2uir_min                		= 0x0180,
 //HUICOBUS_CMDID_cui_hcu2uir_init_resp          		= 0x0180,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_init_resp
@@ -821,19 +859,19 @@ typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_init_resp
 	StrHlcIe_cui_hcu2uir_init_resp_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_hcu2uir_init_resp_t;
 
-//HUICOBUS_CMDID_cui_hcu2uir_start_resume_resp  		= 0x0181,
-typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_start_resume_resp
+//HUICOBUS_CMDID_cui_hcu2uir_start_resp  				= 0x0181,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_start_resp
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
-	StrHlcIe_cui_hcu2uir_start_resume_resp_t hlc;
-}StrMsg_HUICOBUS_CMDID_cui_hcu2uir_start_resume_resp_t;
+	StrHlcIe_cui_hcu2uir_start_resp_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_hcu2uir_start_resp_t;
 
-//HUICOBUS_CMDID_cui_hcu2uir_stop_suspend_resp  		= 0x0182,
-typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_stop_suspend_resp
+//HUICOBUS_CMDID_cui_hcu2uir_stop_resp  				= 0x0182,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_stop_resp
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
-	StrHlcIe_cui_hcu2uir_stop_suspend_resp_t hlc;
-}StrMsg_HUICOBUS_CMDID_cui_hcu2uir_stop_suspend_resp_t;
+	StrHlcIe_cui_hcu2uir_stop_resp_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_hcu2uir_stop_resp_t;
 
 //HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp     		= 0x0183,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_static_cali_resp
@@ -856,42 +894,42 @@ typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp
 	StrHlcIe_cui_hcu2uir_test_cmd_resp_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp_t;
 
-//HUICOBUS_CMDID_cui_hcu2uir_version_report     		= 0x0188,
+//HUICOBUS_CMDID_cui_hcu2uir_version_report     		= 0x0186,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_version_report
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
 	StrHlcIe_cui_hcu2uir_version_report_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_hcu2uir_version_report_t;
 
-//HUICOBUS_CMDID_cui_hcu2uir_status_report       		= 0x0189,
+//HUICOBUS_CMDID_cui_hcu2uir_status_report       		= 0x0187,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_status_report
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
 	StrHlcIe_cui_hcu2uir_status_report_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_hcu2uir_status_report_t;
 
-//HUICOBUS_CMDID_cui_hcu2uir_alarm_report       		= 0x018A,
+//HUICOBUS_CMDID_cui_hcu2uir_alarm_report       		= 0x0188,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_alarm_report
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
 	StrHlcIe_cui_hcu2uir_alarm_report_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_hcu2uir_alarm_report_t;
 
-//HUICOBUS_CMDID_cui_hcu2uir_error_report       		= 0x018B,
+//HUICOBUS_CMDID_cui_hcu2uir_status_report       		= 0x0189,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_error_report
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
 	StrHlcIe_cui_hcu2uir_error_report_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_hcu2uir_error_report_t;
 
-//HUICOBUS_CMDID_cui_hcu2uir_restart_report      		= 0x018C,
+//HUICOBUS_CMDID_cui_hcu2uir_restart_report      		= 0x018A,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_restart_report
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
 	StrHlcIe_cui_hcu2uir_restart_report_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_hcu2uir_restart_report_t;
 
-//HUICOBUS_CMDID_cui_hcu2uir_logout_report      		= 0x018D,
+//HUICOBUS_CMDID_cui_hcu2uir_logout_report      		= 0x018B,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_logout_report
 {
 	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
@@ -940,9 +978,53 @@ typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report
 	StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t hlc;
 }StrMsg_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report_t;
 
+//HUICOBUS_CMDID_cui_hcu2uir_statistic_bfsc_report    = 0x0197,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfsc_report
+{
+	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
+	StrHlcIe_cui_hcu2uir_statistic_bfsc_report_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfsc_report_t;
+
+//HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report    = 0x0198,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report
+{
+	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
+	StrHlcIe_cui_hcu2uir_statistic_bfdf_report_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfdf_report_t;
+
+//HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report    = 0x0199,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report
+{
+	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
+	StrHlcIe_cui_hcu2uir_statistic_bfhs_report_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_hcu2uir_statistic_bfhs_report_t;
+
+//HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm         	= 0x019A,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm
+{
+	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
+	StrHlcIe_cui_hcu2uir_pullin_confirm_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_hcu2uir_pullin_confirm_t;
+
+//HUICOBUS_CMDID_cui_hcu2uir_resume_resp  			= 0x019B,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_resume_resp
+{
+	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
+	StrHlcIe_cui_hcu2uir_resume_resp_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_hcu2uir_resume_resp_t;
+
+//HUICOBUS_CMDID_cui_hcu2uir_suspend_resp  			= 0x019C,
+typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2uir_suspend_resp
+{
+	StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head_t head;
+	StrHlcIe_cui_hcu2uir_suspend_resp_t hlc;
+}StrMsg_HUICOBUS_CMDID_cui_hcu2uir_suspend_resp_t;
+
 //HUICOBUS_CMDID_cui_hcu2uir_max,
 
-//UIR2UIP频道
+
+/**************************UIR2UIP频道**************************/
+
 //HUICOBUS_CMDID_cui_uir2uip_min                		= 0x0280,
 //HUICOBUS_CMDID_cui_uir2uip_init_inq_resp            = 0x0280,
 typedef struct StrMsg_HUICOBUS_CMDID_cui_uir2uip_init_inq_resp

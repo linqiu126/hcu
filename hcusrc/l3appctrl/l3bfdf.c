@@ -251,40 +251,44 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
 
 	//启动命令
-	if ((rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START) || (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME))
+	if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START)
 	{
 		//判定不合法: to resume this function later, as all boards not yet installed.
 		if (func_l3bfdf_is_there_any_board_not_yet_startup()==FALSE){
 			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START);
 			return SUCCESS;
 		}
-		//如果是工作状态，则需要发送RESUME：从板号１开始一直到HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX-1
-		if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_SUSPEND){
-			if (func_l3bfdf_send_out_resume_message_to_all() == FAILURE) return FAILURE;
-		}
-		else{
-			if (func_l3bfdf_send_out_cfg_start_message_to_all() == FAILURE) return FAILURE;
-			FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
-		}
+		if (func_l3bfdf_send_out_cfg_start_message_to_all() == FAILURE) return FAILURE;
+		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
 	}
 
-	//STOP/SUSPEND
-	else if ((rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP) || (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND))
+	//STOP
+	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP)
+	{
+		HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP);
+		if (func_l3bfdf_send_out_stop_message_to_all() == FAILURE) return FAILURE;
+
+		//SET state
+		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
+	}
+
+	//RESUME
+	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME)
 	{
 		//判定不合法: to resume this function later, as all boards not yet installed.
 		if (func_l3bfdf_is_there_any_board_not_yet_startup()==FALSE){
-			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START);
+			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME);
 			return SUCCESS;
 		}
-		//SUSPEND
-		if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_SCAN){
-			if (func_l3bfdf_send_out_suspend_message_to_all() == FAILURE) return FAILURE;
-		}
-		//Special Treatment, to reduce test errors!
-		else{
-			//HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND);
-			if (func_l3bfdf_send_out_suspend_message_to_all() == FAILURE) return FAILURE;
-		}
+		//发送RESUME：从板号１开始一直到HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX-1
+		if (func_l3bfdf_send_out_resume_message_to_all() == FAILURE) return FAILURE;
+		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_SCAN);
+	}
+
+	//SUSPEND
+	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND)
+	{
+		if (func_l3bfdf_send_out_suspend_message_to_all() == FAILURE) return FAILURE;
 		//SET state
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_SUSPEND);
 	}
@@ -1383,6 +1387,20 @@ OPSTAT func_l3bfdf_send_out_resume_message_to_all(void)
 	HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_RESUME_REQ);
 	HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
 	snd.length = sizeof(msg_struct_sui_resume_req_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
+	hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	return SUCCESS;
+}
+
+OPSTAT func_l3bfdf_send_out_stop_message_to_all(void)
+{
+	int i = 0, j = 0, boardId = 0, total = 0;
+	char s[200], tmp[20];
+	msg_struct_sui_stop_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sui_stop_req_t));
+	HCU_L3BFDF_FILL_ALL_BOARD_BITMAP(HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP);
+	HCU_L3BFDF_PRINT_ALL_BOARD_BITMAP();
+	snd.length = sizeof(msg_struct_sui_stop_req_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFDF);
 	hcu_timer_start(TASK_ID_L3BFDF, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFDF_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 	return SUCCESS;

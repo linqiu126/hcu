@@ -677,6 +677,9 @@ typedef enum
 	HUITP_MSGID_sui_com_suspend_resp                = 0x3BF4,
 	HUITP_MSGID_sui_com_resume_req                  = 0x3B75,
 	HUITP_MSGID_sui_com_resume_resp                 = 0x3BF5,
+	//STOP
+	HUITP_MSGID_sui_com_stop_req                  	= 0x3B76,
+	HUITP_MSGID_sui_com_stop_resp                 	= 0x3BF6,
 
 	//统一结束符
 	HUITP_MSGID_uni_bfsc_comb_scale_max,
@@ -6742,6 +6745,23 @@ typedef struct StrMsg_HUITP_MSGID_sui_com_resume_resp
 	UINT8   spare1;
 	UINT16  errCode;
 }StrMsg_HUITP_MSGID_sui_com_resume_resp_t;
+
+//HUITP_MSGID_sui_com_stop_req                 	 = 0x3B76,
+typedef struct StrMsg_HUITP_MSGID_sui_com_stop_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_com_stop_req_t;
+
+//HUITP_MSGID_sui_com_stop_resp                 = 0x3BF5,
+typedef struct StrMsg_HUITP_MSGID_sui_com_stop_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	UINT8   validFlag;
+	UINT8   spare1;
+	UINT16  errCode;
+}StrMsg_HUITP_MSGID_sui_com_stop_resp_t;
 
 //统一结束符
 //HUITP_MSGID_uni_bfsc_comb_scale_max,

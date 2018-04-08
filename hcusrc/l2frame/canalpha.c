@@ -49,6 +49,7 @@ HcuFsmStateItem_t HcuFsmCanalpha[] =
 	{MSG_ID_SUI_TEST_CMD_REQ, 						FSM_STATE_CANALPHA_ACTIVED,     fsm_canalpha_sui_test_cmd_req},
 	{MSG_ID_SUI_SUSPEND_REQ, 						FSM_STATE_CANALPHA_ACTIVED,     fsm_canalpha_sui_suspend_req},
 	{MSG_ID_SUI_RESUME_REQ, 						FSM_STATE_CANALPHA_ACTIVED,     fsm_canalpha_sui_resume_req},
+	{MSG_ID_SUI_STOP_REQ, 							FSM_STATE_CANALPHA_ACTIVED,     fsm_canalpha_sui_stop_req},
 	{MSG_ID_SUI_HEART_BEAT_CONFIRM, 				FSM_STATE_CANALPHA_ACTIVED,     fsm_canalpha_sui_heart_beat_confirm},
 	{MSG_ID_USBCAN_L2FRAME_RCV,      				FSM_STATE_CANALPHA_ACTIVED,     fsm_canalpha_usbcan_l2frame_receive},   //收到L2送过来的帧
 
@@ -561,6 +562,36 @@ OPSTAT fsm_canalpha_sui_resume_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_com_resume_req_t);
 	memset(&pMsgProc, 0, msgProcLen);
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_com_resume_req);
+	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+
+	//发送消息
+	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canalpha_sui_stop_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int i=0;
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_sui_stop_req_t);
+
+	//生成bitmap
+	UINT32 bitmap = 0;
+	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
+		if (rcv.boardBitmap[i] == TRUE){
+			bitmap |= ((UINT32)1<<i);
+		}
+
+	}
+//	printf("CANALPHA: Resume REQ, bitmap = %d/%d/%d/%d/%d/%d, send out bitmap=%x \n", rcv.boardBitmap[0], rcv.boardBitmap[1], rcv.boardBitmap[2], rcv.boardBitmap[3], rcv.boardBitmap[4], rcv.boardBitmap[5], bitmap);
+
+	//准备组装发送消息
+	StrMsg_HUITP_MSGID_sui_com_stop_req_t pMsgProc;
+	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_com_stop_req_t);
+	memset(&pMsgProc, 0, msgProcLen);
+	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_com_stop_req);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 
 	//发送消息

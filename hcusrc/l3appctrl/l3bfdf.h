@@ -333,6 +333,7 @@ bool   func_l3bfdf_cacluate_sensor_resume_rcv_complete(void);
 bool   func_l3bfdf_is_there_any_board_not_yet_startup(void);
 OPSTAT func_l3bfdf_send_out_suspend_message_to_all(void);
 OPSTAT func_l3bfdf_send_out_resume_message_to_all(void);
+OPSTAT func_l3bfdf_send_out_stop_message_to_all(void);
 OPSTAT func_l3bfdf_send_out_cfg_start_message_to_all(void);
 bool   func_l3bfdf_print_all_board_status(void);
 

@@ -591,17 +591,21 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_SUI_SUSPEND_RESP,
 	MSG_ID_SUI_RESUME_REQ,
 	MSG_ID_SUI_RESUME_RESP,
+	MSG_ID_SUI_STOP_REQ,
+	MSG_ID_SUI_STOP_RESP,
 	MSG_ID_SUI_HEART_BEAT_REPORT,
 	MSG_ID_SUI_HEART_BEAT_CONFIRM,
 
 	//HUICOBUS业务消息
 	MSG_ID_HUICOBUS_UIR_INIT_REQ,
-	MSG_ID_HUICOBUS_UIR_START_RESUME_REQ,
-	MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ,
+	MSG_ID_HUICOBUS_UIR_START_REQ,
+	MSG_ID_HUICOBUS_UIR_STOP_REQ,
 	MSG_ID_HUICOBUS_UIR_STATIC_CALI_REQ,
 	MSG_ID_HUICOBUS_UIR_DYNAMIC_CALI_REQ,
 	MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,
 	MSG_ID_HUICOBUS_UIR_ONE_KEY_ZERO_REQ,
+	MSG_ID_HUICOBUS_UIR_RESUME_REQ,
+	MSG_ID_HUICOBUS_UIR_SUSPEND_REQ,
 
 	//L3AQYCG20
 	MSG_ID_L3AQYC_EXG_CTRL_REQ,
@@ -3465,6 +3469,22 @@ typedef struct msg_struct_sui_resume_resp
 	UINT32 length;
 }msg_struct_sui_resume_resp_t;
 
+//MSG_ID_SUI_STOP_REQ,
+typedef struct msg_struct_sui_stop_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_sui_stop_req_t;
+
+//MSG_ID_SUI_STOP_RESP,
+typedef struct msg_struct_sui_stop_resp
+{
+	UINT8  snrId;      /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8  validFlag;	//是否执行成功 0-FALSE, 1-TRUE
+	UINT16 errCode;
+	UINT32 length;
+}msg_struct_sui_stop_resp_t;
+
 //MSG_ID_SUI_HEART_BEAT_REPORT,
 typedef struct msg_struct_sui_heart_beat_report
 {
@@ -3491,19 +3511,33 @@ typedef struct msg_struct_huicobus_uir_init_req
 	UINT32 length;
 }msg_struct_huicobus_uir_init_req_t;
 
-//MSG_ID_HUICOBUS_UIR_START_RESUME_REQ,
-typedef struct msg_struct_huicobus_uir_start_resume_req
+//MSG_ID_HUICOBUS_UIR_STARTE_REQ,
+typedef struct msg_struct_huicobus_uir_start_req
 {
 	INT32  cmdValue;
 	UINT32 length;
-}msg_struct_huicobus_uir_start_resume_req_t;
+}msg_struct_huicobus_uir_start_req_t;
 
-//MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ,
-typedef struct msg_struct_huicobus_uir_stop_suspend_req
+//MSG_ID_HUICOBUS_UIR_RESUME_REQ,
+typedef struct msg_struct_huicobus_uir_resume_req
 {
 	INT32  cmdValue;
 	UINT32 length;
-}msg_struct_huicobus_uir_stop_suspend_req_t;
+}msg_struct_huicobus_uir_resume_req_t;
+
+//MSG_ID_HUICOBUS_UIR_STOP_REQ,
+typedef struct msg_struct_huicobus_uir_stop_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_stop_req_t;
+
+//MSG_ID_HUICOBUS_UIR_SUSPEND_REQ,
+typedef struct msg_struct_huicobus_uir_suspend_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_suspend_req_t;
 
 //MSG_ID_HUICOBUS_UIR_STATIC_CALI_REQ,
 typedef struct msg_struct_huicobus_uir_static_cali_req
