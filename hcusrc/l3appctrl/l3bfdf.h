@@ -64,7 +64,7 @@ extern HcuFsmStateItem_t HcuFsmL3bfdf[];
 typedef struct L3BfdfNodeBoardInfo
 {
 	UINT8  nodeStatus; 	//无效，空料，有料数值错误，有料待组合，有料待出料
-	UINT8  cfgRcvFlag;   	//用来保存CFG_RESP/RESUME_RESP/SUSPEND_RESP是否收到
+	UINT8  respRcvFlag;   	//用来保存CFG_RESP/RESUME_RESP/SUSPEND_RESP/STOP_RESP是否收到
 }L3BfdfNodeBoardInfo_t;
 #define HCU_L3BFDF_NODE_BOARD_STATUS_NONE			0
 #define HCU_L3BFDF_NODE_BOARD_STATUS_OFFLINE		1
@@ -304,6 +304,7 @@ extern OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_pt
 extern OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfdf_canitf_sys_stop_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_dyn_cal_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -326,10 +327,12 @@ void func_l3bfdf_stm_main_recovery_from_fault(void);  //提供了一种比RESTAR
 //Local API
 OPSTAT func_l3bfdf_int_init(void);
 OPSTAT func_l3bfdf_time_out_sys_cfg_req_process(void);
+OPSTAT func_l3bfdf_time_out_sys_resp_common_process(void);
 OPSTAT func_l3bfdf_time_out_statistic_scan_process(void);
 bool   func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
 bool   func_l3bfdf_cacluate_sensor_suspend_rcv_complete(void);
 bool   func_l3bfdf_cacluate_sensor_resume_rcv_complete(void);
+bool   func_l3bfdf_cacluate_sensor_stop_rcv_complete(void);
 bool   func_l3bfdf_is_there_any_board_not_yet_startup(void);
 OPSTAT func_l3bfdf_send_out_suspend_message_to_all(void);
 OPSTAT func_l3bfdf_send_out_resume_message_to_all(void);
@@ -403,7 +406,7 @@ extern OPSTAT dbi_HcuBfdf_callcell_save(HcuSysMsgIeL3bfdfCallcellElement_t *inpu
 				if (gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus > HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MIN)\
 				{\
 					gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus = status;\
-					gTaskL3bfdfContext.nodeDyn[j][i].cfgRcvFlag = FALSE;\
+					gTaskL3bfdfContext.nodeDyn[j][i].respRcvFlag = FALSE;\
 					total++;\
 					snd.boardBitmap[boardId] = TRUE;\
 				}\
@@ -420,7 +423,7 @@ extern OPSTAT dbi_HcuBfdf_callcell_save(HcuSysMsgIeL3bfdfCallcellElement_t *inpu
 			for (i = 1; i< HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; i++){\
 				boardId = (j<<3)+i;\
 				gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus = status;\
-				gTaskL3bfdfContext.nodeDyn[j][i].cfgRcvFlag = FALSE;\
+				gTaskL3bfdfContext.nodeDyn[j][i].respRcvFlag = FALSE;\
 				total++;\
 				snd.boardBitmap[boardId] = TRUE;\
 			}\

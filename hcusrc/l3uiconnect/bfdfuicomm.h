@@ -57,8 +57,6 @@ void    func_bfdfuicomm_algo_parameter_set_check(void);
 //External APIs
 extern OPSTAT dbi_HcuBfdf_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);
 extern UINT32 dbi_HcuBfdf_CallCellMaxIdGet(void);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(INT32 cmdValue, StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t *buf);
-
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_BFDFUICOMM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFDFUICOMM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

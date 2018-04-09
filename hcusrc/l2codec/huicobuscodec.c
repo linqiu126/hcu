@@ -404,6 +404,22 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(INT32 cmdValue, S
 }
 
 //发送API
+OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(INT32 cmdValue)
+{
+	msg_struct_com_mqtt_send_t pMsgProc;
+	HCU_HUICOBUS_ENCODE_HCU2UIR_MSGHEAD_WITH_FIX_VALUE();
+	pMsgProc.cmdId = HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish;
+
+	//HLC part
+	pMsgProc.hlcLen = 0;
+
+	//Call MQTT APIs
+	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+
+	return SUCCESS;
+}
+
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp(INT32 cmdValue, StrHlcIe_cui_hcu2uir_test_cmd_resp_t *buf)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;

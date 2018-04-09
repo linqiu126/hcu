@@ -133,6 +133,7 @@ int func_mqtt_msg_link_setup_by_send_syn_mode(void)
     if ((rc = MQTTClient_connect(gTaskMqttContext.gclient, &gTaskMqttContextConn_opts)) != MQTTCLIENT_SUCCESS)
     {
         HcuErrorPrint("MQTT: Failed to connect, return code %d. So far set to continue work!\n", rc);
+        exit(1);
     }else{
     	HcuDebugPrint("MQTT: Connected, return code %d!\n", rc);
     }

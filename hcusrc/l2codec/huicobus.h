@@ -76,6 +76,7 @@ typedef enum HuicobusCmdidCuiDefination
 	HUICOBUS_CMDID_cui_hcu2uir_error_report       		= 0x0189,
 	HUICOBUS_CMDID_cui_hcu2uir_restart_report      		= 0x018A,
 	HUICOBUS_CMDID_cui_hcu2uir_logout_report      		= 0x018B,
+	HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish 		= 0x018C,
 	HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfsc_report      	= 0x0190,
 	HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report      	= 0x0191,
 	HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report      	= 0x0192,

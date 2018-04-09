@@ -226,28 +226,28 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 		else
 			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_OK;
 
-		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.sensorid, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP){
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
 		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STOP;
 		//通知界面
-		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.sensorid, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND){
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
 		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_SUSPEND;
 		//通知界面
-		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.sensorid, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME){
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
 		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_RESUME;
 		//通知界面
-		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.sensorid, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI){
 		UINT32 cmdValue = 0;
@@ -255,27 +255,34 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 		StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t));
 		if (rcv.dynCalResp.calibration_zero_or_full == 1){        /* 1 for ZERO, 2 for FULL */
-			if (rcv.sensorid == 1)
+			if (rcv.sensorid == 1)  //LINE0
 				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO_LINE0;
-			else if (rcv.sensorid == 9)
+			else if (rcv.sensorid == 9) //LINE1
 				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_ZERO_LINE1;
 			else{
 				HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid sensorId of dynamic calibration zero response, sensorId = %d!\n", rcv.sensorid);
 				return FAILURE;
 			}
-
 			status.weight = 0;
+			if (rcv.dynCalResp.calibration_cur_iteration == gTaskL3bfdfContext.dynCalPar.zero_cal_iteration){
+				//通知界面finish
+				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue);
+			}
 		}
 		else if (rcv.dynCalResp.calibration_zero_or_full == 2){
-			if (rcv.sensorid == 1)
+			if (rcv.sensorid == 1)  //LINE0
 				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL_LINE0;
-			else if (rcv.sensorid == 9)
+			else if (rcv.sensorid == 9) //LINE1
 				cmdValue = HCU_SYSMSG_BFDF_UICOMM_CMDVALUE_DYNAMIC_CALI_FULL_LINE1;
 			else{
 				HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid sensorId of dynamic calibration full response, sensorId = %d!\n", rcv.sensorid);
 				return FAILURE;
 			}
 			status.weight = rcv.dynCalResp.full_weight;
+			if (rcv.dynCalResp.calibration_cur_iteration == gTaskL3bfdfContext.dynCalPar.full_cal_iteration){
+				//通知界面finish
+				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue);
+			}
 		}
 		else{
 			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid parameter of dynamic calibration response!\n");
@@ -395,12 +402,10 @@ OPSTAT fsm_bfdfuicomm_huicobus_uir_start_req(UINT32 dest_id, UINT32 src_id, void
 	snd.cmdValue = rcv.cmdValue;
 	configId = rcv.cmdValue;
 
-	if (configId != gTaskL3bfdfContext.configId){
-		if(func_bfdfuicomm_read_product_config_into_ctrl_table(configId) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Load global context table failure!\n");
-		//检查参数设置情况
-		func_bfdfuicomm_algo_parameter_set_check();
-	}
+	if(func_bfdfuicomm_read_product_config_into_ctrl_table(configId) == FAILURE)
+		HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Load global context table failure!\n");
+	//检查参数设置情况
+	func_bfdfuicomm_algo_parameter_set_check();
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM);
 	return SUCCESS;
