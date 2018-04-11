@@ -282,7 +282,7 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	for (i=0; i<HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX; i++){
 		pMsgProc.bfdf_acp.TLocalAp[i] = HUITP_ENDIAN_EXG16(rcv.actionCtrlPar.TLocalAp[i]);
 	}
-	printf("CANALPHA: DelayNode1ToX = %d\n", pMsgProc.bfdf_acp.DelayNode1ToX);
+
 	//更新传感器状态
 	//gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
 
@@ -965,7 +965,6 @@ OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void *
 	//BFHS消息
 	case HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp:
 	{
-		printf("CANALPHA: Receive DYNAMIC_CALI_ZERO resp \n");
 		HCU_DEBUG_PRINT_INF("CANALPHA: Receive L3 MSG = HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp \n");
 		StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp_t) - 4))
@@ -978,7 +977,6 @@ OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void *
 	//BFHS消息
 	case HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp:
 	{
-		printf("CANALPHA: Receive DYNAMIC_CALI_FULL resp \n");
 		HCU_DEBUG_PRINT_INF("CANALPHA: Receive L3 MSG = HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp \n");
 		StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t) - 4))
@@ -1105,6 +1103,17 @@ OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void *
 			HCU_ERROR_PRINT_CANALPHA("CANALPHA: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_com_resume_resp_t*)(rcv.databuf);
 		ret = func_canalpha_l2frame_msg_com_resume_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_com_stop_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANALPHA: Receive L3 MSG = HUITP_MSGID_sui_com_stop_resp \n");
+		StrMsg_HUITP_MSGID_sui_com_stop_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_com_stop_resp_t) - 4))
+			HCU_ERROR_PRINT_CANALPHA("CANALPHA: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_com_stop_resp_t*)(rcv.databuf);
+		ret = func_canalpha_l2frame_msg_com_stop_resp_received_handle(snd, rcv.nodeId);
 	}
 	break;
 
@@ -1646,6 +1655,30 @@ OPSTAT func_canalpha_l2frame_msg_com_resume_resp_received_handle(StrMsg_HUITP_MS
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
+#else
+#error PRJ SET ERROR!
+#endif
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT func_canalpha_l2frame_msg_com_stop_resp_received_handle(StrMsg_HUITP_MSGID_sui_com_stop_resp_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
+
+	//准备组装发送消息
+	msg_struct_sui_stop_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sui_stop_resp_t));
+	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	snd.snrId = nodeId;
+	snd.length = sizeof(msg_struct_sui_stop_resp_t);
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_STOP_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_STOP_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 #else
 #error PRJ SET ERROR!
 #endif

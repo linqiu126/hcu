@@ -86,6 +86,7 @@ OPSTAT func_canalpha_l2frame_msg_com_startup_ind_received_handle(StrMsg_HUITP_MS
 OPSTAT func_canalpha_l2frame_msg_com_fault_ind_received_handle(StrMsg_HUITP_MSGID_sui_com_fault_ind_t *rcv, UINT8 nodeId);
 OPSTAT func_canalpha_l2frame_msg_com_suspend_resp_received_handle(StrMsg_HUITP_MSGID_sui_com_suspend_resp_t *rcv, UINT8 nodeId);
 OPSTAT func_canalpha_l2frame_msg_com_resume_resp_received_handle(StrMsg_HUITP_MSGID_sui_com_resume_resp_t *rcv, UINT8 nodeId);
+OPSTAT func_canalpha_l2frame_msg_com_stop_resp_received_handle(StrMsg_HUITP_MSGID_sui_com_stop_resp_t *rcv, UINT8 nodeId);
 
 /*
  *
