@@ -222,9 +222,9 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
 		if(rcv.validFlag == TRUE)
-			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR;
-		else
 			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_OK;
+		else
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR;
 
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.sensorid, &status);
 	}
@@ -268,6 +268,10 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 				//通知界面finish
 				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue);
 			}
+			if (rcv.validFlag == FALSE){
+				//通知界面finish
+				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue);
+			}
 		}
 		else if (rcv.dynCalResp.calibration_zero_or_full == 2){
 			if (rcv.sensorid == 1)  //LINE0
@@ -280,6 +284,10 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			}
 			status.weight = rcv.dynCalResp.full_weight;
 			if (rcv.dynCalResp.calibration_cur_iteration == gTaskL3bfdfContext.dynCalPar.full_cal_iteration){
+				//通知界面finish
+				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue);
+			}
+			if (rcv.validFlag == FALSE){
 				//通知界面finish
 				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue);
 			}

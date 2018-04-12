@@ -793,7 +793,10 @@ OPSTAT fsm_l3bfdf_canitf_dyn_cal_resp(UINT32 dest_id, UINT32 src_id, void * para
 	memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
 
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI;
-	snd.validFlag = TRUE;
+	if (rcv.dynCalResp.errCode == 0)
+		snd.validFlag = TRUE;
+	else
+		snd.validFlag = FALSE;
 	snd.sensorid = rcv.snrId;
 	snd.errCode = rcv.dynCalResp.errCode;
 	memcpy(&snd.dynCalResp, &rcv.dynCalResp, sizeof(strMsgIe_bfdf_calibration_resp_t));
