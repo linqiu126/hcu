@@ -404,14 +404,21 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(INT32 cmdValue, S
 }
 
 //发送API
-OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(INT32 cmdValue)
+OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(INT32 cmdValue, StrHlcIe_cui_hcu2uir_dynamic_cali_finish_t *buf)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
 	HCU_HUICOBUS_ENCODE_HCU2UIR_MSGHEAD_WITH_FIX_VALUE();
 	pMsgProc.cmdId = HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish;
 
 	//HLC part
-	pMsgProc.hlcLen = 0;
+	struct json_object *jsonobj = NULL;
+	jsonobj = json_object_new_object();
+	if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC: Failed to create json object!\n");
+
+	json_object_object_add(jsonobj, "result", json_object_new_int(buf->result));
+    sprintf(pMsgProc.hlContent, "%s", json_object_to_json_string(jsonobj));
+    json_object_put(jsonobj);//free
+    pMsgProc.hlcLen = strlen(pMsgProc.hlContent);
 
 	//Call MQTT APIs
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();

@@ -583,7 +583,6 @@ OPSTAT fsm_canalpha_sui_stop_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		if (rcv.boardBitmap[i] == TRUE){
 			bitmap |= ((UINT32)1<<i);
 		}
-
 	}
 //	printf("CANALPHA: Resume REQ, bitmap = %d/%d/%d/%d/%d/%d, send out bitmap=%x \n", rcv.boardBitmap[0], rcv.boardBitmap[1], rcv.boardBitmap[2], rcv.boardBitmap[3], rcv.boardBitmap[4], rcv.boardBitmap[5], bitmap);
 
@@ -867,7 +866,8 @@ OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void *
 	int ret=0;
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_usbcan_l2frame_rcv_t);
 
-	//printf("CANALPHA: Rcv L2 message from %d once!\n", rcv.nodeId);
+	if (rcv.nodeId == 0)
+		printf("CANALPHA: Rcv L2 message from %d once!\n", rcv.nodeId);
 	//解码MSGID/MSGLEN
 	UINT16 msgId = 0, msgLen = 0;
 	StrMsg_HUITP_MSGID_sui_common_msg_header_t *pComMsg = (StrMsg_HUITP_MSGID_sui_common_msg_header_t *)(rcv.databuf);
@@ -1215,7 +1215,8 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_calibration_resp_received_handle(StrMsg_HU
 	//发送到L3BFDF
 	msg_struct_can_l3bfdf_dyn_cal_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_dyn_cal_resp_t));
-	snd.dynCalResp.errCode = HUITP_ENDIAN_EXG16(rcv->cal_resp.errCode);
+	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 	snd.dynCalResp.calibration_cur_iteration = HUITP_ENDIAN_EXG8(rcv->cal_resp.calibration_cur_iteration);
 	snd.dynCalResp.calibration_result = HUITP_ENDIAN_EXG8(rcv->cal_resp.calibration_result);
 	snd.dynCalResp.calibration_zero_or_full = HUITP_ENDIAN_EXG8(rcv->cal_resp.calibration_zero_or_full);

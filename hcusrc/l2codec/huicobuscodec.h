@@ -56,7 +56,7 @@ extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_suspend_resp(INT32 cmdValue)
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_zero_resp(INT32 cmdValue);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_full_resp(INT32 cmdValue);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(INT32 cmdValue, StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t *buf);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(INT32 cmdValue, StrHlcIe_cui_hcu2uir_dynamic_cali_finish_t *buf);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp(INT32 cmdValue, StrHlcIe_cui_hcu2uir_test_cmd_resp_t *buf);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_version_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_version_report_t *buf);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_status_report_t *buf);

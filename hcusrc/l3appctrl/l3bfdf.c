@@ -453,13 +453,13 @@ OPSTAT fsm_l3bfdf_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_p
 		gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID_ERROR;
 
 	//通知界面
-	StrHlcIe_cui_hcu2uir_status_report_t status;
-	memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
+	UINT32 boardStatus;
 	if (gTaskL3bfdfContext.nodeDyn[line][boardId].nodeStatus == HCU_L3BFDF_NODE_BOARD_STATUS_INIT_ERR)
-		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR;
+		boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR;
 	else
-		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_ERROR;
-	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.snrId, &status);
+		boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_ERROR;
+
+	HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, boardStatus);
 
 	//是否要根据ERR_CODE，赋予不同的差错情形，待定
 	//称重传感器如果出错，则需要SUSPEND整个系统，以免损坏系统的持续运行．仅仅通知界面是不够的．
@@ -739,7 +739,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_stop_resp(UINT32 dest_id, UINT32 src_id, void * par
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFDF, msg_struct_sui_stop_resp_t);
 	HCU_L3BFDF_INCOMING_MESSAGE_KEY_PARAMETERS_CHECK();
 
-	//printf("L3BFDF: Stop resp rcv, SnrId=%d, flag=%d\n", rcv.snrId, rcv.validFlag);
+	printf("L3BFDF: Stop resp rcv, SnrId=%d, flag=%d\n", rcv.snrId, rcv.validFlag);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -793,12 +793,9 @@ OPSTAT fsm_l3bfdf_canitf_dyn_cal_resp(UINT32 dest_id, UINT32 src_id, void * para
 	memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
 
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_DYNAMIC_CALI;
-	if (rcv.dynCalResp.errCode == 0)
-		snd.validFlag = TRUE;
-	else
-		snd.validFlag = FALSE;
+	snd.validFlag = rcv.validFlag;
 	snd.sensorid = rcv.snrId;
-	snd.errCode = rcv.dynCalResp.errCode;
+	snd.errCode = rcv.errCode;
 	memcpy(&snd.dynCalResp, &rcv.dynCalResp, sizeof(strMsgIe_bfdf_calibration_resp_t));
 	snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF);

@@ -3221,7 +3221,6 @@ typedef struct msg_struct_uicomm_l3bfdf_ctrl_cmd_req
 //MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP,
 typedef struct strMsgIe_bfdf_calibration_resp
 {
-    UINT16  errCode;
     UINT8   calibration_zero_or_full;
     UINT8   calibration_cur_iteration;
     UINT8   calibration_result;
@@ -3348,8 +3347,10 @@ typedef struct msg_struct_l3bfdf_can_dyn_cal_req
 typedef struct msg_struct_can_l3bfdf_dyn_cal_resp
 {
 	UINT8  snrId;
-	strMsgIe_bfdf_calibration_resp_t dynCalResp;
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
 	UINT32 length;
+	strMsgIe_bfdf_calibration_resp_t dynCalResp;
 }msg_struct_can_l3bfdf_dyn_cal_resp_t;
 
 //MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,  	//传感器新数据事件

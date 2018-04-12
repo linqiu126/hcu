@@ -6475,7 +6475,6 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfdf_calibration_req //
 //HUITP_MSGID_sui_bfdf_calibration_resp            = 0x3BB6,
 typedef struct StrHuiIe_bfdf_calibration_resp //
 {
-    UINT16  errCode;
     UINT8   calibration_zero_or_full;
     UINT8   calibration_cur_iteration;
     UINT8   calibration_result;
@@ -6501,9 +6500,12 @@ typedef struct StrHuiIe_bfdf_calibration_resp //
 
 typedef struct StrMsg_HUITP_MSGID_sui_bfdf_calibration_resp //
 {
-	  UINT16           msgid;
-	  UINT16           length;
-	  StrHuiIe_bfdf_calibration_resp_t cal_resp;
+	UINT16  msgid;
+	UINT16  length;
+	UINT8   validFlag;  //是否执行成功
+	UINT8   spare1;
+	UINT16  errCode;
+	StrHuiIe_bfdf_calibration_resp_t cal_resp;
 }StrMsg_HUITP_MSGID_sui_bfdf_calibration_resp_t;
 /*
 **	BFDF_ACTION_REQ

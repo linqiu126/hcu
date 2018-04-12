@@ -253,6 +253,7 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 		UINT32 cmdValue = 0;
 		char debugInfo[HUICOBUS_CALI_RESP_DEBUG_INFO_LEN_MAX];
 		StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t status;
+		StrHlcIe_cui_hcu2uir_dynamic_cali_finish_t finish;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_dynamic_cali_resp_t));
 		if (rcv.dynCalResp.calibration_zero_or_full == 1){        /* 1 for ZERO, 2 for FULL */
 			if (rcv.sensorid == 1)  //LINE0
@@ -265,12 +266,14 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			}
 			status.weight = 0;
 			if (rcv.dynCalResp.calibration_cur_iteration == gTaskL3bfdfContext.dynCalPar.zero_cal_iteration){
+				finish.result = rcv.dynCalResp.calibration_result;
 				//通知界面finish
-				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue);
+				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue, &finish);
 			}
 			if (rcv.validFlag == FALSE){
+				finish.result = rcv.errCode;
 				//通知界面finish
-				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue);
+				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue, &finish);
 			}
 		}
 		else if (rcv.dynCalResp.calibration_zero_or_full == 2){
@@ -284,12 +287,14 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 			}
 			status.weight = rcv.dynCalResp.full_weight;
 			if (rcv.dynCalResp.calibration_cur_iteration == gTaskL3bfdfContext.dynCalPar.full_cal_iteration){
+				finish.result = rcv.dynCalResp.calibration_result;
 				//通知界面finish
-				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue);
+				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue, &finish);
 			}
 			if (rcv.validFlag == FALSE){
+				finish.result = rcv.errCode;
 				//通知界面finish
-				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue);
+				hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_finish(cmdValue, &finish);
 			}
 		}
 		else{
@@ -650,7 +655,7 @@ UINT32 func_bfdfuicomm_read_product_config_into_ctrl_table(UINT16 configId)
 	/*** Initialize PRODUCT configuration, these parameters are different for each product ***/
 	//Read productPara table
 	if (dbi_HcuBfdf_productConfigData_read(configId, &productConfigData) == FAILURE)
-		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB PRODUCT configuration data failed, configId = %d \n", productConfigData.configId);
+		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Get DB PRODUCT configuration data failed, configId = %d \n", configId);
 
 	gTaskL3bfdfContext.configId = configId;
 	groupPerLine = productConfigData.groupPerLine;

@@ -95,7 +95,14 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	if (FsmSetState(TASK_ID_ETHERNET, FSM_STATE_ETHERNET_RECEIVED) == FAILURE) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Error Set FSM State!\n");
 	HCU_DEBUG_PRINT_INF("ETHERNET: Enter FSM_STATE_ETHERNET_ACTIVED status, Keeping refresh here!\n");
 
-	hcu_usleep(HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV*20);
+	/*
+	 *  2018/4/12: Update by ZHANG Jianlin
+	 *  The duartion = 4s is too short for app to restart the ETHERNT and call back, so change to 60s
+	 *
+	 */
+	hcu_sleep(60);
+	//hcu_usleep(HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV*20);
+
 	//初始化MSGSEND参数
 	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
 	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
