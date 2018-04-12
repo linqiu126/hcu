@@ -914,10 +914,11 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	}
 
 	//超界限错误，扔进垃圾桶
-	UINT16 gidMin = 1;
+	//UINT16 gidMin = 1;
 	UINT16 gidMax = gTaskL3bfdfContext.totalGroupNbr[line];
 	weight = rcv.sensorWsValue;
-	if ((weight < gTaskL3bfdfContext.group[line][gidMin].rangeLow) || (weight > gTaskL3bfdfContext.group[line][gidMax].rangeHigh))
+	//if ((weight < gTaskL3bfdfContext.group[line][gidMin].rangeLow) || (weight > gTaskL3bfdfContext.group[line][gidMax].rangeHigh))
+	if (func_l3bfdf_judge_material_in_official_range(weight, line) == FALSE)
 	{
 		//HCU_DEBUG_PRINT_CRT("L3BFDF: NEW EVENT S/W=%d/%f, Low/High=%f/%f\n", line, weight, gTaskL3bfdfContext.group[line][gidMin].rangeLow, gTaskL3bfdfContext.group[line][gidMax].rangeHigh);
 
@@ -1390,6 +1391,8 @@ OPSTAT func_l3bfdf_time_out_sys_resp_common_process(void)
 				gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_OFFLINE;
 		}
 	}
+
+	return SUCCESS;
 }
 
 /***************************************************************************************************************************
@@ -1539,6 +1542,24 @@ OPSTAT func_l3bfdf_send_out_cfg_start_message_to_all(void)
 	FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
 	return SUCCESS;
 }
+
+//判定是否在规定范围内
+bool func_l3bfdf_judge_material_in_official_range(INT32 weight, UINT8 line)
+{
+	int i = 0;
+	UINT16 gidMin = 1;
+	UINT16 gidMax = gTaskL3bfdfContext.totalGroupNbr[line];
+
+	for (i = gidMin; i<=gidMax; i++){
+		if ((weight >= gTaskL3bfdfContext.group[line][i].rangeLow) && (weight <= gTaskL3bfdfContext.group[line][i].rangeHigh))
+			return TRUE;
+	}
+
+	//不在范围内
+	return FALSE;
+}
+
+
 
 
 /***************************************************************************************************************************
