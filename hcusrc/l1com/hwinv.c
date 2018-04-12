@@ -195,7 +195,7 @@ OPSTAT func_hwinv_global_par_init(void)
 	//创建备份记录的基本工作目录，如果存在，就直接使用
 	dtmp = opendir(zHcuVmCtrTab.clock.curLogDir);
 	if (dtmp == NULL){
-		if (mkdir(HCU_RECORD_LOG_DIR_NAME_LOCAL, 0755) == -1){
+		if (mkdir(HCU_RECORD_LOG_DIR_NAME_LOCAL, 0777) == -1){
 			HcuErrorPrint("HWINV: Create directory error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 			return FAILURE;
@@ -210,7 +210,7 @@ OPSTAT func_hwinv_global_par_init(void)
 	dtmp = opendir(zHcuVmCtrTab.clock.curYmDir);
 	if (dtmp == NULL){
 		chdir(zHcuVmCtrTab.clock.curLogDir);
-		if (mkdir(zHcuVmCtrTab.clock.sMon, 0755) == -1){
+		if (mkdir(zHcuVmCtrTab.clock.sMon, 0777) == -1){
 			HcuErrorPrint("HWINV: Create directory error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 			return FAILURE;
@@ -275,17 +275,22 @@ OPSTAT func_hwinv_global_par_init(void)
 	strcpy(zHcuVmCtrTab.clock.curPhotoDir, HCU_RECORD_PHOTO_DIR_NAME_CLEAN);
 
 	//创建备份记录的基本工作目录，如果存在，就直接使用
-	dtmp = opendir(zHcuVmCtrTab.clock.curPhotoDir);
-	if (dtmp == NULL){
-		if (mkdir(HCU_RECORD_PHOTO_DIR_NAME_CLEAN, 0755) == -1){
-			HcuErrorPrint("HWINV: Create directory error!\n");
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+//	dtmp = opendir(zHcuVmCtrTab.clock.curPhotoDir);
+//	if (dtmp == NULL){
+//		if (mkdir(HCU_RECORD_PHOTO_DIR_NAME_CLEAN, 0777) == -1){
+//			HcuErrorPrint("HWINV: Create directory error!\n");
+//			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+//			return FAILURE;
+//		}
+//		//成功就不打印提示了
+//	}else{
+//		closedir(dtmp);
+//	}
+	if (access(zHcuVmCtrTab.clock.curPhotoDir, F_OK) < 0){
+		if (mkdir(HCU_RECORD_PHOTO_DIR_NAME_CLEAN, 0777) < 0){
+			HcuErrorPrint("HWINV: Create directory error! ErrorCountForFile = %d\n", ErrorCountForFile);
 			return FAILURE;
 		}
-		//成功就不打印提示了
-	}else{
-		//HcuDebugPrint("HWINV: Dir exist!\n");
-		closedir(dtmp);
 	}
 
 	strcpy(zHcuVmCtrTab.clock.curHikvisionFname,zHcuSysEngPar.hwBurnId.equLable);
@@ -615,7 +620,14 @@ void func_hwinv_scan_all(void)
 	func_hwinv_scan_microphone();
 	func_hwinv_scan_camera();
 	func_hwinv_scan_usb();
-	func_hwinv_scan_eng_par();
+
+	/*
+	 *  2018/4/12 - Update by ZHANG Jianlin
+	 *  无论是调测，还是现场实际使用，热修改参数并让ＨＣＵ继续执行，从而让系统延续工作的设计逻辑，并不需要，所以暂时将起关闭
+	 *
+	 */
+	//func_hwinv_scan_eng_par();
+
 	func_hwinv_scan_dir();
 	func_hwinv_scan_db();
 	func_hwinv_scan_emc();
@@ -715,7 +727,7 @@ void func_hwinv_scan_date(void)
 		dtmp = opendir(zHcuVmCtrTab.clock.curYmDir);
 		if (dtmp == NULL){
 			chdir(zHcuVmCtrTab.clock.curLogDir);
-			if (mkdir(zHcuVmCtrTab.clock.sMon, 0755) == -1){
+			if (mkdir(zHcuVmCtrTab.clock.sMon, 0777) == -1){
 				HcuErrorPrint("HWINV: Create directory error!\n");
 				return;
 			}
@@ -781,18 +793,21 @@ void func_hwinv_scan_date(void)
 	strcpy(zHcuVmCtrTab.clock.curPhotoDir, HCU_RECORD_PHOTO_DIR_NAME_CLEAN);
 
 	//创建HKvision的照片存储目录，如果存在，就直接使用
-
 	dtmp = opendir(zHcuVmCtrTab.clock.curPhotoDir);
-	if (dtmp == NULL){
-
-		if (mkdir(HCU_RECORD_PHOTO_DIR_NAME_CLEAN, 0755) == -1){
-		    //HcuDebugPrint("HWINV: zHcuVmCtrTab.clock.curPhotoDir = %s\n\n\n", zHcuVmCtrTab.clock.curPhotoDir);
+//	if (dtmp == NULL){
+//		if (mkdir(HCU_RECORD_PHOTO_DIR_NAME_CLEAN, 0777) == -1){
+//		    //HcuDebugPrint("HWINV: zHcuVmCtrTab.clock.curPhotoDir = %s\n\n\n", zHcuVmCtrTab.clock.curPhotoDir);
+//			HcuErrorPrint("HWINV: Create directory error! ErrorCountForFile = %d\n", ErrorCountForFile);
+//			return ;
+//		}
+//	}else{
+//		closedir(dtmp);
+//	}
+	if (access(zHcuVmCtrTab.clock.curPhotoDir, F_OK) < 0){
+		if (mkdir(HCU_RECORD_PHOTO_DIR_NAME_CLEAN, 0777) < 0){
 			HcuErrorPrint("HWINV: Create directory error! ErrorCountForFile = %d\n", ErrorCountForFile);
-
 			return ;
 		}
-	}else{
-		closedir(dtmp);
 	}
 
 	strcpy(zHcuVmCtrTab.clock.curHikvisionFname,zHcuSysEngPar.hwBurnId.equLable);
