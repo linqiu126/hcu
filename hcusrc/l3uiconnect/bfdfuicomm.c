@@ -320,10 +320,6 @@ estimate_err_itera[1]=%d; estimate_err_itera[2]=%d; estimate_err_itera[3]=%d; es
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(cmdValue, &status);
 	}
-	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_ONE_KEY_ZERO){
-		//TBD
-		printf ("fsm_bfdfuicomm_l3bfdf_ctrl_cmd_resp: rcv.cmdid = %d\n", rcv.cmdid);
-	}
 	else{
 		HCU_ERROR_PRINT_TASK(TASK_ID_BFDFUICOMM, "TASK_ID_BFDFUICOMM: Invalid command response!\n");
 		return FAILURE;

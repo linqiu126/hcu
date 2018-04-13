@@ -49,8 +49,10 @@ HcuFsmStateItem_t HcuFsmBfhsuicomm[] =
 
 	//UIR2HCU MSG RCV
 	{MSG_ID_HUICOBUS_UIR_INIT_REQ,      		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_init_req},
-	{MSG_ID_HUICOBUS_UIR_START_RESUME_REQ, 		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_start_resume_req},
-	{MSG_ID_HUICOBUS_UIR_STOP_SUSPEND_REQ, 		FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_stop_suspend_req},
+	{MSG_ID_HUICOBUS_UIR_START_REQ, 			FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_start_req},
+	{MSG_ID_HUICOBUS_UIR_STOP_REQ, 				FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_stop_req},
+	{MSG_ID_HUICOBUS_UIR_RESUME_REQ, 			FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_resume_req},
+	{MSG_ID_HUICOBUS_UIR_SUSPEND_REQ, 			FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_suspend_req},
 	{MSG_ID_HUICOBUS_UIR_STATIC_CALI_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_static_cali_req},
 	{MSG_ID_HUICOBUS_UIR_DYNAMIC_CALI_REQ,    	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_dynamic_cali_req},
 	{MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_test_cmd_req},
@@ -197,30 +199,43 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
 		if(rcv.validFlag == TRUE)
-			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR;
-		else
 			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_OK;
+		else
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR;
+
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP){
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
-		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STOP;
+		if(rcv.validFlag == TRUE)
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STOP;
+		else
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STARTUP;
+
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND){
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
-		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_SUSPEND;
+		if(rcv.validFlag == TRUE)
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_SUSPEND;
+		else
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STARTUP;
+
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
 	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME){
 		StrHlcIe_cui_hcu2uir_status_report_t status;
 		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
-		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_RESUME;
+		if(rcv.validFlag == TRUE)
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_RESUME;
+		else
+			status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STARTUP;
+
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 	}
@@ -281,10 +296,6 @@ preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime
 		}
 		//通知界面
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_dynamic_cali_resp(rcv.cmdValue, &status);
-	}
-	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_ONE_KEY_ZERO){
-		//TBD
-		printf ("fsm_bfhsuicomm_l3bfhs_ctrl_cmd_resp: rcv.cmdid = %d\n", rcv.cmdid);
 	}
 	else{
 		HCU_ERROR_PRINT_TASK(TASK_ID_BFHSUICOMM, "TASK_ID_BFHSUICOMM: Invalid command response!\n");
@@ -373,30 +384,57 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void 
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfhsuicomm_huicobus_uir_start_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfhsuicomm_huicobus_uir_start_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_start_resume_req_t);
+	UINT16 configId = 0;
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_start_req_t);
+
 	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
-	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START;
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
 	snd.cmdValue = rcv.cmdValue;
+	configId = rcv.cmdValue;
 
 	//Initialize gTaskL3bfhsContext
-	if(func_bfhsuicomm_read_product_config_into_ctrl_table(rcv.cmdValue) == FAILURE)
-		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: get DB data and initialize product config failed, configId = %d \n", rcv.cmdValue);
+	if(func_bfhsuicomm_read_product_config_into_ctrl_table(configId) == FAILURE)
+		HCU_ERROR_PRINT_BFHSUICOMM("BFHSUICOMM: get DB data and initialize product config failed, configId = %d \n", configId);
 
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;
 }
 
-OPSTAT fsm_bfhsuicomm_huicobus_uir_stop_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfhsuicomm_huicobus_uir_stop_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_stop_suspend_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_stop_req_t);
 	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
 	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
 	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP;
+	snd.cmdValue = rcv.cmdValue;
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfhsuicomm_huicobus_uir_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_resume_req_t);
+	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME;
+	snd.cmdValue = rcv.cmdValue;
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfhsuicomm_huicobus_uir_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_suspend_req_t);
+	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND;
 	snd.cmdValue = rcv.cmdValue;
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM);
 	return SUCCESS;

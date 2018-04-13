@@ -47,16 +47,19 @@ HcuFsmStateItem_t HcuFsmL3bfhs[] =
 	{MSG_ID_SUI_STARTUP_IND,       				FSM_STATE_COMMON,          			fsm_l3bfhs_canitf_startup_ind},
 	{MSG_ID_SUI_FAULT_IND,       				FSM_STATE_COMMON,          			fsm_l3bfhs_canitf_fault_ind},
 	{MSG_ID_SUI_HEART_BEAT_REPORT,       		FSM_STATE_COMMON,          			fsm_l3bfhs_canitf_heart_beat_report},
+	{MSG_ID_SUI_STOP_RESP,       				FSM_STATE_COMMON,         			fsm_l3bfhs_canitf_sys_stop_resp},
 
 	//只为出现ACTIVED状态，入口自动被COMMON屏蔽
 	{MSG_ID_CAN_L3BFHS_SYS_CFG_RESP,       		FSM_STATE_L3BFHS_ACTIVED,          	fsm_l3bfhs_canitf_sys_config_resp},
 	{MSG_ID_SUI_SUSPEND_RESP,       			FSM_STATE_L3BFHS_ACTIVED,          	fsm_l3bfhs_canitf_sys_suspend_resp},
+	{MSG_ID_SUI_RESUME_RESP,       				FSM_STATE_L3BFHS_ACTIVED,         	fsm_l3bfhs_canitf_sys_resume_resp},
 
 	//进料组合态
 	{MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,      FSM_STATE_L3BFHS_OOS_SCAN,          fsm_l3bfhs_canitf_ws_new_ready_event},
+	{MSG_ID_SUI_RESUME_RESP,       				FSM_STATE_L3BFHS_OOS_SCAN,         	fsm_l3bfhs_canitf_sys_resume_resp},
 
-	//休眠状态：只允许收到RESUME指令
-	{MSG_ID_SUI_RESUME_RESP,       				FSM_STATE_L3BFHS_SUSPEND,          	fsm_l3bfhs_canitf_sys_resume_resp},
+	//休眠状态
+	{MSG_ID_SUI_SUSPEND_RESP,       			FSM_STATE_L3BFHS_SUSPEND,          	fsm_l3bfhs_canitf_sys_suspend_resp},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            					FSM_STATE_END,             			NULL},  //Ending
@@ -261,8 +264,6 @@ OPSTAT fsm_l3bfhs_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 
 		//存储本地
 		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP;
-		//通知界面
-		HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR);
 	}
 
 	//收到正确的反馈
@@ -278,8 +279,6 @@ OPSTAT fsm_l3bfhs_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 
 		//存储本地
 		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_VALID;
-		//通知界面
-		HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_START_OK);
 
 		//启动统计扫描定时器
 		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_10MS_L3BFHS_PERIOD_STA_SCAN), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
@@ -291,43 +290,52 @@ OPSTAT fsm_l3bfhs_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 	return SUCCESS;
 }
 
+OPSTAT fsm_l3bfhs_canitf_sys_stop_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_sui_stop_resp_t);
+
+	//通知界面
+	msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
+	snd.validFlag = rcv.validFlag;
+	snd.errCode = rcv.errCode;
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP;
+	snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
+
+	//存储本地
+	if(rcv.validFlag == FALSE)
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP;
+	else
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_STOP;
+	hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_STOP_WAIT_FB, TIMER_RESOLUTION_1S);
+	FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
+
+	//返回
+	return SUCCESS;
+}
+
 OPSTAT fsm_l3bfhs_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_sui_suspend_resp_t);
 
-	//收到错误的反馈，就回复差错给界面
-	if (rcv.validFlag == FALSE){
-		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-		snd.validFlag = FALSE;
-		snd.errCode = rcv.errCode;
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND;
-		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
-		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_SUSPEND_WAIT_FB, TIMER_RESOLUTION_1S);
-		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
+	//通知界面
+	msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
+	snd.validFlag = rcv.validFlag;
+	snd.errCode = rcv.errCode;
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND;
+	snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
 
-		//存储本地
+	hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_SUSPEND_WAIT_FB, TIMER_RESOLUTION_1S);
+	if(rcv.validFlag == FALSE){
 		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP;
-		//通知界面
-		HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_OK);
+		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
 	}
-
-	//收到正确的反馈
 	else{
-		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND;
-		snd.validFlag = TRUE;
-		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
-		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_SUSPEND_WAIT_FB, TIMER_RESOLUTION_1S);
-		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_SUSPEND);
-
-		//存储本地
 		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_SUSPEND;
-		//通知界面
-		HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_SUSPEND);
+		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_SUSPEND);
 	}
 
 	//返回
@@ -338,39 +346,25 @@ OPSTAT fsm_l3bfhs_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_sui_resume_resp_t);
 
-	//收到错误的反馈，就回复差错给界面
-	if (rcv.validFlag == FALSE){
-		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-		snd.validFlag = FALSE;
-		snd.errCode = rcv.errCode;
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME;
-		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
-		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_RESUME_WAIT_FB, TIMER_RESOLUTION_1S);
-		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
+	//通知界面
+	msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
+	snd.validFlag = rcv.validFlag;
+	snd.errCode = rcv.errCode;
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME;
+	snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
 
+	hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_RESUME_WAIT_FB, TIMER_RESOLUTION_1S);
+	if (rcv.validFlag == FALSE){
 		//存储本地
 		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP;
-		//通知界面
-		HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_OK);
+		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
 	}
-
-	//收到正确的反馈
 	else{
-		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME;
-		snd.validFlag = TRUE;
-		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
-		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_RESUME_WAIT_FB, TIMER_RESOLUTION_1S);
-		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_OOS_SCAN);
-
 		//存储本地
 		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_VALID;
-		//通知界面
-		HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_DATA_VALID);
+		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_OOS_SCAN);
 	}
 
 	//返回
@@ -381,30 +375,16 @@ OPSTAT fsm_l3bfhs_canitf_cal_zero_resp(UINT32 dest_id, UINT32 src_id, void * par
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_cal_zero_resp_t);
 
-	//收到错误的反馈，就回复差错给界面
-	if (rcv.validFlag == FALSE){
-		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-		snd.validFlag = FALSE;
-		snd.errCode = rcv.errCode;
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
-		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO;
-		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
-		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB, TIMER_RESOLUTION_1S);
-	}
-
-	//收到正确的反馈
-	else{
-		msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
-		snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
-		snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO;
-		snd.validFlag = TRUE;
-		snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
-		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
-		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB, TIMER_RESOLUTION_1S);
-	}
+	//通知界面
+	msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t));
+	snd.validFlag = rcv.validFlag;
+	snd.errCode = rcv.errCode;
+	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_STATIC_CALI;
+	snd.cmdValue = HCU_SYSMSG_BFHS_UICOMM_CMDVALUE_STATIC_CALI_ZERO;
+	snd.length = sizeof(msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_L3BFHS);
+	hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CAL_ZERO_WAIT_FB, TIMER_RESOLUTION_1S);
 
 	//返回
 	return SUCCESS;
@@ -571,7 +551,7 @@ OPSTAT fsm_l3bfhs_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_p
 		status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_CFG_ERR;
 	else
 	status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_ERROR;
-	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(rcv.snrId, &status);
 
 	//是否要根据ERR_CODE，赋予不同的差错情形，待定
 
@@ -770,42 +750,71 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 {
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
 
-	//启动命令
-	if ((rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START) || (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME)){
+	//START启动命令
+	if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START){
 		//不合法，直接退回
 		if (gTaskL3bfhsContext.sensorWs[0].nodeStatus < HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP){
 			HCU_L3BFHS_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START);
 		}
-		//如果是工作态度，则需要发送RESUME
-		else if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_SUSPEND){
-			msg_struct_sui_resume_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_sui_resume_req_t));
-			snd.length = sizeof(msg_struct_sui_resume_req_t);
-			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
-			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-		}
-		else{
-			//合法，发送给下位机
-			if (func_l3bfhs_send_out_sys_cfg_req() == FAILURE)
-				HCU_ERROR_PRINT_L3BFHS("L3BFHS: Send message error!\n");
-			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CFG_START_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-			FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
-		}
+
+		//合法，发送给下位机
+		if (func_l3bfhs_send_out_sys_cfg_req() == FAILURE)
+			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Send configure message error!\n");
+
+		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_CFG_START_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
 	}
 
-	//STOP/SUSPEND：可以不用处理，因为收不到
-	else if ((rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP) || (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND)){
-		if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_OOS_SCAN){
-			msg_struct_sui_suspend_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
-			snd.length = sizeof(msg_struct_sui_suspend_req_t);
-			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
-			hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_SUSPEND_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-			FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
+	//STOP
+	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP) {
+		msg_struct_sui_stop_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_sui_stop_req_t));
+		snd.length = sizeof(msg_struct_sui_stop_req_t);
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_STOP_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_STOP_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
+
+		//统计报告部分初始化
+		memset(&gTaskL3bfhsContext.sta15Min, 0, sizeof(HcuSysMsgIeL3bfhsContextStaElement_t));
+		memset(&gTaskL3bfhsContext.sta24H, 0, sizeof(HcuSysMsgIeL3bfhsContextStaElement_t));
+		memset(&gTaskL3bfhsContext.sta2H, 0, sizeof(HcuSysMsgIeL3bfhsContextStaElement_t));
+		memset(&gTaskL3bfhsContext.sta60Min, 0, sizeof(HcuSysMsgIeL3bfhsContextStaElement_t));
+		memset(&gTaskL3bfhsContext.sta8H, 0, sizeof(HcuSysMsgIeL3bfhsContextStaElement_t));
+		memset(&gTaskL3bfhsContext.staLocalUi, 0, sizeof(HcuSysMsgIeL3bfhsContextStaElement_t));
+		memset(&gTaskL3bfhsContext.staOneMin, 0, sizeof(HcuSysMsgIeL3bfhsContextStaElement_t));
+		memset(&gTaskL3bfhsContext.staUp2Now, 0, sizeof(HcuSysMsgIeL3bfhsContextStaElement_t));
+		//实时统计部分初始化
+		gTaskL3bfhsContext.elipseCnt = 0;
+		gTaskL3bfhsContext.elipse24HourCnt = 0;
+		memset(&gTaskL3bfhsContext.cur, 0, sizeof(HcuSysMsgIeL3bfhsContextStaElement_t));
+		memset(&gTaskL3bfhsContext.curAge, 0, sizeof(gTaskL3bfhsContextStaEleMid_t));
+		//停止定时器
+		hcu_timer_stop(TASK_ID_L3BFHS, TIMER_ID_10MS_L3BFHS_PERIOD_STA_SCAN, TIMER_RESOLUTION_10MS);
+	}
+
+	//RESUME
+	else if(rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME){
+		//不合法，直接退回
+		if (gTaskL3bfhsContext.sensorWs[0].nodeStatus < HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP){
+			HCU_L3BFHS_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME);
 		}
-		else{
-			HCU_L3BFHS_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND);
-		}
+
+		//合法,发送RESUME
+		msg_struct_sui_resume_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_sui_resume_req_t));
+		snd.length = sizeof(msg_struct_sui_resume_req_t);
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_RESUME_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	}
+
+	//SUSPEND
+	else if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND){
+		msg_struct_sui_suspend_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_sui_suspend_req_t));
+		snd.length = sizeof(msg_struct_sui_suspend_req_t);
+		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_REQ, TASK_ID_CANALPHA, TASK_ID_L3BFHS);
+		hcu_timer_start(TASK_ID_L3BFHS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFHS_SUSPEND_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_SUSPEND);
 	}
 
 	//STATIC_CALI

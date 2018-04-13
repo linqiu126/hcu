@@ -58,6 +58,7 @@ typedef struct L3BfhsNodeBoardInfo
 #define HCU_L3BFHS_NODE_BOARD_STATUS_VALID 			31
 #define HCU_L3BFHS_NODE_BOARD_STATUS_VALID_ERROR 	32
 #define HCU_L3BFHS_NODE_BOARD_STATUS_SUSPEND 		33
+#define HCU_L3BFHS_NODE_BOARD_STATUS_STOP	 		34
 #define HCU_L3BFHS_NODE_BOARD_STATUS_WORK_MAX 		49
 #define HCU_L3BFHS_NODE_BOARD_STATUS_INVALID  		0xFF
 
@@ -289,6 +290,7 @@ extern OPSTAT fsm_l3bfhs_time_out(UINT32 dest_id, UINT32 src_id, void * param_pt
 extern OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfhs_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfhs_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfhs_canitf_sys_stop_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfhs_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfhs_canitf_cal_zero_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfhs_canitf_cal_full_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
