@@ -950,8 +950,18 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_heart_beat_report_received_handle(StrMsg_
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfsc_heart_beat_confirm);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 	pMsgProc.wmc_id.wmc_id = nodeId;
-	if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus <= HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE_MAX)
-		pMsgProc.wmcState = HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_OFFLINE;
+	/*
+	 *  2018/4/13, Update by ZHANG Jianlin
+	 *  If heart beat received during node offline status, it shall set this node to be STARTUP status, iso keeping OFFLINE status.
+	 *  In this way, heart-beat will take as STARTUP message function. This is indeed why we design heart-beat function, to take back
+	 *  node when HCU restart or broken.
+	 *  一言以蔽之：HEAT-BEAT可以将坏的，重启ＨＣＵ的状态拉回到正常状态．
+	 */
+	if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus <= HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE_MAX){
+		//pMsgProc.wmcState = HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_OFFLINE;
+		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP;
+		pMsgProc.wmcState = HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_INIT;
+	}
 	else if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus <= HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MAX)
 		pMsgProc.wmcState = HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_INIT;
 	else if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus <= HCU_L3BFSC_SENSOR_WS_STATUS_WORK_MAX)

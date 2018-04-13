@@ -10,6 +10,7 @@
 
 //= ZJL, 2018 Apr.12 CURRENT_SW_DELIVERY 315=>BFDF项目
 = 优化UN-RANGE的算法
+= 将三个项目中有关HEART-BEAT在OFFLINE状态下收到的处理过程，全部变更为强行STARTUP
 
 //= ZSC, 2018 Mar.24 CURRENT_SW_DELIVERY 314=>DAYC项目
 = Update for SiChuan DA deployment(noise=>temparature & humility)

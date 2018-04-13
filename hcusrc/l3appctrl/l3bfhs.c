@@ -577,8 +577,17 @@ OPSTAT fsm_l3bfhs_canitf_heart_beat_report(UINT32 dest_id, UINT32 src_id, void *
 	msg_struct_sui_heart_beat_confirm_t snd;
 	memset(&snd, 0, sizeof(msg_struct_sui_heart_beat_confirm_t));
 	snd.snrId = rcv.snrId;
-	if (gTaskL3bfhsContext.sensorWs[0].nodeStatus <= HCU_L3BFHS_NODE_BOARD_STATUS_OFFLINE_MAX)
-		snd.state = HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_OFFLINE;
+	/*
+	 *  2018/4/13, Update by ZHANG Jianlin
+	 *  If heart beat received during node offline status, it shall set this node to be STARTUP status, iso keeping OFFLINE status.
+	 *  In this way, heart-beat will take as STARTUP message function. This is indeed why we design heart-beat function, to take back
+	 *  node when HCU restart or broken.
+	 *  一言以蔽之：HEAT-BEAT可以将坏的，重启ＨＣＵ的状态拉回到正常状态．
+	 */
+	if (gTaskL3bfhsContext.sensorWs[0].nodeStatus <= HCU_L3BFHS_NODE_BOARD_STATUS_OFFLINE_MAX){
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP;
+		snd.state = HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_INIT;
+	}
 	else if (gTaskL3bfhsContext.sensorWs[0].nodeStatus < HCU_L3BFHS_NODE_BOARD_STATUS_VALID)
 		snd.state = HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_INIT;
 	else if(gTaskL3bfhsContext.sensorWs[0].nodeStatus <= HCU_L3BFHS_NODE_BOARD_STATUS_WORK_MAX)
