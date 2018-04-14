@@ -122,14 +122,14 @@ OPSTAT fsm_pm25_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 		gTaskPm25Context.pm25[i].equId = MODBUS_PM25_RTU_EQUIPMENT_ID_PMS;
 
-		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008)//for PMS
+		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)//for PMS
 		{
-			gTaskPm25Context.pm25[i].equId = MODBUS_PM25_RTU_EQUIPMENT_ID_PMS;
+			gTaskPm25Context.pm25[i].equId = MODBUS_PM25_RTU_EQUIPMENT_ID;
 		}
-		else
+		/*else
 		{
 			gTaskPm25Context.pm25[i].equId = MODBUS_PM25_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
-		}
+		}*/
 
 		gTaskPm25Context.pm25[i].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
 		gTaskPm25Context.pm25[i].hwStatus = SENSOR_PM25_HW_STATUS_ACTIVE;  //假设缺省为活跃状态

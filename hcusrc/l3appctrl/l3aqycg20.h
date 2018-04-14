@@ -219,11 +219,11 @@ typedef struct gTaskL3aqycq20Context
 
 
 
-typedef struct SerialLedMsgBuf
+typedef struct LedMsgBuf
 {
 	UINT32 curLen;
 	UINT8  curBuf[HCU_SYSDIM_MSG_BODY_LEN_MAX];
-}SerialLedMsgBuf_t;
+}LedMsgBuf_t;
 
 //层三Context
 extern gTaskL3aqycq20Context_t		gTaskL3aqycq20Context;

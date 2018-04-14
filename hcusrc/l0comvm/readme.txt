@@ -7,14 +7,17 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+//= ZSC, 2018 Apr.14 CURRENT_SW_DELIVERY 316=>DAYC项目
+= update for 四川达岸 联网版
+
 
 //= ZJL, 2018 Apr.12 CURRENT_SW_DELIVERY 315=>BFDF项目
 = 优化UN-RANGE的算法
 = 将三个项目中有关HEART-BEAT在OFFLINE状态下收到的处理过程，全部变更为强行STARTUP
 
 //= ZSC, 2018 Mar.24 CURRENT_SW_DELIVERY 314=>DAYC项目
-= Update for SiChuan DA deployment(noise=>temparature & humility)
-= LED display format change for DA customer requirment
+= Update for SiChuan DA deployment(noise=>temprature & humility)
+= LED display format change for DA customer requirement
 
 //= ZJL, 2018 Mar.12 CURRENT_SW_DELIVERY 313=>BFDF项目
 = 算法评估，出现的问题
