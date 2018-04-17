@@ -914,8 +914,19 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	if ((rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.sensorWsValue > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight))){
+	if (rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error, SensorId = %d, WsWeight=%d!\n", rcv.sensorid, rcv.sensorWsValue);
+	}
+
+	/*
+	 *  2018/4/17 Update by ZHANG Jianlin
+	 *  海量错误重量汇报消息（超重），将导致错误消息过载，该模块重启，从而让系统停止了工作
+	 *  新的工作模式，改为抛弃该汇报事件，而不疯狂报错
+	 *
+	 */
+	if (rcv.sensorWsValue > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)){
+		HcuErrorPrint("L3BFSC: Receive message error and just give up this weight event, SensorId = %d, WsWeight=%d!\n", rcv.sensorid, rcv.sensorWsValue);
+		return SUCCESS;
 	}
 
 	//Test Print
