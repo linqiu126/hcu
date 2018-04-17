@@ -7,9 +7,14 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+
+
+
+//= ZJL, 2018 Apr.17 CURRENT_SW_DELIVERY 317=>BFSC项目
+= FTP的IP地址，由服务器地址强制绑定，而且工作目录也固定为ftp://serverId/hcu_sw_active/，具体设置工作环境是注意！
+
 //= ZSC, 2018 Apr.14 CURRENT_SW_DELIVERY 316=>DAYC项目
 = update for 四川达岸 联网版
-
 
 //= ZJL, 2018 Apr.12 CURRENT_SW_DELIVERY 315=>BFDF项目
 = 优化UN-RANGE的算法

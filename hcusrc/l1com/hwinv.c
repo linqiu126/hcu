@@ -448,7 +448,16 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_HWINV("HWINV: Read SysEng DB error!\n");
 	}
+
+	/*
+	 *  2018/4/17 Update by ZHANG Jianlin
+	 *  FTP address shall be aligned with server IP address, so can not configure seperatelly as wanted.
+	 *  FTP must = "ftp://" + SERVING IP ADDRESS + "/hcu_sw_active/"
+	 */
+	sprintf(zHcuSysEngPar.cloud.cloudFtpAdd, "ftp://%s/hcu_sw_active/", zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	//printf("\n\nTEST: %s\n\n", zHcuSysEngPar.cloud.cloudFtpAdd);
 	HcuDebugPrint("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
+
 
 	//第三部分/zHcuSysEngPar总共三步分
 	//考虑到数据库控制的复杂性，暂时不再增加更多的字段，其余字段将依靠程序定义来解决
