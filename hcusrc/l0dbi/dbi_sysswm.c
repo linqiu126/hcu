@@ -452,7 +452,8 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 			int file_len = 0;
 			file_len = ftell(fp);
 			fclose(fp);
-			if (file_len<=0){
+			if ((file_len<=0) && (sizeof(ptr->d_name) > 0))
+			{
 				memset(fopr, 0, sizeof(fopr));
 				sprintf(fopr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, ptr->d_name);
 				system(fopr);
