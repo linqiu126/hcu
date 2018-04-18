@@ -1305,8 +1305,9 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 		{
 			//Free memory, here do nothing.
 		}
-		HcuErrorPrint("HCU-VM: Receive invalid msg(%x)[%s] in state(%d) of task(0x%x)[%s]\n",
-			mid, zHcuSysEngTrcMsgCtrStaticCfg[mid].msgName, state, dest_id, zHcuVmCtrTab.task[dest_id].taskName);
+		HcuErrorPrint("HCU-VM: Receive invalid msg(%x)[%s] in state(%d) of task(0x%x)[%s], from task(0x%x)[%s]\n",
+			mid, zHcuSysEngTrcMsgCtrStaticCfg[mid].msgName, state, dest_id, zHcuVmCtrTab.task[dest_id].taskName, \
+			src_id, zHcuVmCtrTab.task[src_id].taskName);
 		return FAILURE;
 	}
 

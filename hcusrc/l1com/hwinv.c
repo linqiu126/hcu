@@ -454,7 +454,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	 *  FTP address shall be aligned with server IP address, so can not configure seperatelly as wanted.
 	 *  FTP must = "ftp://" + SERVING IP ADDRESS + "/hcu_sw_active/"
 	 */
-	sprintf(zHcuSysEngPar.cloud.cloudFtpAdd, "ftp://%s/hcu_sw_active/", zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	sprintf(zHcuSysEngPar.cloud.cloudFtpAdd, "ftp://%s/avorion/hcu_sw_active/", zHcuSysEngPar.cloud.svrAddrSocketipDefault);
 	//printf("\n\nTEST: %s\n\n", zHcuSysEngPar.cloud.cloudFtpAdd);
 	HcuDebugPrint("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
 
