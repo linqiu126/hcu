@@ -918,17 +918,6 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error, SensorId = %d, WsWeight=%d!\n", rcv.sensorid, rcv.sensorWsValue);
 	}
 
-	/*
-	 *  2018/4/17 Update by ZHANG Jianlin
-	 *  海量错误重量汇报消息（超重），将导致错误消息过载，该模块重启，从而让系统停止了工作
-	 *  新的工作模式，改为抛弃该汇报事件，而不疯狂报错
-	 *
-	 */
-	if (rcv.sensorWsValue > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)){
-		HcuErrorPrint("L3BFSC: Receive message error and just give up this weight event, SensorId = %d, WsWeight=%d!\n", rcv.sensorid, rcv.sensorWsValue);
-		return SUCCESS;
-	}
-
 	//Test Print
 	char s[200], tmp[20];
 	memset(s, 0, sizeof(s));
@@ -1088,7 +1077,11 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			snd2.length = sizeof(msg_struct_l3bfsc_can_ws_comb_out_t);
 			memcpy(snd2.sensorBitmap, gTaskL3bfscContext.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
 			snd2.combnbr = gTaskL3bfscContext.wsValueNbrTtt;
-			snd2.smallest_wmc_id = func_l3bfsc_search_smallest_scale_amongh_bitmap_for_one_shot_output();
+			//是否分堆：不分堆，则送下去的参数均为0，这样下位机也不需要做延迟动作了
+			if (gTaskL3bfscContext.comAlgPar.isHeapTogetherEnable == TRUE){
+				snd2.smallest_wmc_id = func_l3bfsc_search_smallest_scale_amongh_bitmap_for_one_shot_output();
+				func_l3bfsc_caculate_ws_delay_for_comb_out(snd2.delayInMs, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+			}
 			if (hcu_message_send(MSG_ID_L3BFSC_CAN_WS_COMB_OUT, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd2, snd2.length)== FAILURE)
 				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 
@@ -1354,8 +1347,55 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 	//组合搜索
 	result_Ul=0; result_Dl=0; promoxityUl=0; promoxityDl=0;
 
+#if 0
 	//HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Search START, Index=%d, SearchSpace=%d, Start Point = %d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr, WsSensorStart);
 	for (i=WsSensorStart; i< (gTaskL3bfscContext.searchSpaceTotalNbr + WsSensorStart); i++){
+		//先计算单个矢量乘积结果
+		memset(resBitmap, 0, sizeof(resBitmap));
+		result = func_l3bfsc_caculate_vector_multipy_result((i % gTaskL3bfscContext.searchSpaceTotalNbr), resBitmap);
+
+		//再计算矢量的有效非零数
+		searchNbr = func_l3bfsc_caculate_bitmap_valid_number(resBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+		//HCU_DEBUG_PRINT_INF("L3BFSC: WsSensorStart=%d, Index = %d, Result = %d, ComTarget/Max=[%d/%d], Nbr Min/Max = [%d/%d], SearchNbr=%d\n", WsSensorStart, i, result, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight, gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination, gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination, searchNbr);
+
+		//在目标组合数量之内，寻求大中最小的
+		if ((searchNbr >= gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination) &&  (searchNbr <= gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination)){
+			//寻求更大的
+			if ((result > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)) && (result < result_Ul))
+			{
+				result_Ul = result;
+				promoxityUl = i;
+				memcpy(resBitmap_Ul, resBitmap, sizeof(resBitmap_Ul));
+			}
+			//寻求小中最大的
+			else if ((result < gTaskL3bfscContext.comAlgPar.TargetCombinationWeight) && (result > result_Dl))
+			{
+				result_Dl = result;
+				promoxityDl = i;
+				memcpy(resBitmap_Dl, resBitmap, sizeof(resBitmap_Dl));
+			}
+		}
+
+		//再判定搜索结果是否满足条件
+		if (func_l3bfsc_caculate_judge_search_result(result, searchNbr, (i % gTaskL3bfscContext.searchSpaceTotalNbr)) == TRUE)
+		{
+			func_l3bfsc_caculate_execute_search_result(i, resBitmap);
+			//HCU_DEBUG_PRINT_FAT("L3BFSC: Combine SUCCESS one time, Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
+			return i;
+		}
+	}//整个搜索空间循环结束
+	//HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Search Accomplish one round, Index=%d, SearchSpace=%d, StartPoint = %d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr, WsSensorStart);
+#endif
+
+	/*
+	 *  2018/4/18 Update by ZHANG Jianlin
+	 *  优化搜索算法：降低混堆风险，永远是从距离出口最近的箩筐开始搜索，有限出料。这既能减少出料时间，又能减少混堆产生的概率
+	 *  新的算法永恒激活，这跟优化产出算法，并非分堆绑定，所以动态分布式的起点参数，以后并不需要使用。一旦本算法稳定后，gTaskL3bfscContext.wsRrSearchStart起点维持过程可以删去掉
+	 *
+	 */
+
+	//HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Search START, Index=%d, SearchSpace=%d, Start Point = %d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr, WsSensorStart);
+	for (i=gTaskL3bfscContext.searchSpaceTotalNbr-1; i>=0; i--){
 		//先计算单个矢量乘积结果
 		memset(resBitmap, 0, sizeof(resBitmap));
 		result = func_l3bfsc_caculate_vector_multipy_result((i % gTaskL3bfscContext.searchSpaceTotalNbr), resBitmap);
@@ -1637,6 +1677,50 @@ UINT8 func_l3bfsc_search_smallest_scale_amongh_bitmap_for_one_shot_output(void)
 	//返回
 	return count;
 }
+
+//计算分堆延迟的算法
+void func_l3bfsc_caculate_ws_delay_for_comb_out(void *delay, UINT8 totalNbr)
+{
+	UINT8 smallestNdId = 0;
+	INT32 target[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
+	int i = 0;
+	int baseWs = 0, distanceWs = 0;
+
+	if (totalNbr <= 0) return;
+	if (totalNbr > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) return;
+	if (delay == NULL) return;
+
+	memset(target, 0, sizeof(INT32)*HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+	smallestNdId = func_l3bfsc_search_smallest_scale_amongh_bitmap_for_one_shot_output();
+
+	baseWs = (smallestNdId-1)/2;
+	for (i = smallestNdId; i < HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++)
+	{
+		//如果根本就没有筛选，则不需要计算
+		if (gTaskL3bfscContext.wsBitmap[i] != 1) continue;
+
+		//取半计算
+		distanceWs = (i-1)/2 - baseWs;
+
+		//第一个头部，不需要延迟
+		if (distanceWs == 0)
+		{
+			target[i] = 0;
+		}
+		else
+		{
+			//所有秤盘延迟都算作群延迟，大马达延迟则为真正不同秤盘之间的延迟
+			target[i] = distanceWs * gTaskL3bfscContext.comAlgPar.motoMoveOneSlotDur4HeapTogether;
+			if (target[i] < 0) target[i] = 0;
+		}
+	}
+
+	//输出
+	memcpy(delay, target, sizeof(INT32)*totalNbr);
+	return;
+}
+
+
 
 //判定是否所有传感器都进入REPEAT状态
 //TRUE:　所有传感器都进入REPEAT状态

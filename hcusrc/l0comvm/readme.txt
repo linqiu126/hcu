@@ -10,6 +10,11 @@
 
 
 
+//= ZJL, 2018 Apr.18 CURRENT_SW_DELIVERY 318=>BFSC项目
+= 分堆和产出优化算法完成
+= 负值显示，但直接抛弃
+= 任意状态都可以显示重量
+
 //= ZJL, 2018 Apr.17 CURRENT_SW_DELIVERY 317=>BFSC项目
 = FTP的IP地址，由服务器地址强制绑定，而且工作目录也固定为ftp://serverId/hcu_sw_active/，具体设置工作环境是注意！
 

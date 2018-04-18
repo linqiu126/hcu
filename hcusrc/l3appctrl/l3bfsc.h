@@ -8,9 +8,9 @@
 #ifndef L3APP_BFSC_H_
 #define L3APP_BFSC_H_
 
+#include "../l0comvm/sysconfig.h"
 #include "../l1com/l1comdef.h"
 #include "../l0service/timer.h"
-
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -33,17 +33,10 @@ enum FSM_STATE_L3BFSC
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3bfsc[];
 
-//#define HCU_L3BFSC_SW_DOWNLOAD_MAX_TIMES	0X7FFFFFFF
-
-//大量编辑性错误，不得不采用这种方式
-#ifndef HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX
-	#define HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX 16  //下位机总共有16个秤盘
-#endif
-
 typedef struct L3BfscSensorWsInfo
 {
 	UINT8  sensorWsId;
-	UINT32 sensorValue;
+	INT32  sensorValue;
 	UINT32 sensorRepTimes;
 	UINT8  sensorStatus; //无效，空料，有料数值错误，有料待组合，有料待出料
 	UINT8  cfgRcvFlag;   //用来保存CFG_RESP是否收到
@@ -129,13 +122,16 @@ typedef struct gTaskL3bfscContextCombinationAlgorithmParamaters
 	UINT32	TargetCombinationUpperWeight;			//组合目标重量上限
 	UINT32	IsPriorityScaleEnabled;					// 1: Enable, 0: Disable
 	UINT32	IsProximitCombinationMode;				// 1: AboveUpperLimit, 2: BelowLowerLimit, 0: Disable
-	UINT32	CombinationBias;						      //每个Scale要求放几个物品
-	UINT32	IsRemainDetectionEnable;				  //Scale处于LAOD状态超过remainDetectionTimeS, 被认为是Remain状态，提示要将物品拿走: 1:Enable， 0：Disble
-	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
-	UINT32	RemainScaleTreatment;					    // 1: Discharge (提示用户移走），0：Enforce（强制进行组合）
-	UINT32	CombinationSpeedMode;					    // 0：SpeedPriority，1: PrecisePriority
-	UINT32	CombinationAutoMode;					    // 0: Auto, 1: Manual
-	UINT32	MovingAvrageSpeedCount;					  //计算平均速度的时候使用最近多少个组合做统计
+	UINT32	CombinationBias;						//每个Scale要求放几个物品
+	UINT32	IsRemainDetectionEnable;				//Scale处于LAOD状态超过remainDetectionTimeS, 被认为是Remain状态，提示要将物品拿走: 1:Enable， 0：Disble
+	UINT32	RemainDetectionTimeSec;					// RemainDetionTime in Seconds
+	UINT32	RemainScaleTreatment;					// 1: Discharge (提示用户移走），0：Enforce（强制进行组合）
+	UINT32	CombinationSpeedMode;					// 0：SpeedPriority，1: PrecisePriority
+	UINT32	CombinationAutoMode;					// 0: Auto, 1: Manual
+	UINT32	MovingAvrageSpeedCount;					//计算平均速度的时候使用最近多少个组合做统计
+	UINT32  isHeapTogetherEnable;					//分堆是否支持，1: Enable, 0: Disable
+	UINT32  oneWsDelay4HeapTogether;				//一个秤盘延迟的时间， MS为单位
+	UINT32  motoMoveOneSlotDur4HeapTogether;		//一个秤盘距离上，大马达延迟的时间，MS为单位
 }gTaskL3bfscContextCombinationAlgorithmParamaters_t;
 //Proximity
 #define HCU_L3BFSC_COMB_ALG_PAR_PROXIMITY_DISABLE  				0
@@ -147,26 +143,26 @@ typedef struct gTaskL3bfscContextCombinationAlgorithmParamaters
 
 typedef struct gTaskL3bfscContextCalibration
 {
-	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
-	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationZeroAdcValue;	// NOT for GUI
+	UINT32	WeightSensorCalibrationFullAdcValue;	// NOT for GUI
 	UINT32	WeightSensorCalibrationFullWeight;
 }gTaskL3bfscContextCalibration_t;
 typedef struct gTaskL3bfscContextWeightSensorParamaters
 {
 	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
-	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
+	UINT32	WeightSensorLoadThread;					//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
 	UINT32	WeightSensorEmptyThread;
 	UINT32	WeightSensorEmptyDetectionTimeMs;
-	UINT32	WeightSensorPickupThread;						// NOT for GUI
-	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
-	UINT32	StardardReadyTimeMs;								//???
-	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+	UINT32	WeightSensorPickupThread;				// NOT for GUI
+	UINT32	WeightSensorPickupDetectionTimeMs;		// NOT for GUI
+	UINT32	StardardReadyTimeMs;					//???
+	UINT32	MaxAllowedWeight;						//如果发现超过这个最大值，说明Sensor出错
 	UINT32  RemainDetectionTimeSec;
-	UINT32	WeightSensorInitOrNot;							// NOT for GUI
+	UINT32	WeightSensorInitOrNot;					// NOT for GUI
 	UINT32	WeightSensorAdcSampleFreq;
 	UINT32	WeightSensorAdcGain;
-	UINT32	WeightSensorAdcBitwidth;						// NOT for GUI
-	UINT32  WeightSensorAdcValue;								// NOT for GUI
+	UINT32	WeightSensorAdcBitwidth;				// NOT for GUI
+	UINT32  WeightSensorAdcValue;					// NOT for GUI
 	gTaskL3bfscContextCalibration_t  calibration[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32	WeightSensorStaticZeroValue;
 	UINT32	WeightSensorTailorValue;				//皮重，分为每种
@@ -179,12 +175,12 @@ typedef struct gTaskL3bfscContextWeightSensorParamaters
 typedef struct gTaskL3bfscContextMotorControlParamaters
 {
 	UINT32	MotorSpeed;
-	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
-	UINT32	MotorRollingStartMs;						//how long do the motor rolling for start action
-	UINT32	MotorRollingStopMs;							//how long do the motor rolling for stop action
+	UINT32	MotorDirection;							//0: Clockwise; 1: Counter-Clockwise
+	UINT32	MotorRollingStartMs;					//how long do the motor rolling for start action
+	UINT32	MotorRollingStopMs;						//how long do the motor rolling for stop action
 	UINT32	MotorRollingInveralMs;					//If the motor is rolling, how long the motor will stay in still before roll back (stop action).
-	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
-	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
+	UINT32	MotorFailureDetectionVaration;			// % of the MotorSpeed
+	UINT32	MotorFailureDetectionTimeMs;			// within TimeMs, 如果速度都在外面，认为故障
 }gTaskL3bfscContextMotorControlParamaters_t;
 
 //主体上下文
@@ -212,21 +208,21 @@ typedef struct gTaskL3bfscContext
 	UINT8 	wsValueNbrTtt;  			//待出料有值秤盘数量
 	UINT8 	wsValueNbrTgu;  			//待出料有值秤盘数量
 	UINT8 	wsValueNbrActive;		    //激活的秤盘数量
-	UINT8 	wsBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];  //组合出的秤盘标示
-	UINT16												configId;  //用来标识系统工作在哪一套配置参数中
+	UINT8 	wsBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];  	//组合出的秤盘标示
+	UINT16	configId;  					//用来标识系统工作在哪一套配置参数中
 	char    configName[20];
 	//实时统计部分：均以一个统计周期为单位
-	HcuSysMsgIeL3bfscContextStaElement_t cur;  		//当前统计基础颗粒中的数值
-	gTaskL3bfscContextStaEleMid_t  curAge;		//使用老化算法，需要该域存下中间结果，不然每一次计算均采用近似会导致数据失真
+	HcuSysMsgIeL3bfscContextStaElement_t cur;  			//当前统计基础颗粒中的数值
+	gTaskL3bfscContextStaEleMid_t  curAge;				//使用老化算法，需要该域存下中间结果，不然每一次计算均采用近似会导致数据失真
 	//统计报告部分
-	HcuSysMsgIeL3bfscContextStaElement_t staLocalUi;  //滑动平均给本地UI的数据
+	HcuSysMsgIeL3bfscContextStaElement_t staLocalUi;  	//滑动平均给本地UI的数据
 	HcuSysMsgIeL3bfscContextStaElement_t staOneMin;  	//1分钟统计结果
 	HcuSysMsgIeL3bfscContextStaElement_t sta15Min;   	//15分钟统计结果
-	HcuSysMsgIeL3bfscContextStaElement_t sta60Min;	//60分钟统计结果
-	HcuSysMsgIeL3bfscContextStaElement_t sta2H;		//2H统计结果
-	HcuSysMsgIeL3bfscContextStaElement_t sta8H;		//8H统计结果
+	HcuSysMsgIeL3bfscContextStaElement_t sta60Min;		//60分钟统计结果
+	HcuSysMsgIeL3bfscContextStaElement_t sta2H;			//2H统计结果
+	HcuSysMsgIeL3bfscContextStaElement_t sta8H;			//8H统计结果
 	HcuSysMsgIeL3bfscContextStaElement_t sta24H;		//24H统计结果
-	HcuSysMsgIeL3bfscContextStaElement_t staUp2Now;	//连续工作到目前的统计结果
+	HcuSysMsgIeL3bfscContextStaElement_t staUp2Now;		//连续工作到目前的统计结果
 }gTaskL3bfscContext_t;
 
 extern gTaskL3bfscContext_t gTaskL3bfscContext;
@@ -274,6 +270,7 @@ UINT32 func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number(void);
 float  func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight(void);
 UINT8  func_l3bfsc_count_numbers_of_startup_ws_sensors(void);
 UINT8  func_l3bfsc_search_smallest_scale_amongh_bitmap_for_one_shot_output(void);
+void   func_l3bfsc_caculate_ws_delay_for_comb_out(void *delay, UINT8 totalNbr);
 BOOL   func_l3bfsc_judge_whether_all_valid_sensor_enter_repeat_status(void);
 BOOL   func_l3bfsc_print_qr_code(void);
 

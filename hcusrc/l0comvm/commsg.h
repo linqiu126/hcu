@@ -2790,7 +2790,7 @@ typedef struct msg_struct_can_l3bfsc_sys_stop_resp
 typedef struct msg_struct_can_l3bfsc_new_ready_event
 {
 	UINT8  sensorid;
-	UINT32  sensorWsValue;
+	INT32  sensorWsValue;
 	UINT32 length;
 }msg_struct_can_l3bfsc_new_ready_event_t;
 
@@ -2799,7 +2799,8 @@ typedef struct msg_struct_l3bfsc_can_ws_comb_out
 {
 	UINT8  combnbr;
 	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT8  smallest_wmc_id;  //组合出来的最小的ID
+	UINT8  smallest_wmc_id; 								//组合出来的最小的ID，用于分堆
+	INT32  delayInMs[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];		//组合出来的每一个ID所对应的延迟
 	UINT32 length;
 }msg_struct_l3bfsc_can_ws_comb_out_t;
 

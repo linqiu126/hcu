@@ -400,6 +400,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
+#if 0
 	//生成bitmap
 	UINT32 bitmap = 0;
 	UINT32 temp =0;
@@ -418,11 +419,41 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 	pMsgProc.weight_combin_type.WeightCombineType = HUITP_ENDIAN_EXG32(HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT);
 	//临时使用DelayMS域来计算分堆中的延迟
-	pMsgProc.weight_combin_type.ActionDelayMs = HUITP_ENDIAN_EXG8(rcv.smallest_wmc_id);
+	pMsgProc.weight_combin_type.smallest_wmc_id = HUITP_ENDIAN_EXG8(rcv.smallest_wmc_id);
 
 	//发送消息
 	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+#endif
+
+
+	/*
+	 *  2018/4/18 Update by ZHANG Jianlin，分堆功能改进
+	 *  之前采用了一个bitmap全发，包含参数delayInMs之后，无法采用这种方式，必须采用分别发送的形式了，不能采用广播发送方式
+	 *
+	 */
+
+	//准备组装发送消息
+	StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_req_t pMsgProc;
+	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_req_t);
+	memset(&pMsgProc, 0, msgProcLen);
+	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfsc_ws_comb_out_req);
+	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+	pMsgProc.weight_combin_type.WeightCombineType = HUITP_ENDIAN_EXG32(HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT);
+	//临时使用DelayMS域来计算分堆中的延迟
+	pMsgProc.weight_combin_type.smallest_wmc_id = HUITP_ENDIAN_EXG8(rcv.smallest_wmc_id);
+
+	//生成bitmap
+	UINT32 bitmap = 0;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+		if (rcv.sensorBitmap[i] == TRUE){
+			bitmap = ((UINT32)1<<i);
+			pMsgProc.weight_combin_type.ActionDelayMs = HUITP_ENDIAN_EXG32(rcv.delayInMs[i]);
+			//独立发送消息
+			if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+				HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+		}
+	}
 
 	//返回
 	return SUCCESS;
@@ -684,12 +715,29 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	UINT32 comType = 0, wsEvent = 0;
+	INT32  rcvWgt = 0;
 	comType = HUITP_ENDIAN_EXG32(rcv->weight_combin_type.WeightCombineType);
 	wsEvent = HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event);
+	rcvWgt  = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
 
 	//先更新本地数据库表单
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_DATA_VALID, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
-	//HCU_DEBUG_PRINT_FAT("CANITFLEP: NEW WS EVENT, Receiveing NodeId/Weight = [%d/%d]", rcv->weight_ind.average_weight);
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_DATA_VALID, rcvWgt);
+	//HCU_DEBUG_PRINT_FAT("CANITFLEO: NEW WS EVENT, Receiveing NodeId/Weight = [%d/%d]", rcv->weight_ind.average_weight);
+
+	/*
+	 *  2018/4/17 Update by ZHANG Jianlin
+	 *  海量错误重量汇报消息（超重），将导致错误消息过载，该模块重启，从而让系统停止了工作
+	 *  新的工作模式，改为抛弃该汇报事件，而不疯狂报错
+	 *
+	 */
+	//超大或者负值直接抛弃，秤盘状态复位
+	if ((rcvWgt <= 0) || (rcvWgt >= (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)))
+	{
+		HcuErrorPrint("CANITFLEO: Receive message error and just give up this weight event, SensorId = %d, WsWeight=%d!\n", nodeId, rcvWgt);
+		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY;
+		gTaskL3bfscContext.sensorWs[nodeId].sensorValue = 0;
+		return SUCCESS;
+	}
 
 	//先检查汇报事件/EMPTY_LOAD事件
 	if (HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event) == WEIGHT_EVENT_ID_EMPTY){
@@ -698,10 +746,13 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 		gTaskL3bfscContext.sensorWs[nodeId].sensorRepTimes = 0;
 		return SUCCESS;
 	}
-
 	else if (HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event) != WEIGHT_EVENT_ID_LOAD){
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error, receive Weight Event = %d!\n", rcv->weight_ind.weight_event);
 		return FAILURE;
+	}
+	else
+	{
+		//Do Nothing
 	}
 
 	//真的新事件
@@ -733,6 +784,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 			if (hcu_message_send(MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
 				HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		}
+		//如果此时出现超大重量，依然存在全局表中，不影响不处理，等待人工干预
 		else{
 			gTaskL3bfscContext.cur.wsIncMatCnt++;
 			gTaskL3bfscContext.cur.wsIncMatWgt += HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);

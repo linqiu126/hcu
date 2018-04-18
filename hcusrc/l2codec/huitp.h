@@ -50,7 +50,9 @@ typedef void                      VOID;
  * 2017/11/24 V3.2: BFHS消息更新
  * 2017/11/24 V3.3: 合并公共消息, 以及BFDF消息
  * 2017/11/29 V3.4: 增加HUITP-JSON结构
- * 2018/02/20 V3.5: BFDF, ADD CALIBRATION REQ/RESP *
+ * 2018/02/20 V3.5: BFDF, ADD CALIBRATION REQ/RESP 
+ * 2018/4/17  V3.6: BFSC, 增加分堆、校准、称重数量带符号等功能
+ * 
  *
  */
 
@@ -622,9 +624,14 @@ typedef enum
 	HUITP_MSGID_sui_bfsc_fault_ind                   = 0x3B99,
 	HUITP_MSGID_sui_bfsc_err_inq_cmd_req             = 0x3B1A,
 	HUITP_MSGID_sui_bfsc_err_inq_cmd_resp            = 0x3B9A,
+  // MYC: CALIBRATION REQUEST/RESPONSE
+	HUITP_MSGID_sui_bfsc_calibration_req             = 0x3B1B, 
+	HUITP_MSGID_sui_bfsc_calibration_resp            = 0x3B9B, 
+
 	//心跳过程
 	HUITP_MSGID_sui_bfsc_heart_beat_report           = 0x3BA0,
 	HUITP_MSGID_sui_bfsc_heart_beat_confirm          = 0x3B20,
+  
 
 	//HCU-IHU BFDF SUI新增内容
 	//配置过程
@@ -5846,7 +5853,10 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_stop_resp
 typedef struct CombineType
 {
 	UINT32	WeightCombineType;
-	UINT32	ActionDelayMs;
+	UINT8   smallest_wmc_id;
+	UINT8   spare1;
+	UINT16  spare2;
+	INT32	ActionDelayMs;
 }CombineType_t;
 #define HUITP_IEID_SUI_BFSC_COMINETYPE_NULL 			0
 #define HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT 		1
@@ -5858,7 +5868,7 @@ typedef struct CombineType
 typedef struct WeightIndication
 {
 	UINT32 weight_event;		//LOAD, EMPTY, PICKUP(FFS)
-	UINT32 average_weight;		//average value in the detect window  // <--- MUST
+	INT32 average_weight;		//average value in the detect window  // <--- MUST
 	UINT32 repeat_times;		// always = 0 for MSG_ID_L3BFSC_WMC_NEW_WS_EVENT, = n for MSG_ID_L3BFSC_WMC_REPEAT_WS_EVENT
 }WeightIndication_t;
 
@@ -6006,6 +6016,46 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_confirm
 #define HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_INIT 		2
 #define HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_WORKING 	3
 #define HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_INVALID 	0xFF
+
+
+//HUITP_MSGID_sui_bfsc_calibration_req             = 0x3B1B, 
+#define BFSC_SENSOR_CALIBRATION_MODE_ZERO    1
+#define BFSC_SENSOR_CALIBRATION_MODE_FULL    2
+typedef struct StrHuiIe_bfsc_calibration_req //
+{
+    UINT8                    calibration_zero_or_full; /* 1 for ZERO, 2 for FULL */
+    UINT8                    spare1;
+    UINT8                    spare2;
+    UINT8                    spare3;
+    WeightSensorParamaters_t weight_sensor_param;
+}StrHuiIe_bfsc_calibration_req_t;
+
+typedef struct StrMsg_HUITP_MSGID_sui_bfs_calibration_req //
+{
+	UINT16           msgid;
+	UINT16           length;
+	StrHuiIe_bfsc_calibration_req_t cal_req;
+}StrMsg_HUITP_MSGID_sui_bfsc_calibration_req_t;
+
+//HUITP_MSGID_sui_bfsc_calibration_resp            = 0x3B9B,
+typedef struct StrHuiIe_bfsc_calibration_resp //
+{
+    UINT8   calibration_zero_or_full;
+    UINT8   calibration_result;
+    UINT8   spare1;
+    UINT8   spare2;
+    UINT32  adc_value;
+}StrHuiIe_bfsc_calibration_resp_t;
+
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_calibration_resp //
+{
+	  UINT16           msgid;
+	  UINT16           length;
+  	  UINT8            validFlag;  //是否执行成功
+	  UINT8            spare1;
+	  UINT16           errCode;
+	  StrHuiIe_bfsc_calibration_resp_t cal_resp;
+}StrMsg_HUITP_MSGID_sui_bfsc_calibration_resp_t;
 
 //Common head defintion
 typedef struct StrMsg_HUITP_MSGID_sui_common_msg_header
