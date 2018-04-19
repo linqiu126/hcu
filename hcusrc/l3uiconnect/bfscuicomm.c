@@ -397,28 +397,25 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		//依赖文件变化的内容，分类发送控制命令：零值校准命令/满值校准命令
 		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)){
 			sensorid = parseResult.cmdCalibration.sensorid;
-			msg_struct_uicomm_can_test_cmd_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
-			snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
+			msg_struct_uicomm_l3bfsc_calibration_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_calibration_req_t));
+			snd.length = sizeof(msg_struct_uicomm_l3bfsc_calibration_req_t);
 			//check sensor id
 			if(sensorid < 1 || sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: UI input sensorid out of range, [sensorid=%d]! \n", sensorid);
 
-			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO)
-			{
-				snd.cmdid = CMDID_SENSOR_COMMAND_CALIBRATION_ZERO;
-				snd.cmdvalue = 0;
+			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO) {
+				snd.cali_mode = BFSC_SENSOR_CALIBRATION_MODE_ZERO;
+				snd.sensorid = sensorid;
 			}
-			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)
-			{
-				snd.cmdid = CMDID_SENSOR_COMMAND_CALIBRATION_FULL;
-				snd.cmdvalue = gTaskL3bfscContext.wgtSnrPar.calibration[sensorid].WeightSensorCalibrationFullWeight;
+			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL){
+				snd.cali_mode = BFSC_SENSOR_CALIBRATION_MODE_FULL;
+				snd.sensorid = sensorid;
 			}
 
-			snd.wsBitmap[sensorid] = 1;
-			//发送命令给CANITFLEO
-			if (hcu_message_send(MSG_ID_UICOMM_CAN_TEST_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+			//发送命令给L3BFSC
+			if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CALI_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		}
 	}
 

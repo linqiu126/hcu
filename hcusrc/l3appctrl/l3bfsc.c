@@ -52,8 +52,10 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 
 	//Normal working status：等待人工干预-登录触发
 	{MSG_ID_UICOMM_L3BFSC_CFG_REQ,     			FSM_STATE_L3BFSC_ACTIVED,          	fsm_l3bfsc_uicomm_config_req},
+	{MSG_ID_UICOMM_L3BFSC_CALI_REQ,    			FSM_STATE_L3BFSC_ACTIVED,          	fsm_l3bfsc_uicomm_calibration_req},
+	{MSG_ID_CAN_L3BFSC_SYS_CALI_RESP,    		FSM_STATE_L3BFSC_ACTIVED,          	fsm_l3bfsc_canitf_calibration_resp},
 
-	//配置状态：等待所有的下危机配置完成
+	//配置状态：等待所有的下位机配置完成
 	{MSG_ID_CAN_L3BFSC_SYS_CFG_RESP,     		FSM_STATE_L3BFSC_OPR_CFG,          	fsm_l3bfsc_canitf_config_resp},
 	{MSG_ID_UICOMM_L3BFSC_CFG_REQ,     			FSM_STATE_L3BFSC_OPR_CFG,          	fsm_l3bfsc_uicomm_config_req},
 
@@ -485,6 +487,13 @@ OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param
 	}
 
 	//收到正确以及没有齐活的反馈：直接返回
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfsc_canitf_calibration_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
 
 	//返回
 	return SUCCESS;
@@ -1199,6 +1208,32 @@ OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_
 	//设置新状态
 	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_CFG) == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
+	}
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfsc_uicomm_calibration_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	UINT8 state = 0;
+	int ret=0;
+
+	msg_struct_uicomm_l3bfsc_calibration_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_uicomm_l3bfsc_calibration_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_uicomm_l3bfsc_calibration_req_t))){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
+	}
+	memcpy(&rcv, param_ptr, param_len);
+	msg_struct_l3bfsc_can_sys_cali_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_sys_cali_req_t));
+	snd.length = sizeof(msg_struct_l3bfsc_can_sys_cali_req_t);
+	snd.sensorid = rcv.sensorid;
+
+	//发送消息
+	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_SYS_CALI_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
+	if (ret == FAILURE){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 	}
 
 	//返回
