@@ -285,6 +285,13 @@ OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		}
 	}
 
+	//校准命令：一次性工作
+	else if ((rcv.timeId == TIMER_ID_1S_L3BFSC_SYS_CALI_WAIT_FB) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		if (func_l3bfsc_time_out_sys_cali_req_process() == FAILURE){
+			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error process time out message!\n");
+		}
+	}
+
 	//启动命令：一次性工作
 	else if ((rcv.timeId == TIMER_ID_1S_L3BFSC_SYS_START_WAIT_FB) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		if (func_l3bfsc_time_out_sys_start_req_process() == FAILURE){
@@ -431,7 +438,7 @@ OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
 	}
 	if ((rcv.sensorid < 0) || (rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX))
-			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive sensorid outof range, sensorid = %d!\n", rcv.sensorid);
 	memcpy(&rcv, param_ptr, param_len);
 
 	//先改本传感器的状态
@@ -494,6 +501,36 @@ OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param
 
 OPSTAT fsm_l3bfsc_canitf_calibration_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret=0;
+	msg_struct_can_l3bfsc_sys_cali_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_can_l3bfsc_sys_cali_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfsc_sys_cali_resp_t))){
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
+	}
+	if ((rcv.sensorid < 0) || (rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX))
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive sensorid outof range, sensorid = %d!\n", rcv.sensorid);
+	memcpy(&rcv, param_ptr, param_len);
+
+	//发送反馈给UICOMM
+	msg_struct_l3bfsc_uicomm_calibration_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_calibration_resp_t));
+	snd.validFlag = rcv.validFlag;
+	snd.errCode = rcv.errCode;
+	snd.sensorid = rcv.sensorid;
+	snd.cali_mode = rcv.cali_ressp.calibration_zero_or_full;
+	snd.cali_result = rcv.cali_ressp.calibration_result;
+	snd.adcValue = rcv.cali_ressp.adc_value;
+	snd.length = sizeof(msg_struct_l3bfsc_uicomm_calibration_resp_t);
+	ret = hcu_message_send(MSG_ID_L3BFSC_UICOMM_CALI_RESP, TASK_ID_BFSCUICOMM, TASK_ID_L3BFSC, &snd, snd.length);
+	if (ret == FAILURE){
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
+	}
+
+	//停止定时器
+	ret = hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_SYS_CALI_WAIT_FB, TIMER_RESOLUTION_1S);
+	if (ret == FAILURE){
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error stop timer!\n");
+	}
 
 	//返回
 	return SUCCESS;
@@ -508,7 +545,7 @@ OPSTAT fsm_l3bfsc_canitf_sys_start_resp(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
 	}
 	if ((rcv.sensorid < 0) || (rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX))
-			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive sensorid outof range, sensorid = %d!\n", rcv.sensorid);
 	memcpy(&rcv, param_ptr, param_len);
 
 	//先改本传感器的状态
@@ -590,7 +627,7 @@ OPSTAT fsm_l3bfsc_canitf_sys_stop_resp(UINT32 dest_id, UINT32 src_id, void * par
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
 	}
 	if ((rcv.sensorid < 0) || (rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX))
-			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive sensorid outof range, sensorid = %d!\n", rcv.sensorid);
 	memcpy(&rcv, param_ptr, param_len);
 
 	//先改本传感器的状态
@@ -1216,7 +1253,6 @@ OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_
 
 OPSTAT fsm_l3bfsc_uicomm_calibration_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	UINT8 state = 0;
 	int ret=0;
 
 	msg_struct_uicomm_l3bfsc_calibration_req_t rcv;
@@ -1229,11 +1265,19 @@ OPSTAT fsm_l3bfsc_uicomm_calibration_req(UINT32 dest_id, UINT32 src_id, void * p
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_sys_cali_req_t));
 	snd.length = sizeof(msg_struct_l3bfsc_can_sys_cali_req_t);
 	snd.sensorid = rcv.sensorid;
+	snd.cali_mode = rcv.cali_mode;  //零值校准 or 满值校准
 
 	//发送消息
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_SYS_CALI_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+	}
+
+	//启动定时器
+	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_SYS_CALI_WAIT_FB, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFSC_SYS_CALI_WAIT_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	if (ret == FAILURE){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start timer [TIMER_ID_1S_L3BFSC_SYS_CALI_WAIT_FB]!\n");
 	}
 
 	//返回
@@ -1885,6 +1929,29 @@ OPSTAT func_l3bfsc_time_out_sys_cfg_req_process(void)
 		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO) == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 		}
+	}
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT func_l3bfsc_time_out_sys_cali_req_process(void)
+{
+	int ret = 0;
+
+	//发送反馈给UICOMM
+	msg_struct_l3bfsc_uicomm_calibration_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_calibration_resp_t));
+	snd.validFlag = FALSE;
+	snd.errCode = HCU_SYSMSG_BFSC_ERR_CODE_TIME_OUT;
+	snd.length = sizeof(msg_struct_l3bfsc_uicomm_calibration_resp_t);
+	ret = hcu_message_send(MSG_ID_L3BFSC_UICOMM_CALI_RESP, TASK_ID_BFSCUICOMM, TASK_ID_L3BFSC, &snd, snd.length);
+	if (ret == FAILURE){
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
+	}
+	//设置状态机
+	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED) == FAILURE){
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 	}
 
 	//返回

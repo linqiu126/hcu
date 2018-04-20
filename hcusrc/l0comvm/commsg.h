@@ -2762,17 +2762,27 @@ typedef struct msg_struct_can_l3bfsc_sys_cfg_resp
 typedef struct msg_struct_l3bfsc_can_sys_cali_req
 {
 	UINT8  sensorid;
+	UINT8  cali_mode;
 	UINT32 length;
 }msg_struct_l3bfsc_can_sys_cali_req_t;
 
-//MSG_ID_L3BFSC_CAN_SYS_CALI_RESP
-typedef struct msg_struct_l3bfsc_can_sys_cali_resp
+//MSG_ID_CAN_L3BFSC_SYS_CALI_RESP
+typedef struct strMsgIe_bfsc_calibration_resp
+{
+    UINT8   calibration_zero_or_full;
+    UINT8   calibration_result;
+    UINT8   spare1;
+    UINT8   spare2;
+    UINT32  adc_value;
+}strMsgIe_bfsc_calibration_resp_t;
+typedef struct msg_struct_can_l3bfsc_sys_cali_resp
 {
 	UINT8  sensorid;
 	UINT8  validFlag;  //是否执行成功
 	UINT16 errCode;
+	strMsgIe_bfsc_calibration_resp_t cali_ressp;
 	UINT32 length;
-}msg_struct_l3bfsc_can_sys_cali_resp_t;
+}msg_struct_can_l3bfsc_sys_cali_resp_t;
 
 //MSG_ID_L3BFSC_CAN_SYS_START_REQ,
 typedef struct msg_struct_l3bfsc_can_sys_start_req
@@ -2939,9 +2949,12 @@ typedef struct msg_struct_uicomm_l3bfsc_calibration_req
 //MSG_ID_L3BFSC_UICOMM_CALI_RESP,  		//配置结果
 typedef struct msg_struct_l3bfsc_uicomm_calibration_resp
 {
+	UINT8	cali_mode;
+	UINT8	cali_result;
 	UINT8	sensorid;
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
+	UINT32  adcValue;
 	UINT32 	length;
 }msg_struct_l3bfsc_uicomm_calibration_resp_t;
 

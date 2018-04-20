@@ -51,7 +51,7 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 
     //Normal task status：BFSC
 	{MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_sys_cfg_req},  	//初始化配置
-	{MSG_ID_L3BFSC_CAN_SYS_CALI_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_sys_cali_req},  	//初始化配置
+	{MSG_ID_L3BFSC_CAN_SYS_CALI_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_sys_cali_req},  	//校准请求
 	{MSG_ID_L3BFSC_CAN_SYS_START_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_can_sys_start_req},   	//人工命令
 	{MSG_ID_L3BFSC_CAN_SYS_STOP_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_can_sys_stop_req},   		//人工命令
 	{MSG_ID_UICOMM_CAN_TEST_CMD_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_can_test_cmd_req},   		//测试性命令
@@ -295,6 +295,7 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cali_req(UINT32 dest_id, UINT32 src_id, void * p
 	memset(&pMsgProc, 0, msgProcLen);
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfsc_calibration_req);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+	pMsgProc.cal_req.calibration_zero_or_full = rcv.cali_mode;
 	pMsgProc.cal_req.weight_sensor_param.WeightSensorLoadDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs);
 	pMsgProc.cal_req.weight_sensor_param.WeightSensorLoadThread = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadThread);
 	pMsgProc.cal_req.weight_sensor_param.WeightSensorEmptyThread = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorEmptyThread);
@@ -714,6 +715,26 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(StrMsg_HU
 		//更新状态
 		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_START_REQ;
 	}
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfsc_calibration_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfsc_calibration_resp_t *rcv, UINT8 nodeId)
+{
+	msg_struct_can_l3bfsc_sys_cali_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_cali_resp_t));
+	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.cali_ressp.adc_value = HUITP_ENDIAN_EXG32(rcv->cal_resp.adc_value);
+	snd.cali_ressp.calibration_result = HUITP_ENDIAN_EXG8(rcv->cal_resp.calibration_result);
+	snd.cali_ressp.calibration_zero_or_full = HUITP_ENDIAN_EXG8(rcv->cal_resp.calibration_zero_or_full);
+	snd.cali_ressp.spare1 = HUITP_ENDIAN_EXG8(rcv->cal_resp.spare1);
+	snd.cali_ressp.spare2 = HUITP_ENDIAN_EXG8(rcv->cal_resp.spare2);
+	snd.sensorid = nodeId;
+	snd.length = sizeof(msg_struct_can_l3bfsc_sys_cali_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFSC_SYS_CALI_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 
 	//返回
 	return SUCCESS;
@@ -1197,7 +1218,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	//按照消息类型进行分类处理
 	switch(msgId){
-	//BFSC消息
+	//BFSC Startup指示消息
 	case HUITP_MSGID_sui_bfsc_startup_ind:
 	{
 		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_startup_ind \n");
@@ -1209,7 +1230,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	}
 	break;
 
-	//BFSC消息
+	//BFSC config消息
 	case HUITP_MSGID_sui_bfsc_set_config_resp:
 	{
 		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_set_config_resp \n");
@@ -1218,6 +1239,18 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	//BFSC 校准消息
+	case HUITP_MSGID_sui_bfsc_calibration_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_calibration_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_calibration_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_calibration_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_calibration_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_calibration_resp_received_handle(snd, rcv.nodeId);
 	}
 	break;
 

@@ -45,8 +45,9 @@ HcuFsmStateItem_t HcuFsmBfscuicomm[] =
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_BFSCUICOMM_ACTIVED,            	fsm_com_do_nothing},
     {MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND,	FSM_STATE_BFSCUICOMM_ACTIVED,            	fsm_bfscuicomm_scan_jason_callback},
 	{MSG_ID_L3BFSC_UICOMM_CFG_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cfg_resp},	//配置反馈
-	{MSG_ID_L3BFSC_UICOMM_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cmd_resp},	//人工控制反馈
-	{MSG_ID_CAN_UICOMM_TEST_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_can_test_cmd_resp},  //测试命令反馈
+	{MSG_ID_L3BFSC_UICOMM_CALI_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cali_resp},   //校准命令反馈
+	{MSG_ID_L3BFSC_UICOMM_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_ctrl_cmd_resp},	//界面控制命令反馈
+	{MSG_ID_CAN_UICOMM_TEST_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_test_cmd_resp},   //测试命令反馈
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -204,7 +205,7 @@ OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	return SUCCESS;
 }
 
-//配置反馈
+//配置命令反馈
 OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
@@ -241,8 +242,51 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 	return SUCCESS;
 }
 
+//校准命令反馈
+OPSTAT fsm_bfscuicomm_l3bfsc_cali_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int ret=0;
+	UINT8  	sensorid = 0;
+
+	msg_struct_l3bfsc_uicomm_calibration_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_uicomm_calibration_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_uicomm_calibration_resp_t)))
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	if (rcv.cali_mode == BFSC_SENSOR_CALIBRATION_MODE_ZERO){
+		sensorid = rcv.sensorid;
+		if(sensorid < 1 || sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)
+			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: calibration_resp's sensorid out of range, [sensorid=%d]! \n", sensorid);
+		//如果返回结果有效，将ADC值显示到界面；否则显示ErrorCode
+		if (rcv.validFlag == TRUE)
+			ret = dbi_HcuBfsc_CalibrationDataUpdate_adczero(rcv.adcValue, sensorid);
+		else
+			ret = dbi_HcuBfsc_CalibrationDataUpdate_adczero(rcv.errCode, sensorid);
+		if (ret == FAILURE) HCU_ERROR_PRINT_BFSCUICOMM("TASK_ID_BFSCUICOMM: Save calibration data into DB error!\n");
+	}
+	else if (rcv.cali_mode == BFSC_SENSOR_CALIBRATION_MODE_FULL){
+		sensorid = rcv.sensorid;
+		if(sensorid < 1 || sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)
+			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: fsm_bfscuicomm_can_test_cmd_resp's sensorid out of range, [sensorid=%d]! \n", sensorid);
+		//如果返回结果有效，将ADC值显示到界面；否则显示ErrorCode
+		if (rcv.validFlag == TRUE)
+			ret = dbi_HcuBfsc_CalibrationDataUpdate_adcfull(rcv.adcValue, sensorid);
+		else
+			ret = dbi_HcuBfsc_CalibrationDataUpdate_adcfull(rcv.errCode, sensorid);
+
+		if (ret == FAILURE) HCU_ERROR_PRINT_BFSCUICOMM("TASK_ID_BFSCUICOMM: Save calibration data into DB error!\n");
+	}
+	else{
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message parameter error!\n");
+	}
+
+	//返回
+	return SUCCESS;
+}
+
 //启动停止反馈
-OPSTAT fsm_bfscuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfscuicomm_l3bfsc_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
 	UINT8	validFlag = 0;
@@ -286,7 +330,7 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 }
 
 //一般性测试命令的反馈
-OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfscuicomm_l3bfsc_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
 	UINT32  adcvalue = 0;

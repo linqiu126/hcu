@@ -277,6 +277,7 @@ BOOL   func_l3bfsc_judge_whether_all_valid_sensor_enter_repeat_status(void);
 BOOL   func_l3bfsc_print_qr_code(void);
 
 OPSTAT func_l3bfsc_time_out_sys_cfg_req_process(void);
+OPSTAT func_l3bfsc_time_out_sys_cali_req_process(void);
 OPSTAT func_l3bfsc_time_out_sys_start_req_process(void);
 OPSTAT func_l3bfsc_time_out_sys_stop_req_process(void);
 OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void);
