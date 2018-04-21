@@ -63,7 +63,7 @@ typedef void                      VOID;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #define HUITP_USE_IN_HCU	1
 #define HUITP_USE_IN_IHU	2
-#define HUITP_USE_SET		HUITP_USE_IN_HCU
+#define HUITP_USE_SET		HUITP_USE_IN_IHU
 
 /*
  *
@@ -5856,7 +5856,8 @@ typedef struct CombineType
 	UINT8   smallest_wmc_id;
 	UINT8   spare1;
 	UINT16  spare2;
-	INT32	ActionDelayMs;
+	INT32	  ActionDelayMs;
+  INT32   ActionArmOpenDurMs;
 }CombineType_t;
 #define HUITP_IEID_SUI_BFSC_COMINETYPE_NULL 			0
 #define HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT 		1
@@ -6021,9 +6022,10 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_confirm
 //HUITP_MSGID_sui_bfsc_calibration_req             = 0x3B1B, 
 #define BFSC_SENSOR_CALIBRATION_MODE_ZERO    1
 #define BFSC_SENSOR_CALIBRATION_MODE_FULL    2
+#define BFSC_SENSOR_CALIBRATION_MODE_READ    3
 typedef struct StrHuiIe_bfsc_calibration_req //
 {
-    UINT8                    calibration_zero_or_full; /* 1 for ZERO, 2 for FULL */
+    UINT8                    calibration_cmdvalue; /* 1 for ZERO, 2 for FULL */
     UINT8                    spare1;
     UINT8                    spare2;
     UINT8                    spare3;
@@ -6040,18 +6042,18 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfs_calibration_req //
 //HUITP_MSGID_sui_bfsc_calibration_resp            = 0x3B9B,
 typedef struct StrHuiIe_bfsc_calibration_resp //
 {
-    UINT8   calibration_zero_or_full;
+    UINT8   calibration_cmdvalue;
     UINT8   calibration_result;
     UINT8   spare1;
     UINT8   spare2;
-    UINT32  adc_value;
+    WeightSensorParamaters_t weight_sensor_param;
 }StrHuiIe_bfsc_calibration_resp_t;
 
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_calibration_resp //
 {
 	  UINT16           msgid;
 	  UINT16           length;
-  	  UINT8            validFlag;  //是否执行成功
+  	UINT8            validFlag;  //是否执行成功
 	  UINT8            spare1;
 	  UINT16           errCode;
 	  StrHuiIe_bfsc_calibration_resp_t cal_resp;

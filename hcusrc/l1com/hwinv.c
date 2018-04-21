@@ -350,9 +350,9 @@ void func_hwinv_copy_right(void)
 	HCU_DEBUG_PRINT_FAT("********************************************************************\n"); /* prints !!!Hello World!!! */
 	HCU_DEBUG_PRINT_FAT("********************************************************************\n"); /* prints !!!Hello World!!! */
 	HCU_DEBUG_PRINT_FAT("**                                                                **\n"); /* prints !!!Hello World!!! */
-	HCU_DEBUG_PRINT_FAT("**              Home and Car Unisystem (HCU)                      **\n"); /* prints !!!Hello World!!! */
-	HCU_DEBUG_PRINT_FAT("**            Octopus Wireless Communications Co. Ltd.            **\n"); /* prints !!!Hello World!!! */
-	HCU_DEBUG_PRINT_FAT("**                          Version 1.0                           **\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("**                Home and Car Unisystem (HCU)                    **\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("**      Shanghai Xiaohui Intelligence Technology Co., Ltd.        **\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("**                        Version 1.0                             **\n"); /* prints !!!Hello World!!! */
 	HCU_DEBUG_PRINT_FAT("**                                                                **\n"); /* prints !!!Hello World!!! */
 	HCU_DEBUG_PRINT_FAT("********************************************************************\n"); /* prints !!!Hello World!!! */
 	HCU_DEBUG_PRINT_FAT("********************************************************************\n"); /* prints !!!Hello World!!! */

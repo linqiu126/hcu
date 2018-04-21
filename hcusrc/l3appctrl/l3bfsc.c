@@ -502,6 +502,9 @@ OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param
 OPSTAT fsm_l3bfsc_canitf_calibration_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
+	//停止定时器
+	hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_SYS_CALI_WAIT_FB, TIMER_RESOLUTION_1S);
+
 	msg_struct_can_l3bfsc_sys_cali_resp_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_can_l3bfsc_sys_cali_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfsc_sys_cali_resp_t))){
@@ -517,19 +520,26 @@ OPSTAT fsm_l3bfsc_canitf_calibration_resp(UINT32 dest_id, UINT32 src_id, void * 
 	snd.validFlag = rcv.validFlag;
 	snd.errCode = rcv.errCode;
 	snd.sensorid = rcv.sensorid;
-	snd.cali_mode = rcv.cali_ressp.calibration_zero_or_full;
-	snd.cali_result = rcv.cali_ressp.calibration_result;
-	snd.adcValue = rcv.cali_ressp.adc_value;
+	snd.cali_mode = rcv.cali_resp.calibration_cmdvalue;
+	snd.cali_result = rcv.cali_resp.calibration_result;
+	if (rcv.cali_resp.calibration_cmdvalue == BFSC_SENSOR_CALIBRATION_MODE_ZERO){
+		snd.adcValue = rcv.cali_resp.wgtSnrPar.WeightSensorCalibrationZeroAdcValue;
+	}
+	else if (rcv.cali_resp.calibration_cmdvalue == BFSC_SENSOR_CALIBRATION_MODE_FULL){
+		snd.adcValue = rcv.cali_resp.wgtSnrPar.WeightSensorCalibrationFullAdcValue;
+	}
+	else if (rcv.cali_resp.calibration_cmdvalue == BFSC_SENSOR_CALIBRATION_MODE_READ){  //暂时读取校准参数命令不处理
+		//返回啥也不干
+		return SUCCESS;
+	}
+	else{
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: calibration cmdvalue error!\n");
+	}
+
 	snd.length = sizeof(msg_struct_l3bfsc_uicomm_calibration_resp_t);
 	ret = hcu_message_send(MSG_ID_L3BFSC_UICOMM_CALI_RESP, TASK_ID_BFSCUICOMM, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
-	}
-
-	//停止定时器
-	ret = hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_SYS_CALI_WAIT_FB, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error stop timer!\n");
 	}
 
 	//返回
