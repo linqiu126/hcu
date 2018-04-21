@@ -130,9 +130,9 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	HCU_DEBUG_PRINT_INF("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: fileStream=%x, zHcuCmdflagJsonFile = %d\n", fileStream, zHcuCmdflagJsonFile);
 
-	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_BFSCUICOMM, TIMER_ID_1S_BFSCUICOMM_PERIOD_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_BFSCUICOMM_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	//启动周期性定时器,暂时没有周期要干的活，不启动
+	//ret = hcu_timer_start(TASK_ID_BFSCUICOMM, TIMER_ID_1S_BFSCUICOMM_PERIOD_READ, \
+	//		zHcuSysEngPar.timer.array[TIMER_ID_1S_BFSCUICOMM_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_BFSCUICOMM, FSM_STATE_BFSCUICOMM_ACTIVED) == FAILURE){
@@ -532,8 +532,7 @@ OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 //	}
 //	else if (state == FSM_STATE_L3BFSC_OPR_GO) {
 //		msg_struct_uicomm_l3bfsc_cmd_req_t snd_start_req;
-//		memset(&snd_start_req, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t))				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: UI input sensorid out of range, [sensorid=%d]! \n", sensorid);
-	return FAILURE;;
+//		memset(&snd_start_req, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t))
 //		snd_start_req.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
 //		snd_start_req.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
 //		if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd_start_req, snd_start_req.length) == FAILURE)

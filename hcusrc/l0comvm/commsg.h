@@ -2767,20 +2767,48 @@ typedef struct msg_struct_l3bfsc_can_sys_cali_req
 }msg_struct_l3bfsc_can_sys_cali_req_t;
 
 //MSG_ID_CAN_L3BFSC_SYS_CALI_RESP
+typedef struct strMsgIe_bfsc_wgtSnrParamaters
+{
+	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
+	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
+	UINT32	WeightSensorEmptyThread;
+	UINT32	WeightSensorEmptyDetectionTimeMs;
+	UINT32	WeightSensorPickupThread;						// NOT for GUI
+	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
+	UINT32	StardardReadyTimeMs;								//???
+	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+
+	UINT32	WeightSensorInitOrNot;							// NOT for GUI
+	UINT32	WeightSensorAdcSampleFreq;
+	UINT32	WeightSensorAdcGain;
+	UINT32	WeightSensorAdcBitwidth;						// NOT for GUI
+	UINT32  WeightSensorAdcValue;								// NOT for GUI
+	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullWeight;
+	UINT32	WeightSensorStaticZeroValue;
+	UINT32	WeightSensorTailorValue;
+	UINT32	WeightSensorDynamicZeroThreadValue;
+	UINT32	WeightSensorDynamicZeroHysteresisMs;
+	UINT32  WeightSensorFilterCoeff[4];				// NOT for GUI
+	UINT32  WeightSensorOutputValue[4];				// NOT for GUI
+}strMsgIe_bfsc_wgtSnrParamaters_t;
+
 typedef struct strMsgIe_bfsc_calibration_resp
 {
-    UINT8   calibration_zero_or_full;
+    UINT8   calibration_cmdvalue;
     UINT8   calibration_result;
     UINT8   spare1;
     UINT8   spare2;
-    UINT32  adc_value;
+    strMsgIe_bfsc_wgtSnrParamaters_t wgtSnrPar;
 }strMsgIe_bfsc_calibration_resp_t;
 typedef struct msg_struct_can_l3bfsc_sys_cali_resp
 {
 	UINT8  sensorid;
 	UINT8  validFlag;  //是否执行成功
 	UINT16 errCode;
-	strMsgIe_bfsc_calibration_resp_t cali_ressp;
+	strMsgIe_bfsc_calibration_resp_t cali_resp;
 	UINT32 length;
 }msg_struct_can_l3bfsc_sys_cali_resp_t;
 
