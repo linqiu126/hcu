@@ -27,6 +27,14 @@ HcuFsmStateItem_t HcuFsmSvrcon[] =
     {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_svrcon_init},
     {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_svrcon_restart},
 
+	//COM State
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            			fsm_svrcon_restart},
+	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_svrcon_init_time_out},
+
 	//Task level processing
 	{MSG_ID_COM_INIT,       	FSM_STATE_SVRCON_INITED,            	fsm_svrcon_init},
     {MSG_ID_COM_RESTART,       	FSM_STATE_SVRCON_INITED,            	fsm_svrcon_restart},
@@ -291,6 +299,13 @@ OPSTAT fsm_svrcon_init_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 		//不用考虑STOP TIMER，底层TIMER任务在发出TIME_OUT时已经自动停止了该定时器，除非定时器错误，比如类型设置为PERIOD才会不断重报
 		//考虑如何恢复吧，倒不是急着返回，这里先这么凑合着，未来再考虑完善的方案
 		//先使用无限重复INIT所有任务的方式吧，给自己再发送一个INIT消息
+
+		/*
+		 *  2018/4/21 Update by ZHANG Jianlin
+		 *  Under special case, SVRCON not receive all INIT_FB message, then it will sustain in WAIT_FB state for ever.
+		 *  To enable whole system working continuous, suppress this design mechanism and just begin to work.
+		 *
+		 */
 #if 0
 		ret = FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_INIT_FB_FAILURE);
 		if (ret == FAILURE){
