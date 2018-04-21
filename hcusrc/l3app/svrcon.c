@@ -288,10 +288,10 @@ OPSTAT fsm_svrcon_init_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 				HcuDebugPrint("SVRCON:Task info: PNP[%d],  Task init info: State[%d] and Active[%d] of Task[%s]!\n",zHcuVmCtrTab.task[i].pnpState, zHcuSvrConTaskInitInfo[i].active,zHcuSvrConTaskInitInfo[i].state,zHcuVmCtrTab.task[i].taskName);
 			}
 		}
-
 		//不用考虑STOP TIMER，底层TIMER任务在发出TIME_OUT时已经自动停止了该定时器，除非定时器错误，比如类型设置为PERIOD才会不断重报
 		//考虑如何恢复吧，倒不是急着返回，这里先这么凑合着，未来再考虑完善的方案
 		//先使用无限重复INIT所有任务的方式吧，给自己再发送一个INIT消息
+#if 0
 		ret = FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_INIT_FB_FAILURE);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON]++;
@@ -309,11 +309,15 @@ OPSTAT fsm_svrcon_init_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 			HcuDebugPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SVRCON].taskName, zHcuVmCtrTab.task[TASK_ID_SVRCON].taskName);
 			return FAILURE;
 		}
-	}else{
+#endif
+	}
+	else{
 		HcuErrorPrint("SVRCON: Error! TIME-OUT message received with wrong timerId or timeResolution!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON]++;
 		return FAILURE;
 	}
+
+	FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_ACTIVED);
 
 	return SUCCESS;
 }
