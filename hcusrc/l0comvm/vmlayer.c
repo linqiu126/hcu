@@ -1383,6 +1383,13 @@ OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 			HCU_ERROR_PRINT_TASK(dest_id, "%s: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[dest_id].taskName, zHcuVmCtrTab.task[dest_id].taskName, zHcuVmCtrTab.task[dest_id].taskName);
 	}
 
+	/*
+	 *  2018/4/21 Update by ZHANG Jianlin
+	 *  Suppress HEART-BEAT send back to HCU_MAIN
+	 */
+	if (src_id == TASK_ID_HCUMAIN)
+		return SUCCESS;
+
 	//发送消息
 	if ((src_id > TASK_ID_MIN) && (src_id < TASK_ID_MAX) && (dest_id > TASK_ID_MIN) && (dest_id < TASK_ID_MAX) ){
 		//发送心跳回复消息给src_id
@@ -2692,6 +2699,11 @@ UINT16 hcu_vm_search_timer_static_cfg_table_of_row(int timerid)
 		if(zHcuSysEngTimerStaticCfg[i].timerId == timerid)
 			return i;
 		i++;
+	}
+
+	if (i == TIMER_ID_MAX){
+		HcuErrorPrint("HCUVM: Error init timer system!\n");
+		exit(1);
 	}
 	return i; //退出来的肯定是TIMER_ID_MAX行
 }

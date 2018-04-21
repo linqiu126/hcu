@@ -306,15 +306,8 @@ OPSTAT fsm_svrcon_init_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 		 *  To enable whole system working continuous, suppress this design mechanism and just begin to work.
 		 *
 		 */
-#if 0
-		ret = FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_INIT_FB_FAILURE);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON]++;
-			HcuErrorPrint("SVRCON: Error set FSM state!\n");
-			return FAILURE;
-		}
-		//hcu_sleep(rand(10));
-		hcu_sleep(10);
+		FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_INIT_FB_FAILURE);
+		hcu_sleep(2);
 		msg_struct_com_init_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_init_t));
 		snd.length = sizeof(msg_struct_com_init_t);
@@ -324,15 +317,15 @@ OPSTAT fsm_svrcon_init_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 			HcuDebugPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SVRCON].taskName, zHcuVmCtrTab.task[TASK_ID_SVRCON].taskName);
 			return FAILURE;
 		}
-#endif
 	}
 	else{
-		HcuErrorPrint("SVRCON: Error! TIME-OUT message received with wrong timerId or timeResolution!\n");
+		HcuErrorPrint("SVRCON: Error! TIME-OUT message received with wrong timerId or timeResolution!, TimerId = %d, TimeName=[%s]\n", \
+				rcv.timeId, zHcuSysEngTimerStaticCfg[rcv.timeId].timerName);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON]++;
 		return FAILURE;
 	}
 
-	FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_ACTIVED);
+	//FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_ACTIVED);
 
 	return SUCCESS;
 }
