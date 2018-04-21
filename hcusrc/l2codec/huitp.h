@@ -6032,7 +6032,7 @@ typedef struct StrHuiIe_bfsc_calibration_req //
     WeightSensorParamaters_t weight_sensor_param;
 }StrHuiIe_bfsc_calibration_req_t;
 
-typedef struct StrMsg_HUITP_MSGID_sui_bfs_calibration_req //
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_calibration_req //
 {
 	UINT16           msgid;
 	UINT16           length;
@@ -6053,7 +6053,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_calibration_resp //
 {
 	  UINT16           msgid;
 	  UINT16           length;
-  	UINT8            validFlag;  //是否执行成功
+  	  UINT8            validFlag;  //是否执行成功
 	  UINT8            spare1;
 	  UINT16           errCode;
 	  StrHuiIe_bfsc_calibration_resp_t cal_resp;
