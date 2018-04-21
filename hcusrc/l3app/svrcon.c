@@ -28,7 +28,7 @@ HcuFsmStateItem_t HcuFsmSvrcon[] =
     {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_svrcon_restart},
 
 	//COM State
-    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_svrcon_init_feed_back},
 	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
 	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          				fsm_com_do_nothing},
 	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          				fsm_com_do_nothing},
@@ -88,7 +88,7 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//Checking source of INIT message, only accept INIT from HCUMAIN.
 	//In future, maybe accept more cases, but right now this is the only allowable situation.
-	if (src_id != TASK_ID_HCUMAIN && src_id != TASK_ID_HWINV){
+	if (src_id != TASK_ID_HCUMAIN && src_id != TASK_ID_HWINV && src_id != TASK_ID_SVRCON){
 		HcuErrorPrint("SVRCON: Error Init message get from task_id [%s]!\n", zHcuVmCtrTab.task[src_id].taskName);
 		return FAILURE;
 	}
@@ -111,12 +111,7 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON] = 0;
 
 	//收到初始化消息后，进入初始化状态
-	ret = FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_INITED);
-	if (ret == FAILURE){
-		HcuErrorPrint("SVRCON: Error Set FSM State at fsm_svrcon_init\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON]++;
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_INITED);
 	HcuDebugPrint("SVRCON: Staring to init all task by distribute MSG_ID_COM_INIT message!\n");
 
 	//发送初始化消息给所有活着的任务，以便让所有任务可控， wait for other task init accomplish
@@ -151,20 +146,10 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//采用静态表格控制Timer，避免了泄露的可能性
 	//为了规避这种潜在过于动态的问题，所有TIMER_ID设计成静态配置固定对应式，新TIMER_ID必须通过timer.h中的人工定义才能使用
 	//Start timer directly
-	ret = hcu_timer_start(TASK_ID_SVRCON, TIMER_ID_1S_SVRCON_INIT_FB, SVRCON_TIMER_DURATION_INIT_FB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON]++;
-		HcuErrorPrint("SVRCON: Error start timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_SVRCON, TIMER_ID_1S_SVRCON_INIT_FB, zHcuSysEngPar.timer.array[TIMER_ID_1S_SVRCON_INIT_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 
 	//进入等待反馈状态
-	ret = FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_WAIT_FOR_FB);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON]++;
-		HcuErrorPrint("SVRCON: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_WAIT_FOR_FB);
 	HCU_DEBUG_PRINT_FAT("SVRCON: Enter FSM_STATE_SVRCON_WAIT_FOR_FB status, everything goes well!\n");
 
 	return SUCCESS;
@@ -172,7 +157,7 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	//int ret=0;
 
 	//检查src_id是否合法
 	if ((dest_id < TASK_ID_MIN) || (dest_id > TASK_ID_MAX)){
@@ -231,22 +216,10 @@ OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 		}//if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE)
 
-		ret = hcu_timer_stop(TASK_ID_SVRCON, TIMER_ID_1S_SVRCON_INIT_FB, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON]++;
-			HcuErrorPrint("SVRCON: Error stop timer!\n");
-			return FAILURE;
-		}
-		ret = FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_ACTIVED);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON]++;
-			HcuErrorPrint("SVRCON: Error stop timer!\n");
-			return FAILURE;
-		}
+		hcu_timer_stop(TASK_ID_SVRCON, TIMER_ID_1S_SVRCON_INIT_FB, TIMER_RESOLUTION_1S);
+		FsmSetState(TASK_ID_SVRCON, FSM_STATE_SVRCON_ACTIVED);
 		//Enter active status, keep working
-		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-			HcuDebugPrint("SVRCON: Enter FSM_STATE_SVRCON_ACTIVED status, Getting to SLEEP mode for a while!\n");
-		}
+		HCU_DEBUG_PRINT_FAT("SVRCON: Enter FSM_STATE_SVRCON_ACTIVED status, Getting to SLEEP mode for a while!\n");
 	}//if (func_svrcon_init_caculate_all_fb() == TRUE)
 
 	//No need FSM status change

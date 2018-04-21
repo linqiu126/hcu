@@ -671,7 +671,7 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	//STARING FLAG: 公共基础部分，不要删除，新的定时器，需要在此增加，确保完整性。各个项目重复的定时器且不同数值部分，可以再分项目中第二次进行设置，后一次设置的数据将覆盖前一次的数值
 	{TIMER_ID_MIN,                                   "TID_MIN",                                0,       TIMER_RESOLUTION_1S},    //STARTING
 	{TIMER_ID_1S_MIN,                                "TID_1S_MIN",                             0,       TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_SVRCON_INIT_FB,                     "TID_1S_SVRCON_INIT_FB",                  10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_SVRCON_INIT_FB,                     "TID_1S_SVRCON_INIT_FB",                  5,      TIMER_RESOLUTION_1S}, //100个任务，2W*100 = 2S
 	{TIMER_ID_1S_LED_GALOWAG_SCAN,                   "TID_1S_LED_GALOWAG_SCAN",                1,       TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_EMC_PERIOD_READ,                    "TID_1S_EMC_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_EMC_MODBUS_FB,                      "TID_1S_EMC_MODBUS_FB",                   10,      TIMER_RESOLUTION_1S},

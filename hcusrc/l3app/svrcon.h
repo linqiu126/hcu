@@ -40,8 +40,6 @@ typedef struct HcuSvrConTimer
 #define SVRCON_TIMER_START_RESTART 3
 #define SVRCON_TIMER_START_STOP 3
 
-#define SVRCON_TIMER_DURATION_INIT_FB 3  //in second
-
 //structure
 typedef struct HcuSvrConTaskInitInfo
 {
