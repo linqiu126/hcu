@@ -530,6 +530,8 @@ enum HCU_INTER_TASK_MSG_ID
 	//BFSC项目：L3BFSC SCALE_WEIGHT / CANITF组合秤
 	MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,
 	MSG_ID_CAN_L3BFSC_SYS_CFG_RESP,
+	MSG_ID_L3BFSC_CAN_SYS_CALI_REQ,
+	MSG_ID_CAN_L3BFSC_SYS_CALI_RESP,
 	MSG_ID_L3BFSC_CAN_SYS_START_REQ,
 	MSG_ID_CAN_L3BFSC_SYS_START_RESP,
 	MSG_ID_L3BFSC_CAN_SYS_STOP_REQ,
@@ -572,6 +574,8 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//命令反馈
 	MSG_ID_UICOMM_L3BFSC_CFG_REQ,  			//配置信息
 	MSG_ID_L3BFSC_UICOMM_CFG_RESP,  		//配置结果
+	MSG_ID_UICOMM_L3BFSC_CALI_REQ,  		//校准请求
+	MSG_ID_L3BFSC_UICOMM_CALI_RESP,  		//校准反馈
 	MSG_ID_UICOMM_CAN_TEST_CMD_REQ,  		//测试命令
 	MSG_ID_CAN_UICOMM_TEST_CMD_RESP,  		//测试结果
 
@@ -2754,6 +2758,32 @@ typedef struct msg_struct_can_l3bfsc_sys_cfg_resp
 	UINT32 length;
 }msg_struct_can_l3bfsc_sys_cfg_resp_t;
 
+//MSG_ID_L3BFSC_CAN_SYS_CALI_REQ
+typedef struct msg_struct_l3bfsc_can_sys_cali_req
+{
+	UINT8  sensorid;
+	UINT8  cali_mode;
+	UINT32 length;
+}msg_struct_l3bfsc_can_sys_cali_req_t;
+
+//MSG_ID_CAN_L3BFSC_SYS_CALI_RESP
+typedef struct strMsgIe_bfsc_calibration_resp
+{
+    UINT8   calibration_zero_or_full;
+    UINT8   calibration_result;
+    UINT8   spare1;
+    UINT8   spare2;
+    UINT32  adc_value;
+}strMsgIe_bfsc_calibration_resp_t;
+typedef struct msg_struct_can_l3bfsc_sys_cali_resp
+{
+	UINT8  sensorid;
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	strMsgIe_bfsc_calibration_resp_t cali_ressp;
+	UINT32 length;
+}msg_struct_can_l3bfsc_sys_cali_resp_t;
+
 //MSG_ID_L3BFSC_CAN_SYS_START_REQ,
 typedef struct msg_struct_l3bfsc_can_sys_start_req
 {
@@ -2903,6 +2933,30 @@ typedef struct msg_struct_l3bfsc_uicomm_cfg_resp
 	UINT16  errCode;
 	UINT32 	length;
 }msg_struct_l3bfsc_uicomm_cfg_resp_t;
+
+/*
+ * LZH@2018/4/19：
+ * 为配合HUITP接口上将BFSC校准过程独立，在BFSCUICOMM<->L3BFSC接口上将原来通过test_cmd发送到CAN的校准消息转而通过独立的calibration消息发送给L3BFSC
+ */
+//MSG_ID_UICOMM_L3BFSC_CALI_REQ
+typedef struct msg_struct_uicomm_l3bfsc_calibration_req
+{
+	UINT8	cali_mode;
+	UINT8	sensorid;
+	UINT32 	length;
+}msg_struct_uicomm_l3bfsc_calibration_req_t;
+
+//MSG_ID_L3BFSC_UICOMM_CALI_RESP,  		//配置结果
+typedef struct msg_struct_l3bfsc_uicomm_calibration_resp
+{
+	UINT8	cali_mode;
+	UINT8	cali_result;
+	UINT8	sensorid;
+	UINT8   validFlag;  //是否执行成功
+	UINT16  errCode;
+	UINT32  adcValue;
+	UINT32 	length;
+}msg_struct_l3bfsc_uicomm_calibration_resp_t;
 
 //MSG_ID_UICOMM_CAN_TEST_CMD_REQ,  		//测试命令
 typedef struct msg_struct_uicomm_can_test_cmd_req

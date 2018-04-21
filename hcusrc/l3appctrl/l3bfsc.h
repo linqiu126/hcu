@@ -240,7 +240,9 @@ extern OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_pt
 extern OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_uicomm_calibration_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_canitf_calibration_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_sys_start_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_sys_stop_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
@@ -275,6 +277,7 @@ BOOL   func_l3bfsc_judge_whether_all_valid_sensor_enter_repeat_status(void);
 BOOL   func_l3bfsc_print_qr_code(void);
 
 OPSTAT func_l3bfsc_time_out_sys_cfg_req_process(void);
+OPSTAT func_l3bfsc_time_out_sys_cali_req_process(void);
 OPSTAT func_l3bfsc_time_out_sys_start_req_process(void);
 OPSTAT func_l3bfsc_time_out_sys_stop_req_process(void);
 OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void);

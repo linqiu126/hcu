@@ -63,7 +63,7 @@ typedef void                      VOID;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #define HUITP_USE_IN_HCU	1
 #define HUITP_USE_IN_IHU	2
-#define HUITP_USE_SET		HUITP_USE_IN_IHU
+#define HUITP_USE_SET		HUITP_USE_IN_HCU
 
 /*
  *
