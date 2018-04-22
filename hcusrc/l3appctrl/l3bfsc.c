@@ -1132,6 +1132,11 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			memset(&snd2, 0, sizeof(msg_struct_l3bfsc_can_ws_comb_out_t));
 			snd2.length = sizeof(msg_struct_l3bfsc_can_ws_comb_out_t);
 			memcpy(snd2.sensorBitmap, gTaskL3bfscContext.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+			/*
+			 *  2018/4/22 Update by ZHANG Jianlin
+			 *  考虑到接下一级，大马达板子需要得到这个消息的通知，并输出计数信号给下一级
+			 */
+			snd2.sensorBitmap[0] = 1;
 			snd2.combnbr = gTaskL3bfscContext.wsValueNbrTtt;
 			//是否分堆：不分堆，则送下去的参数均为0，这样下位机也不需要做延迟动作了
 			if (gTaskL3bfscContext.comAlgPar.isHeapTogetherEnable == TRUE){
