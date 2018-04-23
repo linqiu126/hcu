@@ -1667,6 +1667,12 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 			gTaskL3aqycq20Context.staMin.a50001_Avg = HCU_L3AQYC_A50001_RANGE_MAX - 20;
 		}
 
+		if(gTaskPm25Context.PM25Value == 0)
+			gTaskPm25Context.PM25Value = 55;
+
+		if(gTaskPm25Context.PM10Value == 0)
+			gTaskPm25Context.PM10Value = 66;
+
 
 		snd.ycjk.tempValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01001_Avg;
 		snd.ycjk.humidValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01002_Avg;
@@ -1674,15 +1680,15 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		snd.ycjk.windspdValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01007_Avg;
 		snd.ycjk.tspValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a34001_Avg;
 		snd.ycjk.pm1d0Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a34001_Avg;
-		snd.ycjk.pm2d5Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a34001_Avg;//to be update later
-		snd.ycjk.pm10Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a34001_Avg;//to be update later
+		snd.ycjk.pm2d5Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskPm25Context.PM25Value;//to be update later
+		snd.ycjk.pm10Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskPm25Context.PM10Value;//to be update later
 		snd.ycjk.noiseValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a50001_Avg;
 		snd.ycjk.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF3; //no need, caculate directly for l3aqycg20??
 		snd.ycjk.timeStamp = time(0);
 
-		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%.1f, Humid=%.1f, Windir=%.1f, Windspd=%.1f, tspValue=%.1f, pm2d5Value=%.1f, pm10Value=%.1f, noiseValue=%.1f\n",gTaskL3aqycq20Context.staMin.a01001_Avg, gTaskL3aqycq20Context.staMin.a01002_Avg, gTaskL3aqycq20Context.staMin.a01008_Avg, gTaskL3aqycq20Context.staMin.a01007_Avg, gTaskL3aqycq20Context.cur.a34001_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskNoiseContext.noiseValue);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%.1f, Humid=%.1f, Windir=%.1f, Windspd=%.1f, tspValue=%.1f, pm2d5Value=%.1f, pm10Value=%.1f, noiseValue=%.1f\n",gTaskL3aqycq20Context.staMin.a01001_Avg, gTaskL3aqycq20Context.staMin.a01002_Avg, gTaskL3aqycq20Context.staMin.a01008_Avg, gTaskL3aqycq20Context.staMin.a01007_Avg, gTaskL3aqycq20Context.cur.a34001_Avg, gTaskPm25Context.PM25Value, gTaskPm25Context.PM10Value, gTaskNoiseContext.noiseValue);
 
-		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%.1f, Humid=%.1f, Windir=%.1f, Windspd=%.1f, tspValue=%.1f, pm2d5Value=%.1f, pm10Value=%.1f, noiseValue=%.1f\n",gTaskL3aqycq20Context.staMin.a01001_Avg, gTaskL3aqycq20Context.staMin.a01002_Avg, gTaskL3aqycq20Context.staMin.a01008_Avg, gTaskL3aqycq20Context.staMin.a01007_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskL3aqycq20Context.staMin.a50001_Avg);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%.1f, Humid=%.1f, Windir=%.1f, Windspd=%.1f, tspValue=%.1f, pm2d5Value=%.1f, pm10Value=%.1f, noiseValue=%.1f\n",gTaskL3aqycq20Context.staMin.a01001_Avg, gTaskL3aqycq20Context.staMin.a01002_Avg, gTaskL3aqycq20Context.staMin.a01008_Avg, gTaskL3aqycq20Context.staMin.a01007_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskPm25Context.PM25Value, gTaskPm25Context.PM10Value, gTaskL3aqycq20Context.staMin.a50001_Avg);
 		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%d, Humid=%d, Windir=%d, Windspd=%d, tspValue=%d, pm2d5Value=%d, pm10Value=%d, noiseValue=%d\n\n\n",snd.ycjk.tempValue, snd.ycjk.humidValue, snd.ycjk.winddirValue, snd.ycjk.windspdValue, snd.ycjk.tspValue, snd.ycjk.pm2d5Value, snd.ycjk.pm10Value, snd.ycjk.noiseValue);
 
 
@@ -1770,7 +1776,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	*/
 
 			///////////////////////////////////////////////////
-			if(gTaskPm25Context.PM25Value == 0 || gTaskPm25Context.PM25Value >= 9999)
+			if(gTaskPm25Context.PM25Value == 0)
 				gTaskPm25Context.PM25Value = 99;
 
 			UINT32 pm25 = gTaskPm25Context.PM25Value;
@@ -1792,7 +1798,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 			///////////////////////////////////////////////////
 
 			///////////////////////////////////////////////////
-			if(gTaskPm25Context.PM10Value == 0 || gTaskPm25Context.PM10Value >= 9999)
+			if(gTaskPm25Context.PM10Value == 0)
 				gTaskPm25Context.PM10Value = 88;
 
 			UINT32 pm10 = gTaskPm25Context.PM10Value;

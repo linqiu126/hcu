@@ -2797,11 +2797,14 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 		t0 = (t0 <<8) & 0xFF00;
 		t1 = t1 & 0xFF;
 		snd->winddir.winddirValue = t0 + t1;
-		snd->winddir.winddirValue = zHcuSysEngPar.winddircalibration;//风向校准
+		snd->winddir.winddirValue = snd->winddir.winddirValue + zHcuSysEngPar.winddircalibration;//风向校准
 		if(snd->winddir.winddirValue > MODBUS_WINDDIR_CALIBRATION_MAX)
 		{
 			snd->winddir.winddirValue = snd->winddir.winddirValue - MODBUS_WINDDIR_CALIBRATION_MAX;
 		}
+
+		HcuDebugPrint("MODBUS: winddirValue = %d\n\n\n\n\n\n", snd->winddir.winddirValue);
+
 		break;
 
 	case L3PO_winddir_set_switch:
