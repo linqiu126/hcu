@@ -913,8 +913,13 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	if ((rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.sensorWsValue > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight))){
+	if (rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error, SensorId = %d, WsWeight=%d!\n", rcv.sensorid, rcv.sensorWsValue);
+	}
+
+	if ((rcv.sensorWsValue > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight))){
+		HCU_DEBUG_PRINT_FAT("L3BFSC: Receive message error, SensorId = %d, WsWeight=%d!\n", rcv.sensorid, rcv.sensorWsValue);
+		return SUCCESS;
 	}
 
 	//Test Print
