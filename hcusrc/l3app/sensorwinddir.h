@@ -43,6 +43,7 @@ typedef struct gTaskWinddirContext
 {
 	gTaskWinddirContextElement_t winddir[MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED];
 	UINT8 currentSensorId;
+	float winddirValue;
 }gTaskWinddirContext_t;
 #define SENSOR_WINDDIR_HW_STATUS_INVALID 0xFF
 #define SENSOR_WINDDIR_HW_STATUS_ACTIVE 1
@@ -52,7 +53,7 @@ typedef struct gTaskWinddirContext
 #define SENSOR_WINDDIR_HW_ACCESS_INVALID 0xFF
 #define SENSOR_WINDDIR_HW_ACCESS_BUSY_COUNT_NUM_MAX 3
 
-
+extern gTaskWinddirContext_t		gTaskWinddirContext;
 
 //#define WINDDIR_TIMER_DURATION_PERIOD_READ 180 //should be 60 second, in second
 //#define WINDDIR_TIMER_DURATION_MODBUS_FB 3    //通过MODBUS访问硬件，回应的时间，不给硬件太多的时间考虑问题

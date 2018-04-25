@@ -442,9 +442,8 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		return FAILURE;
 	}
 
-	//HCU_DEBUG_PRINT_INF("TEMP: temp = %d\n\n\n\n", (rcv.temp.tempValue));
-	gTaskTempContext.tempValue = rcv.temp.tempValue/10;
-	HCU_DEBUG_PRINT_INF("TEMP: temp = %d\n\n", gTaskTempContext.tempValue);
+	gTaskTempContext.tempValue = (float)rcv.temp.tempValue/10;
+	HCU_DEBUG_PRINT_INF("TEMP: temp = %.1f\n\n", gTaskTempContext.tempValue);
 
 	//if(gTaskTempContext.tempFlag == FALSE)
 	gTaskTempContext.tempFlag = CurrentModusContext.tempFlag;

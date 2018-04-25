@@ -339,9 +339,9 @@ OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	}
 
 	//HCU_DEBUG_PRINT_INF("HUMID: humid = %d\n\n\n\n", (rcv.humid.humidValue));
-	gTaskHumidContext.humidValue = rcv.humid.humidValue/10;
+	gTaskHumidContext.humidValue = (float)rcv.humid.humidValue/10;
 
-	HCU_DEBUG_PRINT_INF("HUMID: humid = %d\n\n\n\n", gTaskHumidContext.humidValue);
+	HCU_DEBUG_PRINT_INF("HUMID: humid = %.1f\n\n", gTaskHumidContext.humidValue);
 /*
 	//离线模式
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){

@@ -386,6 +386,8 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	gTaskPm25Context.TSP = (float)rcv.pm25.pmTSPValue;
 	HCU_DEBUG_PRINT_INF("PM25: TSP = %.1f\n\n", gTaskPm25Context.TSP);
 
+	gTaskPm25Context.PM01Value = (float)rcv.pm25.pm1d0Value;
+	HCU_DEBUG_PRINT_INF("PM25: PM1.0 = %.1f\n\n", gTaskPm25Context.PM01Value);
 
 	gTaskPm25Context.PM25Value = (float)rcv.pm25.pm2d5Value;
 	HCU_DEBUG_PRINT_INF("PM25: PM2.5 = %.1f\n\n", gTaskPm25Context.PM25Value);
