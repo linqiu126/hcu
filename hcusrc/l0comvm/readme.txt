@@ -9,6 +9,13 @@
 
 
 
+//= ZJL, 2018 Apr.25 CURRENT_SW_DELIVERY 319=>BFSC项目
+= By BFSC, debug mysql db connection error issue not solved.
+  So far, we checked different choices:
+  - Increase max file open numbers, not solved
+  - Increase or Decrease mysql interactive-timeout and wait-timeout, not solved.
+  - Increase max_connections to 1000, not solved.
+= Suppress SYSPM and L3HATE task/module.
 
 //= ZJL, 2018 Apr.18 CURRENT_SW_DELIVERY 318=>BFSC项目
 = 分堆和产出优化算法完成

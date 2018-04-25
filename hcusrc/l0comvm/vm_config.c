@@ -119,7 +119,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_IGM,           "IGM",              &HcuFsmIgm,              HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_IPM,           "IPM",              &HcuFsmIpm,              HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_SVRCON,        "SVRCON",           &HcuFsmSvrcon,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
-	{TASK_ID_SYSPM,         "SYSPM",            &HcuFsmSyspm,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SYSPM,         "SYSPM",            &HcuFsmSyspm,            HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_SYSSWM,        "SYSSWM",           &HcuFsmSysswm,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_PM25SHARP,     "PM25SHARP",        &HcuFsmPm25sharp,        HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_CANITFLEO,     "CANITFLEO",        NULL,        			 HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
@@ -260,7 +260,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_L3BFSC,        "L3BFSC",           &HcuFsmL3bfsc,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_BFSCUICOMM,    "BFSCUICOMM",       &HcuFsmBfscuicomm,       HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_JSONINOTIFY,   "JSONINOTIFY",      &HcuFsmJsoninotify,      HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
-	{TASK_ID_L3HATE,        "L3HATE",           &HcuFsmL3hate,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	//{TASK_ID_L3HATE,        "L3HATE",           &HcuFsmL3hate,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       &HcuFsmL3opwlotdr,       HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
