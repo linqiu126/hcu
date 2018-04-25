@@ -329,6 +329,10 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 		return FAILURE;
 	}
 
+	gTaskWinddirContext.winddirValue = (float)rcv.winddir.winddirValue;
+
+	HCU_DEBUG_PRINT_INF("WINDDIR: winddir = %.1f\n\n", gTaskWinddirContext.winddirValue);
+
 /*
 	//离线模式
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){

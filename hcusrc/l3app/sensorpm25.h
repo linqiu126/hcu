@@ -53,6 +53,7 @@ typedef struct gTaskPmContext
 	UINT8 currentSensorId;
 	UINT32 AlarmFlag;
 	sensor_modbus_opertion_general_t cfgData;
+	float PM01Value;
 	float PM25Value;
 	float PM10Value;
 	float TSP;

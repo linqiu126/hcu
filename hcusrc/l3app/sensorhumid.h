@@ -43,7 +43,7 @@ typedef struct gTaskHumidContext
 {
 	gTaskHumidContextElement_t humid[MAX_NUM_OF_SENSOR_HUMID_INSTALLED];
 	UINT8 currentSensorId;
-	UINT32 humidValue;
+	float humidValue;
 }gTaskHumidContext_t;
 #define SENSOR_HUMID_HW_STATUS_INVALID 0xFF
 #define SENSOR_HUMID_HW_STATUS_ACTIVE 1

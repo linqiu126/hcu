@@ -43,6 +43,7 @@ typedef struct gTaskWindspdContext
 {
 	gTaskWindspdContextElement_t windspd[MAX_NUM_OF_SENSOR_WINDSPD_INSTALLED];
 	UINT8 currentSensorId;
+	float windspdValue;
 }gTaskWindspdContext_t;
 #define SENSOR_WINDSPD_HW_STATUS_INVALID 0xFF
 #define SENSOR_WINDSPD_HW_STATUS_ACTIVE 1
@@ -53,6 +54,7 @@ typedef struct gTaskWindspdContext
 #define SENSOR_WINDSPD_HW_ACCESS_BUSY_COUNT_NUM_MAX 3
 
 
+extern gTaskWindspdContext_t gTaskWindspdContext;
 
 //#define WINDSPD_TIMER_DURATION_PERIOD_READ 180 //should be 60 second, in second
 //#define WINDSPD_TIMER_DURATION_MODBUS_FB 3    //通过MODBUS访问硬件，回应的时间，不给硬件太多的时间考虑问题

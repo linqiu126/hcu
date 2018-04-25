@@ -327,6 +327,10 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 		HcuErrorPrint("WINDSPD: Error stop timer!\n");
 		return FAILURE;
 	}
+
+	gTaskWindspdContext.windspdValue = (float)rcv.windspd.windspdValue;
+
+	HCU_DEBUG_PRINT_INF("WINDSPD: windspd = %.1f\n\n", gTaskWindspdContext.windspdValue);
 /*
 	//离线模式
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){

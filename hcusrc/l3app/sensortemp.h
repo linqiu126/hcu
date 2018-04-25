@@ -44,7 +44,7 @@ typedef struct gTaskTempContext
 	gTaskTempContextElement_t temp[MAX_NUM_OF_SENSOR_TEMP_INSTALLED];
 	UINT8 currentSensorId;
 	UINT32 tempFlag;
-	UINT32 tempValue;
+	float tempValue;
 }gTaskTempContext_t;
 #define SENSOR_TEMP_HW_STATUS_INVALID 0xFF
 #define SENSOR_TEMP_HW_STATUS_ACTIVE 1

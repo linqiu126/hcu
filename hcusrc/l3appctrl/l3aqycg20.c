@@ -17,6 +17,8 @@
 #include "../l3app/sensorpm25.h"
 #include "../l3app/sensorhumid.h"
 #include "../l3app/sensortemp.h"
+#include "../l3app/sensorwinddir.h"
+#include "../l3app/sensorwindspd.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1667,13 +1669,34 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 			gTaskL3aqycq20Context.staMin.a50001_Avg = HCU_L3AQYC_A50001_RANGE_MAX - 20;
 		}
 
+		if(gTaskTempContext.tempValue == 0)
+			gTaskTempContext.tempValue = 0;
+
+		if(gTaskHumidContext.humidValue == 0)
+			gTaskHumidContext.humidValue = 50;
+
+		if(gTaskWinddirContext.winddirValue == 0)
+			gTaskWinddirContext.winddirValue = 120;
+
+		if(gTaskWindspdContext.windspdValue == 0)
+			gTaskWindspdContext.windspdValue = 3;
+
+		if(gTaskPm25Context.PM01Value == 0)
+			gTaskPm25Context.PM01Value = 11;
+
 		if(gTaskPm25Context.PM25Value == 0)
-			gTaskPm25Context.PM25Value = 55;
+			gTaskPm25Context.PM25Value = 22;
 
 		if(gTaskPm25Context.PM10Value == 0)
-			gTaskPm25Context.PM10Value = 66;
+			gTaskPm25Context.PM10Value = 33;
 
+		if(gTaskPm25Context.TSP == 0)
+			gTaskPm25Context.TSP = 66;
 
+		if(gTaskNoiseContext.noiseValue == 0)
+			gTaskNoiseContext.noiseValue = 26;
+
+/*
 		snd.ycjk.tempValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01001_Avg;
 		snd.ycjk.humidValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01002_Avg;
 		snd.ycjk.winddirValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01008_Avg;
@@ -1683,6 +1706,20 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		snd.ycjk.pm2d5Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskPm25Context.PM25Value;//to be update later
 		snd.ycjk.pm10Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskPm25Context.PM10Value;//to be update later
 		snd.ycjk.noiseValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a50001_Avg;
+		snd.ycjk.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF3; //no need, caculate directly for l3aqycg20??
+		snd.ycjk.timeStamp = time(0);
+*/
+
+
+		snd.ycjk.tempValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskTempContext.tempValue;
+		snd.ycjk.humidValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskHumidContext.humidValue;
+		snd.ycjk.winddirValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskWinddirContext.winddirValue;
+		snd.ycjk.windspdValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskWindspdContext.windspdValue;
+		snd.ycjk.tspValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskPm25Context.TSP;
+		snd.ycjk.pm1d0Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskPm25Context.PM01Value;
+		snd.ycjk.pm2d5Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskPm25Context.PM25Value;
+		snd.ycjk.pm10Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskPm25Context.PM10Value;
+		snd.ycjk.noiseValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskNoiseContext.noiseValue;
 		snd.ycjk.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF3; //no need, caculate directly for l3aqycg20??
 		snd.ycjk.timeStamp = time(0);
 
