@@ -48,8 +48,7 @@ OPSTAT fsm_pwm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_PWM, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("PWM: Error Set FSM State at fsm_pwm_task_entry\n");}
+	FsmSetState(TASK_ID_PWM, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -74,10 +73,7 @@ OPSTAT fsm_pwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_PWM, FSM_STATE_PWM_INITED) == FAILURE){
-		HcuErrorPrint("PWM: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_PWM, FSM_STATE_PWM_INITED);
 
 	//初始化硬件接口
 	if (func_pwm_int_init() == FAILURE){
@@ -89,14 +85,8 @@ OPSTAT fsm_pwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_PWM] = 0;
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_PWM, FSM_STATE_PWM_ACTIVIED) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_PWM]++;
-		HcuErrorPrint("PWM: Error Set FSM State!\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("PWM: Enter FSM_STATE_PWM_ACTIVED status, Keeping refresh here!\n");
-	}
+	FsmSetState(TASK_ID_PWM, FSM_STATE_PWM_ACTIVIED);
+	HCU_DEBUG_PRINT_FAT("PWM: Enter FSM_STATE_PWM_ACTIVED status, Keeping refresh here!\n");
 
 	int workingCycle = 2;
 	//进入循环工作模式

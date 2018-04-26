@@ -48,13 +48,9 @@ HcuTimerTable_t zHcuTimerTable;
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_timer_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret;
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	ret = FsmSetState(TASK_ID_TIMER, FSM_STATE_IDLE);
-	if (ret == FAILURE){
-		HcuErrorPrint("TIMER: Error Set FSM State at fsm_timer_task_entry\n");
-	}
+	FsmSetState(TASK_ID_TIMER, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -79,12 +75,7 @@ OPSTAT fsm_timer_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_TIMER] = 0;
 
 	//收到初始化消息后，进入初始化状态
-	ret = FsmSetState(TASK_ID_TIMER, FSM_STATE_TIMER_INITED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_TIMER]++;
-		HcuErrorPrint("TIMER: Error Set FSM State at fsm_timer_init\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_TIMER, FSM_STATE_TIMER_INITED);
 
 	/*
 	 *   方法一：失败告终，目前这种机制跟SLEEP相冲突，蛋疼，留待以后的高手帮助解决
@@ -272,15 +263,8 @@ OPSTAT fsm_timer_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	}
 
 	//进入等待反馈状态
-	ret = FsmSetState(TASK_ID_TIMER, FSM_STATE_TIMER_ACTIVED);
-	if (ret == FAILURE){
-		HcuErrorPrint("TIMER: Error Set FSM State!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_TIMER]++;
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("TIMER: Enter FSM_STATE_TIMER_ACTIVED status, Keeping loop of signal sending here!\n");
-	}
+	FsmSetState(TASK_ID_TIMER, FSM_STATE_TIMER_ACTIVED);
+	HCU_DEBUG_PRINT_FAT("TIMER: Enter FSM_STATE_TIMER_ACTIVED status, Keeping loop of signal sending here!\n");
 
 	while(1) {
 		pause();

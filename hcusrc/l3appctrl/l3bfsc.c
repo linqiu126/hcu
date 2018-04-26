@@ -561,9 +561,7 @@ OPSTAT fsm_l3bfsc_canitf_sys_start_resp(UINT32 dest_id, UINT32 src_id, void * pa
 		gTaskL3bfscContext.startWorkTimeInUnix = time(0);
 
 		//设置状态机
-		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_SCAN) == FAILURE){
-			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
-		}
+		FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_SCAN);
 	}
 
 	//收到正确以及没有齐活的反馈：直接返回

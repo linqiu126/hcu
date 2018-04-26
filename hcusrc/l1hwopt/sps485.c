@@ -49,8 +49,7 @@ OPSTAT fsm_sps485_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_SPS485, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("SPS485: Error Set FSM State at fsm_sps485_task_entry\n");}
+	FsmSetState(TASK_ID_SPS485, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -75,10 +74,7 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_SPS485, FSM_STATE_SPS485_INITED) == FAILURE){
-		HcuErrorPrint("SPS485: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_SPS485, FSM_STATE_SPS485_INITED);
 
 	//初始化硬件接口
 	if (func_sps485_int_init() == FAILURE){
@@ -121,14 +117,8 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_SPS485, FSM_STATE_SPS485_RECEIVED) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS485]++;
-		HcuErrorPrint("SPS485: Error Set FSM State!\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("SPS485: Enter FSM_STATE_SPS485_ACTIVED status, Keeping refresh here!\n");
-	}
+	FsmSetState(TASK_ID_SPS485, FSM_STATE_SPS485_RECEIVED);
+	HCU_DEBUG_PRINT_FAT("SPS485: Enter FSM_STATE_SPS485_ACTIVED status, Keeping refresh here!\n");
 
 	return SUCCESS;
 }

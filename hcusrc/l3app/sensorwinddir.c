@@ -64,14 +64,9 @@ gTaskWinddirContext_t gTaskWinddirContext;
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_winddir_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret;
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	ret = FsmSetState(TASK_ID_WINDDIR, FSM_STATE_IDLE);
-	if (ret == FAILURE){
-		HcuErrorPrint("WINDDIR: Error Set FSM State at fsm_winddir_task_entry\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_WINDDIR, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -95,14 +90,8 @@ OPSTAT fsm_winddir_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 		}
 	}
 
-	ret = FsmSetState(TASK_ID_WINDDIR, FSM_STATE_WINDDIR_INITED);
-	if (ret == FAILURE){
-		HcuErrorPrint("WINDDIR: Error Set FSM State at fsm_winddir_init\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("WINDDIR: Enter FSM_STATE_WINDDIR_INITED status, everything goes well!\n");
-	}
+	FsmSetState(TASK_ID_WINDDIR, FSM_STATE_WINDDIR_INITED);
+	HCU_DEBUG_PRINT_FAT("WINDDIR: Enter FSM_STATE_WINDDIR_INITED status, everything goes well!\n");
 
 	//Task global variables init.
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR] = 0;
@@ -171,12 +160,7 @@ OPSTAT fsm_winddir_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 	if ((rcv.timeId == TIMER_ID_1S_WINDDIR_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
 		if (FsmGetState(TASK_ID_WINDDIR) != FSM_STATE_WINDDIR_ACTIVED){
-			ret = FsmSetState(TASK_ID_WINDDIR, FSM_STATE_WINDDIR_ACTIVED);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
-				HcuErrorPrint("WINDDIR: Error Set FSM State!\n");
-				return FAILURE;
-			}//FsmSetState
+			FsmSetState(TASK_ID_WINDDIR, FSM_STATE_WINDDIR_ACTIVED);
 		}
 		func_winddir_time_out_read_data_from_modbus();
 	}
@@ -270,12 +254,7 @@ void func_winddir_time_out_processing_no_rsponse(void)
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
 
 	//State Transfer to FSM_STATE_WINDDIR_ACTIVE
-	ret = FsmSetState(TASK_ID_WINDDIR, FSM_STATE_WINDDIR_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
-		HcuErrorPrint("WINDDIR: Error Set FSM State!\n");
-		return;
-	}//FsmSetState
+	FsmSetState(TASK_ID_WINDDIR, FSM_STATE_WINDDIR_ACTIVED);
 	return;
 }
 
@@ -455,13 +434,7 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 	}
 
 	//State Transfer to FSM_STATE_WINDDIR_ACTIVE
-	ret = FsmSetState(TASK_ID_WINDDIR, FSM_STATE_WINDDIR_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
-		HcuErrorPrint("WINDDIR: Error Set FSM State!\n");
-		return FAILURE;
-	}
-
+	FsmSetState(TASK_ID_WINDDIR, FSM_STATE_WINDDIR_ACTIVED);
 	return SUCCESS;
 }
 

@@ -359,12 +359,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 		return FAILURE;
 	}
 	//停止定时器
-	ret = hcu_timer_stop(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_AVORION_FB, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("HSMMP: Error stop timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_stop(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_AVORION_FB, TIMER_RESOLUTION_1S);
 	//如果满足条件，移动文件到视频服务器目录中
 	newpath[0]='\0';
 	if(rcv.boolBackCloud == TRUE){

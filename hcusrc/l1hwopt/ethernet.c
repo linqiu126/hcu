@@ -54,8 +54,7 @@ OPSTAT fsm_ethernet_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_ETHERNET, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("ETHERNET: Error Set FSM State at fsm_ethernet_task_entry\n");}
+	FsmSetState(TASK_ID_ETHERNET, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -80,10 +79,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_ETHERNET, FSM_STATE_ETHERNET_INITED) == FAILURE){
-		HcuErrorPrint("ETHERNET: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_ETHERNET, FSM_STATE_ETHERNET_INITED);
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET] = 0;
@@ -92,7 +88,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	if (func_ethernet_int_init() == FAILURE) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Error initialize interface!\n");
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_ETHERNET, FSM_STATE_ETHERNET_RECEIVED) == FAILURE) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Error Set FSM State!\n");
+	FsmSetState(TASK_ID_ETHERNET, FSM_STATE_ETHERNET_RECEIVED);
 	HCU_DEBUG_PRINT_INF("ETHERNET: Enter FSM_STATE_ETHERNET_ACTIVED status, Keeping refresh here!\n");
 
 	/*

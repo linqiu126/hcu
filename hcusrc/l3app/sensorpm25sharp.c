@@ -58,8 +58,7 @@ OPSTAT fsm_pm25sharp_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_PM25SHARP, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("PM25SHARP: Error Set FSM State at fsm_pm25sharp_task_entry\n");}
+	FsmSetState(TASK_ID_PM25SHARP, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -84,10 +83,7 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_PM25SHARP, FSM_STATE_PM25SHARP_INITED) == FAILURE){
-		HcuErrorPrint("PM25SHARP: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_PM25SHARP, FSM_STATE_PM25SHARP_INITED);
 
 	/*
 	//初始化硬件接口
@@ -176,12 +172,7 @@ OPSTAT fsm_pm25sharp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	if ((rcv.timeId == TIMER_ID_1S_PM25SHARP_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
 		if (FsmGetState(TASK_ID_PM25SHARP) != FSM_STATE_PM25SHARP_ACTIVED){
-			ret = FsmSetState(TASK_ID_PM25SHARP, FSM_STATE_PM25SHARP_ACTIVED);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25SHARP]++;
-				HcuErrorPrint("PM25SHARP: Error Set FSM State!\n");
-				return FAILURE;
-			}//FsmSetState
+			FsmSetState(TASK_ID_PM25SHARP, FSM_STATE_PM25SHARP_ACTIVED);
 		}
 		//干活
 		UINT32 pm25sharpfd = gTaskPm25sharpContext.serialPort.fd;

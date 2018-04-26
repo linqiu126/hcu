@@ -64,8 +64,7 @@ OPSTAT fsm_sysswm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_SYSSWM, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("SYSSWM: Error Set FSM State at fsm_sysswm_task_entry\n");}
+	FsmSetState(TASK_ID_SYSSWM, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -90,10 +89,7 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_SYSSWM, FSM_STATE_SYSSWM_INITED) == FAILURE){
-		HcuErrorPrint("SYSSWM: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_SYSSWM, FSM_STATE_SYSSWM_INITED);
 
 	//初始化硬件接口
 	if (func_sysswm_int_init() == FAILURE){

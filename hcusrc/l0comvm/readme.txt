@@ -14,6 +14,7 @@
 = 演进HWINV中有关各个数据库超期3个月的清理，跟任务是否启动相关，而不再是机械的重复清理
 = 改进所有数据库的读取，变成标准宏，以便输出错误码
 = 优化BFSC及SYSPM的代码，简化代码风格
+= 优化所有相关任务的定时器启动/停止以及状态设置
 
 //= ZJL, 2018 Apr.25 CURRENT_SW_DELIVERY 319=>BFSC项目
 = By BFSC, debug mysql db connection error issue not solved.
