@@ -1,5 +1,8 @@
 # ignore these files #
 ######################
+PrjBfsc/Debug/*
+PrjBfdf/Debug/*
+PrjBfhs/Debug/*
 Debug/*
 Linux_Arm_A8/*
 RasberryPi/*
