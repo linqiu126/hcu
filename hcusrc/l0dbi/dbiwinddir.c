@@ -62,19 +62,19 @@ OPSTAT dbi_HcuWinddirDataInfo_save(sensor_winddir_data_element_t *winddirData)
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed: %s\n", mysql_error(sqlHandler));
-        return FAILURE;
-    }
-
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed: %s\n", mysql_error(sqlHandler));
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     HcuDebugPrint("hcuwinddirdatainfo: deviceid = %d, timestamp = %d, dataformat = %d, winddirvalue = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n\n\n", winddirData->equipid, winddirData->timeStamp, winddirData->dataFormat, winddirData->winddirValue, winddirData->gps.ew, winddirData->gps.gpsx, winddirData->gps.ns, winddirData->gps.gpsy, winddirData->gps.gpsz, winddirData->onOffLineFlag);
 
@@ -114,18 +114,19 @@ OPSTAT dbi_HcuWinddirDataInfo_inqury_1st_record(UINT32 deviceid, sensor_winddir_
     }
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//获取数据
     sprintf(strsql, "SELECT * FROM `hcuwinddirdatainfo` WHERE (`deviceid` = '%d')", deviceid);
@@ -184,18 +185,19 @@ OPSTAT dbi_HcuWinddirDataInfo_delete_3monold(UINT32 days)
     if (days <WINDDIR_DATA_SAVE_DAYS_MIN) days = WINDDIR_DATA_SAVE_DAYS_MIN;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//删除满足条件的数据
     cursec = time(NULL);
@@ -229,18 +231,19 @@ OPSTAT dbi_HcuWinddirDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	//UINT32 min;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     cursec = time(NULL);
     duration = dur;
@@ -316,18 +319,19 @@ OPSTAT dbi_HcuWinddirDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	//UINT32 max;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     cursec = time(NULL);
     duration = dur;
@@ -403,18 +407,19 @@ OPSTAT dbi_HcuWinddirDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	//UINT32 avg;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIWINDDIR: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     cursec = time(NULL);
     duration = dur;

@@ -94,4 +94,12 @@ extern OPSTAT dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(UINT32 days);
 #define HCU_ERROR_PRINT_HWINV(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 #define HCU_ERROR_PRINT_HWINV_WO_RETURN(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;  HcuErrorPrint(__VA_ARGS__);  return;}while(0)
 
+#define HCU_HWINV_3MONTH_SCAN_ELEMENT(TASKID, callFunc) do{\
+	if (zHcuVmCtrTab.task[TASKID].pnpState == HCU_SYSCFG_TASK_PNP_ON){\
+		if (callFunc(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE)\
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;\
+		}\
+	}while(0)
+
+
 #endif /* L1COM_HWINV_H_ */

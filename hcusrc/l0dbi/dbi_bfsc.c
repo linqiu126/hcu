@@ -291,18 +291,19 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
     UINT32 tmp = time(0);
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//DELETE旧的数据
     sprintf(strsql, "DELETE FROM `hcubfscstadatainfo` WHERE (`statype` = '%s' AND `configid` = '%d')", s, configId);
@@ -421,18 +422,20 @@ OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info)
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-    	return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//    	return FAILURE;
+//    }
+
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//REPLACE新的数据
     //UINT32 tmp = time(0);
@@ -468,18 +471,19 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     memset(s, 0, sizeof(s));
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//UPDATE新的数据
     timestamp = time(NULL);
@@ -517,18 +521,19 @@ OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt)
     memset(s, 0, sizeof(s));
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//UPDATE新的数据
     sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET curcomwgt = '%d' WHERE (1)", wgt);
@@ -561,18 +566,19 @@ OPSTAT dbi_HcuBfsc_hcusw_ver_Update(char *input, int len)
     memset(s, 0, sizeof(s));
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//UPDATE新的数据
     sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET hcusw = '%s' WHERE (1)", input);
@@ -605,18 +611,19 @@ OPSTAT dbi_HcuBfsc_ihusw_ver_Update(char *input, int len)
     memset(s, 0, sizeof(s));
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//UPDATE新的数据
     sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET ihusw = '%s' WHERE (1)", input);
@@ -648,18 +655,19 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(void)
     memset(s, 0, sizeof(s));
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//REPLACE新的数据
     timestamp = time(NULL);
@@ -692,18 +700,19 @@ OPSTAT  dbi_HcuBfsc_WmcStatusForceSuspend(void)
 	    memset(s, 0, sizeof(s));
 
 		//建立数据库连接
-	    sqlHandler = mysql_init(NULL);
-	    if(!sqlHandler)
-	    {
-	    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-	        return FAILURE;
-	    }
-	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-	    if (!sqlHandler){
-	    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-	    	mysql_close(sqlHandler);
-	        return FAILURE;
-	    }
+//	    sqlHandler = mysql_init(NULL);
+//	    if(!sqlHandler)
+//	    {
+//	    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//	        return FAILURE;
+//	    }
+//	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//	    if (!sqlHandler){
+//	    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//	    	mysql_close(sqlHandler);
+//	        return FAILURE;
+//	    }
+	    HCU_L0DBICOM_INIT_DB_CONN();
 
 		//REPLACE新的数据
 	    timestamp = time(NULL);
@@ -728,18 +737,19 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT8  sensor
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     //零值校准数据
     sprintf(strsql, "UPDATE `hcubfsccalibration` SET zeroadc_%02d = '%d' WHERE (1)", sensorid, adcvalue);
@@ -763,18 +773,19 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adcfull(UINT32  adcvalue, UINT8  sensor
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     //满值校准数据
     sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d'  WHERE (1)", sensorid, adcvalue);
@@ -801,18 +812,19 @@ OPSTAT dbi_HcuBfsc_CalibrationDataGet( UINT32 data[(HCU_SYSCFG_BFSC_SNR_WS_NBR_M
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//获取数据
     sprintf(strsql, "SELECT * FROM `hcubfsccalibration` WHERE (1)");
@@ -861,18 +873,20 @@ OPSTAT dbi_HcuBfsc_DynamicConfigDataGet(UINT16 config_index, UINT32  dynamicdata
 	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
 		//建立数据库连接
-	    sqlHandler = mysql_init(NULL);
-	    if(!sqlHandler)
-	    {
-	    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-	        return FAILURE;
-	    }
-	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-	    if (!sqlHandler){
-	    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-	    	mysql_close(sqlHandler);
-	        return FAILURE;
-	    }
+//	    sqlHandler = mysql_init(NULL);
+//	    if(!sqlHandler)
+//	    {
+//	    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//	        return FAILURE;
+//	    }
+//	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//	    if (!sqlHandler){
+//	    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//	    	mysql_close(sqlHandler);
+//	        return FAILURE;
+//	    }
+	    HCU_L0DBICOM_INIT_DB_CONN();
+
 		//获取数据
 	    sprintf(strsql, "SELECT * FROM `hcubfscconfigpara` WHERE (`currentconf` = 'Y' && `sid` = '%d')" , config_index);
 		result = mysql_query(sqlHandler, strsql);
@@ -919,18 +933,20 @@ OPSTAT dbi_HcuBfsc_StaticConfigDataGet(UINT32  staticdata[HCU_SYSCFG_BFSC_DB_COL
 	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
 		//建立数据库连接
-	    sqlHandler = mysql_init(NULL);
-	    if(!sqlHandler)
-	    {
-	    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-	        return FAILURE;
-	    }
-	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-	    if (!sqlHandler){
-	    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-	    	mysql_close(sqlHandler);
-	        return FAILURE;
-	    }
+//	    sqlHandler = mysql_init(NULL);
+//	    if(!sqlHandler)
+//	    {
+//	    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//	        return FAILURE;
+//	    }
+//	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//	    if (!sqlHandler){
+//	    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//	    	mysql_close(sqlHandler);
+//	        return FAILURE;
+//	    }
+	    HCU_L0DBICOM_INIT_DB_CONN();
+
 		//获取数据
 	    sprintf(strsql, "SELECT * FROM `hcubfscstaticpara` WHERE (1)");
 		result = mysql_query(sqlHandler, strsql);
@@ -975,19 +991,21 @@ OPSTAT dbi_HcuBfsc_TestCmdRespUpdate(UINT8 cmdid, UINT8 validFlag, char strInput
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-        return FAILURE;
-    }
-	//save data
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
+
+    //save data
 	sprintf(strsql, "UPDATE `hcubfscfb2ui` SET validflag = '%d', fbinfo = '%s' WHERE (sid = (SELECT MAX(sid) FROM `hcubfscfb2ui` WHERE cmdtype = %d))", validFlag, strInput, cmdid);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){  //成功返回0
@@ -1008,18 +1026,20 @@ OPSTAT dbi_HcuBfsc_FlowSheetUpdate(UINT16 configId, UINT32 targetWgt, UINT32 rea
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-    	mysql_close(sqlHandler);
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
+
 	//save data
     sprintf(strsql, "INSERT INTO `hcubfscflowsheet` (configid, targetwgt, realwgt, pkgnum) VALUES ('%d', '%d', '%d', '%d')", configId,targetWgt,realWgt,pkgNum);
 	result = mysql_query(sqlHandler, strsql);

@@ -52,7 +52,7 @@ extern OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void);
 	    sqlHandler = mysql_init(NULL);\
 	    if(!sqlHandler)\
 	    {\
-	    	HcuErrorPrint("DBICOM: MySQL init failed!\n");\
+	    	HcuErrorPrint("DBICOM: MySQL init failed!, Init ErrCode = %d\n", mysql_error(sqlHandler));\
 	        return FAILURE;\
 	    }\
 	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);\

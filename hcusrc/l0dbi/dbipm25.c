@@ -115,18 +115,19 @@ OPSTAT dbi_HcuPm25DataInfo_save(sensor_pm25_data_element_t *pm25Data)
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed: %s\n", mysql_error(sqlHandler));
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed: %s\n", mysql_error(sqlHandler));
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 
     HcuDebugPrint("hcupm25datainfo: deviceid = %d, timestamp = %d, dataformat = %d, pmTSPValue = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n\n\n", pm25Data->equipid, pm25Data->timeStamp, pm25Data->dataFormat, pm25Data->pmTSPValue, pm25Data->gps.ew, pm25Data->gps.gpsx, pm25Data->gps.ns, pm25Data->gps.gpsy, pm25Data->gps.gpsz, pm25Data->onOffLineFlag);
@@ -168,18 +169,19 @@ OPSTAT dbi_HcuPm25ConfigData_save(sensor_modbus_opertion_general_t *PM25ConfigDa
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcupm25configdata` (deviceid, poweronoff, workcycle, intersample, meaustimes, sensortype) VALUES \
@@ -215,18 +217,19 @@ OPSTAT dbi_HcuPm25ConfigData_update(UINT8 optId, sensor_modbus_opertion_general_
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	switch(optId)
 	{
@@ -296,18 +299,19 @@ OPSTAT dbi_HcuPm25DataInfo_inqury_1st_record(UINT32 deviceid, sensor_pm25_data_e
     }
 
 	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//获取数据
     sprintf(strsql, "SELECT * FROM `hcupm25datainfo` WHERE (`deviceid` = '%d')", deviceid);
@@ -368,18 +372,19 @@ OPSTAT dbi_HcuPm25DataInfo_delete_3monold(UINT32 days)
     if (days <PM25_DATA_SAVE_DAYS_MIN) days = PM25_DATA_SAVE_DAYS_MIN;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//删除满足条件的数据
     cursec = time(NULL);
@@ -413,18 +418,19 @@ OPSTAT dbi_HcuPm25SharpDataInfo_save(sensor_pm25_sharp_data_element_t *pm25Data)
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+	    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcupm25sharpdatainfo` (deviceid, timestamp, dataformat, pm2d5value) VALUES \
@@ -457,18 +463,19 @@ OPSTAT dbi_HcuPm25SharpDataInfo_delete_3monold(UINT32 days)
     if (days < PM25SHARP_DATA_SAVE_DAYS_MIN) days = PM25SHARP_DATA_SAVE_DAYS_MIN;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//删除满足条件的数据
     cursec = time(NULL);
@@ -502,18 +509,19 @@ OPSTAT dbi_HcuPm25Bmpd300DataInfo_save(sensor_pm25_bmpd300_data_element_t *pm25D
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcupm25bmpd300datainfo` (deviceid, timestamp, dataformat, pm2d5value) VALUES \
@@ -546,18 +554,19 @@ OPSTAT dbi_HcuPm25Bmpd300DataInfo_delete_3monold(UINT32 days)
     if (days < PM25SHARP_DATA_SAVE_DAYS_MIN) days = PM25SHARP_DATA_SAVE_DAYS_MIN;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//删除满足条件的数据
     cursec = time(NULL);
@@ -591,18 +600,19 @@ OPSTAT dbi_HcuPm25DataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	//UINT32 min;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     cursec = time(NULL);
     duration = dur;
@@ -687,18 +697,19 @@ OPSTAT dbi_HcuPm25DataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	//UINT32 max;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     cursec = time(NULL);
     duration = dur;
@@ -782,18 +793,19 @@ OPSTAT dbi_HcuPm25DataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	//UINT32 avg;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     cursec = time(NULL);
     duration = dur;

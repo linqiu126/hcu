@@ -7,7 +7,7 @@
 #include "../l0dbi/dbinbiot.h"
 #include "../l0service/trace.h"
 #include "../l0comvm/sysengpar.h"
-
+#include "../l0dbi/dbicom.h"
 /*
 
 --
@@ -64,18 +64,19 @@ OPSTAT dbi_NbiotCJ188CntSerContext_save(char *add, INT8 cntser, INT8 flag)
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     //查询地址是否存在
     sprintf(strsql, "SELECT * FROM `hcu_nbiot_cj188_context` WHERE (`cj188address` = '%s')", add);
@@ -132,18 +133,19 @@ OPSTAT dbi_NbiotCJ188CntSerContext_ser_inqury(char *add, INT8 cntser)
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     //查询地址是否存在
     sprintf(strsql, "SELECT * FROM `hcu_nbiot_cj188_context` WHERE (`cj188address` = '%s')", add);
@@ -195,18 +197,19 @@ OPSTAT dbi_NbiotCJ188CntSerContext_ser_increase(char *add)
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     //查询地址是否存在
     sprintf(strsql, "SELECT * FROM `hcu_nbiot_cj188_context` WHERE (`cj188address` = '%s')", add);
@@ -266,18 +269,19 @@ OPSTAT dbi_NbiotQG376CntPcfContext_save(char *add, INT8 cntpcf, INT8 flag)
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     //查询地址是否存在
     sprintf(strsql, "SELECT * FROM `hcu_nbiot_qg376_context` WHERE (`ipmaddress` = '%s')", add);
@@ -334,18 +338,19 @@ OPSTAT dbi_NbiotQG376CntPcfContext_ser_inqury(char *add, INT8 cntpcf)
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     //查询地址是否存在
     sprintf(strsql, "SELECT * FROM `hcu_nbiot_qg376_context` WHERE (`ipmaddress` = '%s')", add);
@@ -397,18 +402,19 @@ OPSTAT dbi_NbiotQG376CntPcfContext_ser_increase(char *add)
     }
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
     //查询地址是否存在
     sprintf(strsql, "SELECT * FROM `hcu_nbiot_qg376_context` WHERE (`ipmaddress` = '%s')", add);

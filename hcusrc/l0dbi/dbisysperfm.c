@@ -74,18 +74,19 @@ OPSTAT dbi_HcuSyspmGlobalDataInfo_save(void)
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBISP: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBISP: MySQL connection failed! ErrCode=%d\n", sqlHandler);
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBISP: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBISP: MySQL connection failed! ErrCode=%d\n", sqlHandler);
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//存入新的数据
     memset(strsql, 0, sizeof(strsql));
@@ -137,18 +138,19 @@ OPSTAT dbi_HcuSyspmGlobalDataInfo_delete_3monold(UINT32 days)
     if (days < SP_GLOBAL_DATA_SAVE_DAYS_MIN) days = SP_GLOBAL_DATA_SAVE_DAYS_MIN;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBISP: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBISP: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBISP: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBISP: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//删除满足条件的数据
     cursec = time(NULL);
@@ -197,18 +199,19 @@ OPSTAT dbi_HcuSysAlarmInfo_save(msg_struct_com_alarm_report_t *alarmData)
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBISA: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBISA: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBISA: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBISA: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcusysalarminfo` (eqpid, alarmtype, alarmcontent, alarmseverity, alarmclearflag, alarmdesc, timestamp) VALUES \
@@ -242,18 +245,19 @@ OPSTAT dbi_HcuSysAlarmInfo_delete_3monold(UINT32 days)
     if (days < SP_GLOBAL_DATA_SAVE_DAYS_MIN) days = SP_GLOBAL_DATA_SAVE_DAYS_MIN;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBISA: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBISA: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBISA: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBISA: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//删除满足条件的数据
     cursec = time(NULL);
@@ -284,18 +288,19 @@ OPSTAT dbi_HcuSpErrcntDataInfo_save(void)
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBISP: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBISP: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBISP: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBISP: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+	    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcusperrcntdatainfo` (taskhcuvmec, taskhwinvec, taskmodbusec, taskcloudvelaec, taskavorionec, taskspsvirgoec, taskhsmmpec, \
@@ -332,18 +337,19 @@ OPSTAT dbi_HcuSpErrcntDataInfo_delete_3monold(UINT32 days)
     if (days <SP_ERRCNT_DATA_SAVE_DAYS_MIN) days = SP_ERRCNT_DATA_SAVE_DAYS_MIN;
 
 	//建立连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBISP: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBISP: MySQL connection failed!\n");
-        return FAILURE;
-    }
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBISP: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBISP: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+	    HCU_L0DBICOM_INIT_DB_CONN();
 
 	//删除满足条件的数据
     cursec = time(NULL);

@@ -638,14 +638,7 @@ void func_hwinv_scan_all(void)
 	//func_hwinv_scan_eng_par();
 
 	func_hwinv_scan_dir();
-
-	/*
-	 * 2018/4/26 Update by ZHANG Jianlin
-	 * Temp suppress this function, as too many db access render MYSQL db connection failure.
-	 *
-	 */
-	//func_hwinv_scan_db();
-
+	func_hwinv_scan_db();
 	func_hwinv_scan_emc();
 	func_hwinv_scan_pm25();
 	func_hwinv_scan_winddir();
@@ -1222,50 +1215,50 @@ void func_hwinv_scan_db(void)
 	//删除90天以上的旧数据
 	//先用变天的标示位来判断，以提高效率，不然每一次扫描都无效的要访问一次数据库，过于频繁
 	if (zHcuVmCtrTab.clock.dayChange == TRUE){
-		if (dbi_HcuEmcDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25SharpDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25Bmpd300DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuWinddirDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuWindspdDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidDht11DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidSht20DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidRht03DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempDht11DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempSht20DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempRht03DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempBmp180DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempMth01DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuNoiseDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHsmmpDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsBmp180DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuCo1DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuLightstrDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuLightstrBh1750DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAlcoholDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHchoDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasMq135DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIwmCj188DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIhmCj188DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIgmCj188DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIpmCj188DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIpmQg376DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuSyspmGlobalDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_EMC, dbi_HcuEmcDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_PM25, dbi_HcuPm25DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_PM25SHARP, dbi_HcuPm25SharpDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_PM25, dbi_HcuPm25Bmpd300DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_WINDDIR, dbi_HcuWinddirDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_WINDSPD, dbi_HcuWindspdDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_HUMID, dbi_HcuHumidDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_HUMID, dbi_HcuHumidDht11DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_HUMID, dbi_HcuHumidSht20DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_HUMID, dbi_HcuHumidRht03DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_TEMP, dbi_HcuTempDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_TEMP, dbi_HcuTempDht11DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_TEMP, dbi_HcuTempSht20DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_TEMP, dbi_HcuTempRht03DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_TEMP, dbi_HcuTempBmp180DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_TEMP, dbi_HcuTempMth01DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_NOISE, dbi_HcuNoiseDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_HSMMP, dbi_HcuHsmmpDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_AIRPRS, dbi_HcuAirprsDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_AIRPRS, dbi_HcuAirprsBmp180DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_AIRPRS, dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_CO1, dbi_HcuCo1DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_LIGHTSTR, dbi_HcuLightstrDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_LIGHTSTR, dbi_HcuLightstrBh1750DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_ALCOHOL, dbi_HcuAlcoholDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_ALCOHOL, dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_HCHO, dbi_HcuHchoDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_HCHO, dbi_HcuHchoZe08ch2oDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_TOXICGAS, dbi_HcuToxicgasDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_TOXICGAS, dbi_HcuToxicgasMq135DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_TOXICGAS, dbi_HcuToxicgasZp01vocDataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_IWM, dbi_HcuIwmCj188DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_IHM, dbi_HcuIhmCj188DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_IGM, dbi_HcuIgmCj188DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_IPM, dbi_HcuIpmCj188DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_IPM, dbi_HcuIpmQg376DataInfo_delete_3monold);
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_SYSPM, dbi_HcuSyspmGlobalDataInfo_delete_3monold);
 		//需要清理告警数据，不然超过2MB的数据库大小以后，将比较麻烦
-		if (dbi_HcuSysAlarmInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_SYSPM, dbi_HcuSysAlarmInfo_delete_3monold);
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
-		if (dbi_HcuBfhs_callcell_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_L3BFHS, dbi_HcuBfhs_callcell_delete_3monold);
 #endif
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
-		if (dbi_HcuBfdf_callcell_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		HCU_HWINV_3MONTH_SCAN_ELEMENT(TASK_ID_L3BFDF, dbi_HcuBfdf_callcell_delete_3monold);
 #endif
 	}
 }
