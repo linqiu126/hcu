@@ -235,8 +235,6 @@ void func_winddir_time_out_read_data_from_modbus(void)
 //超时失败，走向下一个传感器
 void func_winddir_time_out_processing_no_rsponse(void)
 {
-	int ret=0;
-
 	//恢复当前传感器的空闲状态
 	gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwAccess = SENSOR_WINDDIR_HW_ACCESS_IDLE;
 	gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwStatus = SENSOR_WINDDIR_HW_STATUS_DEACTIVE;

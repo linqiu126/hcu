@@ -92,7 +92,6 @@ gTaskModbusContext_t CurrentModusContext;
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_modbus_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret;
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
 	FsmSetState(TASK_ID_MODBUS, FSM_STATE_IDLE);

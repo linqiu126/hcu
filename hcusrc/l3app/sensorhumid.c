@@ -244,8 +244,6 @@ void func_humid_time_out_read_data_from_modbus(void)
 //超时失败，走向下一个传感器
 void func_humid_time_out_processing_no_rsponse(void)
 {
-	int ret=0;
-
 	//恢复当前传感器的空闲状态
 	gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwAccess = SENSOR_HUMID_HW_ACCESS_IDLE;
 	gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwStatus = SENSOR_HUMID_HW_STATUS_DEACTIVE;

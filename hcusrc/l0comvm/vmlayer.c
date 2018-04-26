@@ -1002,7 +1002,6 @@ UINT32 FsmInit(void)
 *******************************************************************************/
 UINT32 FsmAddNew(UINT32 task_id, HcuFsmStateItem_t* pFsmStateItem )
 {
-	OPSTAT ret;
 	UINT32 state;
 	UINT32 msgid;
 	UINT32 item, itemNo, i, j;

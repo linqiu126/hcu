@@ -337,8 +337,6 @@ void func_temp_time_out_read_data_from_spibusaries(void)
 //超时失败，走向下一个传感器
 void func_temp_time_out_processing_no_rsponse(void)
 {
-	int ret=0;
-
 	//恢复当前传感器的空闲状态
 	gTaskTempContext.temp[gTaskTempContext.currentSensorId].hwAccess = SENSOR_TEMP_HW_ACCESS_IDLE;
 	gTaskTempContext.temp[gTaskTempContext.currentSensorId].hwStatus = SENSOR_TEMP_HW_STATUS_DEACTIVE;

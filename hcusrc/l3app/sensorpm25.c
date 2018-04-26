@@ -258,8 +258,6 @@ void func_pm25_time_out_read_data_from_modbus(void)
 //超时失败，走向下一个传感器
 void func_pm25_time_out_processing_no_rsponse(void)
 {
-	int ret=0;
-
 	//恢复当前传感器的空闲状态
 	gTaskPm25Context.pm25[gTaskPm25Context.currentSensorId].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
 	gTaskPm25Context.pm25[gTaskPm25Context.currentSensorId].hwStatus = SENSOR_PM25_HW_STATUS_DEACTIVE;

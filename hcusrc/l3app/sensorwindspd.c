@@ -234,8 +234,6 @@ void func_windspd_time_out_read_data_from_modbus(void)
 //超时失败，走向下一个传感器
 void func_windspd_time_out_processing_no_rsponse(void)
 {
-	int ret=0;
-
 	//恢复当前传感器的空闲状态
 	gTaskWindspdContext.windspd[gTaskWindspdContext.currentSensorId].hwAccess = SENSOR_WINDSPD_HW_ACCESS_IDLE;
 	gTaskWindspdContext.windspd[gTaskWindspdContext.currentSensorId].hwStatus = SENSOR_WINDSPD_HW_STATUS_DEACTIVE;

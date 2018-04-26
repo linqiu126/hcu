@@ -222,8 +222,6 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 //超时失败，走向下一个传感器
 void func_noise_time_out_processing_no_rsponse(void)
 {
-	int ret=0;
-
 	//恢复当前传感器的空闲状态
 	gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].hwAccess = SENSOR_NOISE_HW_ACCESS_IDLE;
 	gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].hwStatus = SENSOR_NOISE_HW_STATUS_DEACTIVE;
