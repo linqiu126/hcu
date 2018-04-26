@@ -122,21 +122,10 @@ OPSTAT fsm_windspd_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	hcu_sleep(i);
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_WINDSPD, TIMER_ID_1S_WINDSPD_PERIOD_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_WINDSPD_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-		HcuErrorPrint("WINDSPD: Error start timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_WINDSPD, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_WINDSPD_PERIOD_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//State Transfer to FSM_STATE_WINDSPD_ACTIVED
-	ret = FsmSetState(TASK_ID_WINDSPD, FSM_STATE_WINDSPD_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-		HcuErrorPrint("WINDSPD: Error Set FSM State at fsm_windspd_init\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_WINDSPD, FSM_STATE_WINDSPD_ACTIVED);
 	return SUCCESS;
 }
 
@@ -238,25 +227,14 @@ void func_windspd_time_out_read_data_from_modbus(void)
 		}
 
 		//启动一次性定时器
-		ret = hcu_timer_start(TASK_ID_WINDSPD, TIMER_ID_1S_WINDSPD_MODBUS_FB, \
-				zHcuSysEngPar.timer.array[TIMER_ID_1S_WINDSPD_MODBUS_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-			HcuErrorPrint("WINDSPD: Error start timer!\n");
-			return;
-		}
+		hcu_timer_start(TASK_ID_WINDSPD, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_WINDSPD_MODBUS_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 
 		//设置当前传感器到忙，没反应之前，不置状态
 		gTaskWindspdContext.windspd[gTaskWindspdContext.currentSensorId].hwAccess = SENSOR_WINDSPD_HW_ACCESS_BUSY;
 		gTaskWindspdContext.windspd[gTaskWindspdContext.currentSensorId].busyCount = 0;
 
 		//State Transfer to FSM_STATE_WINDSPD_OPT_WFFB
-		ret = FsmSetState(TASK_ID_WINDSPD, FSM_STATE_WINDSPD_OPT_WFFB);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-			HcuErrorPrint("WINDSPD: Error Set FSM State!\n");
-			return;
-		}//FsmSetState
+		FsmSetState(TASK_ID_WINDSPD, FSM_STATE_WINDSPD_OPT_WFFB);
 	}//SENSOR_WINDSPD_HW_ACCESS_IDLE
 
 	//任何其他状态，强制初始化
@@ -321,15 +299,8 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
 
 	//停止定时器
-	ret = hcu_timer_stop(TASK_ID_WINDSPD, TIMER_ID_1S_WINDSPD_MODBUS_FB, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-		HcuErrorPrint("WINDSPD: Error stop timer!\n");
-		return FAILURE;
-	}
-
+	hcu_timer_stop(TASK_ID_WINDSPD, TIMER_ID_1S_WINDSPD_MODBUS_FB, TIMER_RESOLUTION_1S);
 	gTaskWindspdContext.windspdValue = (float)rcv.windspd.windspdValue;
-
 	HCU_DEBUG_PRINT_INF("WINDSPD: windspd = %.1f\n\n", gTaskWindspdContext.windspdValue);
 /*
 	//离线模式

@@ -102,23 +102,11 @@ OPSTAT fsm_airprs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	memset(&gTaskAirprsContext, 0, sizeof(gTaskAirprsContext_t));
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_AIRPRS, TIMER_ID_1S_AIRPRS_PERIOD_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_AIRPRS_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS]++;
-		HcuErrorPrint("AIRPRS: Error start period timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_AIRPRS, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_AIRPRS_PERIOD_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_AIRPRS, FSM_STATE_AIRPRS_ACTIVED) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS]++;
-		HcuErrorPrint("AIRPRS: Error Set FSM State!\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("AIRPRS: Enter FSM_STATE_AIRPRS_ACTIVED status, Keeping refresh here!\n");
-	}
+	FsmSetState(TASK_ID_AIRPRS, FSM_STATE_AIRPRS_ACTIVED);
+	HCU_DEBUG_PRINT_FAT("AIRPRS: Enter FSM_STATE_AIRPRS_ACTIVED status, Keeping refresh here!\n");
 	/*
 
 	//进入阻塞式接收数据状态，然后继续发送

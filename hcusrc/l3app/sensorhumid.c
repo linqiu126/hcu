@@ -123,21 +123,10 @@ OPSTAT fsm_humid_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	hcu_sleep(i);
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_HUMID, TIMER_ID_1S_HUMID_PERIOD_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_HUMID_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-		HcuErrorPrint("HUMID: Error start timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_HUMID, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_HUMID_PERIOD_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//State Transfer to FSM_STATE_HUMID_ACTIVED
-	ret = FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-		HcuErrorPrint("HUMID: Error Set FSM State at fsm_humid_init\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_ACTIVED);
 	return SUCCESS;
 }
 

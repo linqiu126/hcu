@@ -70,8 +70,7 @@ OPSTAT fsm_hsmmp_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("HSMMP: Error Set FSM State at fsm_hsmmp_task_entry\n");}
+	FsmSetState(TASK_ID_HSMMP, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -97,14 +96,8 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_INITED) == FAILURE){
-		HcuErrorPrint("HSMMP: Error Set FSM State!\n");
-		return FAILURE;
-	}
-
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("HSMMP: Enter FSM_STATE_HSMMP_INITED status, Keeping refresh here!\n");
-	}
+	FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_INITED);
+	HCU_DEBUG_PRINT_FAT("HSMMP: Enter FSM_STATE_HSMMP_INITED status, Keeping refresh here!\n");
 
 	//Task global variables init.
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP] = 0;
@@ -118,35 +111,17 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		hcu_sleep(i);
 
 		//启动周期性定时器
-		ret = hcu_timer_start(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ, \
-				zHcuSysEngPar.timer.array[TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-			HcuErrorPrint("HSMMP: Error start timer!\n");
-			return FAILURE;
-		}
+		hcu_timer_start(TASK_ID_HSMMP, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 		//启动周期性定时器
 		i = rand()%TIMER_DURATION_REDUCE_COLLAPTION_IN_1_MINUTES;
 		hcu_sleep(i);
-		ret = hcu_timer_start(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_PERIOD_CURL_PICTURE, \
-				zHcuSysEngPar.timer.array[TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-			HcuErrorPrint("HSMMP: Error start timer!\n");
-			return FAILURE;
-		}
+		hcu_timer_start(TASK_ID_HSMMP, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_HSMMP_PERIOD_CURL_PICTURE), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	*/
 		//设置状态机到目标状态
 		//State Transfer to FSM_STATE_HSMMP_ACTIVED
-		if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
-			return FAILURE;
-		}
-		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-			HcuDebugPrint("GPIO: Enter FSM_STATE_HSMMP_ACTIVED status, Keeping refresh here!\n");
-		}
+		FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED);
+		HCU_DEBUG_PRINT_FAT("GPIO: Enter FSM_STATE_HSMMP_ACTIVED status, Keeping refresh here!\n");
 /*
 		//For HKvision option setting
 		HKVisionOption_t HKVisionOption;
@@ -353,14 +328,8 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 
 	//检查状态
 	if (FsmGetState(TASK_ID_HSMMP) != FSM_STATE_HSMMP_ACTIVED_WFFB){
-		if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
-			return FAILURE;
-		}
-		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
-			HcuDebugPrint("AVORION: Recover to ACTIVED state during period timer out!\n");
-		}
+		FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED);
+		HCU_DEBUG_PRINT_FAT("AVORION: Recover to ACTIVED state during period timer out!\n");
 		return SUCCESS;
 	}
 	//收消息
@@ -514,12 +483,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 	}
 
 	//设置新状态
-	if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("HSMMP: Error Set FSM State!\n");
-		return FAILURE;
-	}
-
+	FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED);
 	return SUCCESS;
 }
 
@@ -530,15 +494,8 @@ OPSTAT func_hsmmp_time_out_period_avorion_read(void)
 
 	//判定状态机是否可以发送，如果不在ACTIVE状态，意味着一定有啥差错，强行恢复工作状态，等待下一次机会
 	if (FsmGetState(TASK_ID_HSMMP) != FSM_STATE_HSMMP_ACTIVED){
-		if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
-			return FAILURE;
-		}
-		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
-			HcuDebugPrint("AVORION: Recover to ACTIVED state during period timer out!\n");
-		}
-
+		FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED);
+		HCU_DEBUG_PRINT_FAT("AVORION: Recover to ACTIVED state during period timer out!\n");
 
 		//发送INIT消息给AVORION任务
 		/*msg_struct_com_init_t snd;
@@ -594,11 +551,7 @@ OPSTAT func_hsmmp_time_out_period_avorion_read(void)
 	}
 
 	//设置新状态
-	if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED_WFFB) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("HSMMP: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED_WFFB) ;
 	return SUCCESS;
 }
 
@@ -666,11 +619,7 @@ OPSTAT func_hsmmp_time_out_wait_for_cammera_fb(void)
 	}
 
 	//恢复状态机
-	if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("HSMMP: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED);
 	return SUCCESS;
 }
 

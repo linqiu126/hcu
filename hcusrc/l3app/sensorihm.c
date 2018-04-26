@@ -98,23 +98,11 @@ OPSTAT fsm_ihm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	memset(&gTaskIhmContext, 0, sizeof(gTaskIhmContext_t));
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_IHM, TIMER_ID_1S_IHM_PERIOD_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_IHM_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IHM]++;
-		HcuErrorPrint("IHM: Error start period timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_IHM, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_IHM_PERIOD_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_IHM, FSM_STATE_IHM_ACTIVED) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IHM]++;
-		HcuErrorPrint("IHM: Error Set FSM State!\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("IHM: Enter FSM_STATE_IHM_ACTIVED status, Keeping refresh here!\n");
-	}
+	FsmSetState(TASK_ID_IHM, FSM_STATE_IHM_ACTIVED);
+	HCU_DEBUG_PRINT_FAT("IHM: Enter FSM_STATE_IHM_ACTIVED status, Keeping refresh here!\n");
 	/*
 
 	//进入阻塞式接收数据状态，然后继续发送

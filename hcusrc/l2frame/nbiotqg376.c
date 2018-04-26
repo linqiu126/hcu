@@ -62,8 +62,7 @@ OPSTAT fsm_nbiotqg376_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("NBIOTQG376: Error Set FSM State at fsm_nbiotqg376_task_entry\n");}
+	FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -88,10 +87,7 @@ OPSTAT fsm_nbiotqg376_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_INITED) == FAILURE){
-		HcuErrorPrint("NBIOTQG376: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_INITED);
 
 	//初始化硬件接口
 	if (func_nbiotqg376_int_init() == FAILURE){
@@ -103,24 +99,9 @@ OPSTAT fsm_nbiotqg376_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376] = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_NBIOTQG376, TIMER_ID_1S_NBIOTQG376_PERIOD_LINK_HEART_BEAT, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_NBIOTQG376_PERIOD_LINK_HEART_BEAT].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
-		HcuErrorPrint("NBIOTQG376: Error start timer!\n");
-		return FAILURE;
-	}
-
-	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_OFFLINE) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
-		HcuErrorPrint("NBIOTQG376: Error Set FSM State!\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("NBIOTQG376: Enter FSM_STATE_NBIOTQG376_ACTIVED status, Keeping refresh here!\n");
-	}
-
+	hcu_timer_start(TASK_ID_NBIOTQG376, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_NBIOTQG376_PERIOD_LINK_HEART_BEAT), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_OFFLINE);
+	HCU_DEBUG_PRINT_FAT("NBIOTQG376: Enter FSM_STATE_NBIOTQG376_ACTIVED status, Keeping refresh here!\n");
 	return SUCCESS;
 }
 
@@ -203,19 +184,13 @@ OPSTAT func_nbiotqg376_time_out_period(void)
 	if (FsmGetState(TASK_ID_NBIOTQG376) == FSM_STATE_NBIOTQG376_OFFLINE){
 		if (hcu_ethernet_socket_link_setup() == SUCCESS){
 			//State Transfer to FSM_STATE_NBIOTQG376_ONLINE
-			if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_ONLINE) == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
-				HcuErrorPrint("NBIOTQG376: Error Set FSM State!\n");
-				return FAILURE;
-			}
+			FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_ONLINE);
 			HcuDebugPrint("NBIOTQG376: Connect state change, from OFFLINE to ONLINE!\n");
 		}
 		//如果是失败情况，并不返回错误，属于正常情况
 		//当链路不可用时，这个打印结果会非常频繁，放开比较好
 		else{
-			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_IPT_ON) != FALSE){
-				HcuDebugPrint("NBIOTQG376: Try to setup connection with back-cloud, but not success!\n");
-			}
+			HCU_DEBUG_PRINT_IPT("NBIOTQG376: Try to setup connection with back-cloud, but not success!\n");
 		}
 	}
 
@@ -224,11 +199,7 @@ OPSTAT func_nbiotqg376_time_out_period(void)
 		if (func_nbiotqg376_heart_beat_check() == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 			//State Transfer to FSM_STATE_NBIOTQG376_OFFLINE
-			if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_OFFLINE) == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
-				HcuErrorPrint("NBIOTQG376: Error Set FSM State!\n");
-				return FAILURE;
-			}
+			FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_OFFLINE);
 			HcuDebugPrint("NBIOTQG376: Connect state change, from ONLINE to OFFLINE!\n");
 			//并不立即启动连接的建立，而是等待下一个周期带来，否则状态机过于复杂
 		}//心跳握手失败
@@ -238,11 +209,7 @@ OPSTAT func_nbiotqg376_time_out_period(void)
 
 	//既不在线，也不离线，强制转移到离线状态以便下次恢复，这种情况很难得，一般不会跑到这儿来，这种情况通常发生在初始化期间或者状态机胡乱的情况下
 	else{
-		if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_OFFLINE) == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
-			HcuErrorPrint("NBIOTQG376: Error Set FSM State!\n");
-			return FAILURE;
-		}
+		FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_OFFLINE);
 	}
 
 	return SUCCESS;

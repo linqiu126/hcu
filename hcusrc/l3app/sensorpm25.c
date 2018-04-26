@@ -141,22 +141,10 @@ OPSTAT fsm_pm25_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	hcu_sleep(i);
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_PM25, TIMER_ID_1S_PM25_PERIOD_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_PM25_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-		HcuErrorPrint("PM25: Error start timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_PM25, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_PM25_PERIOD_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//State Transfer to FSM_STATE_PM25_ACTIVED
-	ret = FsmSetState(TASK_ID_PM25, FSM_STATE_PM25_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-		HcuErrorPrint("PM25: Error Set FSM State at fsm_pm25_init\n");
-		return FAILURE;
-	}
-
+	FsmSetState(TASK_ID_PM25, FSM_STATE_PM25_ACTIVED);
 	return SUCCESS;
 }
 

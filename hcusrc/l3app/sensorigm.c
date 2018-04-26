@@ -98,23 +98,11 @@ OPSTAT fsm_igm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	memset(&gTaskIgmContext, 0, sizeof(gTaskIgmContext_t));
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_IGM, TIMER_ID_1S_IGM_PERIOD_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_IGM_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IGM]++;
-		HcuErrorPrint("IGM: Error start period timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_IGM, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_IGM_PERIOD_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_IGM, FSM_STATE_IGM_ACTIVED) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IGM]++;
-		HcuErrorPrint("IGM: Error Set FSM State!\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("IGM: Enter FSM_STATE_IGM_ACTIVED status, Keeping refresh here!\n");
-	}
+	FsmSetState(TASK_ID_IGM, FSM_STATE_IGM_ACTIVED);
+	HCU_DEBUG_PRINT_FAT("IGM: Enter FSM_STATE_IGM_ACTIVED status, Keeping refresh here!\n");
 	/*
 
 	//进入阻塞式接收数据状态，然后继续发送
