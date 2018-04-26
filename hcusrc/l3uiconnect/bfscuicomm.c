@@ -423,11 +423,15 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		fileChangeContent = parseResult.cmdCalibration.cmdValue;
 		//依赖文件变化的内容，分类发送控制命令：零值校准命令/满值校准命令
 		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)){
-			sensorid = parseResult.cmdCalibration.sensorid;
 			msg_struct_uicomm_l3bfsc_calibration_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_calibration_req_t));
 			snd.length = sizeof(msg_struct_uicomm_l3bfsc_calibration_req_t);
+			//重新读入系统全局参数表，这时候没有选择用户配置，默认使用Con
+			if (func_bfscuicomm_read_cfg_file_into_ctrl_table(1) == FAILURE){
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: load default configuration into ctrl table error! \n");
+			}
 			//check sensor id
+			sensorid = parseResult.cmdCalibration.sensorid;
 			if(sensorid < 1 || sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: UI input sensorid out of range, [sensorid=%d]! \n", sensorid);
 
