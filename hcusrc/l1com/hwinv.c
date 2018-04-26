@@ -638,7 +638,14 @@ void func_hwinv_scan_all(void)
 	//func_hwinv_scan_eng_par();
 
 	func_hwinv_scan_dir();
-	func_hwinv_scan_db();
+
+	/*
+	 * 2018/4/26 Update by ZHANG Jianlin
+	 * Temp suppress this function, as too many db access render MYSQL db connection failure.
+	 *
+	 */
+	//func_hwinv_scan_db();
+
 	func_hwinv_scan_emc();
 	func_hwinv_scan_pm25();
 	func_hwinv_scan_winddir();
