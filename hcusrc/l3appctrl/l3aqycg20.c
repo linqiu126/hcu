@@ -1650,6 +1650,8 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//CONTENT: Adjust later:TBD
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.ycjk.equipid = 1;
+
+/*
 		if((gTaskL3aqycq20Context.staMin.a01001_Avg > HCU_L3AQYC_A01001_RANGE_MAX) || (gTaskL3aqycq20Context.staMin.a01001_Avg == 0)){
 			gTaskL3aqycq20Context.staMin.a01001_Avg = HCU_L3AQYC_A01001_RANGE_MAX - 20;
 		}
@@ -1668,6 +1670,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		if((gTaskL3aqycq20Context.staMin.a50001_Avg > HCU_L3AQYC_A50001_RANGE_MAX) || (gTaskL3aqycq20Context.staMin.a50001_Avg == 0)){
 			gTaskL3aqycq20Context.staMin.a50001_Avg = HCU_L3AQYC_A50001_RANGE_MAX - 20;
 		}
+*/
 
 		if(gTaskTempContext.tempValue == 0)
 			gTaskTempContext.tempValue = 0;
@@ -1679,7 +1682,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 			gTaskWinddirContext.winddirValue = 120;
 
 		if(gTaskWindspdContext.windspdValue == 0)
-			gTaskWindspdContext.windspdValue = 3;
+			gTaskWindspdContext.windspdValue = 0;
 
 		if(gTaskPm25Context.PM01Value == 0)
 			gTaskPm25Context.PM01Value = 11;
