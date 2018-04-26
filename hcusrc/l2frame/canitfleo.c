@@ -603,6 +603,11 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(StrMsg_HUITP_
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 
+	if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus ==HCU_L3BFSC_SENSOR_WS_STATUS_ISOLATED) //秤台被设置成隔离
+	{
+		return SUCCESS;
+	}
+
 	//Firstly Register state
 	gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP;
 	HCU_DEBUG_PRINT_CRT("CANITFLEO: Sensor ID = %d is set to be startup!\n", nodeId);
@@ -1105,6 +1110,10 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_heart_beat_report_received_handle(StrMsg_
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
 
+	if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_ISOLATED) //秤台被设置成隔离
+	{
+		return SUCCESS;
+	}
 	//准备组装发送消息
 	StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_confirm_t pMsgProc;
 	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_confirm_t);
