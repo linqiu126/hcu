@@ -25,7 +25,6 @@ enum FSM_STATE_BFSCUICOMM
 //#define FSM_STATE_INVALID 0xFF
 
 typedef struct gTaskL3bfscuicommContext{
-	UINT8	bfscuiState; // 1 - UI START; 2 - UI STOP
 	//本地全局变量，分别用于标识开启命令，校准命令，和配置命令的变化，系统启动初始化为0, UI界面修改后自动累加，HCU对比Flag变化判断用户修改了那个Json文件
 	UINT32  cmdStartStopFlag;
 	UINT32  cmdCalibrationFlag;

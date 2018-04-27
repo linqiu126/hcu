@@ -1107,7 +1107,7 @@ OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_
 
 	char s[200], tmp[20];
 	memset(s, 0, sizeof(s));
-	sprintf(s, "L3BFSC: Total config sensor number = %d, bitmap = ", total);
+	sprintf(s, "L3BFSC: Total configured sensor number = %d\n", total);
 	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		memset(tmp, 0, sizeof(tmp));
 		sprintf(tmp, "%d/", snd.wsBitmap[i]);
@@ -1214,8 +1214,8 @@ OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		snd.length = sizeof(msg_struct_l3bfsc_can_sys_stop_req_t);
 		total=0;
 		for (i = 0; i< HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
-			//所有的非离线传感器
-			if (gTaskL3bfscContext.sensorWs[i].sensorStatus > HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE){
+			//发送给所有非异常的传感器
+			if (gTaskL3bfscContext.sensorWs[i].sensorStatus > HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE_MAX){
 				snd.wsBitmap[i] = TRUE;
 				gTaskL3bfscContext.sensorWs[i].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_STOP_REQ;
 				gTaskL3bfscContext.sensorWs[i].stopRcvFlag = FALSE;

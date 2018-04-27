@@ -888,7 +888,7 @@ OPSTAT dbi_HcuBfsc_DynamicConfigDataGet(UINT16 config_index, UINT32  dynamicdata
 	    HCU_L0DBICOM_INIT_DB_CONN();
 
 		//获取数据
-	    sprintf(strsql, "SELECT * FROM `hcubfscconfigpara` WHERE (`currentconf` = 'Y' && `sid` = '%d')" , config_index);
+	    sprintf(strsql, "SELECT * FROM `hcubfscconfigpara` WHERE (`sid` = '%d')" , config_index);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){  //成功返回0
 	    	mysql_close(sqlHandler);

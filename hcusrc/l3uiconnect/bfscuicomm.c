@@ -200,10 +200,8 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 	memcpy(&rcv, param_ptr, param_len);
 
 	//收到正确且所有秤台齐活的反馈
-	HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: rcv.validFlag = %d\n", rcv.validFlag);
-	dbi_HcuBfsc_WmcCurComWgtUpdate(0);
-	if((rcv.validFlag == TRUE) && (gTaskL3bfscuicommContext.bfscuiState == HCU_BFSCCOMM_JASON_CMD_START)){
-		//Update databse, to let START menu turn state from grey to active!!!
+	if(rcv.validFlag == TRUE){
+		dbi_HcuBfsc_WmcCurComWgtUpdate(0); //清理所有秤台，设置重量归0
 		msg_struct_uicomm_l3bfsc_cmd_req_t snd;
 		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
 		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
@@ -213,8 +211,11 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 	}
 	//收到L3BFSC指示秤台配置错误的反馈
-	else if ((rcv.validFlag == FALSE) && (gTaskL3bfscuicommContext.bfscuiState == HCU_BFSCCOMM_JASON_CMD_START)){
-		hcu_sleep(2);
+	else if (rcv.validFlag == FALSE){
+		HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: validFlag = %d，errCode = %d, sensorId = %d\n", rcv.validFlag, rcv.errCode, rcv.sensorid);
+
+		//sleep 3s后尝试再次发送config请求
+		hcu_sleep(3);
 		msg_struct_uicomm_l3bfsc_cfg_req_t snd;
 		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
 		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
@@ -394,18 +395,20 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		//依赖文件变化的内容，分类发送控制命令：START/STOP命令
 		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START){
 			UINT16 config_index = 0;
-			gTaskL3bfscuicommContext.bfscuiState = HCU_BFSCCOMM_JASON_CMD_START;
 			config_index = parseResult.cmdStartStop.confindex;
-			if (func_bfscuicomm_read_cfg_file_into_ctrl_table(config_index) == SUCCESS){
-				msg_struct_uicomm_l3bfsc_cfg_req_t snd;
-				memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
-				snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
-				if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
-					HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+			//根据界面选择的用户配置初始化全局参数表
+			if (func_bfscuicomm_read_cfg_file_into_ctrl_table(config_index) == FAILURE){
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: load user specified configuration into ctrl table error, config_index = %d! \n", config_index);
 			}
+
+			//发送配置消息给L3BFSC
+			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
+			if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		}
 		else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP){
-			gTaskL3bfscuicommContext.bfscuiState = HCU_BFSCCOMM_JASON_CMD_STOP;
 			msg_struct_uicomm_l3bfsc_cmd_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
 			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
@@ -426,7 +429,7 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 			msg_struct_uicomm_l3bfsc_calibration_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_calibration_req_t));
 			snd.length = sizeof(msg_struct_uicomm_l3bfsc_calibration_req_t);
-			//重新读入系统全局参数表，这时候没有选择用户配置，默认使用Con
+			//重新读入系统全局参数表，这时候没有选择用户配置，默认使用Config_index=1的默认配置去初始化weightSensor参数
 			if (func_bfscuicomm_read_cfg_file_into_ctrl_table(1) == FAILURE){
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: load default configuration into ctrl table error! \n");
 			}
@@ -438,11 +441,17 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO) {
 				snd.cali_mode = BFSC_SENSOR_CALIBRATION_MODE_ZERO;
 				snd.sensorid = sensorid;
+				//将对应秤台的原有校准ADC值清零
+				dbi_HcuBfsc_CalibrationDataUpdate_adczero(0, sensorid);
 			}
 			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL){
 				snd.cali_mode = BFSC_SENSOR_CALIBRATION_MODE_FULL;
 				snd.sensorid = sensorid;
+				//将对应秤台的原有校准ADC值清零
+				dbi_HcuBfsc_CalibrationDataUpdate_adcfull(0, sensorid);
 			}
+			else
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: JSON command value error, fileChangeContent = %d! \n", fileChangeContent);
 
 			//发送命令给L3BFSC
 			if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CALI_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
@@ -457,8 +466,6 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		fileChangeContent = parseResult.cmdResume.cmdValue;
 		//依赖文件变化的内容，分类发送控制命令：SUSPEND命令/RESUME命令
 		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME) {
-			//Re-configure/start all weight sensor
-			gTaskL3bfscuicommContext.bfscuiState = HCU_BFSCCOMM_JASON_CMD_START;
 			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
 			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);

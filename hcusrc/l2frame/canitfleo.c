@@ -679,16 +679,20 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(StrMsg_HU
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+	UINT8 validFlag;
+	UINT16 errCode;
+	validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 
-	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_CONFIG_ERR, 0);
+	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, errCode, 0);
 	else dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_CONFIG_RCV, 0);
 
 	//系统初始化过程
 	if (FsmGetState(TASK_ID_L3BFSC) < FSM_STATE_L3BFSC_OOS_SCAN){
 		msg_struct_can_l3bfsc_sys_cfg_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t));
-		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
-		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+		snd.validFlag = validFlag;
+		snd.errCode = errCode;
 		snd.sensorid = nodeId;
 		snd.length = sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t);
 		if (hcu_message_send(MSG_ID_CAN_L3BFSC_SYS_CFG_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
@@ -774,15 +778,20 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_start_resp_received_handle(StrMsg_HUITP_M
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+	UINT8 validFlag;
+	UINT16 errCode;
+	validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_START_RCV, 0);
+	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, errCode, 0);
+	else dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_START_RCV, 0);
 
 	//系统初始化过程
 	if (FsmGetState(TASK_ID_L3BFSC) < FSM_STATE_L3BFSC_OOS_SCAN){
 		msg_struct_can_l3bfsc_sys_start_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_start_resp_t));
-		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
-		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+		snd.validFlag = validFlag;
+		snd.errCode = errCode;
 		snd.sensorid = nodeId;
 		snd.length = sizeof(msg_struct_can_l3bfsc_sys_start_resp_t);
 		if (hcu_message_send(MSG_ID_CAN_L3BFSC_SYS_START_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
@@ -803,13 +812,18 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_stop_resp_received_handle(StrMsg_HUITP_MS
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_STOP_RCV, 0);
+	UINT8 validFlag;
+	UINT16 errCode;
+	validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+
+	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, errCode, 0);
+	else dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_STOP_RCV, 0);
 
 	msg_struct_can_l3bfsc_sys_stop_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_stop_resp_t));
-	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
-	HCU_DEBUG_PRINT_INF("CANITFLEO: Receive STOP_RESP flag = %d\n", snd.validFlag);
-	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.validFlag = validFlag;
+	snd.errCode = errCode;
 	snd.sensorid = nodeId;
 	snd.length = sizeof(msg_struct_can_l3bfsc_sys_stop_resp_t);
 	if (hcu_message_send(MSG_ID_CAN_L3BFSC_SYS_STOP_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
@@ -1064,8 +1078,10 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_fault_ind_received_handle(StrMsg_HUITP_MS
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//只更新传感器的状态，不做其它处理
+	UINT16 errCode;
+	errCode = HUITP_ENDIAN_EXG16(rcv->error_code);
 
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_FAULT_RCV, 0);
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, errCode, 0);
 
 	if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus < HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MAX)
 		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_INIT_ERR;
@@ -1084,12 +1100,18 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_err_ind_cmd_resp_received_handle(StrMsg_H
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_ERR_RESP_RCV, 0);
+	UINT8 validFlag;
+	UINT16 errCode;
+	validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	errCode = HUITP_ENDIAN_EXG16(rcv->error_code);
+	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, errCode, 0);
+	else dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_ERR_RESP_RCV, 0);
 
 	msg_struct_can_l3bfsc_error_inq_cmd_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t));
 	snd.sensorid = nodeId;
-	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	snd.validFlag = validFlag;
+	snd.errCode = errCode;
 	snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->average_weight);
 	snd.length = sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t);
 	if (hcu_message_send(MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
