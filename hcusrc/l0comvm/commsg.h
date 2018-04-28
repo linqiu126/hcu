@@ -3265,7 +3265,7 @@ typedef struct msg_struct_can_l3bfhs_dyn_full_resp
 //MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,  	//传感器新数据事件
 typedef struct msg_struct_can_l3bfhs_new_ready_event
 {
-	UINT32 snrWsValue;
+	INT32 snrWsValue;
 	UINT8  snrState;
 	UINT32 length;
 }msg_struct_can_l3bfhs_new_ready_event_t;
@@ -3440,7 +3440,7 @@ typedef struct msg_struct_can_l3bfdf_dyn_cal_resp
 typedef struct msg_struct_can_l3bfdf_new_ready_event
 {
 	UINT8  snrId;
-	UINT32 sensorWsValue;
+	INT32 sensorWsValue;
 	UINT32 length;
 }msg_struct_can_l3bfdf_new_ready_event_t;
 

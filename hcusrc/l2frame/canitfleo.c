@@ -272,6 +272,7 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 OPSTAT fsm_canitfleo_l3bfsc_sys_cali_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	UINT8 sensorid = 0;
+	UINT32 bitmap = 0;
 
 	//入参检查
 	msg_struct_l3bfsc_can_sys_cali_req_t rcv;
@@ -281,7 +282,7 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cali_req(UINT32 dest_id, UINT32 src_id, void * p
 	memcpy(&rcv, param_ptr, param_len);
 
 	//生成bitmap
-	UINT32 bitmap = 0;
+	sensorid = rcv.sensorid;
 	bitmap = ((UINT32)1<<sensorid);
 
 	//准备组装发送消息
@@ -324,6 +325,8 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cali_req(UINT32 dest_id, UINT32 src_id, void * p
 	//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
 	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+
+	printf("CANITFLEO: send cali req, bitmap = %d, msgLen = %d\n", bitmap, msgProcLen);
 
 	//返回
 	return SUCCESS;
@@ -763,6 +766,8 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_calibration_resp_received_handle(StrMsg_H
 	snd.cali_resp.wgtSnrPar.WeightSensorPickupThread = HUITP_ENDIAN_EXG32(rcv->cal_resp.weight_sensor_param.WeightSensorPickupThread);
 	snd.cali_resp.wgtSnrPar.WeightSensorStaticZeroValue = HUITP_ENDIAN_EXG32(rcv->cal_resp.weight_sensor_param.WeightSensorStaticZeroValue);
 	snd.cali_resp.wgtSnrPar.WeightSensorTailorValue = HUITP_ENDIAN_EXG32(rcv->cal_resp.weight_sensor_param.WeightSensorTailorValue);
+
+	printf ("CANITFLEO:  receive cali resp, validFlag = %d, nodeId = %d, adcZero = %d, adcFull = %d\n",snd.validFlag, nodeId,snd.cali_resp.wgtSnrPar.WeightSensorCalibrationZeroAdcValue, snd.cali_resp.wgtSnrPar.WeightSensorCalibrationFullAdcValue);
 
 	snd.sensorid = nodeId;
 	snd.length = sizeof(msg_struct_can_l3bfsc_sys_cali_resp_t);

@@ -101,8 +101,8 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM] = 0;
 	memset(&gTaskSysswmContext, 0, sizeof(gTaskSysswmContext_t));
 
-	//启动周期性定时器：第一次将时钟降低到15秒
-	hcu_timer_start(TASK_ID_SYSSWM, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_SYSSWM_PERIOD_WORKING), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	//启动周期性定时器：第一次将时钟降低到90秒, considering of ETHERNET 1st start period = 60second.
+	hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, 90, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//设置状态机到目标状态
 	FsmSetState(TASK_ID_SYSSWM, FSM_STATE_SYSSWM_ACTIVED);
@@ -258,6 +258,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		//如果版本号不适合
 		HCU_DEBUG_PRINT_CRT("SYSSWM: Session=%d, HCU Rcv REL/VER/DBVER=[%d/%d/%d], BurnId REL/VER/DBVER=[%d/%d/%d]\n", gTaskSysswmContext.swDlSession, rcv.swRel, rcv.swVer, rcv.dbVer, zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
 		if ((rcv.swRel < zHcuSysEngPar.hwBurnId.swRelId) || ((rcv.swRel == zHcuSysEngPar.hwBurnId.swRelId) && (rcv.swVer <= zHcuSysEngPar.hwBurnId.swVerId))){
+			HCU_DEBUG_PRINT_FAT("SYSSWM: Rcv REL/VER=%d/%d, EngPar REL/ID=%d/%d\n", rcv.swRel, rcv.swVer, zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId);
 			return SUCCESS;
 		}
 

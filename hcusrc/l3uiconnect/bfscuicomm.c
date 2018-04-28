@@ -215,12 +215,12 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 		HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: validFlag = %d，errCode = %d, sensorId = %d\n", rcv.validFlag, rcv.errCode, rcv.sensorid);
 
 		//sleep 3s后尝试再次发送config请求
-		hcu_sleep(3);
-		msg_struct_uicomm_l3bfsc_cfg_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
-		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
-		if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+//		hcu_sleep(3);
+//		msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+//		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+//		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
+//		if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 	}
 	//返回
 	return SUCCESS;
@@ -238,6 +238,7 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cali_resp(UINT32 dest_id, UINT32 src_id, void * par
 		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
+	printf("BFSCUICOMM: cali_resp, sensorid=%d, validFlag=%d, cali_mode=%d, adcValue=%d\n", rcv.sensorid,rcv.validFlag,rcv.cali_mode,rcv.adcValue);
 	if (rcv.cali_mode == BFSC_SENSOR_CALIBRATION_MODE_ZERO){
 		sensorid = rcv.sensorid;
 		if(sensorid < 1 || sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)
@@ -262,7 +263,7 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cali_resp(UINT32 dest_id, UINT32 src_id, void * par
 		if (ret == FAILURE) HCU_ERROR_PRINT_BFSCUICOMM("TASK_ID_BFSCUICOMM: Save calibration data into DB error!\n");
 	}
 	else{
-		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message parameter error!\n");
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message parameter error, rcv.cali_mode = %d!\n", rcv.cali_mode);
 	}
 
 	//返回
@@ -435,6 +436,7 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 			}
 			//check sensor id
 			sensorid = parseResult.cmdCalibration.sensorid;
+
 			if(sensorid < 1 || sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: UI input sensorid out of range, [sensorid=%d]! \n", sensorid);
 
@@ -487,6 +489,7 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 			testcmd = parseResult.cmdTest.testCmd;
 			testpara = parseResult.cmdTest.testPara;
 			msg_struct_uicomm_can_test_cmd_req_t snd;
+
 			memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
 			snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
 			//check sensor id
@@ -670,7 +673,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 			//解码testpara
 			json_object_object_get_ex(cmd_jsonobj, "testpara", &testpara_jsonobj);
 			if (testpara_jsonobj != NULL){
-				parseResult->cmdTest.testCmd = json_object_get_int(testpara_jsonobj);
+				parseResult->cmdTest.testPara = json_object_get_int(testpara_jsonobj);
 				json_object_put(testpara_jsonobj);
 			}
 		}

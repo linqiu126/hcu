@@ -726,8 +726,8 @@ OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	callcell.targetWeight = gTaskL3bfhsContext.wgtSnrPar.minAllowedWeight;
 	callcell.actualWeight = rcv.snrWsValue;
 	callcell.state = rcv.snrState;
-	callcell.tu1 = 0;  //TBD
-	callcell.tu2 = 0;  //TBD
+	callcell.tu1 = gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu1Limit;  //TBD
+	callcell.tu2 = gTaskL3bfhsContext.wgtSnrPar.snrAlgoTu2Limit;  //TBD
 	if (dbi_HcuBfhs_callcell_save(&callcell) == FAILURE)
 		HCU_ERROR_PRINT_L3BFHS("L3BFHS: Save data into db error!\n");
 
