@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 27, 2018 at 02:58 PM
--- Server version: 5.7.21-0ubuntu0.16.04.1
--- PHP Version: 7.0.25-0ubuntu0.16.04.1
+-- Generation Time: Apr 29, 2018 at 04:03 PM
+-- Server version: 5.7.20-0ubuntu0.16.04.1
+-- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `hcudb`
 --
+CREATE DATABASE IF NOT EXISTS `hcudb` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `hcudb`;
 
 -- --------------------------------------------------------
 
@@ -26,6 +28,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `hcuairprsaltitudebmp180datainfo`
 --
 
+DROP TABLE IF EXISTS `hcuairprsaltitudebmp180datainfo`;
 CREATE TABLE `hcuairprsaltitudebmp180datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -40,6 +43,7 @@ CREATE TABLE `hcuairprsaltitudebmp180datainfo` (
 -- Table structure for table `hcuairprsbmp180datainfo`
 --
 
+DROP TABLE IF EXISTS `hcuairprsbmp180datainfo`;
 CREATE TABLE `hcuairprsbmp180datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -54,6 +58,7 @@ CREATE TABLE `hcuairprsbmp180datainfo` (
 -- Table structure for table `hcuairprsdatainfo`
 --
 
+DROP TABLE IF EXISTS `hcuairprsdatainfo`;
 CREATE TABLE `hcuairprsdatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -74,6 +79,7 @@ CREATE TABLE `hcuairprsdatainfo` (
 -- Table structure for table `hcualcoholdatainfo`
 --
 
+DROP TABLE IF EXISTS `hcualcoholdatainfo`;
 CREATE TABLE `hcualcoholdatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -94,6 +100,7 @@ CREATE TABLE `hcualcoholdatainfo` (
 -- Table structure for table `hcualcoholmq3alcodatainfo`
 --
 
+DROP TABLE IF EXISTS `hcualcoholmq3alcodatainfo`;
 CREATE TABLE `hcualcoholmq3alcodatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -108,6 +115,7 @@ CREATE TABLE `hcualcoholmq3alcodatainfo` (
 -- Table structure for table `hcubfdfcallcell`
 --
 
+DROP TABLE IF EXISTS `hcubfdfcallcell`;
 CREATE TABLE `hcubfdfcallcell` (
   `sid` int(4) NOT NULL,
   `configid` int(4) DEFAULT NULL,
@@ -135,63 +143,7 @@ INSERT INTO `hcubfdfcallcell` (`sid`, `configid`, `timestamp`, `operator`, `grou
 (6, 16, 1520583608, 'apple', 1, 40000, 10000, 100000, 110000, 101615, 0, 5),
 (7, 16, 1520952050, 'apple', 1, 80000, 10000, 1000000, 1100000, 1128195, 0, 1),
 (8, 16, 1520952052, 'apple', 1, 80000, 10000, 1000000, 1100000, 1116604, 0, 2),
-(9, 16, 1520952053, 'apple', 1, 80000, 10000, 1000000, 1100000, 1137164, 0, 3),
-(10, 16, 1520952054, 'apple', 1, 80000, 10000, 1000000, 1100000, 1097711, 0, 4),
-(11, 16, 1520952055, 'apple', 1, 80000, 10000, 1000000, 1100000, 1177520, 0, 5),
-(12, 16, 1520952056, 'apple', 1, 80000, 10000, 1000000, 1100000, 1144028, 0, 6),
-(13, 16, 1520952057, 'apple', 1, 80000, 10000, 1000000, 1100000, 1141798, 0, 7),
-(14, 16, 1520952058, 'apple', 1, 80000, 10000, 1000000, 1100000, 1090702, 0, 8),
-(15, 16, 1520583723, 'apple', 1, 40000, 10000, 100000, 110000, 118964, 0, 7),
-(16, 16, 1520583724, 'apple', 1, 40000, 10000, 100000, 110000, 112017, 0, 8),
-(17, 16, 1520583726, 'apple', 1, 40000, 10000, 100000, 110000, 105356, 0, 1),
-(18, 16, 1520583729, 'apple', 1, 40000, 10000, 100000, 110000, 106592, 0, 3),
-(19, 16, 1520953431, 'apple', 1, 80000, 10000, 1000000, 1100000, 1128955, 0, 1),
-(20, 16, 1520953432, 'apple', 1, 80000, 10000, 1000000, 1100000, 1076503, 0, 2),
-(21, 16, 1520953434, 'apple', 1, 80000, 10000, 1000000, 1100000, 1133336, 0, 3),
-(22, 16, 1520953434, 'apple', 1, 80000, 10000, 1000000, 1100000, 1103000, 0, 4),
-(23, 16, 1520953435, 'apple', 1, 80000, 10000, 1000000, 1100000, 1131518, 0, 5),
-(24, 16, 1520953436, 'apple', 1, 80000, 10000, 1000000, 1100000, 1117140, 0, 6),
-(25, 16, 1520953437, 'apple', 1, 80000, 10000, 1000000, 1100000, 1150163, 0, 7),
-(26, 16, 1520953438, 'apple', 1, 80000, 10000, 1000000, 1100000, 1117937, 0, 8),
-(27, 16, 1520583809, 'apple', 1, 40000, 10000, 100000, 110000, 115432, 0, 2),
-(28, 16, 1520953681, 'apple', 1, 80000, 10000, 1000000, 1100000, 1009727, 0, 1),
-(29, 16, 1520953684, 'apple', 1, 80000, 10000, 1000000, 1100000, 1009530, 0, 5),
-(30, 16, 1520583861, 'apple', 1, 40000, 10000, 100000, 110000, 128303, 0, 3),
-(31, 16, 1520583863, 'apple', 1, 40000, 10000, 100000, 110000, 100652, 0, 4),
-(32, 16, 1520583864, 'apple', 1, 40000, 10000, 100000, 110000, 123808, 0, 5),
-(33, 16, 1520583865, 'apple', 1, 40000, 10000, 100000, 110000, 105832, 0, 6),
-(34, 16, 1520583866, 'apple', 1, 40000, 10000, 100000, 110000, 107681, 0, 7),
-(35, 16, 1520583867, 'apple', 1, 40000, 10000, 100000, 110000, 102348, 0, 8),
-(36, 16, 1520583871, 'apple', 1, 40000, 10000, 100000, 110000, 103287, 0, 1),
-(37, 16, 1520583872, 'apple', 1, 40000, 10000, 100000, 110000, 118689, 0, 2),
-(38, 16, 1520583874, 'apple', 1, 40000, 10000, 100000, 110000, 103071, 0, 4),
-(39, 16, 1520583878, 'apple', 1, 40000, 10000, 100000, 110000, 114170, 0, 8),
-(40, 16, 1520581265, 'apple', 1, 40000, 10000, 100000, 110000, 124135, 0, 4),
-(41, 16, 1520581267, 'apple', 1, 40000, 10000, 100000, 110000, 131899, 0, 5),
-(42, 16, 1520581269, 'apple', 1, 40000, 10000, 100000, 110000, 107443, 0, 5),
-(43, 16, 1520581271, 'apple', 1, 40000, 10000, 100000, 110000, 62215, 0, 5),
-(44, 16, 1520581273, 'apple', 1, 40000, 10000, 100000, 110000, 0, 0, 8),
-(45, 16, 1520581274, 'apple', 1, 40000, 10000, 100000, 110000, 108812, 0, 7),
-(46, 16, 1520581288, 'apple', 1, 40000, 10000, 100000, 110000, 116955, 0, 5),
-(47, 16, 1520581294, 'apple', 1, 40000, 10000, 100000, 110000, 113354, 0, 6),
-(48, 16, 1520581301, 'apple', 1, 40000, 10000, 100000, 110000, 121312, 0, 7),
-(49, 16, 1520581307, 'apple', 1, 40000, 10000, 100000, 110000, 106821, 0, 7),
-(50, 16, 1520581314, 'apple', 1, 40000, 10000, 100000, 110000, 119513, 0, 8),
-(51, 16, 1520581318, 'apple', 1, 40000, 10000, 100000, 110000, 110338, 0, 1),
-(52, 16, 1520581325, 'apple', 1, 40000, 10000, 100000, 110000, 127640, 0, 3),
-(53, 16, 1520581326, 'apple', 1, 40000, 10000, 100000, 110000, 75556, 0, 3),
-(54, 16, 1520581327, 'apple', 1, 40000, 10000, 100000, 110000, 104728, 0, 4),
-(55, 16, 1520581328, 'apple', 1, 40000, 10000, 100000, 110000, 117833, 0, 5),
-(56, 16, 1520581330, 'apple', 1, 40000, 10000, 100000, 110000, 111541, 0, 6),
-(57, 16, 1520581402, 'apple', 1, 40000, 10000, 100000, 110000, 117940, 0, 7),
-(58, 16, 1520581428, 'apple', 1, 40000, 10000, 100000, 110000, 111390, 0, 1),
-(59, 16, 1520581429, 'apple', 1, 40000, 10000, 100000, 110000, 110266, 0, 2),
-(60, 16, 1520581430, 'apple', 1, 40000, 10000, 100000, 110000, 120508, 0, 3),
-(61, 16, 1520581431, 'apple', 1, 40000, 10000, 100000, 110000, 110226, 0, 4),
-(62, 16, 1520581432, 'apple', 1, 40000, 10000, 100000, 110000, 111506, 0, 5),
-(63, 16, 1520581433, 'apple', 1, 40000, 10000, 100000, 110000, 101764, 0, 6),
-(64, 16, 1520581434, 'apple', 1, 40000, 10000, 100000, 110000, 120786, 0, 7),
-(65, 16, 1520581436, 'apple', 1, 40000, 10000, 100000, 110000, 117043, 0, 8);
+(9, 16, 1520952053, 'apple', 1, 80000, 10000, 1000000, 1100000, 1137164, 0, 3);
 
 -- --------------------------------------------------------
 
@@ -199,6 +151,7 @@ INSERT INTO `hcubfdfcallcell` (`sid`, `configid`, `timestamp`, `operator`, `grou
 -- Table structure for table `hcubfdfgrouppara`
 --
 
+DROP TABLE IF EXISTS `hcubfdfgrouppara`;
 CREATE TABLE `hcubfdfgrouppara` (
   `sid` int(4) NOT NULL,
   `groupid` int(1) NOT NULL,
@@ -211,7 +164,7 @@ CREATE TABLE `hcubfdfgrouppara` (
   `bufwgttarget` int(4) NOT NULL,
   `rangelow` int(4) NOT NULL,
   `rangehigh` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfdfgrouppara`
@@ -236,16 +189,17 @@ INSERT INTO `hcubfdfgrouppara` (`sid`, `groupid`, `lineid`, `configid`, `hoppern
 -- Table structure for table `hcubfdfproductpara`
 --
 
+DROP TABLE IF EXISTS `hcubfdfproductpara`;
 CREATE TABLE `hcubfdfproductpara` (
   `configid` int(4) NOT NULL,
   `groupnum` int(1) NOT NULL,
-  `confname` varchar(50) NOT NULL,
-  `confowner` varchar(20) NOT NULL DEFAULT 'System',
-  `currentconf` varchar(1) NOT NULL DEFAULT 'N',
-  `baseconf` varchar(5) NOT NULL DEFAULT 'N',
-  `conficon` varchar(20) NOT NULL,
-  `confdescription` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `confname` varchar(50) CHARACTER SET utf8mb4 NOT NULL,
+  `confowner` varchar(20) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'System',
+  `currentconf` varchar(1) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'N',
+  `baseconf` varchar(5) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'N',
+  `conficon` varchar(20) CHARACTER SET utf8mb4 NOT NULL,
+  `confdescription` varchar(100) CHARACTER SET utf8mb4 NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfdfproductpara`
@@ -262,6 +216,7 @@ INSERT INTO `hcubfdfproductpara` (`configid`, `groupnum`, `confname`, `confowner
 -- Table structure for table `hcubfdfstadatainfo`
 --
 
+DROP TABLE IF EXISTS `hcubfdfstadatainfo`;
 CREATE TABLE `hcubfdfstadatainfo` (
   `sid` int(4) NOT NULL,
   `statype` char(20) DEFAULT NULL,
@@ -299,6 +254,7 @@ INSERT INTO `hcubfdfstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `ws
 -- Table structure for table `hcubfdfsystempara`
 --
 
+DROP TABLE IF EXISTS `hcubfdfsystempara`;
 CREATE TABLE `hcubfdfsystempara` (
   `sid` int(4) NOT NULL,
   `linenum` int(1) NOT NULL,
@@ -350,6 +306,7 @@ INSERT INTO `hcubfdfsystempara` (`sid`, `linenum`, `boardnumperline`, `mainmotsp
 -- Table structure for table `hcubfhscallcell`
 --
 
+DROP TABLE IF EXISTS `hcubfhscallcell`;
 CREATE TABLE `hcubfhscallcell` (
   `sid` int(4) NOT NULL,
   `configid` int(4) DEFAULT NULL,
@@ -375,14 +332,15 @@ INSERT INTO `hcubfhscallcell` (`sid`, `configid`, `timestamp`, `operator`, `targ
 -- Table structure for table `hcubfhsproductpara`
 --
 
+DROP TABLE IF EXISTS `hcubfhsproductpara`;
 CREATE TABLE `hcubfhsproductpara` (
   `configid` int(4) NOT NULL,
-  `confname` varchar(20) CHARACTER SET utf8 NOT NULL,
-  `currentconf` char(1) CHARACTER SET utf8 NOT NULL DEFAULT 'N',
-  `baseconf` char(1) CHARACTER SET utf8 NOT NULL DEFAULT 'N',
-  `confowner` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT 'System',
-  `conficon` varchar(20) CHARACTER SET utf8 NOT NULL,
-  `confdescription` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `confname` varchar(20) NOT NULL,
+  `currentconf` char(1) NOT NULL DEFAULT 'N',
+  `baseconf` char(1) NOT NULL DEFAULT 'N',
+  `confowner` varchar(20) NOT NULL DEFAULT 'System',
+  `conficon` varchar(20) NOT NULL,
+  `confdescription` varchar(100) DEFAULT NULL,
   `targetweight` int(4) NOT NULL,
   `targetspeed` int(4) NOT NULL,
   `productlength` int(4) NOT NULL,
@@ -404,7 +362,7 @@ CREATE TABLE `hcubfhsproductpara` (
   `armstartaction` int(4) NOT NULL,
   `motordirection` int(4) NOT NULL,
   `motorspeed` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfhsproductpara`
@@ -412,7 +370,7 @@ CREATE TABLE `hcubfhsproductpara` (
 
 INSERT INTO `hcubfhsproductpara` (`configid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `targetweight`, `targetspeed`, `productlength`, `upperlimit`, `algorithmoption`, `rejectoroption`, `targetthroughput`, `tareweight`, `tu1limit`, `maxtu1`, `tu2limit`, `readstarttime`, `readstoptime`, `armfailtime`, `armfailvaration`, `armrollinginterval`, `armrollingstart`, `armrollingstop`, `armstartaction`, `motordirection`, `motorspeed`) VALUES
 (16, 'apple', 'N', 'Y', 'System', 'apple54.svg', 'Apple base configuratuion', 1000, 1000, 100, 1000, 1, 3, 0, 0, 99500, 250, 99000, 300, 380, 0, 0, 0, 0, 0, 2000, 0, 750),
-(24, 'fish', 'N', 'N', 'System', 'fish13.svg', 'Fish configuratuion', 1000, 1000, 100, 1000, 1, 3, 0, 0, 99500, 250, 99000, 300, 380, 0, 0, 0, 0, 0, 2000, 1, 750),
+(24, 'fish', 'N', 'N', 'admin', 'fish13.svg', 'Fish configuratuion', 1000, 1000, 100, 1000, 1, 3, 0, 0, 99500, 250, 99000, 300, 380, 1, 0, 0, 0, 0, 2000, 1, 750),
 (25, 'Banana', 'N', 'N', 'System', 'banana3.svg', 'Banana configuratuion', 1000, 1000, 100, 1000, 1, 3, 0, 0, 99500, 250, 99000, 300, 380, 0, 0, 0, 0, 0, 2000, 1, 750);
 
 -- --------------------------------------------------------
@@ -421,6 +379,7 @@ INSERT INTO `hcubfhsproductpara` (`configid`, `confname`, `currentconf`, `baseco
 -- Table structure for table `hcubfhsstadatainfo`
 --
 
+DROP TABLE IF EXISTS `hcubfhsstadatainfo`;
 CREATE TABLE `hcubfhsstadatainfo` (
   `sid` int(4) NOT NULL,
   `statype` char(20) DEFAULT NULL,
@@ -455,6 +414,7 @@ INSERT INTO `hcubfhsstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `ws
 -- Table structure for table `hcubfhssystempara`
 --
 
+DROP TABLE IF EXISTS `hcubfhssystempara`;
 CREATE TABLE `hcubfhssystempara` (
   `sid` int(4) NOT NULL,
   `weighterlength` int(4) NOT NULL,
@@ -482,9 +442,9 @@ CREATE TABLE `hcubfhssystempara` (
   `motorspeed` int(4) NOT NULL,
   `engswitch` int(1) NOT NULL DEFAULT '0',
   `sysstatus` int(1) NOT NULL DEFAULT '0',
-  `hcusw` varchar(100) DEFAULT NULL,
-  `ihusw` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `hcusw` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
+  `ihusw` varchar(100) CHARACTER SET latin1 DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfhssystempara`
@@ -499,6 +459,7 @@ INSERT INTO `hcubfhssystempara` (`sid`, `weighterlength`, `rejectorposition`, `s
 -- Table structure for table `hcubfsccalibration`
 --
 
+DROP TABLE IF EXISTS `hcubfsccalibration`;
 CREATE TABLE `hcubfsccalibration` (
   `sid` int(4) NOT NULL,
   `zeroadc_01` int(4) NOT NULL DEFAULT '0',
@@ -564,6 +525,7 @@ INSERT INTO `hcubfsccalibration` (`sid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01
 -- Table structure for table `hcubfscconfigpara`
 --
 
+DROP TABLE IF EXISTS `hcubfscconfigpara`;
 CREATE TABLE `hcubfscconfigpara` (
   `sid` int(4) NOT NULL,
   `confname` varchar(50) NOT NULL,
@@ -618,6 +580,7 @@ INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `
 -- Table structure for table `hcubfsccurrentinfo`
 --
 
+DROP TABLE IF EXISTS `hcubfsccurrentinfo`;
 CREATE TABLE `hcubfsccurrentinfo` (
   `timestamp` int(4) NOT NULL,
   `status_00` int(4) DEFAULT NULL,
@@ -664,7 +627,7 @@ CREATE TABLE `hcubfsccurrentinfo` (
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`, `hcusw`, `ihusw`) VALUES
-(1524810716, 6, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 1000, 111, 1000, 121, 1000, 131, 1000, 141, 1000, 151, 1000, 161, 0, 'NOW: Inventory Req HCU-SW-R3.V191.DB201.PATCH!', 'IHU-SW-R*.V*.*');
+(1524810716, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 1000, 0, 0, 'NOW: Inventory Req HCU-SW-R3.V191.DB201.PATCH!', 'IHU-SW-R*.V*.*');
 
 -- --------------------------------------------------------
 
@@ -672,6 +635,7 @@ INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_
 -- Table structure for table `hcubfscfb2ui`
 --
 
+DROP TABLE IF EXISTS `hcubfscfb2ui`;
 CREATE TABLE `hcubfscfb2ui` (
   `sid` int(4) NOT NULL,
   `cmdtype` int(1) NOT NULL,
@@ -686,8 +650,7 @@ CREATE TABLE `hcubfscfb2ui` (
 INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 (1, 1, 1, 'Configuration success'),
 (2, 2, 0, 'Start failure due to WS not reachable'),
-(3, 3, 0, 'Stop failure due to WS not reachable'),
-(4, 1, 0, '');
+(3, 3, 0, 'Stop failure due to WS not reachable');
 
 -- --------------------------------------------------------
 
@@ -695,13 +658,14 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 -- Table structure for table `hcubfscflowsheet`
 --
 
+DROP TABLE IF EXISTS `hcubfscflowsheet`;
 CREATE TABLE `hcubfscflowsheet` (
   `sid` int(4) NOT NULL,
   `configid` int(2) NOT NULL,
   `targetwgt` int(4) NOT NULL,
   `realwgt` int(4) NOT NULL,
   `pkgnum` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfscflowsheet`
@@ -720,6 +684,7 @@ INSERT INTO `hcubfscflowsheet` (`sid`, `configid`, `targetwgt`, `realwgt`, `pkgn
 -- Table structure for table `hcubfsclanguagedict`
 --
 
+DROP TABLE IF EXISTS `hcubfsclanguagedict`;
 CREATE TABLE `hcubfsclanguagedict` (
   `sid` int(4) NOT NULL,
   `english` varchar(200) NOT NULL,
@@ -986,7 +951,40 @@ INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japan
 (248, 'ADCKO', 'ADC过载', NULL, NULL, NULL, NULL, NULL),
 (249, 'FLASHKO', '写内存错', NULL, NULL, NULL, NULL, NULL),
 (250, 'MOTORKO', '马达故障', NULL, NULL, NULL, NULL, NULL),
-(251, 'UNKNOWN', '未知', NULL, NULL, NULL, NULL, NULL);
+(251, 'UNKNOWN', '未知', NULL, NULL, NULL, NULL, NULL),
+(252, 'Failure Detection Variation', NULL, NULL, NULL, NULL, NULL, NULL),
+(253, 'Main Motor Failure Detection Variation', NULL, NULL, NULL, NULL, NULL, NULL),
+(254, 'Failure Detection Time', NULL, NULL, NULL, NULL, NULL, NULL),
+(255, 'Main Motor Failure Detection Time in Ms', NULL, NULL, NULL, NULL, NULL, NULL),
+(256, 'MainMotor Parameters', NULL, NULL, NULL, NULL, NULL, NULL),
+(257, 'Seconde Motor Direction', NULL, NULL, NULL, NULL, NULL, NULL),
+(258, 'Second Motor Failure Detection Variation', NULL, NULL, NULL, NULL, NULL, NULL),
+(259, 'Second Motor Failure Detection Time in Ms', NULL, NULL, NULL, NULL, NULL, NULL),
+(260, 'SecondMotor Parameters', NULL, NULL, NULL, NULL, NULL, NULL),
+(261, 'DelayNode1Tox', NULL, NULL, NULL, NULL, NULL, NULL),
+(262, 'DelayUpHCU', NULL, NULL, NULL, NULL, NULL, NULL),
+(263, 'Delay Time of HCU algorithm', NULL, NULL, NULL, NULL, NULL, NULL),
+(264, 'Arm Parameters', NULL, NULL, NULL, NULL, NULL, NULL),
+(265, 'Engineering Mode Switch, 0-OFF/1-ON', NULL, NULL, NULL, NULL, NULL, NULL),
+(266, 'Line Number', NULL, NULL, NULL, NULL, NULL, NULL),
+(267, 'Board Num per Line', NULL, NULL, NULL, NULL, NULL, NULL),
+(268, 'Number of Control Board per Line', NULL, NULL, NULL, NULL, NULL, NULL),
+(269, 'CaliZero Iteration', NULL, NULL, NULL, NULL, NULL, NULL),
+(270, 'Iteration Times for Dynamic Calibration Zero', NULL, NULL, NULL, NULL, NULL, NULL),
+(271, 'CaliFull Iteration', NULL, NULL, NULL, NULL, NULL, NULL),
+(272, 'Scale Weight', NULL, NULL, NULL, NULL, NULL, NULL),
+(273, 'Scale Weight for Calibration(0.01g)', NULL, NULL, NULL, NULL, NULL, NULL),
+(274, 'ADC Sample Frequency', NULL, NULL, NULL, NULL, NULL, NULL),
+(275, 'Tailor Weight', NULL, NULL, NULL, NULL, NULL, NULL),
+(276, 'General Parameters', NULL, NULL, NULL, NULL, NULL, NULL),
+(277, 'Motor Speed', NULL, NULL, NULL, NULL, NULL, NULL),
+(278, 'Motor Direction', NULL, NULL, NULL, NULL, NULL, NULL),
+(279, 'Rejector arm position (1mm)', NULL, NULL, NULL, NULL, NULL, NULL),
+(280, 'Calibration Parameter', NULL, NULL, NULL, NULL, NULL, NULL),
+(281, 'Motor Parameter', NULL, NULL, NULL, NULL, NULL, NULL),
+(282, 'ArmRollingStop', NULL, NULL, NULL, NULL, NULL, NULL),
+(283, 'ArmPara', NULL, NULL, NULL, NULL, NULL, NULL),
+(284, 'RejectorPara', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -994,6 +992,7 @@ INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japan
 -- Table structure for table `hcubfsclanguagelist`
 --
 
+DROP TABLE IF EXISTS `hcubfsclanguagelist`;
 CREATE TABLE `hcubfsclanguagelist` (
   `lang_name` varchar(20) NOT NULL,
   `lang_icon` varchar(20) NOT NULL,
@@ -1020,6 +1019,7 @@ INSERT INTO `hcubfsclanguagelist` (`lang_name`, `lang_icon`, `lang_abbr`, `defau
 -- Table structure for table `hcubfscstadatainfo`
 --
 
+DROP TABLE IF EXISTS `hcubfscstadatainfo`;
 CREATE TABLE `hcubfscstadatainfo` (
   `sid` int(4) NOT NULL,
   `statype` char(20) DEFAULT NULL,
@@ -1059,6 +1059,7 @@ INSERT INTO `hcubfscstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `ws
 -- Table structure for table `hcubfscstaticpara`
 --
 
+DROP TABLE IF EXISTS `hcubfscstaticpara`;
 CREATE TABLE `hcubfscstaticpara` (
   `sid` int(4) NOT NULL,
   `calmaxallowedwgt` int(4) NOT NULL DEFAULT '0',
@@ -1084,12 +1085,13 @@ INSERT INTO `hcubfscstaticpara` (`sid`, `calmaxallowedwgt`, `calfullwgt`, `calad
 -- Table structure for table `hcubfznaccount`
 --
 
+DROP TABLE IF EXISTS `hcubfznaccount`;
 CREATE TABLE `hcubfznaccount` (
   `uid` int(4) NOT NULL,
-  `username` varchar(20) CHARACTER SET utf8 NOT NULL,
-  `password` varchar(50) CHARACTER SET utf8 NOT NULL,
-  `memo` text CHARACTER SET utf8
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `username` varchar(20) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `memo` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfznaccount`
@@ -1107,6 +1109,7 @@ INSERT INTO `hcubfznaccount` (`uid`, `username`, `password`, `memo`) VALUES
 -- Table structure for table `hcuco1datainfo`
 --
 
+DROP TABLE IF EXISTS `hcuco1datainfo`;
 CREATE TABLE `hcuco1datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1127,6 +1130,7 @@ CREATE TABLE `hcuco1datainfo` (
 -- Table structure for table `hcuemcdatainfo`
 --
 
+DROP TABLE IF EXISTS `hcuemcdatainfo`;
 CREATE TABLE `hcuemcdatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1147,6 +1151,7 @@ CREATE TABLE `hcuemcdatainfo` (
 -- Table structure for table `hcuhchodatainfo`
 --
 
+DROP TABLE IF EXISTS `hcuhchodatainfo`;
 CREATE TABLE `hcuhchodatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1167,6 +1172,7 @@ CREATE TABLE `hcuhchodatainfo` (
 -- Table structure for table `hcuhchoze08ch2odatainfo`
 --
 
+DROP TABLE IF EXISTS `hcuhchoze08ch2odatainfo`;
 CREATE TABLE `hcuhchoze08ch2odatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1181,6 +1187,7 @@ CREATE TABLE `hcuhchoze08ch2odatainfo` (
 -- Table structure for table `hcuhsmmpdatainfo`
 --
 
+DROP TABLE IF EXISTS `hcuhsmmpdatainfo`;
 CREATE TABLE `hcuhsmmpdatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1202,6 +1209,7 @@ CREATE TABLE `hcuhsmmpdatainfo` (
 -- Table structure for table `hcuhumiddatainfo`
 --
 
+DROP TABLE IF EXISTS `hcuhumiddatainfo`;
 CREATE TABLE `hcuhumiddatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1222,6 +1230,7 @@ CREATE TABLE `hcuhumiddatainfo` (
 -- Table structure for table `hcuhumiddht11datainfo`
 --
 
+DROP TABLE IF EXISTS `hcuhumiddht11datainfo`;
 CREATE TABLE `hcuhumiddht11datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1236,6 +1245,7 @@ CREATE TABLE `hcuhumiddht11datainfo` (
 -- Table structure for table `hcuhumidmth01datainfo`
 --
 
+DROP TABLE IF EXISTS `hcuhumidmth01datainfo`;
 CREATE TABLE `hcuhumidmth01datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1257,6 +1267,7 @@ INSERT INTO `hcuhumidmth01datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 -- Table structure for table `hcuhumidrht03datainfo`
 --
 
+DROP TABLE IF EXISTS `hcuhumidrht03datainfo`;
 CREATE TABLE `hcuhumidrht03datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1271,6 +1282,7 @@ CREATE TABLE `hcuhumidrht03datainfo` (
 -- Table structure for table `hcuhumidsht20datainfo`
 --
 
+DROP TABLE IF EXISTS `hcuhumidsht20datainfo`;
 CREATE TABLE `hcuhumidsht20datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1285,6 +1297,7 @@ CREATE TABLE `hcuhumidsht20datainfo` (
 -- Table structure for table `hcuigmcj188datainfo`
 --
 
+DROP TABLE IF EXISTS `hcuigmcj188datainfo`;
 CREATE TABLE `hcuigmcj188datainfo` (
   `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
@@ -1325,6 +1338,7 @@ CREATE TABLE `hcuigmcj188datainfo` (
 -- Table structure for table `hcuihmcj188datainfo`
 --
 
+DROP TABLE IF EXISTS `hcuihmcj188datainfo`;
 CREATE TABLE `hcuihmcj188datainfo` (
   `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
@@ -1369,6 +1383,7 @@ CREATE TABLE `hcuihmcj188datainfo` (
 -- Table structure for table `hcuipmcj188datainfo`
 --
 
+DROP TABLE IF EXISTS `hcuipmcj188datainfo`;
 CREATE TABLE `hcuipmcj188datainfo` (
   `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
@@ -1409,6 +1424,7 @@ CREATE TABLE `hcuipmcj188datainfo` (
 -- Table structure for table `hcuiwmcj188datainfo`
 --
 
+DROP TABLE IF EXISTS `hcuiwmcj188datainfo`;
 CREATE TABLE `hcuiwmcj188datainfo` (
   `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
@@ -1449,6 +1465,7 @@ CREATE TABLE `hcuiwmcj188datainfo` (
 -- Table structure for table `hculightstrbh1750datainfo`
 --
 
+DROP TABLE IF EXISTS `hculightstrbh1750datainfo`;
 CREATE TABLE `hculightstrbh1750datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1463,6 +1480,7 @@ CREATE TABLE `hculightstrbh1750datainfo` (
 -- Table structure for table `hculightstrdatainfo`
 --
 
+DROP TABLE IF EXISTS `hculightstrdatainfo`;
 CREATE TABLE `hculightstrdatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1483,6 +1501,7 @@ CREATE TABLE `hculightstrdatainfo` (
 -- Table structure for table `hcunoisedatainfo`
 --
 
+DROP TABLE IF EXISTS `hcunoisedatainfo`;
 CREATE TABLE `hcunoisedatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1503,6 +1522,7 @@ CREATE TABLE `hcunoisedatainfo` (
 -- Table structure for table `hcupm25bmpd300datainfo`
 --
 
+DROP TABLE IF EXISTS `hcupm25bmpd300datainfo`;
 CREATE TABLE `hcupm25bmpd300datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1517,6 +1537,7 @@ CREATE TABLE `hcupm25bmpd300datainfo` (
 -- Table structure for table `hcupm25datainfo`
 --
 
+DROP TABLE IF EXISTS `hcupm25datainfo`;
 CREATE TABLE `hcupm25datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1539,6 +1560,7 @@ CREATE TABLE `hcupm25datainfo` (
 -- Table structure for table `hcupm25sharpdatainfo`
 --
 
+DROP TABLE IF EXISTS `hcupm25sharpdatainfo`;
 CREATE TABLE `hcupm25sharpdatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -1553,6 +1575,7 @@ CREATE TABLE `hcupm25sharpdatainfo` (
 -- Table structure for table `hcusysalarminfo`
 --
 
+DROP TABLE IF EXISTS `hcusysalarminfo`;
 CREATE TABLE `hcusysalarminfo` (
   `sid` int(4) NOT NULL,
   `eqpid` int(4) NOT NULL,
@@ -1570,6 +1593,7 @@ CREATE TABLE `hcusysalarminfo` (
 -- Table structure for table `hcusysengpar`
 --
 
+DROP TABLE IF EXISTS `hcusysengpar`;
 CREATE TABLE `hcusysengpar` (
   `prjname` char(100) NOT NULL,
   `commbackhawlcon` int(1) NOT NULL,
@@ -1608,9 +1632,9 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuse
 ('HCU_PRJ_AQYCG10_335D', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0, 4),
 ('HCU_PRJ_AQYCG20_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 1, 1, 'http://127.0.0.1/test.php', '112.64.16.27', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-kiosk', 0, 4),
 ('HCU_PRJ_AQYC_OBSOLETE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0, 4),
-('HCU_PRJ_BFDF_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen', 0, 4),
-('HCU_PRJ_BFHS_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen', 0, 4),
-('HCU_PRJ_BFSC_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen', 0, 4),
+('HCU_PRJ_BFDF_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '47.100.191.83', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen', 0, 4),
+('HCU_PRJ_BFHS_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '47.100.191.83', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen', 0, 4),
+('HCU_PRJ_BFSC_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '47.100.191.83', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen', 0, 4),
 ('HCU_PRJ_CXGLACM', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0, 4),
 ('HCU_PRJ_CXILC', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0, 4),
 ('HCU_PRJ_DAYCG21_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 1, 1, 'http://127.0.0.1/test.php', '112.64.16.27', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-kiosk', 0, 4),
@@ -1627,6 +1651,7 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuse
 -- Table structure for table `hcusysengtimer`
 --
 
+DROP TABLE IF EXISTS `hcusysengtimer`;
 CREATE TABLE `hcusysengtimer` (
   `timerid` int(2) NOT NULL,
   `timername` char(40) NOT NULL,
@@ -1742,6 +1767,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 -- Table structure for table `hcusyspmglobaldatainfo`
 --
 
+DROP TABLE IF EXISTS `hcusyspmglobaldatainfo`;
 CREATE TABLE `hcusyspmglobaldatainfo` (
   `sid` int(4) NOT NULL,
   `taskhcuvmec` int(4) NOT NULL,
@@ -7924,6 +7950,7 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 -- Table structure for table `hcusysswm_swdl`
 --
 
+DROP TABLE IF EXISTS `hcusysswm_swdl`;
 CREATE TABLE `hcusysswm_swdl` (
   `sid` int(4) NOT NULL,
   `equentry` int(1) NOT NULL DEFAULT '1',
@@ -7950,6 +7977,7 @@ CREATE TABLE `hcusysswm_swdl` (
 -- Table structure for table `hcusysswm_swpkg`
 --
 
+DROP TABLE IF EXISTS `hcusysswm_swpkg`;
 CREATE TABLE `hcusysswm_swpkg` (
   `sid` int(4) NOT NULL,
   `equentry` int(1) NOT NULL DEFAULT '1',
@@ -7975,6 +8003,7 @@ CREATE TABLE `hcusysswm_swpkg` (
 -- Table structure for table `hcutempbmp180datainfo`
 --
 
+DROP TABLE IF EXISTS `hcutempbmp180datainfo`;
 CREATE TABLE `hcutempbmp180datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -7989,6 +8018,7 @@ CREATE TABLE `hcutempbmp180datainfo` (
 -- Table structure for table `hcutempdatainfo`
 --
 
+DROP TABLE IF EXISTS `hcutempdatainfo`;
 CREATE TABLE `hcutempdatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -8009,6 +8039,7 @@ CREATE TABLE `hcutempdatainfo` (
 -- Table structure for table `hcutempdht11datainfo`
 --
 
+DROP TABLE IF EXISTS `hcutempdht11datainfo`;
 CREATE TABLE `hcutempdht11datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -8023,6 +8054,7 @@ CREATE TABLE `hcutempdht11datainfo` (
 -- Table structure for table `hcutempmth01datainfo`
 --
 
+DROP TABLE IF EXISTS `hcutempmth01datainfo`;
 CREATE TABLE `hcutempmth01datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -8037,6 +8069,7 @@ CREATE TABLE `hcutempmth01datainfo` (
 -- Table structure for table `hcutemprht03datainfo`
 --
 
+DROP TABLE IF EXISTS `hcutemprht03datainfo`;
 CREATE TABLE `hcutemprht03datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -8051,6 +8084,7 @@ CREATE TABLE `hcutemprht03datainfo` (
 -- Table structure for table `hcutempsht20datainfo`
 --
 
+DROP TABLE IF EXISTS `hcutempsht20datainfo`;
 CREATE TABLE `hcutempsht20datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -8065,6 +8099,7 @@ CREATE TABLE `hcutempsht20datainfo` (
 -- Table structure for table `hcutoxicgasdatainfo`
 --
 
+DROP TABLE IF EXISTS `hcutoxicgasdatainfo`;
 CREATE TABLE `hcutoxicgasdatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -8085,6 +8120,7 @@ CREATE TABLE `hcutoxicgasdatainfo` (
 -- Table structure for table `hcutoxicgasmq135datainfo`
 --
 
+DROP TABLE IF EXISTS `hcutoxicgasmq135datainfo`;
 CREATE TABLE `hcutoxicgasmq135datainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -8099,6 +8135,7 @@ CREATE TABLE `hcutoxicgasmq135datainfo` (
 -- Table structure for table `hcutoxicgaszp01vocdatainfo`
 --
 
+DROP TABLE IF EXISTS `hcutoxicgaszp01vocdatainfo`;
 CREATE TABLE `hcutoxicgaszp01vocdatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -8113,6 +8150,7 @@ CREATE TABLE `hcutoxicgaszp01vocdatainfo` (
 -- Table structure for table `hcutracemodulectr`
 --
 
+DROP TABLE IF EXISTS `hcutracemodulectr`;
 CREATE TABLE `hcutracemodulectr` (
   `moduleid` int(2) NOT NULL,
   `modulename` char(15) NOT NULL,
@@ -8221,6 +8259,7 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 -- Table structure for table `hcutracemsgctr`
 --
 
+DROP TABLE IF EXISTS `hcutracemsgctr`;
 CREATE TABLE `hcutracemsgctr` (
   `msgid` int(2) NOT NULL,
   `msgname` char(70) NOT NULL,
@@ -8556,6 +8595,7 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 -- Table structure for table `hcuwinddirdatainfo`
 --
 
+DROP TABLE IF EXISTS `hcuwinddirdatainfo`;
 CREATE TABLE `hcuwinddirdatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -8576,6 +8616,7 @@ CREATE TABLE `hcuwinddirdatainfo` (
 -- Table structure for table `hcuwindspddatainfo`
 --
 
+DROP TABLE IF EXISTS `hcuwindspddatainfo`;
 CREATE TABLE `hcuwindspddatainfo` (
   `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
@@ -9060,7 +9101,7 @@ ALTER TABLE `hcubfsccalibration`
 -- AUTO_INCREMENT for table `hcubfscconfigpara`
 --
 ALTER TABLE `hcubfscconfigpara`
-  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `hcubfscfb2ui`
 --
@@ -9075,7 +9116,7 @@ ALTER TABLE `hcubfscflowsheet`
 -- AUTO_INCREMENT for table `hcubfsclanguagedict`
 --
 ALTER TABLE `hcubfsclanguagedict`
-  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=285;
 --
 -- AUTO_INCREMENT for table `hcubfscstadatainfo`
 --
@@ -9210,7 +9251,7 @@ ALTER TABLE `hcusysswm_swdl`
 -- AUTO_INCREMENT for table `hcusysswm_swpkg`
 --
 ALTER TABLE `hcusysswm_swpkg`
-  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcutempbmp180datainfo`
 --
