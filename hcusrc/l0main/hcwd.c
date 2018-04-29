@@ -54,11 +54,16 @@ void func_hcwd_feed_ext_watchdog(void)
 void func_hcwd_read_ext_trigger_and_soft_shut_down(void)
 {
 	if (func_hcwd_read_ext_soft_shut_trigger_value() == TRUE){
+		time_t timer;  //time_t就是long int 类型
+		struct tm *tblock;
+		timer = time(NULL);
+		tblock = localtime(&timer);
+		printf("HCWD: Shutdown one time at local time = %s\n", asctime(tblock));
+
 		while(1){
 			system("shutdown -h now");
 			sleep(1);
 		}
-
 	}
 	return;
 }
@@ -90,14 +95,6 @@ bool func_hcwd_read_ext_soft_shut_trigger_value(void)
 #endif
 	return FALSE;
 }
-
-
-
-
-
-
-
-
 
 
 //以下是DHT11读取和存储的例子，供参考
