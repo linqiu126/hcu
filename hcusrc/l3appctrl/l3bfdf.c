@@ -874,7 +874,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	UINT32 weight = 0;
+	INT32 weight = 0;
 	UINT16 outHopperId = 0;
 	int i=0;
 	int line=0, boardId=0;

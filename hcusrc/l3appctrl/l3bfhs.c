@@ -692,6 +692,12 @@ OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	buf.wmcState = rcv.snrState;
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(buf.weight, &buf);
 
+	//超大或者负值直接抛弃
+	if ((rcv.snrWsValue <= 0) || (rcv.snrWsValue > gTaskL3bfhsContext.wgtSnrPar.maxAllowedWeight)) {
+		HcuErrorPrint("L3BFHS: Received weight out of range, wmcState = %d,weight=%d!\n", rcv.snrState, rcv.snrWsValue);
+		return SUCCESS;
+	}
+
 	//正常处理
 	gTaskL3bfhsContext.sessionId++;
 	gTaskL3bfhsContext.cur.wsIncMatCnt++;

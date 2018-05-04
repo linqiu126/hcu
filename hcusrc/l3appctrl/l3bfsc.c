@@ -46,14 +46,15 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 	{MSG_ID_CLOUDVELA_L3BFSC_CTRL_REQ,          FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_ctrl_req},
 	{MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM, FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_statistic_confirm},
 	//这个命令，有些命令可以在任何状态下执行：比如STOP，但有些命令必须在配置状态下，比如START
-	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_COMMON,          			fsm_l3bfsc_uicomm_cmd_req},
+	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_COMMON,          			fsm_l3bfsc_uicomm_ctrl_cmd_req},
 	//考虑到单个错误的查询不能影响大部队的组合，所以差错不采用独立的状态机控制，而做为公共事件进行处理
 	{MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,      FSM_STATE_COMMON,         			fsm_l3bfsc_canitf_error_inq_cmd_resp},  //只能触发数据存储，不进入组合算法的执行
+	//校准命令从原来控制命令里剥离出来，可以灵活在各种状态下执行
+	{MSG_ID_UICOMM_L3BFSC_CALI_REQ,    			FSM_STATE_COMMON,          			fsm_l3bfsc_uicomm_calibration_req},
+	{MSG_ID_CAN_L3BFSC_SYS_CALI_RESP,    		FSM_STATE_COMMON,          			fsm_l3bfsc_canitf_calibration_resp},
 
 	//Normal working status：等待人工干预-登录触发
 	{MSG_ID_UICOMM_L3BFSC_CFG_REQ,     			FSM_STATE_L3BFSC_ACTIVED,          	fsm_l3bfsc_uicomm_config_req},
-	{MSG_ID_UICOMM_L3BFSC_CALI_REQ,    			FSM_STATE_L3BFSC_ACTIVED,          	fsm_l3bfsc_uicomm_calibration_req},
-	{MSG_ID_CAN_L3BFSC_SYS_CALI_RESP,    		FSM_STATE_L3BFSC_ACTIVED,          	fsm_l3bfsc_canitf_calibration_resp},
 
 	//配置状态：等待所有的下位机配置完成
 	{MSG_ID_CAN_L3BFSC_SYS_CFG_RESP,     		FSM_STATE_L3BFSC_OPR_CFG,          	fsm_l3bfsc_canitf_config_resp},
@@ -1153,7 +1154,7 @@ OPSTAT fsm_l3bfsc_uicomm_calibration_req(UINT32 dest_id, UINT32 src_id, void * p
 	return SUCCESS;
 }
 
-OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3bfsc_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
 	int i = 0;
