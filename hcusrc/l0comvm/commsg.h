@@ -3124,6 +3124,7 @@ typedef struct msg_struct_l3bfhs_uicomm_ctrl_cmd_resp
 	UINT16  errCode;
 	UINT8   iteration;
 	UINT32  dynCaliCoeff; //NF5 format
+	INT32   weight; //format NF2;
 	StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t calFullRespPar;
 	UINT32  length;
 }msg_struct_l3bfhs_uicomm_ctrl_cmd_resp_t;
@@ -3246,6 +3247,7 @@ typedef struct msg_struct_can_l3bfhs_dyn_zero_resp
 typedef struct msg_struct_l3bfhs_can_dyn_full_req
 {
 	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	strMsgIe_bfhs_WgtSnrParamaters_t wgtSnrPar;
     UINT32 adjustingWeight;
 	UINT32 motorSpeed;
 	UINT32 motorDirection;
@@ -3260,6 +3262,7 @@ typedef struct msg_struct_can_l3bfhs_dyn_full_resp
 	UINT16 errCode;
 	UINT32 length;
 	UINT32 dynCaliCoeff; //NF5 format
+	INT32  weight; //format NF2;
 }msg_struct_can_l3bfhs_dyn_full_resp_t;
 
 //MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,  	//传感器新数据事件

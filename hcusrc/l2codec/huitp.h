@@ -6368,6 +6368,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_req
 {
 	UINT16 msgid;
 	UINT16 length;
+	StrHuiIe_WeightSensorBfhsParamaters_t weight_sensor_param;
     UINT32 adjustingWeight;
 	UINT32 motorSpeed;
 	UINT32 motorDirection;
@@ -6382,6 +6383,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp
 	UINT8   iteration;
 	UINT16  errCode;
 	UINT32  DynCaliCoeff; //NF5 format
+	INT32   Weight; //format NF2;
 }StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t;
 
 

@@ -848,6 +848,33 @@ OPSTAT fsm_canalpha_l3bfhs_dyn_full_req(UINT32 dest_id, UINT32 src_id, void * pa
 	memset(&pMsgProc, 0, msgProcLen);
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfhs_dyn_calibration_full_req);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+	//Weight Sensor parameters
+	pMsgProc.weight_sensor_param.WeightSensorAutoZeroCaptureRangeGrams = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAutoZeroCaptureRangeGrams);
+	pMsgProc.weight_sensor_param.WeightSensorStandstillRangeGrams = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorStandstillRangeGrams);
+	pMsgProc.weight_sensor_param.MaxAllowedWeight = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.MaxAllowedWeight);
+	pMsgProc.weight_sensor_param.MinAllowedWeight = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.MinAllowedWeight);
+	pMsgProc.weight_sensor_param.WeightSensorFilterCutOffFreqHz = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorFilterCutOffFreqHz);
+	pMsgProc.weight_sensor_param.WeightSensorRingBufTimeMs = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorRingBufTimeMs);
+	pMsgProc.weight_sensor_param.WeightSensorAutoZeroAutotaringTimeMs = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorAutoZeroAutotaringTimeMs);
+	pMsgProc.weight_sensor_param.WeightSensorPreloadComPensationValuePercent = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorPreloadComPensationValuePercent);
+	pMsgProc.weight_sensor_param.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint);
+	pMsgProc.weight_sensor_param.WeightSensorStandstillTimeoutMs = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorStandstillTimeoutMs);
+	pMsgProc.weight_sensor_param.WeightSensorStandstillTime = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorStandstillTime);
+	pMsgProc.weight_sensor_param.WeightSensorMeasurementRangeNo = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorMeasurementRangeNo);
+	pMsgProc.weight_sensor_param.WeightSensorAutoZero = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorAutoZero);
+	pMsgProc.weight_sensor_param.WeightSensorTimeGrid = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorTimeGrid);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoSelect = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorAlgoSelect);
+	pMsgProc.weight_sensor_param.WeightSensorReadStartMs = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorReadStartMs);
+	pMsgProc.weight_sensor_param.WeightSensorReadStopMs = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorReadStopMs);
+	pMsgProc.weight_sensor_param.WeightSensorDynCaliCoeff = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorDynCaliCoeff);
+	pMsgProc.weight_sensor_param.WeightSensorTareWeight = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorTareWeight);
+	pMsgProc.weight_sensor_param.WeightSensorTargetThroughput = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorTargetThroughput);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoAutoZeroSignal = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAlgoAutoZeroSignal);
+	pMsgProc.weight_sensor_param.WeightSensorUpperLimit = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorUpperLimit);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoTu1Limit = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAlgoTu1Limit);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoTu2Limit = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAlgoTu2Limit);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoMaxTu1Ratio = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAlgoMaxTu1Ratio);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoRejectOption = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorAlgoRejectOption);
 	pMsgProc.adjustingWeight = HUITP_ENDIAN_EXG32(rcv.adjustingWeight);
 	pMsgProc.motorSpeed = HUITP_ENDIAN_EXG32(rcv.motorSpeed);
 	pMsgProc.motorDirection = HUITP_ENDIAN_EXG32(rcv.motorDirection);
@@ -1408,8 +1435,8 @@ OPSTAT func_canalpha_l2frame_msg_bfhs_dyn_calibration_full_resp_received_handle(
 	snd.iteration = HUITP_ENDIAN_EXG8(rcv->iteration);
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 	snd.dynCaliCoeff = HUITP_ENDIAN_EXG32(rcv->DynCaliCoeff);
+	snd.weight = HUITP_ENDIAN_EXG32(rcv->Weight);
 	snd.length = sizeof(msg_struct_can_l3bfhs_dyn_full_resp_t);
-
 	printf("CANALPHA: l3bfhs_dyn_full_resp, iteration=%d,dynCaliCoeff=%d \n\n", snd.iteration, snd.dynCaliCoeff);
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_DYN_FULL_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 

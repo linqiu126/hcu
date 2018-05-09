@@ -490,7 +490,7 @@ OPSTAT fsm_l3bfhs_canitf_dyn_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 		snd.validFlag = TRUE;
 		snd.iteration = rcv.iteration;
 		snd.dynCaliCoeff = rcv.dynCaliCoeff;
-
+		snd.weight = rcv.weight;
 		printf("L3BFHS: l3bfhs_dyn_full_resp, iteration=%d,dynCaliCoeff=%d \n\n", snd.iteration, snd.dynCaliCoeff);
 		if (dbi_HcuBfhs_dynCaliData_save(rcv.dynCaliCoeff) == FAILURE)
 			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Save dynamic calibration data into DB error!\n");
@@ -876,6 +876,7 @@ OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 			msg_struct_l3bfhs_can_dyn_full_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_dyn_full_req_t));
 			snd.boardBitmap[1] = 1;
+			memcpy(&snd.wgtSnrPar, &gTaskL3bfhsContext.wgtSnrPar, sizeof(gTaskL3bfhsContextWgtSnrParamaters_t));
 			snd.adjustingWeight = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams;
 			snd.motorSpeed = gTaskL3bfhsContext.motoCtrlPar.MotorSpeed;
 			snd.motorDirection = gTaskL3bfhsContext.motoCtrlPar.MotorDirection;

@@ -289,7 +289,7 @@ preloadCompValue=%d; preloadCompDecimal=%d; standstillTimeout=%d; standstillTime
 			status.engModeSwitch = gTaskL3bfhsContext.engModeSwitch;
 			status.validFlag = rcv.validFlag;
 			status.errCode = rcv.errCode;
-			status.weight = gTaskL3bfhsContext.calFullReqPar.WeightSensorAdjustingWeightGrams;
+			status.weight = rcv.weight;
 			status.iteration = rcv.iteration;
 			sprintf(debugInfo, "dynCaliCoeff = %d", rcv.dynCaliCoeff);
 			printf("L3BFHSUICOMM: DYNAMIC_CALI_FULL resp, validFlag = %d; iteration = %d;  dynCaliCoeff = %d\n\n",rcv.validFlag,rcv.iteration,rcv.dynCaliCoeff);
