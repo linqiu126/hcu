@@ -1095,7 +1095,7 @@ OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_
 	total=0;
 	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		//将所有启动的传感器全部归化到配置状态
-		if (gTaskL3bfscContext.sensorWs[i].sensorStatus > HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MIN){
+		if (gTaskL3bfscContext.sensorWs[i].sensorStatus > HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MIN ){
 			snd.wsBitmap[i] = TRUE;
 			gTaskL3bfscContext.sensorWs[i].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_CFG_REQ;
 			gTaskL3bfscContext.sensorWs[i].cfgRcvFlag = FALSE;

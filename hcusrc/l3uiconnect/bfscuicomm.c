@@ -740,9 +740,11 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionVaration = dynamicdata[index++];
 	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionTimeMs = dynamicdata[index++];
 	preemption = dynamicdata[index++];
-	for(i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1; i++){
-		if ((preemption & ((UINT32)(1<<i))) == 1){
+	for(i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+		if ((preemption & (((UINT32)1<<i))) == ((UINT32)1<<i)){
 			gTaskL3bfscContext.sensorWs[i+1].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_ISOLATED;
+
+			printf("BFSCUICOMM: sensorid = %d, status = %d\n",i, gTaskL3bfscContext.sensorWs[i+1].sensorStatus);
 		}
 	}
 	//重复参数
