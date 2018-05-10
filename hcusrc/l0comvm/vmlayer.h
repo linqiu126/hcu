@@ -891,11 +891,16 @@ extern OPSTAT hcu_timer_clear(UINT32 timerid, UINT32 taskid);
 extern void hcu_sleep(UINT32 second);
 extern void hcu_usleep(UINT32 usecond);  //resulution 10^(-6)s = 1 microsecond
 
+#define PLOY 0xa001
+
+extern unsigned short hcu_vm_crc16(UINT8 *data, UINT32 size);
+
 //CRC计算函数
 extern UINT16 hcu_vm_calculate_crc_u16(unsigned char *data,int len);
 extern void   hcu_vm_calculate_crc_modbus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut);
 extern UINT16 hcu_vm_calculate_crc_one_char(UINT8 cDataIn, UINT16 wCRCIn);
 extern UINT16 hcu_vm_calculate_crc_ccitt(unsigned char *q, int len);
+extern unsigned short hcu_vm_my_crc_ccitt(int *data, int size);
 extern void   hcu_vm_set_local_time(UINT32 newTimeInUnix);
 
 //UINT32转Float
