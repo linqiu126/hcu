@@ -1529,6 +1529,46 @@ UINT16 hcu_vm_calculate_crc_ccitt(unsigned char *q, int len)
 	return crc;
 }
 
+unsigned short hcu_vm_my_crc_ccitt(int *data, int size)
+{
+	unsigned short tempcrc = 0;
+	unsigned short temp = 0;
+	int i = 0;
+
+	for(i=0;i<size;i++)
+	{
+		temp = ((tempcrc & 0x00ff) ^ (data[i] & 0x00ff));
+		tempcrc = ((tempcrc >> 8) & 0xff) ^ gHcuCcittwCRC16Table[temp];
+	}
+	return tempcrc;
+}
+
+unsigned short hcu_vm_crc16(UINT8 *data, UINT32 size)
+{
+	unsigned short crc = 0x0;
+	UINT8 date_t;
+	int i = 0;
+	int j = 0;
+	if (data == NULL){
+		return 0;
+	 }
+	for(j=0;j<size;j++)
+	{
+		date_t = *data++;
+		crc = (date_t ^ (crc));
+		for(i=0;i<8;i++)
+		{
+			if((crc&0x1) == 1){
+				crc = (crc>>1) ^ PLOY;
+			}else{
+				crc>>=1;
+			}
+		}
+	}
+	return crc;
+
+}
+
 
 //将新时间设置到本地
 void hcu_vm_set_local_time(UINT32 newTimeInUnix)
