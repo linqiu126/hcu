@@ -7,6 +7,8 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+//= ZSC, 2018 May.10 CURRENT_SW_DELIVERY 321=>DAYC项目
+= 支持仰帮字符卡控制
 
 
 
