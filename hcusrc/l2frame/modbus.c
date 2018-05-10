@@ -92,14 +92,9 @@ gTaskModbusContext_t CurrentModusContext;
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_modbus_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret;
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	ret = FsmSetState(TASK_ID_MODBUS, FSM_STATE_IDLE);
-	if (ret == FAILURE){
-		HcuErrorPrint("MODBUS: Error Set FSM State at fsm_modbus_task_entry\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_MODBUS, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -123,12 +118,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		}
 	}
 
-	ret = FsmSetState(TASK_ID_MODBUS, FSM_STATE_MODBUS_INITED);
-	if (ret == FAILURE){
-		HcuErrorPrint("MODBUS: Error Set FSM State at fsm_modbus_init!\n");
-		return FAILURE;
-	}
-
+	FsmSetState(TASK_ID_MODBUS, FSM_STATE_MODBUS_INITED);
 	HCU_DEBUG_PRINT_FAT("MODBUS: Enter FSM_STATE_MODBUS_INITED status, everything goes well!\n");
 
 	//Init global variables
@@ -141,13 +131,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	CurrentModusContext.tempFlag = FALSE;
 
 	//基本上不设置状态机，所有操作均为同步式，这样就不需要状态机了
-	ret = FsmSetState(TASK_ID_MODBUS, FSM_STATE_MODBUS_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Error Set FSM State at fsm_modbus_init!\n");
-		return FAILURE;
-	}
-
+	FsmSetState(TASK_ID_MODBUS, FSM_STATE_MODBUS_ACTIVED);
 	return SUCCESS;
 }
 

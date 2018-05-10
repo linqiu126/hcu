@@ -48,19 +48,15 @@ HcuFsmStateItem_t HcuFsmL3bfdf[] =
 
 	//只为出现ACTIVED状态，入口自动被COMMON屏蔽
 	{MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,       		FSM_STATE_L3BFDF_ACTIVED,          	fsm_l3bfdf_canitf_sys_config_resp},
-	{MSG_ID_SUI_RESUME_RESP,       				FSM_STATE_L3BFDF_ACTIVED,          	fsm_l3bfdf_canitf_sys_resume_resp},
-	{MSG_ID_SUI_SUSPEND_RESP,       			FSM_STATE_L3BFDF_ACTIVED,          	fsm_l3bfdf_canitf_sys_suspend_resp},//这个是先转移状态，再发送命令
 	{MSG_ID_CAN_L3BFDF_DYN_CAL_RESP,       		FSM_STATE_L3BFDF_ACTIVED,          	fsm_l3bfdf_canitf_dyn_cal_resp},
 
 	//进料组合态
 	{MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,      FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_ws_new_ready_event},
 	{MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,       	FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_basket_clean_ind},
-	{MSG_ID_SUI_RESUME_RESP,       				FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_sys_resume_resp},
 	{MSG_ID_SUI_SUSPEND_RESP,       			FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_sys_suspend_resp},//这个是先转移状态，再发送命令
 
 	//休眠状态：只允许收到RESUME指令，不更新界面广告牌以及数据库
 	{MSG_ID_SUI_RESUME_RESP,       				FSM_STATE_L3BFDF_SUSPEND,          	fsm_l3bfdf_canitf_sys_resume_resp},//这个是先发送命令，收齐后再转移状态
-	{MSG_ID_SUI_SUSPEND_RESP,       			FSM_STATE_L3BFDF_SUSPEND,          	fsm_l3bfdf_canitf_sys_suspend_resp},//这个是先转移状态，再发送命令
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            					FSM_STATE_END,             			NULL},  //Ending
@@ -280,6 +276,7 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 			return SUCCESS;
 		}
 		if (func_l3bfdf_send_out_cfg_start_message_to_all() == FAILURE) return FAILURE;
+		//一旦收到配置命令即进入ACTIVE状态
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
 	}
 
@@ -302,32 +299,27 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		gTaskL3bfdfContext.elipse24HourCnt = 0;
 		memset(&gTaskL3bfdfContext.cur, 0, sizeof(HcuSysMsgIeL3bfdfContextStaElement_t));
 		memset(&gTaskL3bfdfContext.curAge, 0, sizeof(gTaskL3bfdfContextStaEleMid_t));
-		//停止定时器
+		//停止周期统计报告定时器
 		hcu_timer_stop(TASK_ID_L3BFDF, TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN, TIMER_RESOLUTION_10MS);
-
-		//SET state
-		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED); //???
 	}
 
 	//RESUME
 	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME)
 	{
-		//判定不合法: to resume this function later, as all boards not yet installed.
-		if (func_l3bfdf_is_there_any_board_not_yet_startup()==FALSE){
-			HCU_L3BFDF_FEEDBACK_CTRL_RESP_MESSAGE(HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME);
-			return SUCCESS;
-		}
+		//如果当前状态不在SUSPEND状态，判定不合法，直接返回
+		if (FsmGetState(TASK_ID_L3BFDF) != FSM_STATE_L3BFDF_SUSPEND) return SUCCESS;
+
 		//发送RESUME：从板号１开始一直到HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX-1
 		if (func_l3bfdf_send_out_resume_message_to_all() == FAILURE) return FAILURE;
-		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_SCAN);
 	}
 
 	//SUSPEND
 	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND)
 	{
+		//如果当前状态不在进料组合状态，判定不合法，直接返回
+		if (FsmGetState(TASK_ID_L3BFDF) != FSM_STATE_L3BFDF_OOS_SCAN) return SUCCESS;
+		//发送SUSPEND
 		if (func_l3bfdf_send_out_suspend_message_to_all() == FAILURE) return FAILURE;
-		//SET state
-		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_SUSPEND);
 	}
 
 	//DYNAMIC_CALI
@@ -411,23 +403,9 @@ OPSTAT fsm_l3bfdf_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	//通知界面
 	HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(rcv.snrId, HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STARTUP);
 
-	//RETURN to normal state
-	if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_SUSPEND)
+	//为了简化流程，运行过程中任何板子重启导致收到STARTUP，将状态强制转到ACTIVE，等待界面重新开始
+	if (FsmGetState(TASK_ID_L3BFDF) > FSM_STATE_L3BFDF_ACTIVED)
 	{
-		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
-	}
-
-	//判定状态
-	if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_SCAN)
-	{
-		//如果某些板子重启，系统处于工作态，但并不是所有板子都进入工作态，则依然不重启
-		if (func_l3bfdf_is_there_any_board_not_yet_startup() == FALSE){
-			func_l3bfdf_send_out_suspend_message_to_all();
-			FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
-			HCU_ERROR_PRINT_TASK(TASK_ID_L3BFDF, "L3BFDF: Receiving Startup message while not all boards start yet!\n");
-		}
-		//给所有下位机发送StartCfg消息，重启启动整个系统
-		if (func_l3bfdf_send_out_cfg_start_message_to_all() == FAILURE) return FAILURE;
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
 	}
 
@@ -874,7 +852,7 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	UINT32 weight = 0;
+	INT32 weight = 0;
 	UINT16 outHopperId = 0;
 	int i=0;
 	int line=0, boardId=0;
@@ -1398,6 +1376,8 @@ OPSTAT func_l3bfdf_time_out_sys_resp_common_process(void)
 		}
 	}
 
+	//Response消息超时都强行退回到ACTIVE状态
+	FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
 	return SUCCESS;
 }
 

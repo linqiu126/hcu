@@ -58,8 +58,7 @@ OPSTAT fsm_lightstr_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_LIGHTSTR, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("LIGHTSTR: Error Set FSM State at fsm_lightstr_task_entry\n");}
+	FsmSetState(TASK_ID_LIGHTSTR, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -84,10 +83,7 @@ OPSTAT fsm_lightstr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_LIGHTSTR, FSM_STATE_LIGHTSTR_INITED) == FAILURE){
-		HcuErrorPrint("LIGHTSTR: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_LIGHTSTR, FSM_STATE_LIGHTSTR_INITED);
 
 	//初始化硬件接口
 	if (func_lightstr_int_init() == FAILURE){
@@ -100,23 +96,12 @@ OPSTAT fsm_lightstr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	memset(&gTaskLightstrContext, 0, sizeof(gTaskLightstrContext_t));
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_LIGHTSTR, TIMER_ID_1S_LIGHTSTR_PERIOD_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_LIGHTSTR_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_LIGHTSTR]++;
-		HcuErrorPrint("LIGHTSTR: Error start period timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_LIGHTSTR, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_LIGHTSTR_PERIOD_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_LIGHTSTR, FSM_STATE_LIGHTSTR_ACTIVED) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_LIGHTSTR]++;
-		HcuErrorPrint("LIGHTSTR: Error Set FSM State!\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("LIGHTSTR: Enter FSM_STATE_LIGHTSTR_ACTIVED status, Keeping refresh here!\n");
-	}
+	FsmSetState(TASK_ID_LIGHTSTR, FSM_STATE_LIGHTSTR_ACTIVED);
+	HCU_DEBUG_PRINT_FAT("LIGHTSTR: Enter FSM_STATE_LIGHTSTR_ACTIVED status, Keeping refresh here!\n");
+
 	/*
 
 	//进入阻塞式接收数据状态，然后继续发送
@@ -189,12 +174,7 @@ OPSTAT fsm_lightstr_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 	if ((rcv.timeId == TIMER_ID_1S_LIGHTSTR_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
 		if (FsmGetState(TASK_ID_LIGHTSTR) != FSM_STATE_LIGHTSTR_ACTIVED){
-			ret = FsmSetState(TASK_ID_LIGHTSTR, FSM_STATE_LIGHTSTR_ACTIVED);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_LIGHTSTR]++;
-				HcuErrorPrint("LIGHTSTR: Error Set FSM State!\n");
-				return FAILURE;
-			}//FsmSetState
+			FsmSetState(TASK_ID_LIGHTSTR, FSM_STATE_LIGHTSTR_ACTIVED);
 		}
 
 #ifdef TARGET_RASPBERRY_PI3B

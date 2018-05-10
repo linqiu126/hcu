@@ -64,8 +64,7 @@ OPSTAT fsm_sysswm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_SYSSWM, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("SYSSWM: Error Set FSM State at fsm_sysswm_task_entry\n");}
+	FsmSetState(TASK_ID_SYSSWM, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -90,10 +89,7 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_SYSSWM, FSM_STATE_SYSSWM_INITED) == FAILURE){
-		HcuErrorPrint("SYSSWM: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_SYSSWM, FSM_STATE_SYSSWM_INITED);
 
 	//初始化硬件接口
 	if (func_sysswm_int_init() == FAILURE){
@@ -105,17 +101,11 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM] = 0;
 	memset(&gTaskSysswmContext, 0, sizeof(gTaskSysswmContext_t));
 
-	//启动周期性定时器：第一次将时钟降低到15秒
-	ret = hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, 90, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
-		HcuErrorPrint("SYSSWM: Error start period timer!\n");
-		return FAILURE;
-	}
+	//启动周期性定时器：第一次将时钟降低到90秒, considering of ETHERNET 1st start period = 60second.
+	hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, 90, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_SYSSWM, FSM_STATE_SYSSWM_ACTIVED) == FAILURE)
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Error Set FSM State!\n");
+	FsmSetState(TASK_ID_SYSSWM, FSM_STATE_SYSSWM_ACTIVED);
 	HCU_DEBUG_PRINT_FAT("SYSSWM: Enter FSM_STATE_SYSSWM_ACTIVED status, Keeping refresh here!\n");
 
 	//刷新右下角当前版本信息
@@ -268,6 +258,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		//如果版本号不适合
 		HCU_DEBUG_PRINT_CRT("SYSSWM: Session=%d, HCU Rcv REL/VER/DBVER=[%d/%d/%d], BurnId REL/VER/DBVER=[%d/%d/%d]\n", gTaskSysswmContext.swDlSession, rcv.swRel, rcv.swVer, rcv.dbVer, zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
 		if ((rcv.swRel < zHcuSysEngPar.hwBurnId.swRelId) || ((rcv.swRel == zHcuSysEngPar.hwBurnId.swRelId) && (rcv.swVer <= zHcuSysEngPar.hwBurnId.swVerId))){
+			HCU_DEBUG_PRINT_FAT("SYSSWM: Rcv REL/VER=%d/%d, EngPar REL/ID=%d/%d\n", rcv.swRel, rcv.swVer, zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId);
 			return SUCCESS;
 		}
 

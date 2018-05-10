@@ -70,14 +70,9 @@ UINT32 LCD_AlarmFlag;
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_noise_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret;
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_IDLE);
-	if (ret == FAILURE){
-		HcuErrorPrint("NOISE: Error Set FSM State at fsm_noise_task_entry\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_NOISE, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -102,14 +97,8 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		}
 	}
 
-	ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_INITED);
-	if (ret == FAILURE){
-		HcuErrorPrint("NOISE: Error Set FSM State at fsm_noise_init\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("NOISE: Enter FSM_STATE_NOISE_INITED status, everything goes well!\n");
-	}
+	FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_INITED);
+	HCU_DEBUG_PRINT_FAT("NOISE: Enter FSM_STATE_NOISE_INITED status, everything goes well!\n");
 
 	//Task global variables init.
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE] = 0;
@@ -148,21 +137,10 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	hcu_sleep(i);
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_NOISE, TIMER_ID_1S_NOISE_PERIOD_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_NOISE_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-		HcuErrorPrint("NOISE: Error start timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_NOISE, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_NOISE_PERIOD_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//State Transfer to FSM_STATE_NOISE_ACTIVED
-	ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-		HcuErrorPrint("NOISE: Error Set FSM State at fsm_noise_init\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
 	return SUCCESS;
 }
 
@@ -207,12 +185,7 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	if ((rcv.timeId == TIMER_ID_1S_NOISE_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
 		if (FsmGetState(TASK_ID_NOISE) != FSM_STATE_NOISE_ACTIVED){
-			ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-				HcuErrorPrint("NOISE: Error Set FSM State!\n");
-				return FAILURE;
-			}//FsmSetState
+			FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
 		}
 		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
 		{
@@ -249,8 +222,6 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 //超时失败，走向下一个传感器
 void func_noise_time_out_processing_no_rsponse(void)
 {
-	int ret=0;
-
 	//恢复当前传感器的空闲状态
 	gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].hwAccess = SENSOR_NOISE_HW_ACCESS_IDLE;
 	gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].hwStatus = SENSOR_NOISE_HW_STATUS_DEACTIVE;
@@ -268,12 +239,7 @@ void func_noise_time_out_processing_no_rsponse(void)
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
 
 	//State Transfer to FSM_STATE_NOISE_ACTIVE
-	ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-		HcuErrorPrint("NOISE: Error Set FSM State!\n");
-		return;
-	}//FsmSetState
+	FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
 	return;
 }
 
@@ -316,25 +282,14 @@ void func_noise_time_out_read_data_from_modbus(void)
 		}
 
 		//启动一次性定时器
-		ret = hcu_timer_start(TASK_ID_NOISE, TIMER_ID_1S_NOISE_MODBUS_FB, \
-				zHcuSysEngPar.timer.array[TIMER_ID_1S_NOISE_MODBUS_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Error start timer!\n");
-			return;
-		}
+		hcu_timer_start(TASK_ID_NOISE, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_NOISE_MODBUS_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 
 		//设置当前传感器到忙，没反应之前，不置状态
 		gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].hwAccess = SENSOR_NOISE_HW_ACCESS_BUSY;
 		gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].busyCount = 0;
 
 		//State Transfer to FSM_STATE_NOISE_OPT_WFFB
-		ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_MODBUS_WFFB);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Error Set FSM State!\n");
-			return;
-		}//FsmSetState
+		FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_MODBUS_WFFB);
 	}//SENSOR_NOISE_HW_ACCESS_IDLE
 
 	//任何其他状态，强制初始化
@@ -390,24 +345,14 @@ void func_noise_time_out_read_data_from_spsvirgo(void)
 		}
 
 		//启动一次性定时器
-		ret = hcu_timer_start(TASK_ID_NOISE, TIMER_ID_1S_NOISE_SPSVIRGO_FB, NOISE_TIMER_DURATION_SPSVIRGO_FB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Error start timer!\n");
-			return;
-		}
+		hcu_timer_start(TASK_ID_NOISE, TIMER_ID_1S_NOISE_SPSVIRGO_FB, NOISE_TIMER_DURATION_SPSVIRGO_FB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 
 		//设置当前传感器到忙，没反应之前，不置状态
 		gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].hwAccess = SENSOR_NOISE_HW_ACCESS_BUSY;
 		gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].busyCount = 0;
 
 		//State Transfer to FSM_STATE_NOISE_OPT_WFFB
-		ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_SPSVIRGO_WFFB);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Error Set FSM State!\n");
-			return;
-		}//FsmSetState
+		FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_SPSVIRGO_WFFB);
 	}//SENSOR_NOISE_HW_ACCESS_IDLE
 
 	//任何其他状态，强制初始化
@@ -443,13 +388,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
 
 	//停止定时器
-	ret = hcu_timer_stop(TASK_ID_NOISE, TIMER_ID_1S_NOISE_MODBUS_FB, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-		HcuErrorPrint("NOISE: Error stop timer!\n");
-		return FAILURE;
-	}
-
+	hcu_timer_stop(TASK_ID_NOISE, TIMER_ID_1S_NOISE_MODBUS_FB, TIMER_RESOLUTION_1S);
 
 	//判断如果Noise超过阀值，若超过，则需要设alarm flag = ON, 启动拍照和录像，并触发告警，告警报告中需要包括告警类型，告警内容，及需要上传照片的文件名（包含设备名字日期时间）和录像的开始日期、时间和停止的日期、时间。
 	HCU_DEBUG_PRINT_INF("NOISE: noise = %d\n\n\n\n", (rcv.noise.noiseValue));
@@ -601,7 +540,6 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	//else if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 	//在线模式
 	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE) || ((zHcuSysEngPar.hwBurnId.hwType != HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)) )
-
 	{
 		//Online processing
 		//赋值给发送消息
@@ -629,121 +567,114 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 					return FAILURE;
 				}
 		*/
-				///////////
-				//L2信息
-				msg_struct_noise_cloudvela_data_resp_t snd;
-				memset(&snd, 0, sizeof(msg_struct_noise_cloudvela_data_resp_t));
-				strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
-					sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
-				strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
-						sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
-				snd.comHead.timeStamp = time(0);
-				snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-				strcpy(snd.comHead.funcFlag, "0");
+			///////////
+			//L2信息
+			msg_struct_noise_cloudvela_data_resp_t snd;
+			memset(&snd, 0, sizeof(msg_struct_noise_cloudvela_data_resp_t));
+			strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+				sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+			strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+					sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+			snd.comHead.timeStamp = time(0);
+			snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+			strcpy(snd.comHead.funcFlag, "0");
 
-				//CONTENT
-				snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
-				snd.usercmdid = rcv.usercmdid;
-				snd.cmdIdBackType = rcv.cmdIdBackType;
-				snd.useroptid = rcv.useroptid;
+			//CONTENT
+			snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
+			snd.usercmdid = rcv.usercmdid;
+			snd.cmdIdBackType = rcv.cmdIdBackType;
+			snd.useroptid = rcv.useroptid;
 
-				snd.noise.equipid = rcv.noise.equipid;
-				snd.noise.timeStamp = rcv.noise.timeStamp;
-				snd.noise.dataFormat = rcv.noise.dataFormat;
-				snd.noise.noiseValue = rcv.noise.noiseValue;
-				snd.noise.gps.gpsx = rcv.noise.gps.gpsx;
-				snd.noise.gps.gpsy = rcv.noise.gps.gpsy;
-				snd.noise.gps.gpsz = rcv.noise.gps.gpsz;
-				snd.noise.gps.ew = rcv.noise.gps.ew;
-				snd.noise.gps.ns = rcv.noise.gps.ns;
-				snd.noise.nTimes = rcv.noise.nTimes;
-				snd.noise.onOffLineFlag = rcv.noise.onOffLineFlag;
-				snd.length = sizeof(msg_struct_noise_cloudvela_data_resp_t);
+			snd.noise.equipid = rcv.noise.equipid;
+			snd.noise.timeStamp = rcv.noise.timeStamp;
+			snd.noise.dataFormat = rcv.noise.dataFormat;
+			snd.noise.noiseValue = rcv.noise.noiseValue;
+			snd.noise.gps.gpsx = rcv.noise.gps.gpsx;
+			snd.noise.gps.gpsy = rcv.noise.gps.gpsy;
+			snd.noise.gps.gpsz = rcv.noise.gps.gpsz;
+			snd.noise.gps.ew = rcv.noise.gps.ew;
+			snd.noise.gps.ns = rcv.noise.gps.ns;
+			snd.noise.nTimes = rcv.noise.nTimes;
+			snd.noise.onOffLineFlag = rcv.noise.onOffLineFlag;
+			snd.length = sizeof(msg_struct_noise_cloudvela_data_resp_t);
 
-				//发送后台
-				if (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL){
-					ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
-					if (ret == FAILURE){
-						zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-						HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-						return FAILURE;
-					}
+			//发送后台
+			if (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL){
+				ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
+				if (ret == FAILURE){
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+					HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+					return FAILURE;
 				}
-
-				//Save to disk as request：在线是为了备份，离线是为了重发给后台
-				//该函数，有待完成
-				if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
-					//RECORD还要存入数据库
-					memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-					record.equipid = rcv.noise.equipid;
-					record.sensortype = L3CI_noise;
-					record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
-					record.timestamp = rcv.noise.timeStamp;
-					record.dataFormat = rcv.noise.dataFormat;
-					record.noiseValue = rcv.noise.noiseValue;
-					record.gpsx = rcv.noise.gps.gpsx;
-					record.gpsy = rcv.noise.gps.gpsy;
-					record.gpsz = rcv.noise.gps.gpsz;
-					record.ew = rcv.noise.gps.ew;
-					record.ns = rcv.noise.gps.ns;
-					//RECORD还要存入数据库
-					sensor_noise_data_element_t noiseData;
-					memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
-					noiseData.equipid = record.equipid;
-					noiseData.timeStamp = record.timestamp;
-					noiseData.dataFormat = record.dataFormat;
-					noiseData.noiseValue = record.noiseValue;
-					noiseData.gps.gpsx = record.gpsx;
-					noiseData.gps.gpsy = record.gpsy;
-					noiseData.gps.gpsz = record.gpsz;
-					noiseData.gps.ew = record.ew;
-					noiseData.gps.ns = record.ns;
-					noiseData.onOffLineFlag = record.onOffLine;
-
-					//HCU_DEBUG_PRINT_INF("NOISE: noiseValue=%d\n\n\n\n", noiseData.noiseValue);
-
-					ret = dbi_HcuNoiseDataInfo_save(&noiseData);
-					if (ret == FAILURE){
-						zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-						HcuErrorPrint("NOISE: Can not save data into database!\n");
-					}
-				}// Period mode OK!
-				// Instance mode, no need store!
 			}
 
-			//差错情形
-			else{
-				HcuErrorPrint("NOISE: Wrong state of CLOUDVELA when data need send out!\n");
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-				//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
-				//If this shall work normally, it is too much for each sensor STM process!
-				return FAILURE;
-			}
+			//Save to disk as request：在线是为了备份，离线是为了重发给后台
+			//该函数，有待完成
+			if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
+				//RECORD还要存入数据库
+				memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
+				record.equipid = rcv.noise.equipid;
+				record.sensortype = L3CI_noise;
+				record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
+				record.timestamp = rcv.noise.timeStamp;
+				record.dataFormat = rcv.noise.dataFormat;
+				record.noiseValue = rcv.noise.noiseValue;
+				record.gpsx = rcv.noise.gps.gpsx;
+				record.gpsy = rcv.noise.gps.gpsy;
+				record.gpsz = rcv.noise.gps.gpsz;
+				record.ew = rcv.noise.gps.ew;
+				record.ns = rcv.noise.gps.ns;
+				//RECORD还要存入数据库
+				sensor_noise_data_element_t noiseData;
+				memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
+				noiseData.equipid = record.equipid;
+				noiseData.timeStamp = record.timestamp;
+				noiseData.dataFormat = record.dataFormat;
+				noiseData.noiseValue = record.noiseValue;
+				noiseData.gps.gpsx = record.gpsx;
+				noiseData.gps.gpsy = record.gpsy;
+				noiseData.gps.gpsz = record.gpsz;
+				noiseData.gps.ew = record.ew;
+				noiseData.gps.ns = record.ns;
+				noiseData.onOffLineFlag = record.onOffLine;
 
-			//恢复当前传感器的空闲状态
-			gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].hwAccess = SENSOR_NOISE_HW_ACCESS_IDLE;
-			gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].hwStatus = SENSOR_NOISE_HW_STATUS_ACTIVE;
-			gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].busyCount = 0;
+				//HCU_DEBUG_PRINT_INF("NOISE: noiseValue=%d\n\n\n\n", noiseData.noiseValue);
 
-			//当前传感器指针指向下一个
-			//Finished, then currentSensor+1 do firstly
-			//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-			if ((gTaskNoiseContext.currentSensorId < 0) || (gTaskNoiseContext.currentSensorId >= (MAX_NUM_OF_SENSOR_NOISE_INSTALLED-1))){
-				gTaskNoiseContext.currentSensorId = 0;
-			}else{
-				gTaskNoiseContext.currentSensorId++;
-			}
+				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
+				if (ret == FAILURE){
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+					HcuErrorPrint("NOISE: Can not save data into database!\n");
+				}
+			}// Period mode OK!
+			// Instance mode, no need store!
+		}
 
-			//State Transfer to FSM_STATE_NOISE_ACTIVE
-			ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-				HcuErrorPrint("NOISE: Error Set FSM State!\n");
-				return FAILURE;
-			}
+	//差错情形
+	else{
+		HcuErrorPrint("NOISE: Wrong state of CLOUDVELA when data need send out!\n");
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+		//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
+		//If this shall work normally, it is too much for each sensor STM process!
+		return FAILURE;
+	}
 
-			return SUCCESS;
+	//恢复当前传感器的空闲状态
+	gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].hwAccess = SENSOR_NOISE_HW_ACCESS_IDLE;
+	gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].hwStatus = SENSOR_NOISE_HW_STATUS_ACTIVE;
+	gTaskNoiseContext.noise[gTaskNoiseContext.currentSensorId].busyCount = 0;
 
+	//当前传感器指针指向下一个
+	//Finished, then currentSensor+1 do firstly
+	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
+	if ((gTaskNoiseContext.currentSensorId < 0) || (gTaskNoiseContext.currentSensorId >= (MAX_NUM_OF_SENSOR_NOISE_INSTALLED-1))){
+		gTaskNoiseContext.currentSensorId = 0;
+	}else{
+		gTaskNoiseContext.currentSensorId++;
+	}
+
+	//State Transfer to FSM_STATE_NOISE_ACTIVE
+	FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
+	return SUCCESS;
 }
 
 
@@ -768,16 +699,7 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
 
 	//停止定时器
-	ret = hcu_timer_stop(TASK_ID_NOISE, TIMER_ID_1S_NOISE_SPSVIRGO_FB, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-		HcuErrorPrint("NOISE: Error stop timer!\n");
-		return FAILURE;
-	}
-
-
-
-
+	hcu_timer_stop(TASK_ID_NOISE, TIMER_ID_1S_NOISE_SPSVIRGO_FB, TIMER_RESOLUTION_1S);
 
 	//For HKvision option setting
 	HKVisionOption_t HKVisionOption;
@@ -1066,13 +988,7 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 	}
 
 	//State Transfer to FSM_STATE_NOISE_ACTIVE
-	ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-		HcuErrorPrint("NOISE: Error Set FSM State!\n");
-		return FAILURE;
-	}
-
+	FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
 	return SUCCESS;
 }
 

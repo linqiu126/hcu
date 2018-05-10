@@ -67,8 +67,7 @@ OPSTAT fsm_bfscuicomm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_BFSCUICOMM, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("BFSCUICOMM: Error Set FSM State at fsm_bfscuicomm_task_entry\n");}
+	FsmSetState(TASK_ID_BFSCUICOMM, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -93,10 +92,7 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_BFSCUICOMM, FSM_STATE_BFSCUICOMM_INITED) == FAILURE){
-		HcuErrorPrint("BFSCUICOMM: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_BFSCUICOMM, FSM_STATE_BFSCUICOMM_INITED);
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM] = 0;
@@ -128,21 +124,14 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	sprintf(str, "chmod -R 777 /var/www/html/*");
 	system(str);
 
-	HCU_DEBUG_PRINT_INF("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: fileStream=%x, zHcuCmdflagJsonFile = %d\n", fileStream, zHcuCmdflagJsonFile);
+	HCU_DEBUG_PRINT_INF("BFSCUICOMM: fsm_bfscuicomm_init: fileStream=%x, zHcuCmdflagJsonFile = %d\n", fileStream, zHcuCmdflagJsonFile);
 
 	//启动周期性定时器,暂时没有周期要干的活，不启动
-	//ret = hcu_timer_start(TASK_ID_BFSCUICOMM, TIMER_ID_1S_BFSCUICOMM_PERIOD_READ, \
-	//		zHcuSysEngPar.timer.array[TIMER_ID_1S_BFSCUICOMM_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	//hcu_timer_start(TASK_ID_BFSCUICOMM, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_BFSCUICOMM_PERIOD_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_BFSCUICOMM, FSM_STATE_BFSCUICOMM_ACTIVED) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
-		HcuErrorPrint("BFSCUICOMM: Error Set FSM State!\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("BFSCUICOMM: Enter FSM_STATE_BFSCUICOMM_ACTIVED status, Keeping refresh here!\n");
-	}
+	FsmSetState(TASK_ID_BFSCUICOMM, FSM_STATE_BFSCUICOMM_ACTIVED);
+	HCU_DEBUG_PRINT_FAT("BFSCUICOMM: Enter FSM_STATE_BFSCUICOMM_ACTIVED status, Keeping refresh here!\n");
 
 	//返回
 	return SUCCESS;
@@ -190,14 +179,8 @@ OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	if ((rcv.timeId == TIMER_ID_1S_BFSCUICOMM_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
 		if (FsmGetState(TASK_ID_BFSCUICOMM) != FSM_STATE_BFSCUICOMM_ACTIVED){
-			ret = FsmSetState(TASK_ID_BFSCUICOMM, FSM_STATE_BFSCUICOMM_ACTIVED);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
-				HcuErrorPrint("BFSCUICOMM: Error Set FSM State!\n");
-				return FAILURE;
-			}//FsmSetState
+			FsmSetState(TASK_ID_BFSCUICOMM, FSM_STATE_BFSCUICOMM_ACTIVED);
 		}
-
 		//Do nothing
 		func_bfscuicomm_time_out_period_read_process();
 	}
@@ -217,10 +200,8 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 	memcpy(&rcv, param_ptr, param_len);
 
 	//收到正确且所有秤台齐活的反馈
-	HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: rcv.validFlag = %d\n", rcv.validFlag);
-	dbi_HcuBfsc_WmcCurComWgtUpdate(0);
-	if((rcv.validFlag == TRUE) && (gTaskL3bfscuicommContext.bfscuiState == HCU_BFSCCOMM_JASON_CMD_START)){
-		//Update databse, to let START menu turn state from grey to active!!!
+	if(rcv.validFlag == TRUE){
+		dbi_HcuBfsc_WmcCurComWgtUpdate(0); //清理所有秤台，设置重量归0
 		msg_struct_uicomm_l3bfsc_cmd_req_t snd;
 		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
 		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
@@ -230,13 +211,16 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 	}
 	//收到L3BFSC指示秤台配置错误的反馈
-	else if ((rcv.validFlag == FALSE) && (gTaskL3bfscuicommContext.bfscuiState == HCU_BFSCCOMM_JASON_CMD_START)){
-		hcu_sleep(2);
-		msg_struct_uicomm_l3bfsc_cfg_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
-		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
-		if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+	else if (rcv.validFlag == FALSE){
+		HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: validFlag = %d，errCode = %d, sensorId = %d\n", rcv.validFlag, rcv.errCode, rcv.sensorid);
+
+		//sleep 3s后尝试再次发送config请求
+//		hcu_sleep(3);
+//		msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+//		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+//		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
+//		if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 	}
 	//返回
 	return SUCCESS;
@@ -254,6 +238,7 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cali_resp(UINT32 dest_id, UINT32 src_id, void * par
 		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
+	printf("BFSCUICOMM: cali_resp, sensorid=%d, validFlag=%d, cali_mode=%d, adcValue=%d\n", rcv.sensorid,rcv.validFlag,rcv.cali_mode,rcv.adcValue);
 	if (rcv.cali_mode == BFSC_SENSOR_CALIBRATION_MODE_ZERO){
 		sensorid = rcv.sensorid;
 		if(sensorid < 1 || sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)
@@ -278,7 +263,7 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cali_resp(UINT32 dest_id, UINT32 src_id, void * par
 		if (ret == FAILURE) HCU_ERROR_PRINT_BFSCUICOMM("TASK_ID_BFSCUICOMM: Save calibration data into DB error!\n");
 	}
 	else{
-		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message parameter error!\n");
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message parameter error, rcv.cali_mode = %d!\n", rcv.cali_mode);
 	}
 
 	//返回
@@ -411,18 +396,20 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		//依赖文件变化的内容，分类发送控制命令：START/STOP命令
 		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START){
 			UINT16 config_index = 0;
-			gTaskL3bfscuicommContext.bfscuiState = HCU_BFSCCOMM_JASON_CMD_START;
 			config_index = parseResult.cmdStartStop.confindex;
-			if (func_bfscuicomm_read_cfg_file_into_ctrl_table(config_index) == SUCCESS){
-				msg_struct_uicomm_l3bfsc_cfg_req_t snd;
-				memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
-				snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
-				if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
-					HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+			//根据界面选择的用户配置初始化全局参数表
+			if (func_bfscuicomm_read_cfg_file_into_ctrl_table(config_index) == FAILURE){
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: load user specified configuration into ctrl table error, config_index = %d! \n", config_index);
 			}
+
+			//发送配置消息给L3BFSC
+			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
+			if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		}
 		else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP){
-			gTaskL3bfscuicommContext.bfscuiState = HCU_BFSCCOMM_JASON_CMD_STOP;
 			msg_struct_uicomm_l3bfsc_cmd_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
 			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
@@ -440,22 +427,33 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		fileChangeContent = parseResult.cmdCalibration.cmdValue;
 		//依赖文件变化的内容，分类发送控制命令：零值校准命令/满值校准命令
 		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)){
-			sensorid = parseResult.cmdCalibration.sensorid;
 			msg_struct_uicomm_l3bfsc_calibration_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_calibration_req_t));
 			snd.length = sizeof(msg_struct_uicomm_l3bfsc_calibration_req_t);
+			//重新读入系统全局参数表，这时候没有选择用户配置，默认使用Config_index=1的默认配置去初始化weightSensor参数
+			if (func_bfscuicomm_read_cfg_file_into_ctrl_table(1) == FAILURE){
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: load default configuration into ctrl table error! \n");
+			}
 			//check sensor id
+			sensorid = parseResult.cmdCalibration.sensorid;
+
 			if(sensorid < 1 || sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: UI input sensorid out of range, [sensorid=%d]! \n", sensorid);
 
 			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO) {
 				snd.cali_mode = BFSC_SENSOR_CALIBRATION_MODE_ZERO;
 				snd.sensorid = sensorid;
+				//将对应秤台的原有校准ADC值清零
+				dbi_HcuBfsc_CalibrationDataUpdate_adczero(0, sensorid);
 			}
 			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL){
 				snd.cali_mode = BFSC_SENSOR_CALIBRATION_MODE_FULL;
 				snd.sensorid = sensorid;
+				//将对应秤台的原有校准ADC值清零
+				dbi_HcuBfsc_CalibrationDataUpdate_adcfull(0, sensorid);
 			}
+			else
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: JSON command value error, fileChangeContent = %d! \n", fileChangeContent);
 
 			//发送命令给L3BFSC
 			if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CALI_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
@@ -470,8 +468,6 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		fileChangeContent = parseResult.cmdResume.cmdValue;
 		//依赖文件变化的内容，分类发送控制命令：SUSPEND命令/RESUME命令
 		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME) {
-			//Re-configure/start all weight sensor
-			gTaskL3bfscuicommContext.bfscuiState = HCU_BFSCCOMM_JASON_CMD_START;
 			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
 			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
@@ -493,6 +489,7 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 			testcmd = parseResult.cmdTest.testCmd;
 			testpara = parseResult.cmdTest.testPara;
 			msg_struct_uicomm_can_test_cmd_req_t snd;
+
 			memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
 			snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
 			//check sensor id
@@ -550,14 +547,14 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 	FILE *fileStream;
 	char inotifyReadBuf[1000];
 	UINT32  numread = 0;
-	UINT32  flag = 0, value = 0, errid = 0;
+	UINT32  errid = 0;
 	UINT8  sensorid = 0;
 
 	if((NULL == monitorJsonFile) || (NULL == parseResult))
 		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: (NULL == monitorJsonFile) || (NULL == parseResult), return.\n");
 
-	struct json_object *file_jsonobj = NULL;
-	struct json_object *cmd_jsonobj = NULL, *flag_jsonobj = NULL, *value_jsonobj = NULL, *sensorid_jsonobj = NULL;
+	struct json_object *file_jsonobj = NULL, *cmd_jsonobj = NULL;
+	struct json_object *flag_jsonobj = NULL, *value_jsonobj = NULL, *sensorid_jsonobj = NULL;
 
     if ((fileStream = fopen( monitorJsonFile, "rt" )) != NULL )  // 文件读取
     {
@@ -579,55 +576,67 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 
 			//解析Start/Stop命令
 		   if ( json_object_object_get_ex(file_jsonobj, "start_cmd", &cmd_jsonobj)){
-			   UINT16 config_index = 0;
 			   struct json_object *confindex_jsonobj = NULL;
-
-			   flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
-			   value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
-			   confindex_jsonobj = json_object_object_get(cmd_jsonobj, "confindex");
-
-			   if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
-				   flag = json_object_get_int(flag_jsonobj);
-				   value = json_object_get_int(value_jsonobj);
-				   config_index = json_object_get_int(confindex_jsonobj);
-				   parseResult->cmdStartStop.cmdFlag = flag;
-				   parseResult->cmdStartStop.cmdValue = value;
-				   parseResult->cmdStartStop.confindex = config_index;
-			   }
-			   json_object_put(confindex_jsonobj);  //释放Json Object指针
+				//解码flag
+				json_object_object_get_ex(cmd_jsonobj, "flag", &flag_jsonobj);
+				if (flag_jsonobj != NULL){
+					parseResult->cmdStartStop.cmdFlag = json_object_get_int(flag_jsonobj);
+					json_object_put(flag_jsonobj);
+				}
+				//解码value
+				json_object_object_get_ex(cmd_jsonobj, "value", &value_jsonobj);
+				if (value_jsonobj != NULL){
+					parseResult->cmdStartStop.cmdValue = json_object_get_int(value_jsonobj);
+					json_object_put(value_jsonobj);
+				}
+				//解码confindex
+				json_object_object_get_ex(cmd_jsonobj, "confindex", &confindex_jsonobj);
+				if (confindex_jsonobj != NULL){
+					parseResult->cmdStartStop.confindex = json_object_get_int(confindex_jsonobj);
+					json_object_put(confindex_jsonobj);
+				}
 		   }
 		  else
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [start_cmd] dose not exist in command json file ! \n");
 
 		   //解析Calibration命令
 		  if (json_object_object_get_ex(file_jsonobj, "calibration_cmd", &cmd_jsonobj)){
-			  flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
-			  value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
-			  sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
-			  if ((flag_jsonobj != NULL) && (value_jsonobj != NULL) && (sensorid_jsonobj != NULL)){
-				  flag = json_object_get_int(flag_jsonobj);
-				  value = json_object_get_int(value_jsonobj);
-				  sensorid = json_object_get_int(sensorid_jsonobj);
-				  if ((sensorid >0 ) && (sensorid < HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)){
-					  parseResult->cmdCalibration.cmdFlag = flag;
-					  parseResult->cmdCalibration.cmdValue = value;
-					  parseResult->cmdCalibration.sensorid = sensorid;
-					  parseResult->cmdCalibration.weight = gTaskL3bfscContext.wgtSnrPar.calibration[sensorid].WeightSensorCalibrationFullWeight;
-				  }
-			  }
+				//解码flag
+				json_object_object_get_ex(cmd_jsonobj, "flag", &flag_jsonobj);
+				if (flag_jsonobj != NULL){
+					parseResult->cmdCalibration.cmdFlag = json_object_get_int(flag_jsonobj);
+					json_object_put(flag_jsonobj);
+				}
+				//解码value
+				json_object_object_get_ex(cmd_jsonobj, "value", &value_jsonobj);
+				if (value_jsonobj != NULL){
+					parseResult->cmdCalibration.cmdValue = json_object_get_int(value_jsonobj);
+					json_object_put(value_jsonobj);
+				}
+				//解码sensorid
+				json_object_object_get_ex(cmd_jsonobj, "sensorid", &sensorid_jsonobj);
+				if (sensorid_jsonobj != NULL){
+					parseResult->cmdCalibration.sensorid = json_object_get_int(sensorid_jsonobj);
+					json_object_put(value_jsonobj);
+				}
+				parseResult->cmdCalibration.weight = gTaskL3bfscContext.wgtSnrPar.calibration[sensorid].WeightSensorCalibrationFullWeight;
 		  }
 		 else
 			 HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [calibration_cmd] dose not exist in command json file ! \n");
 
 		 //解析Resume命令
 		if (json_object_object_get_ex(file_jsonobj, "resume_cmd", &cmd_jsonobj)){
-			flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
-			value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
-			if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
-				flag = json_object_get_int(flag_jsonobj);
-				value = json_object_get_int(value_jsonobj);
-				parseResult->cmdResume.cmdFlag = flag;
-				parseResult->cmdResume.cmdValue = value;
+			//解码flag
+			json_object_object_get_ex(cmd_jsonobj, "flag", &flag_jsonobj);
+			if (flag_jsonobj != NULL){
+				parseResult->cmdResume.cmdFlag = json_object_get_int(flag_jsonobj);
+				json_object_put(flag_jsonobj);
+			}
+			//解码value
+			json_object_object_get_ex(cmd_jsonobj, "value", &value_jsonobj);
+			if (value_jsonobj != NULL){
+				parseResult->cmdResume.cmdValue = json_object_get_int(value_jsonobj);
+				json_object_put(value_jsonobj);
 			}
 		}
 		else
@@ -635,29 +644,38 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 
 		 //解析Test命令
 		if (json_object_object_get_ex(file_jsonobj, "test_cmd", &cmd_jsonobj)){
-			UINT32 	testcmd = 0, testpara = 0;
 			struct json_object *testcmd_jsonobj = NULL, *testpara_jsonobj = NULL;
 
-			flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
-			value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
-			sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
-			testcmd_jsonobj =  json_object_object_get(cmd_jsonobj, "testcmd");
-			testpara_jsonobj =  json_object_object_get(cmd_jsonobj, "testpara");
-			if ((flag_jsonobj != NULL) && (value_jsonobj != NULL) && (sensorid_jsonobj != NULL)){
-				flag = json_object_get_int(flag_jsonobj);
-				value = json_object_get_int(value_jsonobj);
-				sensorid = json_object_get_int(sensorid_jsonobj);
-				testcmd = json_object_get_int(testcmd_jsonobj);
-				testpara = json_object_get_int(testpara_jsonobj);
-				parseResult->cmdTest.cmdFlag = flag;
-				parseResult->cmdTest.cmdValue = value;
-				parseResult->cmdTest.sensorid = sensorid;
-				parseResult->cmdTest.testCmd = testcmd;
-				parseResult->cmdTest.testPara = testpara;
+			//解码flag
+			json_object_object_get_ex(cmd_jsonobj, "flag", &flag_jsonobj);
+			if (flag_jsonobj != NULL){
+				parseResult->cmdTest.cmdFlag = json_object_get_int(flag_jsonobj);
+				json_object_put(flag_jsonobj);
 			}
-			//free json object
-			json_object_put(testcmd_jsonobj);
-			json_object_put(testpara_jsonobj);
+			//解码value
+			json_object_object_get_ex(cmd_jsonobj, "value", &value_jsonobj);
+			if (value_jsonobj != NULL){
+				parseResult->cmdTest.cmdValue = json_object_get_int(value_jsonobj);
+				json_object_put(value_jsonobj);
+			}
+			//解码sensorid
+			json_object_object_get_ex(cmd_jsonobj, "sensorid", &sensorid_jsonobj);
+			if (sensorid_jsonobj != NULL){
+				parseResult->cmdTest.sensorid = json_object_get_int(sensorid_jsonobj);
+				json_object_put(value_jsonobj);
+			}
+			//解码testcmd
+			json_object_object_get_ex(cmd_jsonobj, "testcmd", &testcmd_jsonobj);
+			if (testcmd_jsonobj != NULL){
+				parseResult->cmdTest.testCmd = json_object_get_int(testcmd_jsonobj);
+				json_object_put(testcmd_jsonobj);
+			}
+			//解码testpara
+			json_object_object_get_ex(cmd_jsonobj, "testpara", &testpara_jsonobj);
+			if (testpara_jsonobj != NULL){
+				parseResult->cmdTest.testPara = json_object_get_int(testpara_jsonobj);
+				json_object_put(testpara_jsonobj);
+			}
 		}
 		else
 			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [test_cmd] dose not exist in command json file ! \n");
@@ -665,9 +683,6 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 		 //释放Json Object指针
 		json_object_put(file_jsonobj);
 		json_object_put(cmd_jsonobj);
-		json_object_put(flag_jsonobj);
-		json_object_put(value_jsonobj);
-		json_object_put(sensorid_jsonobj);
 
         return SUCCESS;
     }
@@ -678,6 +693,8 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 //扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
 OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 {
+	UINT8	i;
+	UINT32  preemption;
 	UINT32  calibrationdata[(HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1)*3];
 	UINT32 dynamicdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX], staticdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX];
 
@@ -696,32 +713,38 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	if (dbi_HcuBfsc_DynamicConfigDataGet(config_index, dynamicdata) == FAILURE){
 		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Get DB algorithm data failed \n");
 	}
-	UINT8 i = 7;   //数据表单hcubfscconfigpara前7个参数为UI界面使用参数
-	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination  = dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.CombinationBias =  dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.IsRemainDetectionEnable = dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.RemainDetectionTimeSec  = dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.RemainScaleTreatment =  dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.CombinationAutoMode = dynamicdata[i++];
-	gTaskL3bfscContext.comAlgPar.MovingAvrageSpeedCount = dynamicdata[i++];
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  dynamicdata[i++];
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadThread = dynamicdata[i++];
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = dynamicdata[i++];
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorEmptyThread = dynamicdata[i++];
-	gTaskL3bfscContext.wgtSnrPar.StardardReadyTimeMs = dynamicdata[i++];
-	gTaskL3bfscContext.motCtrPar.MotorSpeed = dynamicdata[i++];
-	gTaskL3bfscContext.motCtrPar.MotorDirection = dynamicdata[i++];
-	gTaskL3bfscContext.motCtrPar.MotorRollingStartMs = dynamicdata[i++];
-	gTaskL3bfscContext.motCtrPar.MotorRollingStopMs  = dynamicdata[i++];
-	gTaskL3bfscContext.motCtrPar.MotorRollingInveralMs = dynamicdata[i++];
-	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionVaration = dynamicdata[i++];
-	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionTimeMs = dynamicdata[i++];
+	UINT8 index = 7;   //数据表单hcubfscconfigpara前7个参数为UI界面使用参数
+	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination  = dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.CombinationBias =  dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.IsRemainDetectionEnable = dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.RemainDetectionTimeSec  = dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.RemainScaleTreatment =  dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.CombinationAutoMode = dynamicdata[index++];
+	gTaskL3bfscContext.comAlgPar.MovingAvrageSpeedCount = dynamicdata[index++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  dynamicdata[index++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadThread = dynamicdata[index++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = dynamicdata[index++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorEmptyThread = dynamicdata[index++];
+	gTaskL3bfscContext.wgtSnrPar.StardardReadyTimeMs = dynamicdata[index++];
+	gTaskL3bfscContext.motCtrPar.MotorSpeed = dynamicdata[index++];
+	gTaskL3bfscContext.motCtrPar.MotorDirection = dynamicdata[index++];
+	gTaskL3bfscContext.motCtrPar.MotorRollingStartMs = dynamicdata[index++];
+	gTaskL3bfscContext.motCtrPar.MotorRollingStopMs  = dynamicdata[index++];
+	gTaskL3bfscContext.motCtrPar.MotorRollingInveralMs = dynamicdata[index++];
+	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionVaration = dynamicdata[index++];
+	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionTimeMs = dynamicdata[index++];
+	preemption = dynamicdata[index++];
+	for(i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+		if ((preemption & (((UINT32)1<<i))) == ((UINT32)1<<i)){
+			gTaskL3bfscContext.sensorWs[i+1].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_ISOLATED;
+		}
+	}
 	//重复参数
 	gTaskL3bfscContext.wgtSnrPar.RemainDetectionTimeSec = gTaskL3bfscContext.comAlgPar.RemainDetectionTimeSec;
 
@@ -730,16 +753,16 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Get DB algorithm data failed \n");
 	}
 
-	i =1;
-	gTaskL3bfscContext.wgtSnrPar.MaxAllowedWeight = staticdata[i++];
+	index =1;
+	gTaskL3bfscContext.wgtSnrPar.MaxAllowedWeight = staticdata[index++];
 
-	i++;  // calibration full weight
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcGain = staticdata[i++];
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcSampleFreq = staticdata[i++];
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorStaticZeroValue = staticdata[i++];
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorTailorValue = staticdata[i++];
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = staticdata[i++];
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = staticdata[i++];
+	index++;  // skip calibration full weight
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcGain = staticdata[index++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcSampleFreq = staticdata[index++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorStaticZeroValue = staticdata[index++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorTailorValue = staticdata[index++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = staticdata[index++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = staticdata[index++];
 
 	gTaskL3bfscContext.comAlgPar.CombinationSpeedMode = 0;
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorPickupThread = 300;

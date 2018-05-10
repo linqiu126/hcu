@@ -6043,7 +6043,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_calibration_req //
 typedef struct StrHuiIe_bfsc_calibration_resp //
 {
     UINT8   calibration_cmdvalue;
-    UINT8   calibration_result;
+    UINT8   calibration_result;  /* NOT USED FOR THE MOEMENT 2018/04/22 */
     UINT8   spare1;
     UINT8   spare2;
     WeightSensorParamaters_t weight_sensor_param;
@@ -6053,7 +6053,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_calibration_resp //
 {
 	  UINT16           msgid;
 	  UINT16           length;
-  	  UINT8            validFlag;  //是否执行成功
+  	UINT8            validFlag;  //是否执行成功
 	  UINT8            spare1;
 	  UINT16           errCode;
 	  StrHuiIe_bfsc_calibration_resp_t cal_resp;
@@ -6065,6 +6065,13 @@ typedef struct StrMsg_HUITP_MSGID_sui_common_msg_header
 	UINT16 msgid;
 	UINT16 length;
 }StrMsg_HUITP_MSGID_sui_common_msg_header_t;
+
+//Common head defintion
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header
+{
+	UINT16 msgid;
+	UINT16 length;
+}StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t;
 
 /* Can ID for communication between AWS and WMC */
 /* 1: AWS to WMC: 1 to n, n = 0 ... 15       */
@@ -6100,6 +6107,11 @@ typedef enum error_code
 	ERROR_CODE_CALLING_ERROR,
 	ERROR_CODE_INPUT_PARAMETER_KO,
 	ERROR_CODE_WRONG_WMC_STATE,
+    ERROR_CODE_SENSOR_NOT_CALIBRATED,
+    ERROR_CODE_WRONG_CALIBRATION_SEQUENCE,
+    ERROR_CODE_SENSOR_ADC_OVERLOADED,
+    ERROR_CODE_FLASH_SAVING_KO,
+    ERROR_CODE_MOTOR_FAILURE,
 	ERROR_CODE_UNKNOWN,
 	//SPECIFIC PART
 
@@ -6117,6 +6129,11 @@ typedef enum StrHuiIe_sui_com_error_code
 	HUITP_IEID_SUI_COM_ERROR_CODE_CALLING_ERROR,
 	HUITP_IEID_SUI_COM_ERROR_CODE_INPUT_PARAMETER_KO,
 	HUITP_IEID_SUI_COM_ERROR_CODE_WRONG_WMC_STATE,
+    HUITP_IEID_SUI_COM_ERROR_CODE_SENSOR_NOT_CALIBRATED,
+    HUITP_IEID_SUI_COM_ERROR_CODE_WRONG_CALIBRATION_SEQUENCE,
+    HUITP_IEID_SUI_COM_ERROR_CODE_SENSOR_ADC_OVERLOADED,
+    HUITP_IEID_SUI_COM_ERROR_CODE_FLASH_SAVING_KO,
+    HUITP_IEID_SUI_COM_ERROR_CODE_MOTOR_FAILURE,
 	HUITP_IEID_SUI_COM_ERROR_CODE_UNKNOWN,
 	//SPECIFIC PART
 
@@ -6351,6 +6368,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_req
 {
 	UINT16 msgid;
 	UINT16 length;
+	StrHuiIe_WeightSensorBfhsParamaters_t weight_sensor_param;
     UINT32 adjustingWeight;
 	UINT32 motorSpeed;
 	UINT32 motorDirection;
@@ -6365,6 +6383,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp
 	UINT8   iteration;
 	UINT16  errCode;
 	UINT32  DynCaliCoeff; //NF5 format
+	INT32   Weight; //format NF2;
 }StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t;
 
 

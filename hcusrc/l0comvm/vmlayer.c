@@ -1002,7 +1002,6 @@ UINT32 FsmInit(void)
 *******************************************************************************/
 UINT32 FsmAddNew(UINT32 task_id, HcuFsmStateItem_t* pFsmStateItem )
 {
-	OPSTAT ret;
 	UINT32 state;
 	UINT32 msgid;
 	UINT32 item, itemNo, i, j;
@@ -1119,11 +1118,7 @@ UINT32 FsmAddNew(UINT32 task_id, HcuFsmStateItem_t* pFsmStateItem )
 	** Set the state to init state(FSM_STATE_IDLE).
 	** 一旦任务创建，自动转移到IDLE状态，因而每个任务独特的初始化不能处理状态，也不能被FsmRunEngine调度，而必须被任务创建的入口函数所执行
 	*/
-	ret = FsmSetState(task_id, FSM_STATE_IDLE);
-	if (ret == FAILURE){
-		HcuErrorPrint("HCU-VM: Error set FSM State!\n");
-	}
-
+	FsmSetState(task_id, FSM_STATE_IDLE);
     return SUCCESS;
 }
 

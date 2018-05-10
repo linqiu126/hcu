@@ -1,24 +1,13 @@
 # ignore these files #
 ######################
-<<<<<<< HEAD
-Debug/log/*
-Debug/src/*
-Linux_Arm_A8/src/*
-RasberryPi/src/*
-Release/src/*
-=======
-#Debug/log/*
-#Debug/src/*
-#Linux_Arm_A8/src/*
-#RasberryPi/src/*
-#Release/src/*
-
+PrjBfsc/Debug/*
+PrjBfdf/Debug/*
+PrjBfhs/Debug/*
 Debug/*
 Linux_Arm_A8/*
 RasberryPi/*
 Release/*
 RemoteSystemsTempFiles/*
->>>>>>> refs/remotes/origin/dev
 
 # Compiled source # 
 ####################
@@ -42,8 +31,6 @@ Icon?
 Thumbs.db
 
 # Eclipse .metadata directory
-<<<<<<< HEAD
 .metadata/
-=======
 .metadata/
->>>>>>> refs/remotes/origin/dev
+

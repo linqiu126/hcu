@@ -62,14 +62,9 @@ gTaskEmcContext_t gTaskEmcContext;
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_emc_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret;
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	ret = FsmSetState(TASK_ID_EMC, FSM_STATE_IDLE);
-	if (ret == FAILURE){
-		HcuErrorPrint("EMC: Error Set FSM State at fsm_emc_task_entry\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_EMC, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -93,14 +88,8 @@ OPSTAT fsm_emc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		}
 	}
 
-	ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_INITED);
-	if (ret == FAILURE){
-		HcuErrorPrint("EMC: Error Set FSM State at fsm_emc_init\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("EMC: Enter FSM_STATE_EMC_INITED status, everything goes well!\n");
-	}
+	FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_INITED);
+	HCU_DEBUG_PRINT_FAT("EMC: Enter FSM_STATE_EMC_INITED status, everything goes well!\n");
 
 	//Task global variables init.
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC] = 0;
@@ -120,21 +109,10 @@ OPSTAT fsm_emc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	hcu_sleep(i);
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_EMC, TIMER_ID_1S_EMC_PERIOD_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_EMC_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-		HcuErrorPrint("EMC: Error start timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_EMC, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_EMC_PERIOD_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//State Transfer to FSM_STATE_EMC_ACTIVED
-	ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-		HcuErrorPrint("EMC: Error Set FSM State at fsm_emc_init\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
 	return SUCCESS;
 }
 
@@ -179,12 +157,7 @@ OPSTAT fsm_emc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	if ((rcv.timeId == TIMER_ID_1S_EMC_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
 		if (FsmGetState(TASK_ID_EMC) != FSM_STATE_EMC_ACTIVED){
-			ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-				HcuErrorPrint("EMC: Error Set FSM State!\n");
-				return FAILURE;
-			}//FsmSetState
+			FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
 		}
 		func_emc_time_out_read_data_from_modbus();
 	}
@@ -236,32 +209,16 @@ void func_emc_time_out_read_data_from_modbus(void)
 		}
 
 		//启动一次性定时器
-		ret = hcu_timer_start(TASK_ID_EMC, TIMER_ID_1S_EMC_MODBUS_FB, \
-				zHcuSysEngPar.timer.array[TIMER_ID_1S_EMC_MODBUS_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-			HcuErrorPrint("EMC: Error start timer!\n");
-			return;
-		}
-		else{
-			HcuDebugPrint("EMC: Succeed on starting timer: TIMER_ID_1S_EMC_MODBUS_FB!\n");
-		}
-
+		hcu_timer_start(TASK_ID_EMC, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_EMC_MODBUS_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		HCU_DEBUG_PRINT_FAT("EMC: Succeed on starting timer: TIMER_ID_1S_EMC_MODBUS_FB!\n");
 
 		//设置当前传感器到忙，没反应之前，不置状态
 		gTaskEmcContext.emc[gTaskEmcContext.currentSensorId].hwAccess = SENSOR_EMC_HW_ACCESS_BUSY;
 		gTaskEmcContext.emc[gTaskEmcContext.currentSensorId].busyCount = 0;
 
 		//State Transfer to FSM_STATE_EMC_OPT_WFFB
-		ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_OPT_WFFB);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-			HcuErrorPrint("EMC: Error Set FSM State!\n");
-			return;
-		}//FsmSetState
-		else{
-			HcuDebugPrint("EMC: Succeed on set FSM Status: FSM_STATE_EMC_OPT_WFFB!\n");
-		}
+		FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_OPT_WFFB);
+		HcuDebugPrint("EMC: Succeed on set FSM Status: FSM_STATE_EMC_OPT_WFFB!\n");
 	}//SENSOR_EMC_HW_ACCESS_IDLE
 
 	//任何其他状态，强制初始化
@@ -277,8 +234,6 @@ void func_emc_time_out_read_data_from_modbus(void)
 //超时失败，走向下一个传感器
 void func_emc_time_out_processing_no_rsponse(void)
 {
-	int ret=0;
-
 	//恢复当前传感器的空闲状态
 	gTaskEmcContext.emc[gTaskEmcContext.currentSensorId].hwAccess = SENSOR_EMC_HW_ACCESS_IDLE;
 	gTaskEmcContext.emc[gTaskEmcContext.currentSensorId].hwStatus = SENSOR_EMC_HW_STATUS_DEACTIVE;
@@ -296,12 +251,7 @@ void func_emc_time_out_processing_no_rsponse(void)
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
 
 	//State Transfer to FSM_STATE_EMC_ACTIVE
-	ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-		HcuErrorPrint("EMC: Error Set FSM State!\n");
-		return;
-	}//FsmSetState
+	FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
 	return;
 }
 
@@ -326,12 +276,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
 
 	//停止定时器
-	ret = hcu_timer_stop(TASK_ID_EMC, TIMER_ID_1S_EMC_MODBUS_FB, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-		HcuErrorPrint("EMC: Error stop timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_stop(TASK_ID_EMC, TIMER_ID_1S_EMC_MODBUS_FB, TIMER_RESOLUTION_1S);
 /*
 	//离线模式
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
@@ -469,13 +414,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 	}
 
 	//State Transfer to FSM_STATE_EMC_ACTIVE
-	ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-		HcuErrorPrint("EMC: Error Set FSM State!\n");
-		return FAILURE;
-	}
-
+	FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
 	return SUCCESS;
 }
 

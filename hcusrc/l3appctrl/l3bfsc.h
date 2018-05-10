@@ -47,6 +47,7 @@ typedef struct L3BfscSensorWsInfo
 #define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID			0  		//秤盘无效
 #define HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE		 	1
 #define HCU_L3BFSC_SENSOR_WS_STATUS_HW_ERROR		2
+#define HCU_L3BFSC_SENSOR_WS_STATUS_ISOLATED		3
 #define HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE_MAX		9
 
 #define HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MIN		10
@@ -69,7 +70,7 @@ typedef struct L3BfscSensorWsInfo
 #define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TGU_START 37		//秤盘有料开始出抛
 #define HCU_L3BFSC_SENSOR_WS_STATUS_WORK_MAX 		49
 
-#define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID1  		255  	//秤盘无效
+#define HCU_L3BFSC_SENSOR_WS_STATUS_NULL  			255  	//秤盘无效
 
 //统计周期，为了计算滑动平均数据
 #define HCU_L3BFSC_STA_CYCLE_DUR  60000 //1分钟，相当于60S
@@ -237,8 +238,7 @@ extern OPSTAT fsm_l3bfsc_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr
 extern OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //API启动及命令控制部分
-extern OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_canitf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_uicomm_calibration_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

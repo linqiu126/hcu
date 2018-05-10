@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stddef.h>
+#include <time.h>
+
 
 #ifdef TARGET_RASPBERRY_PI3B
 	#include <wiringPi.h>

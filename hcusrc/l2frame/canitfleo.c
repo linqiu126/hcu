@@ -74,8 +74,7 @@ OPSTAT fsm_canitfleo_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("CANITFLEO: Error Set FSM State at fsm_canitfleo_task_entry\n");}
+	FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -101,10 +100,7 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_INITED) == FAILURE){
-		HcuErrorPrint("CANITFLEO: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_INITED);
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO] = 0;
@@ -119,8 +115,7 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	//启动定时器：放在初始化完成之后再启动，仅仅是为了测试目的
 	//为了简化任务的执行，先禁止该定时器的启动
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED) == FAILURE)
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error Set FSM State!\n");
+	FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED);
 	HCU_DEBUG_PRINT_FAT("CANITFLEO: Enter FSM_STATE_CANITFLEO_ACTIVED status, Keeping refresh here!\n");
 
 	return SUCCESS;
@@ -185,7 +180,7 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 	if ((rcv.timeId == TIMER_ID_1S_CANITFLEO_WORKING_SCAN) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
 		if (FsmGetState(TASK_ID_CANITFLEO) != FSM_STATE_CANITFLEO_ACTIVED){
-			if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED) == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error Set FSM State!\n");
+			FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED);
 		}
 	}
 
@@ -277,6 +272,7 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 OPSTAT fsm_canitfleo_l3bfsc_sys_cali_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	UINT8 sensorid = 0;
+	UINT32 bitmap = 0;
 
 	//入参检查
 	msg_struct_l3bfsc_can_sys_cali_req_t rcv;
@@ -286,7 +282,7 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cali_req(UINT32 dest_id, UINT32 src_id, void * p
 	memcpy(&rcv, param_ptr, param_len);
 
 	//生成bitmap
-	UINT32 bitmap = 0;
+	sensorid = rcv.sensorid;
 	bitmap = ((UINT32)1<<sensorid);
 
 	//准备组装发送消息
@@ -329,6 +325,8 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cali_req(UINT32 dest_id, UINT32 src_id, void * p
 	//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
 	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+
+	printf("CANITFLEO: send cali req, bitmap = %d, msgLen = %d\n", bitmap, msgProcLen);
 
 	//返回
 	return SUCCESS;
@@ -603,6 +601,11 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(StrMsg_HUITP_
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 
+	if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus ==HCU_L3BFSC_SENSOR_WS_STATUS_ISOLATED) //秤台被设置成隔离
+	{
+		return SUCCESS;
+	}
+
 	//Firstly Register state
 	gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP;
 	HCU_DEBUG_PRINT_CRT("CANITFLEO: Sensor ID = %d is set to be startup!\n", nodeId);
@@ -679,16 +682,20 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(StrMsg_HU
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+	UINT8 validFlag;
+	UINT16 errCode;
+	validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 
-	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_CONFIG_ERR, 0);
+	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, errCode, 0);
 	else dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_CONFIG_RCV, 0);
 
 	//系统初始化过程
 	if (FsmGetState(TASK_ID_L3BFSC) < FSM_STATE_L3BFSC_OOS_SCAN){
 		msg_struct_can_l3bfsc_sys_cfg_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t));
-		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
-		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+		snd.validFlag = validFlag;
+		snd.errCode = errCode;
 		snd.sensorid = nodeId;
 		snd.length = sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t);
 		if (hcu_message_send(MSG_ID_CAN_L3BFSC_SYS_CFG_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
@@ -760,6 +767,8 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_calibration_resp_received_handle(StrMsg_H
 	snd.cali_resp.wgtSnrPar.WeightSensorStaticZeroValue = HUITP_ENDIAN_EXG32(rcv->cal_resp.weight_sensor_param.WeightSensorStaticZeroValue);
 	snd.cali_resp.wgtSnrPar.WeightSensorTailorValue = HUITP_ENDIAN_EXG32(rcv->cal_resp.weight_sensor_param.WeightSensorTailorValue);
 
+	printf ("CANITFLEO:  receive cali resp, validFlag = %d, nodeId = %d, adcZero = %d, adcFull = %d\n",snd.validFlag, nodeId,snd.cali_resp.wgtSnrPar.WeightSensorCalibrationZeroAdcValue, snd.cali_resp.wgtSnrPar.WeightSensorCalibrationFullAdcValue);
+
 	snd.sensorid = nodeId;
 	snd.length = sizeof(msg_struct_can_l3bfsc_sys_cali_resp_t);
 	if (hcu_message_send(MSG_ID_CAN_L3BFSC_SYS_CALI_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
@@ -774,15 +783,20 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_start_resp_received_handle(StrMsg_HUITP_M
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+	UINT8 validFlag;
+	UINT16 errCode;
+	validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_START_RCV, 0);
+	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, errCode, 0);
+	else dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_START_RCV, 0);
 
 	//系统初始化过程
 	if (FsmGetState(TASK_ID_L3BFSC) < FSM_STATE_L3BFSC_OOS_SCAN){
 		msg_struct_can_l3bfsc_sys_start_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_start_resp_t));
-		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
-		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+		snd.validFlag = validFlag;
+		snd.errCode = errCode;
 		snd.sensorid = nodeId;
 		snd.length = sizeof(msg_struct_can_l3bfsc_sys_start_resp_t);
 		if (hcu_message_send(MSG_ID_CAN_L3BFSC_SYS_START_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
@@ -803,13 +817,18 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_stop_resp_received_handle(StrMsg_HUITP_MS
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_STOP_RCV, 0);
+	UINT8 validFlag;
+	UINT16 errCode;
+	validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+
+	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, errCode, 0);
+	else dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_STOP_RCV, 0);
 
 	msg_struct_can_l3bfsc_sys_stop_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_stop_resp_t));
-	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
-	HCU_DEBUG_PRINT_INF("CANITFLEO: Receive STOP_RESP flag = %d\n", snd.validFlag);
-	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.validFlag = validFlag;
+	snd.errCode = errCode;
 	snd.sensorid = nodeId;
 	snd.length = sizeof(msg_struct_can_l3bfsc_sys_stop_resp_t);
 	if (hcu_message_send(MSG_ID_CAN_L3BFSC_SYS_STOP_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
@@ -1064,8 +1083,10 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_fault_ind_received_handle(StrMsg_HUITP_MS
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//只更新传感器的状态，不做其它处理
+	UINT16 errCode;
+	errCode = HUITP_ENDIAN_EXG16(rcv->error_code);
 
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_FAULT_RCV, 0);
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, errCode, 0);
 
 	if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus < HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MAX)
 		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_INIT_ERR;
@@ -1084,12 +1105,18 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_err_ind_cmd_resp_received_handle(StrMsg_H
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_ERR_RESP_RCV, 0);
+	UINT8 validFlag;
+	UINT16 errCode;
+	validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	errCode = HUITP_ENDIAN_EXG16(rcv->error_code);
+	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, errCode, 0);
+	else dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_ERR_RESP_RCV, 0);
 
 	msg_struct_can_l3bfsc_error_inq_cmd_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t));
 	snd.sensorid = nodeId;
-	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	snd.validFlag = validFlag;
+	snd.errCode = errCode;
 	snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->average_weight);
 	snd.length = sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t);
 	if (hcu_message_send(MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
@@ -1105,6 +1132,10 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_heart_beat_report_received_handle(StrMsg_
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
 
+	if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_ISOLATED) //秤台被设置成隔离
+	{
+		return SUCCESS;
+	}
 	//准备组装发送消息
 	StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_confirm_t pMsgProc;
 	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_confirm_t);

@@ -51,8 +51,7 @@ OPSTAT fsm_sps232_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_SPS232, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("SPS232: Error Set FSM State at fsm_sps232_task_entry\n");}
+	FsmSetState(TASK_ID_SPS232, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -78,10 +77,7 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_SPS232, FSM_STATE_SPS232_INITED) == FAILURE){
-		HcuErrorPrint("SPS232: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_SPS232, FSM_STATE_SPS232_INITED);
 
 	//初始化硬件接口
 	if (func_sps232_int_init() == FAILURE){
@@ -95,14 +91,8 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuVmCtrTab.codab.si[SENSOR_ID_SPSHCHOZE08CH2O].fVal = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_SPS232, FSM_STATE_SPS232_RECEIVED) == FAILURE){
-		HcuErrorPrint("SPS232: Error Set FSM State!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("SPS232: Enter FSM_STATE_SPS232_ACTIVED status, Keeping refresh here!\n");
-	}
+	FsmSetState(TASK_ID_SPS232, FSM_STATE_SPS232_RECEIVED);
+	HCU_DEBUG_PRINT_FAT("SPS232: Enter FSM_STATE_SPS232_ACTIVED status, Keeping refresh here!\n");
 
 	//串口同时支持两种速率，没有成功，意味着不同的外设具备不同速度时，必须设置树莓派的串口环境速率，然后这里u一次性初始化，而不能单次重复初始化
 	//多个串口外设同时打开时，互相斥需要将不工作的传感器关掉，不然它会无谓的占据很多的时间，导致其它正常工作的传感器得不到快速响应

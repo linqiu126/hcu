@@ -176,14 +176,9 @@ gTaskCloudvelaContext_t gTaskCloudvelaContext;
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_cloudvela_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret;
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_IDLE);
-	if (ret == FAILURE){
-		HcuErrorPrint("CLOUDVELA: Error Set FSM State at fsm_cloudvela_task_entry\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -207,11 +202,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	}
 
 	//收到初始化消息后，进入初始化状态
-	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_INITED);
-	if (ret == FAILURE){
-		HcuErrorPrint("CLOUDVELA: Error Set FSM State at fsm_cloudvela_init\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_INITED);
 	HCU_DEBUG_PRINT_FAT("CLOUDVELA: Enter FSM_STATE_CLOUDVELA_INITED status, everything goes well!\n");
 
 	//Task global variables init，
@@ -219,21 +210,10 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA] = 0;
 
 	//启动周期性心跳定时器
-	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_CLOUDVELA, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
-	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Error Set FSM State at fsm_cloudvela_init\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
 
 	//初次启动链路
 	func_cloudvela_hb_link_main_entry();
@@ -339,7 +319,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 		if ((gTaskCloudvelaContext.defaultSvrSocketCon == TRUE) && (func_cloudvela_socket_conn_setup() == SUCCESS)){
 			zHcuSysStaPm.statisCnt.cloudVelaConnCnt++;
 			//State Transfer to FSM_STATE_CLOUDVELA_ONLINE
-			if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+			FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE);
 			HCU_DEBUG_PRINT_NOR("CLOUDVELA: Connect state change, from OFFLINE to ONLINE!\n");
 		}
 		//如果是失败情况，并不返回错误，属于正常情况
@@ -356,7 +336,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 			zHcuSysStaPm.statisCnt.cloudVelaDiscCnt++;
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
-			if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+			FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
 			HCU_DEBUG_PRINT_NOR("CLOUDVELA: Connect state change, from ONLINE to OFFLINE!\n");
 			//并不立即启动连接的建立，而是等待下一个周期带来，否则状态机过于复杂
 		}//心跳握手失败
@@ -375,7 +355,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 					//Disconnect current 3g4g connection!!!
 					if (hcu_3g4g_phy_link_disconnect() == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error disconnect 3G4G link!\n");
 					//设置为离线状态，以便下次重连接
-					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error set FSM status!\n");
+					FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
 					//设置当前工作物理链路为无效
 					gTaskCloudvelaContext.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 				}
@@ -389,7 +369,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 					//Disconnect current wifi connection!!!
 					if (hcu_wifi_phy_link_disconnect() == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error disconnect WIFI link!\n");
 					//设置为离线状态，以便下次重连接
-					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error set FSM status!\n");
+					FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
 					//设置当前工作物理链路为无效
 					gTaskCloudvelaContext.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 				}
@@ -402,7 +382,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 					//Disconnect current usbnet connection!!!
 					if (hcu_usbnet_phy_link_disconnect() == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error disconnect USBNET link!\n");
 					//设置为离线状态，以便下次重连接
-					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error set FSM status!\n");
+					FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
 					//设置当前工作物理链路为无效
 					gTaskCloudvelaContext.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 				}
@@ -413,7 +393,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 
 	//既不在线，也不离线，强制转移到离线状态以便下次恢复，这种情况很难得，一般不会跑到这儿来，这种情况通常发生在初始化期间或者状态机胡乱的情况下
 	else{
-		if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+		FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
 	}
 
 	return SUCCESS;
@@ -824,7 +804,7 @@ OPSTAT fsm_cloudvela_ethernet_curl_data_rx(UINT32 dest_id, UINT32 src_id, void *
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 
 	//连接态
-	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+	FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE);
 
 	//接收消息解码
 	msg_struct_com_cloudvela_data_rx_t rcv;
@@ -850,7 +830,7 @@ OPSTAT fsm_cloudvela_ethernet_curl_data_rx(UINT32 dest_id, UINT32 src_id, void *
 OPSTAT fsm_cloudvela_usbnet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//连接态
-	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+	FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE);
 
 	return SUCCESS;
 }
@@ -858,7 +838,7 @@ OPSTAT fsm_cloudvela_usbnet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 OPSTAT fsm_cloudvela_wifi_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//连接态
-	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+	FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE);
 
 	return SUCCESS;
 }
@@ -866,7 +846,7 @@ OPSTAT fsm_cloudvela_wifi_data_rx(UINT32 dest_id, UINT32 src_id, void * param_pt
 OPSTAT fsm_cloudvela_3g4g_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//连接态
-	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+	FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE);
 
 	return SUCCESS;
 }
@@ -883,7 +863,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	if (param_ptr == NULL) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 
 	//连接态
-	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+	FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE);
 
 	//接收消息解码
 	msg_struct_com_cloudvela_data_rx_t rcv;

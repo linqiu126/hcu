@@ -64,14 +64,9 @@ gTaskHumidContext_t gTaskHumidContext;
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_humid_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret;
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	ret = FsmSetState(TASK_ID_HUMID, FSM_STATE_IDLE);
-	if (ret == FAILURE){
-		HcuErrorPrint("HUMID: Error Set FSM State at fsm_humid_task_entry\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_HUMID, FSM_STATE_IDLE);
 	return SUCCESS;
 }
 
@@ -95,14 +90,8 @@ OPSTAT fsm_humid_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		}
 	}
 
-	ret = FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_INITED);
-	if (ret == FAILURE){
-		HcuErrorPrint("HUMID: Error Set FSM State at fsm_humid_init\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("HUMID: Enter FSM_STATE_HUMID_INITED status, everything goes well!\n");
-	}
+	FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_INITED);
+	HCU_DEBUG_PRINT_FAT("HUMID: Enter FSM_STATE_HUMID_INITED status, everything goes well!\n");
 
 	//Task global variables init.
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID] = 0;
@@ -123,21 +112,10 @@ OPSTAT fsm_humid_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	hcu_sleep(i);
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_HUMID, TIMER_ID_1S_HUMID_PERIOD_READ, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_HUMID_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-		HcuErrorPrint("HUMID: Error start timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_start(TASK_ID_HUMID, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_HUMID_PERIOD_READ), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 
 	//State Transfer to FSM_STATE_HUMID_ACTIVED
-	ret = FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-		HcuErrorPrint("HUMID: Error Set FSM State at fsm_humid_init\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_ACTIVED);
 	return SUCCESS;
 }
 
@@ -182,12 +160,7 @@ OPSTAT fsm_humid_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	if ((rcv.timeId == TIMER_ID_1S_HUMID_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
 		if (FsmGetState(TASK_ID_HUMID) != FSM_STATE_HUMID_ACTIVED){
-			ret = FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_ACTIVED);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-				HcuErrorPrint("HUMID: Error Set FSM State!\n");
-				return FAILURE;
-			}//FsmSetState
+			FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_ACTIVED);
 		}
 /*
 #ifdef TARGET_RASPBERRY_PI3B
@@ -248,25 +221,14 @@ void func_humid_time_out_read_data_from_modbus(void)
 		}
 
 		//启动一次性定时器
-		ret = hcu_timer_start(TASK_ID_HUMID, TIMER_ID_1S_HUMID_MODBUS_FB, \
-				zHcuSysEngPar.timer.array[TIMER_ID_1S_HUMID_MODBUS_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-			HcuErrorPrint("HUMID: Error start timer!\n");
-			return;
-		}
+		hcu_timer_start(TASK_ID_HUMID, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_HUMID_MODBUS_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 
 		//设置当前传感器到忙，没反应之前，不置状态
 		gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwAccess = SENSOR_HUMID_HW_ACCESS_BUSY;
 		gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].busyCount = 0;
 
 		//State Transfer to FSM_STATE_HUMID_OPT_WFFB
-		ret = FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_OPT_WFFB);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-			HcuErrorPrint("HUMID: Error Set FSM State!\n");
-			return;
-		}//FsmSetState
+		FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_OPT_WFFB);
 	}//SENSOR_HUMID_HW_ACCESS_IDLE
 
 	//任何其他状态，强制初始化
@@ -282,8 +244,6 @@ void func_humid_time_out_read_data_from_modbus(void)
 //超时失败，走向下一个传感器
 void func_humid_time_out_processing_no_rsponse(void)
 {
-	int ret=0;
-
 	//恢复当前传感器的空闲状态
 	gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwAccess = SENSOR_HUMID_HW_ACCESS_IDLE;
 	gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwStatus = SENSOR_HUMID_HW_STATUS_DEACTIVE;
@@ -301,12 +261,7 @@ void func_humid_time_out_processing_no_rsponse(void)
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
 
 	//State Transfer to FSM_STATE_HUMID_ACTIVE
-	ret = FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-		HcuErrorPrint("HUMID: Error Set FSM State!\n");
-		return;
-	}//FsmSetState
+	FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_ACTIVED);
 	return;
 }
 
@@ -331,12 +286,7 @@ OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
 
 	//停止定时器
-	ret = hcu_timer_stop(TASK_ID_HUMID, TIMER_ID_1S_HUMID_MODBUS_FB, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-		HcuErrorPrint("HUMID: Error stop timer!\n");
-		return FAILURE;
-	}
+	hcu_timer_stop(TASK_ID_HUMID, TIMER_ID_1S_HUMID_MODBUS_FB, TIMER_RESOLUTION_1S);
 
 	//HCU_DEBUG_PRINT_INF("HUMID: humid = %d\n\n\n\n", (rcv.humid.humidValue));
 	gTaskHumidContext.humidValue = (float)rcv.humid.humidValue/10;
@@ -497,12 +447,7 @@ OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	}
 
 	//State Transfer to FSM_STATE_HUMID_ACTIVE
-	ret = FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_ACTIVED);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-		HcuErrorPrint("HUMID: Error Set FSM State!\n");
-		return FAILURE;
-	}
+	FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_ACTIVED);
 
 	return SUCCESS;
 }
