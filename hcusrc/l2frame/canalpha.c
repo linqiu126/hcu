@@ -893,8 +893,6 @@ OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void *
 	int ret=0;
 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_usbcan_l2frame_rcv_t);
 
-	if (rcv.nodeId == 0)
-		printf("CANALPHA: Rcv L2 message from %d once!\n", rcv.nodeId);
 	//解码MSGID/MSGLEN
 	UINT16 msgId = 0, msgLen = 0;
 	StrMsg_HUITP_MSGID_sui_common_msg_header_t *pComMsg = (StrMsg_HUITP_MSGID_sui_common_msg_header_t *)(rcv.databuf);

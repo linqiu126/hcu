@@ -858,7 +858,7 @@ uint32_t hcu_bsp_usbcan_l2frame_transmit(HcuUsbCanHandleTypeDef_t* CanHandle, ui
 	//入参检查
 	if ((CanHandle == NULL) || (buffer == NULL) || (length == 0) || (length > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE - 4)){
 		HcuErrorPrint("USBCAN_DH: Error input parameters reveived!\n");
-		return 0;
+		return FAILURE;
 	}
 
 	/* Need to add L2 frame Header */
