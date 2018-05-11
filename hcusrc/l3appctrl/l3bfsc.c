@@ -300,6 +300,9 @@ OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		if (func_l3bfsc_time_out_sys_stop_req_process() == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error process time out message!\n");
 		}
+
+
+		printf("L3BFSC: TIMER_ID_1S_L3BFSC_SYS_STOP_WAIT_FB timeout, timer = %d\n", rcv.timeId);
 	}
 
 	//出料操作：一次性工作
@@ -882,7 +885,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	//正常处理
 	gTaskL3bfscContext.cur.wsIncMatCnt++;
 	gTaskL3bfscContext.cur.wsIncMatWgt += rcv.sensorWsValue;
-	HCU_DEBUG_PRINT_FAT("L3BFSC: Sensor Input Id = %d, Status = %d\n", rcv.sensorid, gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus);
+	HCU_DEBUG_PRINT_FAT("L3BFSC: Input sensorId = %d, Status = %d\n", rcv.sensorid, gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus);
 
 	//将重复次数清零：这个参数用于增加该传感器被算法命中的概率
 	gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorRepTimes = 0;
@@ -1204,7 +1207,7 @@ OPSTAT fsm_l3bfsc_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFSC_CAN_SYS_START_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC);
 
 		//启动定时器
-		hcu_timer_start(TASK_ID_L3BFSC, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFSC_SYS_START_WAIT_FB), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+		hcu_timer_start(TASK_ID_L3BFSC, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFSC_SYS_START_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO);
 	}
 
@@ -1237,7 +1240,7 @@ OPSTAT fsm_l3bfsc_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 		HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFSC_CAN_SYS_STOP_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC);
 
 		//启动定时器
-		hcu_timer_start(TASK_ID_L3BFSC, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFSC_SYS_STOP_WAIT_FB), TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+		hcu_timer_start(TASK_ID_L3BFSC, HCU_TIMERID_WITH_DUR(TIMER_ID_1S_L3BFSC_SYS_STOP_WAIT_FB), TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO);
 	}
 
@@ -1860,7 +1863,7 @@ OPSTAT func_l3bfsc_time_out_sys_stop_req_process(void)
 	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_L3BFSC_UICOMM_CMD_RESP, TASK_ID_BFSCUICOMM, TASK_ID_L3BFSC);
 
 	//设置状态机
-	FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO);
+	FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED);
 
 	//返回
 	return SUCCESS;

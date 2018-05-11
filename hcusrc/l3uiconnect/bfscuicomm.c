@@ -285,8 +285,6 @@ OPSTAT fsm_bfscuicomm_l3bfsc_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 
 	validFlag = rcv.validFlag;
 	cmdid = rcv.cmdid;
-	//测试用的打印命令
-	HCU_DEBUG_PRINT_NOR("TASK_ID_BFSCUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag,cmdid);
 
 	//存入数据库表单，通知界面新的状态信息
 	if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFSC_UICOMM_CMDID_START)){
@@ -306,7 +304,7 @@ OPSTAT fsm_bfscuicomm_l3bfsc_ctrl_cmd_resp(UINT32 dest_id, UINT32 src_id, void *
 		//do nothing
 	}
 	else{
-		HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: Invalid command response!\n");
+		HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: Invalid command response, sensorid = %d, validFlag = %d, cmdid = %d, errCode = %d!\n", rcv.sensorid, rcv.validFlag, cmdid, rcv.errCode);
 		return FAILURE;
 	}
 
@@ -742,7 +740,8 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	preemption = dynamicdata[index++];
 	for(i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		if ((preemption & (((UINT32)1<<i))) == ((UINT32)1<<i)){
-			gTaskL3bfscContext.sensorWs[i+1].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_ISOLATED;
+			gTaskL3bfscContext.sensorWs[i].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_ISOLATED;
+			printf("L3BFSCUICOMM: senorid = %d was set to %d\n", i,gTaskL3bfscContext.sensorWs[i].sensorStatus);
 		}
 	}
 	//重复参数
